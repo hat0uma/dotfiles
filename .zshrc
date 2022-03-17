@@ -1,0 +1,179 @@
+#####################################################################
+# init
+#####################################################################
+# zmodload zsh/zprof && zprof
+
+if [ ! -f ~/.zshrc.zwc -o ~/.zshrc -nt ~/.zshrc.zwc ]; then
+    zcompile ~/.zshrc
+fi
+
+#####################################################################
+# plugins
+#####################################################################
+
+### Added by Zinit's installer
+if [[ ! -f $HOME/.zinit/bin/zinit.zsh ]]; then
+    print -P "%F{33}▓▒░ %F{220}Installing %F{33}DHARMA%F{220} Initiative Plugin Manager (%F{33}zdharma/zinit%F{220})…%f"
+    command mkdir -p "$HOME/.zinit" && command chmod g-rwX "$HOME/.zinit"
+    command git clone https://github.com/zdharma/zinit "$HOME/.zinit/bin" && \
+        print -P "%F{33}▓▒░ %F{34}Installation successful.%f%b" || \
+        print -P "%F{160}▓▒░ The clone has failed.%f%b"
+fi
+
+source "$HOME/.zinit/bin/zinit.zsh"
+autoload -Uz _zinit
+(( ${+_comps} )) && _comps[zinit]=_zinit
+
+## two regular plugins loaded without investigating.
+zinit light zsh-users/zsh-autosuggestions
+zinit light zdharma/fast-syntax-highlighting
+
+## Plugin history-search-multi-word loaded with investigating.
+zinit load zdharma/history-search-multi-word
+
+## Load the pure theme, with zsh-async library that's bundled with it.
+zinit ice pick"async.zsh" src"pure.zsh"
+zinit light sindresorhus/pure
+
+## A glance at the new for-syntax – load all of the above
+## plugins with a single command. For more information see:
+## https://zdharma.org/zinit/wiki/For-Syntax/
+zinit for \
+    light-mode  zsh-users/zsh-autosuggestions \
+    light-mode  zdharma/fast-syntax-highlighting \
+                zdharma/history-search-multi-word \
+    light-mode pick"async.zsh" src"pure.zsh" \
+                sindresorhus/pure
+
+# Binary release in archive, from GitHub-releases page.
+# After automatic unpacking it provides program "fzf".
+zinit ice from"gh-r" as"program"
+zinit load junegunn/fzf-bin
+
+## One other binary release, it needs renaming from `docker-compose-Linux-x86_64`.
+## This is done by ice-mod `mv'{from} -> {to}'. There are multiple packages per
+## single version, for OS X, Linux and Windows – so ice-mod `bpick' is used to
+## select Linux package – in this case this is actually not needed, Zinit will
+## grep operating system name and architecture automatically when there's no `bpick'.
+# zinit ice from"gh-r" as"program" mv"docker* -> docker-compose" bpick"*linux*"
+# zinit load docker/compose
+
+## Vim repository on GitHub – a typical source code that needs compilation – Zinit
+## can manage it for you if you like, run `./configure` and other `make`, etc. stuff.
+## Ice-mod `pick` selects a binary program to add to $PATH. You could also install the
+## package under the path $ZPFX, see: http://zdharma.org/zinit/wiki/Compiling-programs
+# zinit ice as"program" atclone"rm -f src/auto/config.cache; ./configure" \
+#     atpull"%atclone" make pick"src/vim"
+# zinit light vim/vim
+
+# Scripts that are built at install (there's single default make target, "install",
+# and it constructs scripts by `cat'ing a few files). The make'' ice could also be:
+# `make"install PREFIX=$ZPFX"`, if "install" wouldn't be the only, default target.
+# zinit ice as"program" pick"$ZPFX/bin/git-*" make"PREFIX=$ZPFX"
+# zinit light tj/git-extras
+
+## Handle completions without loading any plugin, see "clist" command.
+## This one is to be ran just once, in interactive session.
+# zinit creinstall %HOME/my_completions
+
+# (this is currently required for annexes)
+zinit light-mode for \
+    zinit-zsh/z-a-rust \
+    zinit-zsh/z-a-as-monitor \
+    zinit-zsh/z-a-patch-dl \
+    zinit-zsh/z-a-bin-gem-node
+
+### End of Zinit's installer chunk
+
+#####################################################################
+# environment
+#####################################################################
+typeset -U path PATH
+
+export EDITOR=/usr/local/bin/nvim
+
+# wsl settings
+export ON_WSL="$(if [ -v WSLENV ]; then echo true; else echo false;fi)" 
+export ON_WSL2="$(if [ -v WSL_INTEROP ]; then echo true; else echo false;fi)"
+export ON_WSL1="$(if [[ $ON_WSL = true && $ON_WSL2 = false ]]; then echo true; else echo false;fi)" 
+
+if [ $ON_WSL1 = true ]; then
+    export DISPLAY=:0.0
+fi
+
+if [ $ON_WSL2 = true ]; then
+    export WSL2_X_IP=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2; exit;}')
+    export DISPLAY=${WSL2_X_IP}:0.0
+fi
+
+# for hidpi
+export QT_SCALE_FACTOR=2
+export GDK_SCALE=2
+
+export http_proxy="$HTTP_PROXY"
+export https_proxy="$HTTPS_PROXY"
+export ftp_proxy="$FTP_PROXY"
+
+#deno
+export DENO_INSTALL="$HOME/.deno"
+export PATH="$DENO_INSTALL/bin:$PATH"
+
+# golang
+export PATH=$PATH:/usr/local/go/bin
+
+# rust
+export PATH=$PATH:$HOME/.cargo/bin
+
+# nodenv
+export PATH=$HOME/.nodenv/bin:$PATH
+export PATH=$HOME/.nodenv/shims:$PATH
+
+# pyenv/virtualenv
+export PYENV_ROOT=$HOME/.pyenv
+export PATH=$PYENV_ROOT/bin:$PATH
+export PATH=$PYENV_ROOT/shims:$PATH
+
+export PATH=$PATH:~/.local/bin
+export XDG_DATA_HOME=$HOME/.local/share
+#####################################################################
+# aliases
+#####################################################################
+alias ls='ls --color=auto'
+alias ll='ls -alFh'
+alias cp='cp -i'
+alias mv='mv -i'
+alias rm='rm -i'
+alias edit='nvim'
+
+if [ $ON_WSL = true ]; then
+    alias open='explorer.exe'
+else
+    alias open='xdg-open'
+fi
+
+#####################################################################
+# others
+#####################################################################
+autoload -U compinit
+
+# histoy
+HISTFILE=$HOME/.zsh-history
+HISTSIZE=10000
+SAVEHIST=50000
+setopt inc_append_history
+setopt share_history
+
+setopt auto_cd
+setopt auto_pushd
+setopt correct
+setopt list_packed
+zmodload -i zsh/mathfunc
+
+zmodload zsh/zpty
+
+fpath+=${ZDOTDIR:-~}/.zsh_functions
+
+# if (which zprof > /dev/null 2>&1) ;then
+#   zprof
+# fi
+
