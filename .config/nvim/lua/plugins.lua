@@ -362,13 +362,13 @@ function M.init()
         vim.keymap.set("n", ",b", ":<C-u>Gina branch -a<CR>", {})
         vim.keymap.set("n", ",l", ":<C-u>Gina log<CR>", {})
 
-        local yank_cmd = ":<C-u>Gina browse --exact : --yank<CR>:let @+=@0<CR>"
-        vim.keymap.set("n", ",y", yank_cmd, { silent = true })
-        vim.keymap.set("v", ",y", yank_cmd, { silent = true })
+        local yank_cmd = "Gina browse --exact : --yank<CR>:let @+=@0"
+        vim.keymap.set("n", ",y", "<Cmd>" .. yank_cmd .. "<CR>", { silent = true })
+        vim.keymap.set("v", ",y", ":" .. yank_cmd .. "<CR>", { silent = true })
 
-        local browse_cmd = ":<C-u>Gina browse --exact :<CR>"
-        vim.keymap.set("n", ",x", browse_cmd, { silent = true })
-        vim.keymap.set("v", ",x", browse_cmd, { silent = true })
+        local browse_cmd = "Gina browse --exact :"
+        vim.keymap.set("n", ",x", "<Cmd>" .. browse_cmd .. "<CR>", { silent = true })
+        vim.keymap.set("v", ",x", ":" .. browse_cmd .. "<CR>", { silent = true })
       end,
       cmd = { "Gina" },
     },
