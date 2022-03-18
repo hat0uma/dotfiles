@@ -5,6 +5,7 @@ local lsp_installer = require "nvim-lsp-installer"
 local format = function()
   vim.lsp.buf.formatting_sync({}, 7000)
 end
+
 --- format on save
 vim.g.lsp_format_on_save = true
 local on_save = function()
@@ -27,28 +28,33 @@ local my_rename = function()
   require("rc.lsp.rename").rename()
 end
 
-local on_attach = function(client, bufnr)
-  local opts = { noremap = true, silent = true, buffer = bufnr }
-  vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
-  vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
-  vim.keymap.set("n", "gh", vim.lsp.buf.hover, opts)
-  vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
-  vim.keymap.set("n", "gr", my_references, opts)
-  vim.keymap.set("n", "<leader>s", my_document_symbols, opts)
-  vim.keymap.set("n", "<leader>S", my_workspace_symbols, opts)
-  vim.keymap.set("n", "<leader>rn", my_rename, { silent = true })
-  vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, opts)
-  vim.keymap.set("n", "<leader>D", vim.lsp.buf.type_definition, opts)
-  -- vim.keymap.set("n", "<leader>e", vim.lsp.diagnostic.show_line_diagnostics, opts)
-  vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
-  vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
-  vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, opts)
+local make_on_attach = function(override_opts)
+  return function(client, bufnr)
+    if override_opts.document_formatting ~= nil then
+      client.resolved_capabilities.document_formatting = override_opts.document_formatting
+    end
 
-  if client.resolved_capabilities.document_formatting then
-    vim.keymap.set("n", "<leader><leader>f", format, opts)
-    vim.api.nvim_create_autocmd("BufWritePre", { buffer = 0, callback = on_save })
+    local map_opts = { noremap = true, silent = true, buffer = bufnr }
+    vim.keymap.set("n", "gD", vim.lsp.buf.declaration, map_opts)
+    vim.keymap.set("n", "gd", vim.lsp.buf.definition, map_opts)
+    vim.keymap.set("n", "gh", vim.lsp.buf.hover, map_opts)
+    vim.keymap.set("n", "gi", vim.lsp.buf.implementation, map_opts)
+    vim.keymap.set("n", "gr", my_references, map_opts)
+    vim.keymap.set("n", "<leader>s", my_document_symbols, map_opts)
+    vim.keymap.set("n", "<leader>S", my_workspace_symbols, map_opts)
+    vim.keymap.set("n", "<leader>rn", my_rename, map_opts)
+    vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, map_opts)
+    vim.keymap.set("n", "<leader>D", vim.lsp.buf.type_definition, map_opts)
+    vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, map_opts)
+    vim.keymap.set("n", "]d", vim.diagnostic.goto_next, map_opts)
+    vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, map_opts)
+
+    if client.resolved_capabilities.document_formatting then
+      vim.keymap.set("n", "<leader><leader>f", format, map_opts)
+      vim.api.nvim_create_autocmd("BufWritePre", { buffer = 0, callback = on_save })
+    end
+    require("illuminate").on_attach(client)
   end
-  require("illuminate").on_attach(client)
 end
 
 -- settings for workspace/symbol
@@ -81,7 +87,7 @@ local SymbolKind = {
   TypeParameter = 26,
 }
 -- default configurations for lsp
-local function default_config()
+local function default_config(on_attach)
   local capabilities = vim.lsp.protocol.make_client_capabilities()
   capabilities.textDocument.completion.completionItem.snippetSupport = true
   capabilities.workspace.symbol.symbolKind.valueSet = {
@@ -96,7 +102,7 @@ local function default_config()
     SymbolKind.Struct,
   }
   return {
-    on_attach = on_attach,
+    on_attach = on_attach or make_on_attach {},
     capabilities = capabilities,
   }
 end
@@ -110,15 +116,11 @@ end
 
 -- lua
 local function lua_config()
-  local config = default_config()
-  config.on_attach = function(client, bufnr)
-    client.resolved_capabilities.document_formatting = false
-    on_attach(client, bufnr)
-  end
+  local on_attach = make_on_attach { document_formatting = false }
+  local config = default_config(on_attach)
   local runtime_path = vim.split(package.path, ";")
   table.insert(runtime_path, "lua/?.lua")
   table.insert(runtime_path, "lua/?/init.lua")
-
   local lib = vim.api.nvim_get_runtime_file("", true)
   config.settings = {
     Lua = {
@@ -180,7 +182,7 @@ local function setup_nullls()
     },
     null_ls.builtins.diagnostics.shellcheck,
   }
-  null_ls.setup { sources = sources, on_attach = on_attach }
+  null_ls.setup { sources = sources, on_attach = make_on_attach {} }
   local function register_my_nullls_settings()
     null_ls.register(sources)
   end

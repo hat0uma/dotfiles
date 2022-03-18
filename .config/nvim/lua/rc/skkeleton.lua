@@ -5,6 +5,8 @@ local function my_skkeleton_init()
     userJisyo = vim.fn.expand "~/.skk-jisyo",
     globalJisyo = vim.fn.expand "~/.eskk/SKK-JISYO.L",
     globalJisyoEncoding = "utf-8",
+    markerHenkan = "<>",
+    markerHenkanSelect = ">>",
   }
   vim.fn["skkeleton#register_kanatable"]("rom", {
     jj = "escape",
