@@ -324,7 +324,7 @@ function M.init()
         "nvim-treesitter/nvim-treesitter-textobjects",
       },
       config = function()
-        require "rc.treesitter"
+        require("rc.treesitter").config()
       end,
     },
     {
