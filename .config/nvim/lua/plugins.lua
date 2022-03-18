@@ -22,7 +22,7 @@ function M.init()
   packer.reset()
 
   use { "wbthomason/packer.nvim", opt = true }
-  use { "lewis6991/impatient.nvim" }
+  use "lewis6991/impatient.nvim"
   use "vim-jp/vimdoc-ja"
 
   use {
@@ -76,6 +76,7 @@ function M.init()
     config = function()
       require("rc.snippets").config()
     end,
+    module = "luasnip",
   }
 
   -- cmp
@@ -190,18 +191,10 @@ function M.init()
   }
 
   use {
-    "ryanoasis/vim-devicons",
-    config = function()
-      vim.g.webdevicons_enable_denite = 0
-    end,
-  }
-
-  use {
     "tamago324/lir.nvim",
     setup = function()
       vim.keymap.set("n", "<leader>e", "<Cmd>MyLirOpen<CR>", { silent = true })
     end,
-
     config = function()
       require("rc.lir").config()
     end,
@@ -265,13 +258,14 @@ function M.init()
           cs = { template = { annotation_convention = "xmldoc" } },
         },
       }
+      local generator = function(type)
+        return function()
+          require("neogen").generate { type = type }
+        end
+      end
       local opts = { noremap = true, silent = true }
-      vim.keymap.set("n", "<Leader>hc", function()
-        require("neogen").generate { type = "class" }
-      end, opts)
-      vim.keymap.set("n", "<Leader>hf", function()
-        require("neogen").generate { type = "func" }
-      end, opts)
+      vim.keymap.set("n", "<Leader>hc", generator "class", opts)
+      vim.keymap.set("n", "<Leader>hf", generator "func", opts)
     end,
     requires = "nvim-treesitter/nvim-treesitter",
   }

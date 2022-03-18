@@ -1,3 +1,4 @@
+local M = {}
 local nvim_lsp = require "lspconfig"
 local lsp_installer = require "nvim-lsp-installer"
 
@@ -7,9 +8,9 @@ local format = function()
 end
 
 --- format on save
-vim.g.lsp_format_on_save = true
+M.lsp_format_on_save = true
 local on_save = function()
-  if vim.g.lsp_format_on_save then
+  if M.lsp_format_on_save then
     format()
   end
 end
@@ -56,6 +57,9 @@ local make_on_attach = function(override_opts)
     if client.resolved_capabilities.document_formatting then
       vim.keymap.set("n", "<leader><leader>f", format, map_opts)
       vim.api.nvim_create_autocmd("BufWritePre", { buffer = 0, callback = on_save })
+      vim.api.nvim_buf_add_user_command(bufnr, "FormatOnSaveToggle", function()
+        M.lsp_format_on_save = not M.lsp_format_on_save
+      end, {})
     end
     require("illuminate").on_attach(client)
   end
@@ -166,7 +170,7 @@ local function omnisharp_config()
   }
 end
 
-local configured_servers = {
+M.configured_servers = {
   auto = {
     sumneko_lua = { config = lua_config() },
     vimls = { config = default_config() },
@@ -203,24 +207,21 @@ local function setup_nullls()
   })
 end
 
-local function setup()
+function M.setup()
   require("lsp_signature").setup()
   setup_nullls()
   lsp_installer.on_server_ready(function(server)
-    if configured_servers.auto[server.name] == nil then
+    if M.configured_servers.auto[server.name] == nil then
       print(server.name .. " is installed, but not setup.")
       return
     end
 
-    local opts = configured_servers.auto[server.name].config
+    local opts = M.configured_servers.auto[server.name].config
     server:setup(opts)
   end)
-  for name, config in pairs(configured_servers.manual) do
+  for name, config in pairs(M.configured_servers.manual) do
     nvim_lsp[name].setup(config)
   end
 end
 
-return {
-  configured_servers = configured_servers,
-  setup = setup,
-}
+return M

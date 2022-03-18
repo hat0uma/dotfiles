@@ -1,6 +1,4 @@
 local cmp = require "cmp"
-local luasnip = require "luasnip"
-local neogen = require "neogen"
 
 local has_words_before = function()
   local line, col = unpack(vim.api.nvim_win_get_cursor(0))
@@ -19,6 +17,9 @@ cmp.setup {
   },
   mapping = {
     ["<Tab>"] = cmp.mapping(function(fallback)
+      local luasnip = require "luasnip"
+      local neogen = require "neogen"
+
       if cmp.visible() then
         cmp.select_next_item()
       elseif luasnip.expand_or_jumpable() then
@@ -32,6 +33,9 @@ cmp.setup {
       end
     end, { "i", "s" }),
     ["<S-Tab>"] = cmp.mapping(function(fallback)
+      local luasnip = require "luasnip"
+      local neogen = require "neogen"
+
       if cmp.visible() then
         cmp.select_prev_item()
       elseif luasnip.jumpable(-1) then
@@ -95,7 +99,7 @@ aug("my_cmp_settings", {
   au("FileType", {
     pattern = { "denite-filter", "TelescopePrompt", "LspRenamePrompt" },
     callback = function()
-      require("cmp").setup.buffer { enabled = false }
+      cmp.setup.buffer { enabled = false }
     end,
   }),
 })
