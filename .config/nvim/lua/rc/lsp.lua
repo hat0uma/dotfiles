@@ -15,14 +15,18 @@ local on_save = function()
 end
 
 -- lsp callback
+local telescope_opt = { preview = { hide_on_startup = false } }
 local my_document_symbols = function()
-  require("telescope.builtin").lsp_document_symbols()
+  require("telescope.builtin").lsp_document_symbols(telescope_opt)
 end
 local my_workspace_symbols = function()
-  require("telescope.builtin").lsp_dynamic_workspace_symbols()
+  require("telescope.builtin").lsp_dynamic_workspace_symbols(telescope_opt)
 end
 local my_references = function()
-  require("telescope.builtin").lsp_references()
+  require("telescope.builtin").lsp_references(telescope_opt)
+end
+local my_definition = function()
+  require("telescope.builtin").lsp_definitions(telescope_opt)
 end
 local my_rename = function()
   require("rc.lsp.rename").rename()
@@ -36,7 +40,7 @@ local make_on_attach = function(override_opts)
 
     local map_opts = { noremap = true, silent = true, buffer = bufnr }
     vim.keymap.set("n", "gD", vim.lsp.buf.declaration, map_opts)
-    vim.keymap.set("n", "gd", vim.lsp.buf.definition, map_opts)
+    vim.keymap.set("n", "gd", my_definition, map_opts)
     vim.keymap.set("n", "gh", vim.lsp.buf.hover, map_opts)
     vim.keymap.set("n", "gi", vim.lsp.buf.implementation, map_opts)
     vim.keymap.set("n", "gr", my_references, map_opts)
@@ -155,11 +159,19 @@ local function clangd_config()
   return config
 end
 
+local function omnisharp_config()
+  local config = default_config()
+  config.handlers = {
+    ["textDocument/definition"] = require("omnisharp_extended").handler,
+  }
+  return config
+end
+
 local configured_servers = {
   auto = {
     sumneko_lua = { config = lua_config() },
     vimls = { config = default_config() },
-    omnisharp = { config = default_config() },
+    omnisharp = { config = omnisharp_config() },
     dockerls = { config = default_config() },
     pyright = { config = default_config() },
     bashls = { config = default_config() },

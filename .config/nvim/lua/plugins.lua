@@ -46,6 +46,7 @@ function M.init()
   -- lsp
   use {
     { "p00f/clangd_extensions.nvim" },
+    { "Hoffs/omnisharp-extended-lsp.nvim" },
     {
       "neovim/nvim-lspconfig",
       config = function()
