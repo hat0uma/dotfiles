@@ -6,37 +6,43 @@ local lsp_installer = require "nvim-lsp-installer"
 local format = function()
   vim.lsp.buf.formatting_sync({}, 7000)
 end
-
---- format on save
-M.lsp_format_on_save = true
+local format_on_save = true
 local on_save = function()
-  if M.lsp_format_on_save then
+  if format_on_save then
     format()
   end
 end
+local format_on_save_setter = function(value)
+  return function()
+    format_on_save = value
+  end
+end
+local format_on_save_toggle = function()
+  format_on_save = not format_on_save
+end
 
 -- lsp callback
-local telescope_opt = { preview = { hide_on_startup = false } }
-local my_document_symbols = function()
-  require("telescope.builtin").lsp_document_symbols(telescope_opt)
-end
-local my_workspace_symbols = function()
-  require("telescope.builtin").lsp_dynamic_workspace_symbols(telescope_opt)
-end
-local my_references = function()
-  require("telescope.builtin").lsp_references(telescope_opt)
-end
-local my_definition = function()
-  require("telescope.builtin").lsp_definitions(telescope_opt)
-end
-local my_rename = function()
-  require("rc.lsp.rename").rename()
-end
-
 local make_on_attach = function(override_opts)
   return function(client, bufnr)
     if override_opts.document_formatting ~= nil then
       client.resolved_capabilities.document_formatting = override_opts.document_formatting
+    end
+
+    local telescope_opt = { preview = { hide_on_startup = false } }
+    local my_document_symbols = function()
+      require("telescope.builtin").lsp_document_symbols(telescope_opt)
+    end
+    local my_workspace_symbols = function()
+      require("telescope.builtin").lsp_dynamic_workspace_symbols(telescope_opt)
+    end
+    local my_references = function()
+      require("telescope.builtin").lsp_references(telescope_opt)
+    end
+    local my_definition = function()
+      require("telescope.builtin").lsp_definitions(telescope_opt)
+    end
+    local my_rename = function()
+      require("rc.lsp.rename").rename()
     end
 
     local map_opts = { noremap = true, silent = true, buffer = bufnr }
@@ -56,10 +62,10 @@ local make_on_attach = function(override_opts)
 
     if client.resolved_capabilities.document_formatting then
       vim.keymap.set("n", "<leader><leader>f", format, map_opts)
-      vim.api.nvim_create_autocmd("BufWritePre", { buffer = 0, callback = on_save })
-      vim.api.nvim_buf_add_user_command(bufnr, "FormatOnSaveToggle", function()
-        M.lsp_format_on_save = not M.lsp_format_on_save
-      end, {})
+      vim.api.nvim_create_autocmd("BufWritePre", { buffer = bufnr, callback = on_save })
+      vim.api.nvim_add_user_command("FormatOnSaveToggle", format_on_save_toggle, {})
+      vim.api.nvim_add_user_command("FormatOnSaveDisable", format_on_save_setter(false), {})
+      vim.api.nvim_add_user_command("FormatOnSaveEnable", format_on_save_setter(true), {})
     end
     require("illuminate").on_attach(client)
   end
