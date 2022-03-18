@@ -51,6 +51,7 @@ function M.config()
         },
         n = {
           ["q"] = actions.close,
+          ["v"] = actions.file_vsplit,
           ["p"] = layout_actions.toggle_preview,
           ["<C-d>"] = my_actions.shift_selection_pagedown,
           ["<C-u>"] = my_actions.shift_selection_pageup,

@@ -29,31 +29,31 @@ local make_on_attach = function(override_opts)
     end
 
     local telescope_opt = { preview = { hide_on_startup = false } }
-    local my_document_symbols = function()
+    local lsp_document_symbols = function()
       require("telescope.builtin").lsp_document_symbols(telescope_opt)
     end
-    local my_workspace_symbols = function()
+    local lsp_workspace_symbol = function()
       require("telescope.builtin").lsp_dynamic_workspace_symbols(telescope_opt)
     end
-    local my_references = function()
+    local lsp_references = function()
       require("telescope.builtin").lsp_references(telescope_opt)
     end
-    local my_definition = function()
+    local go_to_definition = function()
       require("telescope.builtin").lsp_definitions(telescope_opt)
     end
-    local my_rename = function()
+    local lsp_rename = function()
       require("rc.lsp.rename").rename()
     end
 
     local map_opts = { noremap = true, silent = true, buffer = bufnr }
     vim.keymap.set("n", "gD", vim.lsp.buf.declaration, map_opts)
-    vim.keymap.set("n", "gd", override_opts.go_to_definition or my_definition, map_opts)
+    vim.keymap.set("n", "gd", override_opts.go_to_definition or go_to_definition, map_opts)
     vim.keymap.set("n", "gh", vim.lsp.buf.hover, map_opts)
     vim.keymap.set("n", "gi", vim.lsp.buf.implementation, map_opts)
-    vim.keymap.set("n", "gr", my_references, map_opts)
-    vim.keymap.set("n", "<leader>s", my_document_symbols, map_opts)
-    vim.keymap.set("n", "<leader>S", my_workspace_symbols, map_opts)
-    vim.keymap.set("n", "<leader>rn", my_rename, map_opts)
+    vim.keymap.set("n", "gr", lsp_references, map_opts)
+    vim.keymap.set("n", "<leader>s", lsp_document_symbols, map_opts)
+    vim.keymap.set("n", "<leader>S", lsp_workspace_symbol, map_opts)
+    vim.keymap.set("n", "<leader>rn", lsp_rename, map_opts)
     vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, map_opts)
     vim.keymap.set("n", "<leader>D", vim.lsp.buf.type_definition, map_opts)
     vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, map_opts)
