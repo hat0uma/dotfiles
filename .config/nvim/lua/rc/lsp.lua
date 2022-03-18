@@ -110,7 +110,7 @@ local function default_config(override_opts)
     SymbolKind.Struct,
   }
   return {
-    on_attach = make_on_attach { override_opts },
+    on_attach = make_on_attach(override_opts),
     capabilities = capabilities,
   }
 end
