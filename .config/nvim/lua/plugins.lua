@@ -26,11 +26,6 @@ function M.init()
   use "vim-jp/vimdoc-ja"
 
   use {
-    "MunifTanjim/nui.nvim",
-    module = "nui",
-  }
-
-  use {
     "RRethy/vim-illuminate",
     config = function()
       vim.g.Illuminate_ftblacklist = {
@@ -122,10 +117,7 @@ function M.init()
         vim.cmd [[ colorscheme everforest ]]
       end,
     },
-    {
-      "morhetz/gruvbox",
-      disable = true,
-    },
+    { "morhetz/gruvbox", disable = true },
     {
       "Matsuuu/pinkmare",
       config = function()
@@ -169,16 +161,6 @@ function M.init()
       } }
     end,
   }
-
-  use {
-    "junegunn/vim-easy-align",
-    config = function()
-      vim.keymap.set("x", "ga", "<Plug>(EasyAlign)", {})
-      vim.keymap.set("n", "ga", "<Plug>(EasyAlign)", {})
-    end,
-  }
-
-  -- use 'metakirby5/codi.vim'
 
   use {
     "haya14busa/vim-asterisk",
@@ -360,10 +342,13 @@ function M.init()
 
   use {
     "phaazon/hop.nvim",
-    config = function()
-      require("hop").setup()
+    setup = function()
       vim.keymap.set("n", ";", "<Cmd>HopWord<CR>", { silent = true })
     end,
+    config = function()
+      require("hop").setup()
+    end,
+    cmd = "HopWord",
   }
 
   -- git
@@ -389,9 +374,7 @@ function M.init()
     },
     {
       "lewis6991/gitsigns.nvim",
-      requires = {
-        "nvim-lua/plenary.nvim",
-      },
+      requires = "nvim-lua/plenary.nvim",
       config = function()
         require("rc.gitsigns").setup()
       end,
