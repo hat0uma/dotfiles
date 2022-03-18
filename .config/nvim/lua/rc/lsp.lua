@@ -40,7 +40,7 @@ local make_on_attach = function(override_opts)
 
     local map_opts = { noremap = true, silent = true, buffer = bufnr }
     vim.keymap.set("n", "gD", vim.lsp.buf.declaration, map_opts)
-    vim.keymap.set("n", "gd", my_definition, map_opts)
+    vim.keymap.set("n", "gd", override_opts.go_to_definition or my_definition, map_opts)
     vim.keymap.set("n", "gh", vim.lsp.buf.hover, map_opts)
     vim.keymap.set("n", "gi", vim.lsp.buf.implementation, map_opts)
     vim.keymap.set("n", "gr", my_references, map_opts)
@@ -91,7 +91,7 @@ local SymbolKind = {
   TypeParameter = 26,
 }
 -- default configurations for lsp
-local function default_config(on_attach)
+local function default_config(override_opts)
   local capabilities = vim.lsp.protocol.make_client_capabilities()
   capabilities.textDocument.completion.completionItem.snippetSupport = true
   capabilities.workspace.symbol.symbolKind.valueSet = {
@@ -106,7 +106,7 @@ local function default_config(on_attach)
     SymbolKind.Struct,
   }
   return {
-    on_attach = on_attach or make_on_attach {},
+    on_attach = make_on_attach { override_opts },
     capabilities = capabilities,
   }
 end
@@ -120,8 +120,7 @@ end
 
 -- lua
 local function lua_config()
-  local on_attach = make_on_attach { document_formatting = false }
-  local config = default_config(on_attach)
+  local config = default_config { document_formatting = false }
   local runtime_path = vim.split(package.path, ";")
   table.insert(runtime_path, "lua/?.lua")
   table.insert(runtime_path, "lua/?/init.lua")
@@ -160,11 +159,11 @@ local function clangd_config()
 end
 
 local function omnisharp_config()
-  local config = default_config()
-  config.handlers = {
-    ["textDocument/definition"] = require("omnisharp_extended").handler,
+  return default_config {
+    go_to_definition = function()
+      require("omnisharp_extended").telescope_lsp_definitions()
+    end,
   }
-  return config
 end
 
 local configured_servers = {
