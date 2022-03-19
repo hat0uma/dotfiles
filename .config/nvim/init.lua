@@ -1,22 +1,5 @@
 pcall(require, "impatient")
 
-local has = function(value)
-  return vim.fn.has(value) == 1
-end
-local is_windows = function()
-  return has "win64"
-end
--- providers
-if is_windows() then
-  -- let g:python_host_prog  = '~/.pyenv/pyenv-win/versions/python2_nvim_provider/Scripts/python.exe'
-  -- let g:python3_host_prog = '~/.pyenv/pyenv-win/versions/python3_nvim_provider/Scripts/python.exe'
-  -- let g:node_host_prog    = '~/.nodenv/versions/12.18.4/bin/neovim-node-host'
-else
-  vim.g.python_host_prog = "~/.pyenv/versions/python2_nvim_provider/bin/python2"
-  vim.g.python3_host_prog = "~/.pyenv/versions/python3_nvim_provider/bin/python3"
-  vim.g.node_host_prog = "~/.nodenv/versions/12.18.4/bin/neovim-node-host"
-end
-
 --- define augroup with autocmd
 ---@param name string aurgoup name
 ---@param autocmds autocmd[]
