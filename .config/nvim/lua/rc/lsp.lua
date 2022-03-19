@@ -23,6 +23,7 @@ end
 
 -- lsp callback
 local make_on_attach = function(override_opts)
+  override_opts = override_opts or {}
   return function(client, bufnr)
     if override_opts.document_formatting ~= nil then
       client.resolved_capabilities.document_formatting = override_opts.document_formatting
