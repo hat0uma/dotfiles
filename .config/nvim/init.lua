@@ -1,4 +1,4 @@
-require "impatient"
+pcall(require, "impatient")
 
 local has = function(value)
   return vim.fn.has(value) == 1
