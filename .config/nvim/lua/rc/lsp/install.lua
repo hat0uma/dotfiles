@@ -1,9 +1,10 @@
 -- install_servers
 -- https://github.com/williamboman/nvim-lsp-installer/issues/179#issuecomment-946674767
-local process = require("nvim-lsp-installer.process")
-local lsp_installer_servers = require("nvim-lsp-installer.servers")
 
 local function install_servers_sync(servers)
+  local process = require("nvim-lsp-installer.process")
+  local lsp_installer_servers = require("nvim-lsp-installer.servers")
+
   local completed = 0
   local server_count = 0
   for name,_ in pairs(servers) do

@@ -179,18 +179,18 @@ end
 
 M.configured_servers = {
   auto = {
-    sumneko_lua = { config = lua_config() },
-    vimls = { config = default_config() },
-    omnisharp = { config = omnisharp_config() },
-    dockerls = { config = default_config() },
-    pyright = { config = default_config() },
-    bashls = { config = default_config() },
-    rust_analyzer = { config = default_config() },
-    clangd = { config = clangd_config() },
+    sumneko_lua = lua_config(),
+    vimls = default_config(),
+    omnisharp = omnisharp_config(),
+    dockerls = default_config(),
+    pyright = default_config(),
+    bashls = default_config(),
+    rust_analyzer = default_config(),
+    clangd = clangd_config(),
   },
   manual = {
-    denols = { config = denols_config() },
-    gopls = { config = gopls_config() },
+    denols = denols_config(),
+    gopls = gopls_config(),
   },
 }
 
@@ -223,7 +223,7 @@ function M.setup()
       return
     end
 
-    local opts = M.configured_servers.auto[server.name].config
+    local opts = M.configured_servers.auto[server.name]
     server:setup(opts)
   end)
   for name, config in pairs(M.configured_servers.manual) do
