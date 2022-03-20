@@ -103,19 +103,19 @@ local function dropdown_theme(entry_maker)
   return theme
 end
 
-function M.telescope_oldfiles()
+local function telescope_oldfiles()
   require("telescope.builtin").oldfiles(
     dropdown_theme(require("rc.telescope.my_make_entry").gen_from_files_prioritize_basename())
   )
 end
 
-function M.telescope_find_files()
+local function telescope_find_files()
   require("telescope.builtin").find_files(
     dropdown_theme(require("rc.telescope.my_make_entry").gen_from_files_prioritize_basename())
   )
 end
 
-function M.telescope_packers()
+local function telescope_packers()
   local actions = require "telescope.actions"
   local action_state = require "telescope.actions.state"
 
@@ -134,25 +134,33 @@ function M.telescope_packers()
   }
 end
 
-function M.telescope_live_grep()
+local function telescope_live_grep()
   require("telescope").extensions.live_grep_raw.live_grep_raw()
 end
 
-function M.telescope_gina_p_action_list()
+local function telescope_gina_p_action_list()
   require("rc.telescope.my_pickers").gina_p_action_list(require("telescope.themes").get_cursor())
+end
+
+local function telescope_buffers()
+  local opt = {
+    preview = { hide_on_startup = false },
+  }
+  require("telescope.builtin").buffers(opt)
 end
 
 function M.setup()
   local opt = { noremap = true, silent = true }
-  vim.keymap.set("n", "<leader>o", M.telescope_oldfiles, opt)
-  vim.keymap.set("n", "<leader>f", M.telescope_find_files, opt)
-  vim.keymap.set("n", "<leader>p", M.telescope_packers, opt)
-  vim.keymap.set("n", "<leader>g", M.telescope_live_grep, opt)
+  vim.keymap.set("n", "<leader>o", telescope_oldfiles, opt)
+  vim.keymap.set("n", "<leader>f", telescope_find_files, opt)
+  vim.keymap.set("n", "<leader>p", telescope_packers, opt)
+  vim.keymap.set("n", "<leader>g", telescope_live_grep, opt)
+  vim.keymap.set("n", "<leader>b", telescope_buffers, opt)
   aug("my_telescope_aug", {
     au("FileType", {
       pattern = "gina-status",
       callback = function()
-        vim.keymap.set("n", "A", M.telescope_gina_p_action_list, { noremap = true, silent = true, buffer = true })
+        vim.keymap.set("n", "A", telescope_gina_p_action_list, { noremap = true, silent = true, buffer = true })
       end,
     }),
   })
