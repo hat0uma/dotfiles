@@ -29,18 +29,17 @@ local make_on_attach = function(override_opts)
       client.resolved_capabilities.document_formatting = override_opts.document_formatting
     end
 
-    local telescope_opt = { preview = { hide_on_startup = false } }
     local lsp_document_symbols = function()
-      require("telescope.builtin").lsp_document_symbols(telescope_opt)
+      require("telescope.builtin").lsp_document_symbols()
     end
     local lsp_workspace_symbol = function()
-      require("telescope.builtin").lsp_dynamic_workspace_symbols(telescope_opt)
+      require("telescope.builtin").lsp_dynamic_workspace_symbols()
     end
     local lsp_references = function()
-      require("telescope.builtin").lsp_references(telescope_opt)
+      require("telescope.builtin").lsp_references()
     end
     local go_to_definition = function()
-      require("telescope.builtin").lsp_definitions(telescope_opt)
+      require("telescope.builtin").lsp_definitions()
     end
     local lsp_rename = function()
       require("rc.lsp.rename").rename()

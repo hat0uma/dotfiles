@@ -60,7 +60,7 @@ function M.config()
       initial_mode = "normal",
       winblend = 10,
       preview = {
-        hide_on_startup = true,
+        hide_on_startup = false,
       },
       vimgrep_arguments = grep_command,
       path_display = function(_, path)
@@ -94,6 +94,9 @@ local function dropdown_theme(entry_maker)
     layout_config = {
       width = math.floor(vim.o.columns * 0.7),
       height = math.floor(vim.o.lines * 0.7),
+    },
+    preview = {
+      hide_on_startup = true,
     },
   }
   if entry_maker then
@@ -135,7 +138,7 @@ local function telescope_packers()
 end
 
 local function telescope_live_grep()
-  require("telescope").extensions.live_grep_raw.live_grep_raw()
+  require("telescope").extensions.live_grep_raw.live_grep_raw { preview = { hide_on_startup = true } }
 end
 
 local function telescope_gina_p_action_list()
@@ -143,10 +146,22 @@ local function telescope_gina_p_action_list()
 end
 
 local function telescope_buffers()
-  local opt = {
-    preview = { hide_on_startup = false },
-  }
-  require("telescope.builtin").buffers(opt)
+  require("telescope.builtin").buffers()
+end
+
+local function on_telescope_prompt()
+  local bufnr = vim.fn.bufnr()
+  local function buf_au(event, cb)
+    return au(event, { callback = cb, buffer = bufnr })
+  end
+  aug("on_telescope_prompt", {
+    buf_au("InsertEnter", function()
+      -- require("rc.telescope.actions").disable_preview(bufnr)
+    end),
+    buf_au("InsertLeave", function()
+      -- require("rc.telescope.actions").enable_preview(bufnr)
+    end),
+  })
 end
 
 function M.setup()
@@ -156,6 +171,7 @@ function M.setup()
   vim.keymap.set("n", "<leader>p", telescope_packers, opt)
   vim.keymap.set("n", "<leader>g", telescope_live_grep, opt)
   vim.keymap.set("n", "<leader>b", telescope_buffers, opt)
+
   aug("my_telescope_aug", {
     au("FileType", {
       pattern = "gina-status",
@@ -163,6 +179,7 @@ function M.setup()
         vim.keymap.set("n", "A", telescope_gina_p_action_list, { noremap = true, silent = true, buffer = true })
       end,
     }),
+    au("FileType", { pattern = "TelescopePrompt", callback = on_telescope_prompt }),
   })
 end
 return M
