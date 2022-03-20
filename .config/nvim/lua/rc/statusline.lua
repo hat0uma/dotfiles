@@ -15,14 +15,14 @@ local section = gl.section
 local M = {}
 
 gl.short_line_list = {
-  "defx",
-  "deol",
-  "gina-status",
-  "gina-log",
-  "gina-branch",
-  "simplenote",
-  "translate",
-  "packer",
+  -- "defx",
+  -- "deol",
+  -- "gina-status",
+  -- "gina-log",
+  -- "gina-branch",
+  -- "simplenote",
+  -- "translate",
+  -- "packer",
 }
 
 local one_dark_colors = {
