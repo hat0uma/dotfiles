@@ -15,7 +15,12 @@ local packer = nil
 function M.init()
   if packer == nil then
     packer = require "packer"
-    packer.init { disable_commands = true }
+    packer.init {
+      disable_commands = true,
+      display = {
+        open_cmd = "lefta 65vnew \\[packer\\]",
+      },
+    }
   end
 
   local use = packer.use
