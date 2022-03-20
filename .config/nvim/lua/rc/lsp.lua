@@ -64,9 +64,6 @@ local make_on_attach = function(override_opts)
     if client.resolved_capabilities.document_formatting then
       vim.keymap.set("n", "<leader><leader>f", format, map_opts)
       vim.api.nvim_create_autocmd("BufWritePre", { buffer = bufnr, callback = on_save })
-      vim.api.nvim_add_user_command("FormatOnSaveToggle", format_on_save_toggle, {})
-      vim.api.nvim_add_user_command("FormatOnSaveDisable", format_on_save_setter(false), {})
-      vim.api.nvim_add_user_command("FormatOnSaveEnable", format_on_save_setter(true), {})
     end
     require("illuminate").on_attach(client)
   end
@@ -215,6 +212,10 @@ local function setup_nullls()
 end
 
 function M.setup()
+  vim.api.nvim_add_user_command("FormatOnSaveToggle", format_on_save_toggle, {})
+  vim.api.nvim_add_user_command("FormatOnSaveDisable", format_on_save_setter(false), {})
+  vim.api.nvim_add_user_command("FormatOnSaveEnable", format_on_save_setter(true), {})
+
   require("lsp_signature").setup()
   setup_nullls()
   lsp_installer.on_server_ready(function(server)

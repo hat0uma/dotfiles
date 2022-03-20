@@ -48,7 +48,6 @@ local function install_configured_servers_sync()
 end
 
 return {
-  install_servers_sync = install_servers_sync,
   install_configured_servers_sync = install_configured_servers_sync
 }
 
