@@ -522,7 +522,7 @@ function M.init()
   use {
     "akinsho/toggleterm.nvim",
     setup = function()
-      local cmd = "<Cmd>exe v:count1 . 'ToggleTerm direction=float'<CR>"
+      local cmd = "<Cmd>exe v:count1 . 'ToggleTerm'<CR>"
       vim.keymap.set("n", "<C-t>", cmd, { noremap = true, silent = true })
     end,
     config = function()

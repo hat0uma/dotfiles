@@ -7,16 +7,14 @@ function M.config()
     float_opts = {
       winblend = 10,
     },
+    on_open = function(term)
+      local opts = { noremap = true, buffer = term.bufnr }
+      vim.keymap.set("t", "<esc>", [[<C-\><C-n>]], opts)
+      vim.keymap.set("t", "jj", [[<C-\><C-n>]], opts)
+      vim.keymap.set("n", "q", "<Cmd>close<CR>", opts)
+    end,
+    direction = "float",
   }
-  local function set_terminal_keymaps()
-    local opts = { noremap = true, buffer = true }
-    vim.keymap.set("t", "<esc>", [[<C-\><C-n>]], opts)
-    vim.keymap.set("t", "jj", [[<C-\><C-n>]], opts)
-    vim.keymap.set("n", "q", "<Cmd>close<CR>", opts)
-  end
-  aug("toggleterm_augroup", {
-    au("TermOpen", { pattern = "term://*", callback = set_terminal_keymaps }),
-  })
 end
 
 return M
