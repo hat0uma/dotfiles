@@ -116,9 +116,22 @@ function M.telescope_find_files()
 end
 
 function M.telescope_packers()
+  local actions = require "telescope.actions"
+  local action_state = require "telescope.actions.state"
+
   vim.cmd [[ packadd packer.nvim ]]
   require("plugins").init()
-  require("telescope").extensions.packer.packer()
+  require("telescope").extensions.packer.packer {
+    attach_mappings = function(prompt_bufnr, map)
+      local vsplit_readme = function()
+        local selection = action_state.get_selected_entry()
+        actions.close(prompt_bufnr)
+        vim.cmd(string.format(":vsplit %s", selection.readme))
+      end
+      map("n", "v", vsplit_readme)
+      return true
+    end,
+  }
 end
 
 function M.telescope_live_grep()

@@ -28,6 +28,7 @@ function _G.au(event, opts)
   return _au
 end
 
+vim.o.splitright = true
 vim.o.termguicolors = true
 vim.o.updatetime = 100
 vim.g.mapleader = " "
