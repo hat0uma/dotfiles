@@ -522,8 +522,11 @@ function M.init()
   use {
     "akinsho/toggleterm.nvim",
     setup = function()
-      local cmd = "<Cmd>exe v:count1 . 'ToggleTerm'<CR>"
-      vim.keymap.set("n", "<C-t>", cmd, { noremap = true, silent = true })
+      for i = 1, 5 do
+        local key = string.format("<leader>%d", i)
+        local cmd = string.format("<Cmd>exe %d . 'ToggleTerm'<CR>", i)
+        vim.keymap.set("n", key, cmd, { noremap = true, silent = true })
+      end
     end,
     config = function()
       require("rc.toggleterm").config()
@@ -539,6 +542,12 @@ function M.init()
       vim.g.go_doc_keywordprg_enabled = 0
     end,
     ft = { "go" },
+  }
+  use {
+    "luukvbaal/stabilize.nvim",
+    config = function()
+      require("stabilize").setup()
+    end,
   }
 end
 
