@@ -520,7 +520,7 @@ function M.init()
     config = function() end,
   }
   use {
-    "akinsho/toggleterm.nvim",
+    "rikuma-t/toggleterm.nvim",
     setup = function()
       for i = 1, 5 do
         local key = string.format("<leader>%d", i)
