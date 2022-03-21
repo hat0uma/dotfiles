@@ -276,10 +276,10 @@ local GitIcon = {
 
 local GitBranch = {
   provider = function()
-    return vcs.get_git_branch() .. " "
+    return vcs.get_git_branch() or ""
   end,
   condition = condition.check_git_workspace,
-  separator = "",
+  separator = " ",
   separator_highlight = { palette.bg, palette.bg },
   highlight = { palette.orange, palette.bg, "bold" },
 }

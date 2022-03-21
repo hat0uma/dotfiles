@@ -61,7 +61,7 @@ local make_on_attach = function(override_opts)
     vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, map_opts)
 
     if client.resolved_capabilities.document_formatting then
-      vim.keymap.set("n", "<leader><leader>f", format, map_opts)
+      vim.api.nvim_buf_add_user_command(bufnr, "Format", format, {})
       vim.api.nvim_create_autocmd("BufWritePre", { buffer = bufnr, callback = on_save })
     end
     require("illuminate").on_attach(client)
