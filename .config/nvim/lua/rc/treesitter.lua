@@ -1,3 +1,4 @@
+
 local M = {}
 
 function M.config()
@@ -66,16 +67,6 @@ function M.config()
           ["[M"] = "@function.outer",
           ["[]"] = "@class.outer",
         },
-      },
-    },
-  }
-
-  require("nvim-treesitter.configs").setup {
-    tree_docs = {
-      enable = false,
-      keymaps = {
-        doc_all_in_range = "<space>h",
-        doc_node_at_cursor = "<space>h",
       },
     },
   }
