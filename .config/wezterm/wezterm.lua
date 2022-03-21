@@ -9,5 +9,6 @@ end
 
 return {
   font = wezterm.font "Sarasa Term J Nerd Font",
+  harfbuzz_features = { "calt=0", "clig=0", "liga=0" },
   default_prog = shell,
 }
