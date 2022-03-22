@@ -7,7 +7,7 @@ local function install_servers_sync(servers)
 
   local completed = 0
   local server_count = 0
-  for name,_ in pairs(servers) do
+  for name,info in pairs(servers) do
 
     server_count = server_count + 1
     local ok, server = lsp_installer_servers.get_server(name)
@@ -23,9 +23,10 @@ local function install_servers_sync(servers)
       goto continue
     end
 
+    local version = info.version
     server:install_attached({
       stdio_sink = process.simple_sink(),
-      requested_server_version = nil },
+      requested_server_version = version },
       function (success)
         if not success then
           print("Server " .. server.name .. " failed to install.")
