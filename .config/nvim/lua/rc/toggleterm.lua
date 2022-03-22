@@ -37,11 +37,12 @@ function M.config()
       vim.keymap.set("n", "J", send_key_action(KeyCode.Down), opts)
       vim.keymap.set("n", "<CR>", send_key_action "\r", opts)
 
-      local direction_cycle = {
-        "vertical",
-        "horizontal",
-        "float",
-      }
+      -- reload
+      local reload = string.format("<Cmd>bdelete! | %dToggleTerm direction=%s<CR>", term.id, term.direction)
+      vim.keymap.set("n", "<C-q>", reload, opts)
+
+      -- cycle direction
+      local direction_cycle = { "vertical", "horizontal", "float" }
       for idx, direction in pairs(direction_cycle) do
         if direction == term.direction then
           local next_idx = (idx % #direction_cycle) + 1
