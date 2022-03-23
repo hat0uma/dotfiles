@@ -81,7 +81,9 @@ function M.config()
       },
     },
   }
-
+  if package.loaded.project_nvim then
+    require("telescope").load_extension "projects"
+  end
   -- vim.cmd[[
   --   highlight! default link TelescopeNormal NormalFloat
   --   highlight! default link TelescopePreviewNormal NormalFloat
