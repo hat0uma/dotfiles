@@ -6,7 +6,10 @@ local KeyCode = {
   Right = "\x1b[C",
   Left = "\x1b[D",
 }
-local powershell_cmd = "powershell -NoLogo -NoExit -Command Set-PSReadLineOption -BellStyle None -EditMode Emacs"
+local powershell_cmd = string.format(
+  "powershell -NoLogo -NoProfile -NoExit -File %s ",
+  vim.fn.expand "~/dotfiles/win/profile.ps1"
+)
 function M.config()
   local shell = vim.fn.has "win64" == 1 and powershell_cmd or vim.o.shell
   require("toggleterm").setup {
