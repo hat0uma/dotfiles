@@ -91,7 +91,7 @@ local buffer_name = function()
   else
     name = fn.fnamemodify(bufname, ":~:.")
   end
-  return name
+  return name:gsub("\\", "/")
 end
 
 local buffer_not_empty = function()
@@ -161,7 +161,9 @@ local ViMode = {
       alias = mode.alias .. "-" .. skkeleton_mode
     end
     cmd("hi GalaxyViMode guibg=" .. mode.color)
-    return "  " .. alias .. " "
+    -- return "  " .. alias .. " "
+    return "  " .. alias .. " "
+    -- return "  " .. alias.. " "
   end,
   separator = " ",
   separator_highlight = separator_highlight,
@@ -263,7 +265,9 @@ local GitBranch = {
   condition = condition.check_git_workspace,
   -- separator = "  ",
   -- separator = "  ",
-  separator = " | ",
+  -- separator = "  ",
+  -- separator = "  ",
+  separator = " / ",
   separator_highlight = separator_highlight,
   highlight = { palette.fg, palette.bg },
 }
