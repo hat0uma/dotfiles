@@ -42,25 +42,7 @@ local one_dark_colors = {
   red = "#D16969",
 }
 
-local ever_forest = vim.fn["everforest#get_palette"](vim.fn["everforest#get_configuration"]().background)
-local ever_forest_palette = {
-  bg = ever_forest.bg2[1],
-  fg = ever_forest.fg[1],
-  line_bg = ever_forest.bg3[1],
-  bg_red = ever_forest.bg_red[1],
-  bg_green = ever_forest.bg_green[1],
-  yellow = ever_forest.yellow[1],
-  cyan = ever_forest.aqua[1],
-  darkblue = ever_forest.blue[1],
-  green = ever_forest.green[1],
-  orange = ever_forest.orange[1],
-  purple = ever_forest.purple[1],
-  magenta = ever_forest.purple[1],
-  grey = ever_forest.grey1[1],
-  blue = ever_forest.blue[1],
-  red = ever_forest.red[1],
-}
-
+local everforest = vim.fn["everforest#get_palette"](vim.fn["everforest#get_configuration"]().background)
 local pinkmare_palette = {
   bg = "#202330",
   fg = "#FAE8B6",
@@ -78,13 +60,25 @@ local pinkmare_palette = {
   blue = "#eba4ac",
   red = "#FF38A2",
 }
-local palette = ever_forest_palette
 
---  functions
-local deol_edit_buffer = function()
-  return string.find(fn.expand "%:p", "deol-edit", 1, true) ~= nil
-end
+local palette = {
+  bg = everforest.bg2[1],
+  fg = everforest.grey2[1],
+  vimode_fg = everforest.bg2[1],
+  -- other colors
+  yellow = everforest.yellow[1],
+  cyan = everforest.aqua[1],
+  darkblue = everforest.blue[1],
+  green = everforest.green[1],
+  orange = everforest.orange[1],
+  purple = everforest.purple[1],
+  magenta = everforest.purple[1],
+  grey = everforest.grey1[1],
+  blue = everforest.blue[1],
+  red = everforest.red[1],
+}
 
+local separator_highlight = { palette.fg, palette.bg }
 local buffer_name = function()
   local filetype = vim.bo.filetype
   local bufname = fn.bufname()
@@ -167,13 +161,11 @@ local ViMode = {
       alias = mode.alias .. "-" .. skkeleton_mode
     end
     cmd("hi GalaxyViMode guibg=" .. mode.color)
-    return "  " .. alias .. " "
-    -- return "  " .. alias.. " "
+    return "  " .. alias .. " "
   end,
   separator = " ",
-  separator_highlight = { palette.bg, palette.bg },
-  -- highlight = {palette.bg, palette.bg, "bold"}
-  highlight = { palette.bg, palette.bg },
+  separator_highlight = separator_highlight,
+  highlight = { palette.vimode_fg, palette.bg, "bold" },
 }
 
 local FileIcon = {
@@ -185,22 +177,22 @@ local FileIcon = {
 local FileName = {
   provider = buffer_name,
   condition = function()
-    return not deol_edit_buffer()
+    return true
   end,
   separator = " ",
-  separator_highlight = { palette.purple, palette.bg },
-  -- highlight = {palette.fg,palette.bg}
-  highlight = { ever_forest.grey2[1], palette.bg },
+  separator_highlight = separator_highlight,
+  highlight = { palette.fg, palette.bg },
 }
 
 local LineInfo = {
-  provider = "LineColumn",
-  condition = function()
-    return not deol_edit_buffer()
+  provider = function()
+    local line = vim.fn.line "."
+    local column = vim.fn.col "."
+    return string.format(" %3d:%-2d ", line, column)
   end,
   separator = " ",
-  separator_highlight = { palette.gray, palette.bg },
-  highlight = { palette.gray, palette.bg },
+  separator_highlight = separator_highlight,
+  highlight = { palette.bg, palette.fg },
 }
 
 local DiffAdd = {
@@ -227,7 +219,7 @@ local FileSize = {
   provider = "FileSize",
   separator = " ",
   condition = buffer_not_empty,
-  separator_highlight = { palette.blue, palette.bg },
+  separator_highlight = separator_highlight,
   highlight = { palette.fg, palette.bg },
 }
 
@@ -236,14 +228,14 @@ local DiagnosticError = {
   separator = " ",
   icon = " ",
   highlight = { palette.red, palette.bg },
-  separator_highlight = { palette.bg, palette.bg },
+  separator_highlight = separator_highlight,
 }
 local DiagnosticWarn = {
   provider = "DiagnosticWarn",
   -- separator = " ",
   icon = " ",
   highlight = { palette.yellow, palette.bg },
-  separator_highlight = { palette.bg, palette.bg },
+  separator_highlight = separator_highlight,
 }
 
 local DiagnosticInfo = {
@@ -251,7 +243,7 @@ local DiagnosticInfo = {
   provider = "DiagnosticInfo",
   icon = " ",
   highlight = { palette.green, palette.bg },
-  separator_highlight = { palette.bg, palette.bg },
+  separator_highlight = separator_highlight,
 }
 
 local DiagnosticHint = {
@@ -259,58 +251,52 @@ local DiagnosticHint = {
   separator = " ",
   icon = " ",
   highlight = { palette.blue, palette.bg },
-  separator_highlight = { palette.bg, palette.bg },
-}
-
-local GitIcon = {
-  separator = "  ",
-  provider = function()
-    return " "
-  end,
-  condition = function()
-    return condition.check_git_workspace() and not deol_edit_buffer()
-  end,
-  highlight = { palette.orange, palette.bg },
-  separator_highlight = { palette.bg, palette.bg },
+  separator_highlight = separator_highlight,
 }
 
 local GitBranch = {
   provider = function()
-    return vcs.get_git_branch() or ""
+    local icon = " "
+    local branch = vcs.get_git_branch() or ""
+    return string.format("%s%s", icon, branch)
   end,
   condition = condition.check_git_workspace,
-  separator = " ",
-  separator_highlight = { palette.bg, palette.bg },
-  highlight = { palette.orange, palette.bg, "bold" },
+  -- separator = "  ",
+  -- separator = "  ",
+  separator = " | ",
+  separator_highlight = separator_highlight,
+  highlight = { palette.fg, palette.bg },
 }
 
 local FileType = {
   provider = buffer.get_buffer_filetype,
   separator = " ",
-  separator_highlight = { palette.gray, palette.bg },
-  highlight = { palette.gray, palette.bg },
+  separator_highlight = separator_highlight,
+  highlight = { palette.fg, palette.bg },
 }
 
 local FileEncode = {
-  provider = fileinfo.get_file_encode,
+  provider = function()
+    return fileinfo.get_file_encode():lower()
+  end,
   separator = " ",
-  separator_highlight = { palette.gray, palette.bg },
-  highlight = { palette.gray, palette.bg },
+  separator_highlight = separator_highlight,
+  highlight = { palette.fg, palette.bg },
 }
 
 local FileFormat = {
   provider = function()
     local ff = vim.bo.fileformat
     local name_tbl = {
-      unix = "LF",
-      dos = "CRLF",
-      mac = "CR",
+      unix = "lf",
+      dos = "crlf",
+      mac = "cr",
     }
     return name_tbl[ff] or ""
   end,
   separator = " ",
-  separator_highlight = { palette.gray, palette.bg },
-  highlight = { palette.gray, palette.bg },
+  separator_highlight = separator_highlight,
+  highlight = { palette.fg, palette.bg },
 }
 
 -- short lines
@@ -323,7 +309,7 @@ local BufferType = {
     end
   end,
   separator = " ",
-  -- separator_highlight = {"NONE", palette.bg},
+  separator_highlight = separator_highlight,
   highlight = { palette.orange, "bold" },
 }
 local BufferIcon = {
@@ -344,19 +330,17 @@ function M.setup()
 
   -- section.left[1] = {FirstElement = FirstElement}
   table.insert(section.left, { ViMode = ViMode })
+  table.insert(section.left, { GitBranch = GitBranch })
   table.insert(section.left, { FileName = FileName })
 
+  -- table.insert(section.right,{FileType = FileType})
   table.insert(section.right, { DiagnosticError = DiagnosticError })
   table.insert(section.right, { DiagnosticWarn = DiagnosticWarn })
   table.insert(section.right, { DiagnosticInfo = DiagnosticInfo })
   table.insert(section.right, { DiagnosticHint = DiagnosticHint })
-
-  table.insert(section.right, { LineInfo = LineInfo })
-  -- table.insert(section.right,{FileType = FileType})
   table.insert(section.right, { FileEncode = FileEncode })
   table.insert(section.right, { FileFormat = FileFormat })
-  table.insert(section.right, { GitIcon = GitIcon })
-  table.insert(section.right, { GitBranch = GitBranch })
+  table.insert(section.right, { LineInfo = LineInfo })
 
   table.insert(section.short_line_right, { BufferType = BufferType })
   table.insert(section.short_line_right, { BufferIcon = BufferIcon })
