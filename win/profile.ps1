@@ -2,7 +2,7 @@
 # use emacs keybind
 Set-PSReadLineOption -BellStyle None -EditMode Emacs
 # change tab completion style
-Set-PSReadlineKeyHandler -Chord Tab -Function MenuComplete
+Set-PSReadlineKeyHandler -Chord Tab -Function Complete
 
 # encoding
 $PSDefaultParameterValues["Out-File:Encoding"] = "utf8"
