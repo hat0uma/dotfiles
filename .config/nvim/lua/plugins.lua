@@ -465,6 +465,7 @@ function M.init()
     "tyru/open-browser.vim",
     config = function()
       vim.keymap.set("n", "gx", "<Plug>(openbrowser-smart-search)", {})
+      vim.keymap.set("v", "gx", "<Plug>(openbrowser-smart-search)", {})
     end,
   }
 
@@ -547,6 +548,42 @@ function M.init()
     "luukvbaal/stabilize.nvim",
     config = function()
       require("stabilize").setup()
+    end,
+  }
+  -- test
+  use {
+    "hrsh7th/vim-searchx",
+    config = function()
+      local opts = { noremap = true }
+      vim.keymap.set("n", "?", "<Cmd>call searchx#start({ 'dir': 0 })<CR>", opts)
+      vim.keymap.set("n", "/", "<Cmd>call searchx#start({ 'dir': 1 })<CR>", opts)
+      vim.keymap.set("x", "?", "<Cmd>call searchx#start({ 'dir': 0 })<CR>", opts)
+      vim.keymap.set("x", "/", "<Cmd>call searchx#start({ 'dir': 1 })<CR>", opts)
+      vim.keymap.set("c", ";", "<Cmd>call searchx#select()<CR>", opts)
+      vim.keymap.set("n", "N", "<Cmd>call searchx#prev_dir()<CR>", opts)
+      vim.keymap.set("n", "n", "<Cmd>call searchx#next_dir()<CR>", opts)
+      vim.keymap.set("n", "N", "<Cmd>call searchx#prev_dir()<CR>", opts)
+      vim.keymap.set("n", "n", "<Cmd>call searchx#next_dir()<CR>", opts)
+      vim.g.searchx = {
+        -- Auto jump if the recent input matches to any marker.
+        auto_accept = true,
+        -- The scrolloff value for moving to next/prev.
+        scrolloff = vim.o.scrolloff,
+        -- To enable scrolling animation.
+        scrolltime = 500,
+        -- To enable auto nohlsearch after cursor is moved
+        nohlsearch = { jump = true },
+        markers = vim.split("ABCDEFGHIJKLMNOPQRSTUVWXYZ", ""),
+      }
+      vim.cmd [[
+        " Convert search pattern.
+        function g:searchx.convert(input) abort
+          if a:input !~# '\k'
+            return '\V' .. a:input
+          endif
+          return a:input[0] .. substitute(a:input[1:], '\\\@<! ', '.\\{-}', 'g')
+        endfunction
+      ]]
     end,
   }
 end
