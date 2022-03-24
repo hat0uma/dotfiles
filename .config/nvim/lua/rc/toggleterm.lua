@@ -7,7 +7,7 @@ local KeyCode = {
   Left = "\x1b[D",
 }
 local powershell_cmd = string.format(
-  "powershell -NoLogo -NoProfile -NoExit -File %s ",
+  "pwsh -NoLogo -NoProfile -NoExit -File %s ",
   vim.fn.expand "~/dotfiles/win/profile.ps1"
 )
 function M.config()

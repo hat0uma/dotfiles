@@ -3,7 +3,7 @@ local wezterm = require "wezterm"
 local shell
 if wezterm.target_triple == "x86_64-pc-windows-msvc" then
   local profile_path = os.getenv "HOME" .. "/dotfiles/win/profile.ps1"
-  shell = { "powershell", "-NoLogo", "-NoProfile", "-NoExit", "-File", profile_path }
+  shell = { "pwsh", "-NoLogo", "-NoProfile", "-NoExit", "-File", profile_path }
 else
   shell = { "zsh", "-l" }
 end
