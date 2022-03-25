@@ -390,7 +390,6 @@ function M.init()
   use {
     { "kana/vim-operator-user" },
     { "kana/vim-textobj-user" },
-    { "sgur/vim-textobj-parameter" },
     {
       "kana/vim-operator-replace",
       config = function()
@@ -411,51 +410,11 @@ function M.init()
       config = function()
         vim.keymap.set("n", "sdd", "<Plug>(operator-surround-delete)<Plug>(textobj-multiblock-a)", { silent = true })
         vim.keymap.set("n", "srr", "<Plug>(operator-surround-replace)<Plug>(textobj-multiblock-a)", { silent = true })
+        vim.keymap.set("o", "ib", "<Plug>(textobj-multiblock-i)", { silent = true })
+        vim.keymap.set("o", "ab", "<Plug>(textobj-multiblock-a)", { silent = true })
+        vim.keymap.set("v", "ib", "<Plug>(textobj-multiblock-i)", { silent = true })
+        vim.keymap.set("v", "ab", "<Plug>(textobj-multiblock-a)", { silent = true })
       end,
-    },
-    {
-      "osyo-manga/vim-textobj-multitextobj",
-      requires = { { "kana/vim-textobj-jabraces", opt = true } },
-      setup = function()
-        vim.g.textobj_multitextobj_textobjects_i = {
-          "<Plug>(textobj-multiblock-i)",
-          "<Plug>(textobj-jabraces-parens-i)",
-          "<Plug>(textobj-jabraces-braces-i)",
-          "<Plug>(textobj-jabraces-brackets-i)",
-          "<Plug>(textobj-jabraces-angles-i)",
-          "<Plug>(textobj-jabraces-double-angles-i)",
-          "<Plug>(textobj-jabraces-kakko-i)",
-          "<Plug>(textobj-jabraces-double-kakko-i)",
-          "<Plug>(textobj-jabraces-yama-kakko-i)",
-          "<Plug>(textobj-jabraces-double-yama-kakko-i)",
-          "<Plug>(textobj-jabraces-kikkou-kakko-i)",
-          "<Plug>(textobj-jabraces-sumi-kakko-i)",
-        }
-        vim.g.textobj_multitextobj_textobjects_a = {
-          "<Plug>(textobj-multiblock-a)",
-          "<Plug>(textobj-jabraces-parens-a)",
-          "<Plug>(textobj-jabraces-braces-a)",
-          "<Plug>(textobj-jabraces-brackets-a)",
-          "<Plug>(textobj-jabraces-angles-a)",
-          "<Plug>(textobj-jabraces-double-angles-a)",
-          "<Plug>(textobj-jabraces-kakko-a)",
-          "<Plug>(textobj-jabraces-double-kakko-a)",
-          "<Plug>(textobj-jabraces-yama-kakko-a)",
-          "<Plug>(textobj-jabraces-double-yama-kakko-a)",
-          "<Plug>(textobj-jabraces-kikkou-kakko-a)",
-          "<Plug>(textobj-jabraces-sumi-kakko-a)",
-        }
-        vim.keymap.set("o", "ab", "<Plug>(textobj-multitextobj-a)", { silent = true })
-        vim.keymap.set("o", "ib", "<Plug>(textobj-multitextobj-i)", { silent = true })
-        vim.keymap.set("v", "ab", "<Plug>(textobj-multitextobj-a)", { silent = true })
-        vim.keymap.set("v", "ib", "<Plug>(textobj-multitextobj-i)", { silent = true })
-      end,
-      keys = {
-        { "o", "<Plug>(textobj-multitextobj-a)" },
-        { "o", "<Plug>(textobj-multitextobj-i)" },
-        { "v", "<Plug>(textobj-multitextobj-a)" },
-        { "v", "<Plug>(textobj-multitextobj-i)" },
-      },
     },
   }
 
@@ -559,18 +518,20 @@ function M.init()
       vim.keymap.set("n", "/", "<Cmd>call searchx#start({ 'dir': 1 })<CR>", opts)
       vim.keymap.set("x", "?", "<Cmd>call searchx#start({ 'dir': 0 })<CR>", opts)
       vim.keymap.set("x", "/", "<Cmd>call searchx#start({ 'dir': 1 })<CR>", opts)
-      vim.keymap.set("c", ";", "<Cmd>call searchx#select()<CR>", opts)
+      -- vim.keymap.set("c", ";", "<Cmd>call searchx#select()<CR>", opts)
       vim.keymap.set("n", "N", "<Cmd>call searchx#prev_dir()<CR>", opts)
       vim.keymap.set("n", "n", "<Cmd>call searchx#next_dir()<CR>", opts)
       vim.keymap.set("n", "N", "<Cmd>call searchx#prev_dir()<CR>", opts)
       vim.keymap.set("n", "n", "<Cmd>call searchx#next_dir()<CR>", opts)
+      vim.keymap.set("c", "<C-p>", "<Cmd>call searchx#prev()<CR>", opts)
+      vim.keymap.set("c", "<C-n>", "<Cmd>call searchx#next()<CR>", opts)
       vim.g.searchx = {
         -- Auto jump if the recent input matches to any marker.
         auto_accept = true,
         -- The scrolloff value for moving to next/prev.
         scrolloff = vim.o.scrolloff,
         -- To enable scrolling animation.
-        scrolltime = 500,
+        scrolltime = 0,
         -- To enable auto nohlsearch after cursor is moved
         nohlsearch = { jump = true },
         markers = vim.split("ABCDEFGHIJKLMNOPQRSTUVWXYZ", ""),
