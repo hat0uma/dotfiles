@@ -79,7 +79,7 @@ vim.o.wrapscan = true
 vim.o.gdefault = true
 vim.o.inccommand = "split"
 
--- vim.go.shellslash = true
+-- vim.o.shellslash = true
 
 -- commandline
 vim.o.wildoptions = "pum"

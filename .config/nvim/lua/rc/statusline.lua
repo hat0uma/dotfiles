@@ -89,24 +89,18 @@ local buffer_name = function()
   elseif bufname == "" then
     name = "[NONAME]"
   else
-    name = fn.fnamemodify(bufname, ":~:.")
+    name = fn.simplify(bufname):gsub("\\", "/")
   end
-  return name:gsub("\\", "/")
+  return name
 end
 
 local buffer_not_empty = function()
-  if fn.empty(fn.expand "%:t") ~= 1 then
-    return true
-  end
-  return false
+  return fn.empty(fn.expand "%:t") ~= 1
 end
 
 local checkwidth = function()
   local squeeze_width = fn.winwidth(0) / 2
-  if squeeze_width > 40 then
-    return true
-  end
-  return false
+  return squeeze_width > 40
 end
 
 function table.contains(table, element)
@@ -117,14 +111,6 @@ function table.contains(table, element)
   end
   return false
 end
-
-local FirstElement = {
-  -- provider = function() return '▊ ' end,
-  provider = function()
-    return "  "
-  end,
-  highlight = { palette.blue, palette.bg },
-}
 
 local ViMode = {
   provider = function()
