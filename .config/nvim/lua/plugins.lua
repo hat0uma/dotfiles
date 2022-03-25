@@ -292,7 +292,7 @@ function M.init()
   use {
     "NTBBloodbath/galaxyline.nvim",
     config = function()
-      require("rc.statusline").setup()
+      require "rc.statusline"
     end,
   }
 
