@@ -210,16 +210,15 @@ local DiagnosticHint = {
 
 local GitBranch = {
   provider = function()
+    -- local icon = " "
     local icon = " "
     local branch = vcs.get_git_branch() or ""
     return string.format("  %s%s ", icon, branch)
   end,
   condition = condition.check_git_workspace,
-  -- separator = "  ",
   -- separator = "  ",
-  separator = "",
-  -- separator = " ",
-  -- separator = " / ",
+  -- separator = "",
+  separator = "",
   separator_highlight = { palette.bg2, palette.bg },
   highlight = { palette.fg, palette.bg2 },
 }
