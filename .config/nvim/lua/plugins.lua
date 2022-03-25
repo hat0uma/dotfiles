@@ -521,16 +521,28 @@ function M.init()
       vim.keymap.set("c", "<C-p>", "<Cmd>call searchx#prev()<CR>", opts)
       vim.keymap.set("c", "<C-n>", "<Cmd>call searchx#next()<CR>", opts)
       vim.g.searchx = {
-        -- Auto jump if the recent input matches to any marker.
         auto_accept = true,
-        -- The scrolloff value for moving to next/prev.
-        scrolloff = vim.o.scrolloff,
-        -- To enable scrolling animation.
+        scrolloff = 0,
         scrolltime = 0,
-        -- To enable auto nohlsearch after cursor is moved
         nohlsearch = { jump = true },
         markers = vim.split("ABCDEFGHIJKLMNOPQRSTUVWXYZ", ""),
       }
+      local old_scrolloff = vim.o.scrolloff
+      aug("searchx_settings", {
+        au("User", {
+          pattern = "SearchxEnter",
+          callback = function()
+            old_scrolloff = vim.o.scrolloff
+            vim.o.scrolloff = 0
+          end,
+        }),
+        au("User", {
+          pattern = "SearchxLeave",
+          callback = function()
+            vim.o.scrolloff = old_scrolloff
+          end,
+        }),
+      })
       vim.cmd [[
         " Convert search pattern.
         function g:searchx.convert(input) abort
