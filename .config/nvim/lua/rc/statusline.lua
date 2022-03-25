@@ -12,8 +12,6 @@ local buffer = require "galaxyline.providers.buffer"
 local condition = require "galaxyline.condition"
 local section = gl.section
 
-local M = {}
-
 gl.short_line_list = {
   -- "defx",
   -- "deol",
@@ -25,44 +23,11 @@ gl.short_line_list = {
   -- "packer",
 }
 
-local one_dark_colors = {
-  bg = "#2e3440",
-  fg = "#81a1c1",
-  line_bg = "#2e3440",
-  fg_green = "#6d96a5",
-  yellow = "#fabd2f",
-  cyan = "#008080",
-  darkblue = "#081633",
-  green = "#608B4E",
-  orange = "#FF8800",
-  purple = "#5d4d7a",
-  magenta = "#d16d9e",
-  grey = "#c0c0c0",
-  blue = "#569CD6",
-  red = "#D16969",
-}
-
 local everforest = vim.fn["everforest#get_palette"](vim.fn["everforest#get_configuration"]().background)
-local pinkmare_palette = {
-  bg = "#202330",
-  fg = "#FAE8B6",
-  line_bg = "#472541",
-  bg_red = "#f2448b",
-  bg_green = "#333b2f",
-  yellow = "#ffc85b",
-  cyan = "#87c095",
-  darkblue = "#203a41",
-  green = "#9cd162",
-  orange = "#ffb347",
-  purple = "#d9bcef",
-  magenta = "#d16d9e",
-  grey = "#444444",
-  blue = "#eba4ac",
-  red = "#FF38A2",
-}
-
 local palette = {
-  bg = everforest.bg2[1],
+  bg = everforest.bg1[1],
+  bg2 = everforest.bg3[1],
+  -- fg = everforest.statusline2[1],
   fg = everforest.grey2[1],
   vimode_fg = everforest.bg2[1],
   -- other colors
@@ -92,7 +57,7 @@ local buffer_name = function()
     name = fn.simplify(bufname)
     name = fn.fnamemodify(name, ":~:."):gsub("\\", "/")
   end
-  return name
+  return "  " .. name
 end
 
 local buffer_not_empty = function()
@@ -149,10 +114,10 @@ local ViMode = {
     end
     cmd("hi GalaxyViMode guibg=" .. mode.color)
     -- return "  " .. alias .. " "
-    return "  " .. alias .. " "
+    return "  " .. alias .. " "
     -- return "  " .. alias.. " "
   end,
-  separator = " ",
+  separator = "",
   separator_highlight = palette.separator_highlight,
   highlight = { palette.vimode_fg, palette.bg, "bold" },
 }
@@ -247,16 +212,16 @@ local GitBranch = {
   provider = function()
     local icon = " "
     local branch = vcs.get_git_branch() or ""
-    return string.format("%s%s", icon, branch)
+    return string.format("  %s%s ", icon, branch)
   end,
   condition = condition.check_git_workspace,
   -- separator = "  ",
   -- separator = "  ",
-  -- separator = "  ",
-  -- separator = "  ",
-  separator = " / ",
-  separator_highlight = palette.separator_highlight,
-  highlight = { palette.fg, palette.bg },
+  separator = "",
+  -- separator = " ",
+  -- separator = " / ",
+  separator_highlight = { palette.bg2, palette.bg },
+  highlight = { palette.fg, palette.bg2 },
 }
 
 local FileType = {
@@ -308,33 +273,29 @@ local BufferIcon = {
   highlight = { palette.fg, palette.bg },
 }
 
-function M.setup()
-  local function clear(t)
-    for k in pairs(t) do
-      t[k] = nil
-    end
+local function clear(t)
+  for k in pairs(t) do
+    t[k] = nil
   end
-  clear(section.left)
-  clear(section.right)
-  clear(section.short_line_left)
-  clear(section.short_line_right)
-
-  -- section.left[1] = {FirstElement = FirstElement}
-  table.insert(section.left, { ViMode = ViMode })
-  table.insert(section.left, { GitBranch = GitBranch })
-  table.insert(section.left, { FileName = FileName })
-
-  -- table.insert(section.right,{FileType = FileType})
-  table.insert(section.right, { DiagnosticError = DiagnosticError })
-  table.insert(section.right, { DiagnosticWarn = DiagnosticWarn })
-  table.insert(section.right, { DiagnosticInfo = DiagnosticInfo })
-  table.insert(section.right, { DiagnosticHint = DiagnosticHint })
-  table.insert(section.right, { FileEncode = FileEncode })
-  table.insert(section.right, { FileFormat = FileFormat })
-  table.insert(section.right, { LineInfo = LineInfo })
-
-  table.insert(section.short_line_right, { BufferType = BufferType })
-  table.insert(section.short_line_right, { BufferIcon = BufferIcon })
 end
+clear(section.left)
+clear(section.right)
+clear(section.short_line_left)
+clear(section.short_line_right)
 
-return M
+-- section.left[1] = {FirstElement = FirstElement}
+table.insert(section.left, { ViMode = ViMode })
+table.insert(section.left, { GitBranch = GitBranch })
+table.insert(section.left, { FileName = FileName })
+
+-- table.insert(section.right,{FileType = FileType})
+table.insert(section.right, { DiagnosticError = DiagnosticError })
+table.insert(section.right, { DiagnosticWarn = DiagnosticWarn })
+table.insert(section.right, { DiagnosticInfo = DiagnosticInfo })
+table.insert(section.right, { DiagnosticHint = DiagnosticHint })
+table.insert(section.right, { FileEncode = FileEncode })
+table.insert(section.right, { FileFormat = FileFormat })
+table.insert(section.right, { LineInfo = LineInfo })
+
+table.insert(section.short_line_right, { BufferType = BufferType })
+table.insert(section.short_line_right, { BufferIcon = BufferIcon })
