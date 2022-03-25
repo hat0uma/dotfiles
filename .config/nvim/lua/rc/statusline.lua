@@ -77,8 +77,8 @@ local palette = {
   blue = everforest.blue[1],
   red = everforest.red[1],
 }
+palette.separator_highlight = { palette.fg, palette.bg }
 
-local separator_highlight = { palette.fg, palette.bg }
 local buffer_name = function()
   local filetype = vim.bo.filetype
   local bufname = fn.bufname()
@@ -89,7 +89,8 @@ local buffer_name = function()
   elseif bufname == "" then
     name = "[NONAME]"
   else
-    name = fn.simplify(bufname):gsub("\\", "/")
+    name = fn.simplify(bufname)
+    name = fn.fnamemodify(name, ":~:."):gsub("\\", "/")
   end
   return name
 end
@@ -152,7 +153,7 @@ local ViMode = {
     -- return "  " .. alias.. " "
   end,
   separator = " ",
-  separator_highlight = separator_highlight,
+  separator_highlight = palette.separator_highlight,
   highlight = { palette.vimode_fg, palette.bg, "bold" },
 }
 
@@ -168,7 +169,7 @@ local FileName = {
     return true
   end,
   separator = " ",
-  separator_highlight = separator_highlight,
+  separator_highlight = palette.separator_highlight,
   highlight = { palette.fg, palette.bg },
 }
 
@@ -179,7 +180,7 @@ local LineInfo = {
     return string.format(" %3d:%-2d ", line, column)
   end,
   separator = " ",
-  separator_highlight = separator_highlight,
+  separator_highlight = palette.separator_highlight,
   highlight = { palette.bg, palette.fg },
 }
 
@@ -207,7 +208,7 @@ local FileSize = {
   provider = "FileSize",
   separator = " ",
   condition = buffer_not_empty,
-  separator_highlight = separator_highlight,
+  separator_highlight = palette.separator_highlight,
   highlight = { palette.fg, palette.bg },
 }
 
@@ -216,14 +217,14 @@ local DiagnosticError = {
   separator = " ",
   icon = " ",
   highlight = { palette.red, palette.bg },
-  separator_highlight = separator_highlight,
+  separator_highlight = palette.separator_highlight,
 }
 local DiagnosticWarn = {
   provider = "DiagnosticWarn",
   -- separator = " ",
   icon = " ",
   highlight = { palette.yellow, palette.bg },
-  separator_highlight = separator_highlight,
+  separator_highlight = palette.separator_highlight,
 }
 
 local DiagnosticInfo = {
@@ -231,7 +232,7 @@ local DiagnosticInfo = {
   provider = "DiagnosticInfo",
   icon = " ",
   highlight = { palette.green, palette.bg },
-  separator_highlight = separator_highlight,
+  separator_highlight = palette.separator_highlight,
 }
 
 local DiagnosticHint = {
@@ -239,7 +240,7 @@ local DiagnosticHint = {
   separator = " ",
   icon = " ",
   highlight = { palette.blue, palette.bg },
-  separator_highlight = separator_highlight,
+  separator_highlight = palette.separator_highlight,
 }
 
 local GitBranch = {
@@ -254,14 +255,14 @@ local GitBranch = {
   -- separator = "  ",
   -- separator = "  ",
   separator = " / ",
-  separator_highlight = separator_highlight,
+  separator_highlight = palette.separator_highlight,
   highlight = { palette.fg, palette.bg },
 }
 
 local FileType = {
   provider = buffer.get_buffer_filetype,
   separator = " ",
-  separator_highlight = separator_highlight,
+  separator_highlight = palette.separator_highlight,
   highlight = { palette.fg, palette.bg },
 }
 
@@ -270,7 +271,7 @@ local FileEncode = {
     return fileinfo.get_file_encode():lower()
   end,
   separator = " ",
-  separator_highlight = separator_highlight,
+  separator_highlight = palette.separator_highlight,
   highlight = { palette.fg, palette.bg },
 }
 
@@ -285,7 +286,7 @@ local FileFormat = {
     return name_tbl[ff] or ""
   end,
   separator = " ",
-  separator_highlight = separator_highlight,
+  separator_highlight = palette.separator_highlight,
   highlight = { palette.fg, palette.bg },
 }
 
@@ -299,7 +300,7 @@ local BufferType = {
     end
   end,
   separator = " ",
-  separator_highlight = separator_highlight,
+  separator_highlight = palette.separator_highlight,
   highlight = { palette.orange, "bold" },
 }
 local BufferIcon = {
