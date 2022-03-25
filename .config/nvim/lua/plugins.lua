@@ -418,7 +418,13 @@ function M.init()
     },
   }
 
-  use "mg979/vim-visual-multi"
+  use {
+    "mg979/vim-visual-multi",
+    config = function()
+      -- \\z normal
+      vim.keymap.set("n", "<C-j>", "<Plug>(VM-Add-Cursor-Down)", { silent = true })
+    end,
+  }
   use "tpope/vim-repeat"
   use {
     "tyru/open-browser.vim",
