@@ -25,8 +25,8 @@ gl.short_line_list = {
 
 local everforest = vim.fn["everforest#get_palette"](vim.fn["everforest#get_configuration"]().background)
 local palette = {
-  bg = everforest.bg1[1],
-  bg2 = everforest.bg3[1],
+  bg = everforest.bg0[1],
+  bg2 = everforest.bg2[1],
   -- fg = everforest.statusline2[1],
   fg = everforest.grey2[1],
   vimode_fg = everforest.bg2[1],
