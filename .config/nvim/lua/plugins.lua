@@ -345,17 +345,6 @@ function M.init()
     end,
   }
 
-  use {
-    "phaazon/hop.nvim",
-    setup = function()
-      vim.keymap.set("n", ";", "<Cmd>HopWord<CR>", { silent = true })
-    end,
-    config = function()
-      require("hop").setup()
-    end,
-    cmd = "HopWord",
-  }
-
   -- git
   use {
     {
