@@ -292,7 +292,7 @@ function M.init()
   -- statusline
   use {
     {
-      "SmiteshP/nvim-gps",
+      "rikuma-t/nvim-gps",
       config = function()
         require("nvim-gps").setup()
       end,
@@ -484,7 +484,7 @@ function M.init()
     config = function() end,
   }
   use {
-    "rikuma-t/toggleterm.nvim",
+    "akinsho/toggleterm.nvim",
     setup = function()
       for i = 1, 5 do
         local key = string.format("<leader>%d", i)
