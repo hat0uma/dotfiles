@@ -289,11 +289,20 @@ function M.init()
     },
   }
 
+  -- statusline
   use {
-    "NTBBloodbath/galaxyline.nvim",
-    config = function()
-      require "rc.statusline"
-    end,
+    {
+      "SmiteshP/nvim-gps",
+      config = function()
+        require("nvim-gps").setup()
+      end,
+    },
+    {
+      "NTBBloodbath/galaxyline.nvim",
+      config = function()
+        require "rc.statusline"
+      end,
+    },
   }
 
   use "mfussenegger/nvim-dap"

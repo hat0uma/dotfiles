@@ -11,6 +11,7 @@ local buffer = require "galaxyline.providers.buffer"
 -- local lspclient = require('galaxyline.provider_lsp')
 local condition = require "galaxyline.condition"
 local section = gl.section
+local gps = require "nvim-gps"
 
 gl.short_line_list = {
   -- "defx",
@@ -57,7 +58,7 @@ local buffer_name = function()
     name = fn.simplify(bufname)
     name = fn.fnamemodify(name, ":~:."):gsub("\\", "/")
   end
-  return "  " .. name
+  return name
 end
 
 local buffer_not_empty = function()
@@ -129,11 +130,28 @@ local FileIcon = {
 }
 
 local FileName = {
-  provider = buffer_name,
-  condition = function()
-    return true
+  provider = function()
+    local name = buffer_name()
+    local modified_icon = "*"
+    if vim.bo.modifiable and vim.bo.modified then
+      name = name .. modified_icon
+    end
+    return "  " .. name
   end,
   separator = " ",
+  separator_highlight = palette.separator_highlight,
+  highlight = { palette.fg, palette.bg },
+}
+
+local nvimGPS = {
+  provider = function()
+    local loc = gps.get_location()
+    if loc ~= "" then
+      loc = "> " .. loc
+    end
+    return loc
+  end,
+  condition = gps.is_available,
   separator_highlight = palette.separator_highlight,
   highlight = { palette.fg, palette.bg },
 }
@@ -286,6 +304,7 @@ clear(section.short_line_right)
 table.insert(section.left, { ViMode = ViMode })
 table.insert(section.left, { GitBranch = GitBranch })
 table.insert(section.left, { FileName = FileName })
+table.insert(section.left, { nvimGPS = nvimGPS })
 
 -- table.insert(section.right,{FileType = FileType})
 table.insert(section.right, { DiagnosticError = DiagnosticError })
