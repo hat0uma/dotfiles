@@ -11,7 +11,7 @@ link:
 deps:
 	sudo apt-get install -y xsel nodejs npm ripgrep
 	curl -fsSL https://deno.land/x/install/install.sh | sh
-	@echo "*** instal dotnet start ***"
+	@echo "*** instal dotnet ***"
 	wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
 	sudo dpkg -i packages-microsoft-prod.deb
 	rm packages-microsoft-prod.deb
@@ -19,7 +19,16 @@ deps:
 	  sudo apt-get install -y apt-transport-https && \
 	  sudo apt-get update && \
 	  sudo apt-get install -y dotnet-sdk-6.0
-	@echo "*** instal dotnet finish ***"
+	@echo "*** instal gh ***"
+	curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+	echo "deb [arch=amd64 signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+	sudo apt-get install -y gh
+	@echo "*** instal stylua ***"
+	gh release download --repo "JohnnyMorganz/StyLua" -p "stylua-*-linux.zip"
+	sudo unzip -f stylua-*-linux.zip -d /usr/bin && sudo chmod a+x /usr/bin/stylua
+	rm stylua-*-linux.zip
+	@echo "*** instal shellcheck ***"
+	sudo apt-get install -y shellcheck
 
 app:
 	curl -LO https://github.com/wez/wezterm/releases/download/nightly/wezterm-nightly.Ubuntu20.04.deb
