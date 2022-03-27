@@ -1,6 +1,7 @@
 #!/bin/bash
-version=$1
+version=${1:-"master"}
 neovim_tmp_dir=${2:-"/tmp/nvim"}
+echo "*** start install neovim@${version} ***"
 
 prerequisites_packages=(
     "cmake"
@@ -19,6 +20,7 @@ sudo apt-get install -y "${prerequisites_packages[@]}"
 git clone https://github.com/neovim/neovim -b "$version" "$neovim_tmp_dir" || :
 cd "$neovim_tmp_dir" || exit
 git pull origin "$version"
-make CMAKE_BUILD_TYPE=RelWithDebInfo
-sudo make install
+make CMAKE_BUILD_TYPE=RelWithDebInfo -j$(nproc)
+sudo make install -j$(nproc)
 
+echo "*** finish install neovim@${version} ***"
