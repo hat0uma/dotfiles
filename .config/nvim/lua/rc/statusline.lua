@@ -250,7 +250,7 @@ local GitBranch = {
     -- local icon = " "
     local icon = " "
     local branch = vcs.get_git_branch() or ""
-    return string.format("  %s%s%s", icon, branch, git_status())
+    return string.format("  %s%s", icon, branch)
   end,
   condition = condition.check_git_workspace,
   -- separator = "  ",
