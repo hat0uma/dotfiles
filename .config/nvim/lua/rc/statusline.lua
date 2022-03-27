@@ -226,18 +226,37 @@ local DiagnosticHint = {
   separator_highlight = palette.separator_highlight,
 }
 
+local function git_status()
+  local ahead = vim.fn["gina#component#traffic#ahead"]()
+  local behind = vim.fn["gina#component#traffic#behind"]()
+  local staged = vim.fn["gina#component#status#staged"]()
+  local unstaged = vim.fn["gina#component#status#unstaged"]()
+  local conflicted = vim.fn["gina#component#status#conflicted"]()
+
+  local function has(value)
+    if type(value) == "string" then
+      value = tonumber(value) or 0
+    end
+    return value ~= 0
+  end
+  local dirty = has(unstaged) or has(staged)
+  local ahead_arrow = ahead ~= 0 and "↑" or ""
+  local behind_arrow = behind ~= 0 and "↓" or ""
+  return string.format("%s %s%s", dirty and "*" or "", ahead_arrow, behind_arrow)
+end
+
 local GitBranch = {
   provider = function()
     -- local icon = " "
     local icon = " "
     local branch = vcs.get_git_branch() or ""
-    return string.format("  %s%s ", icon, branch)
+    return string.format("  %s%s%s", icon, branch, git_status())
   end,
   condition = condition.check_git_workspace,
   -- separator = "  ",
   -- separator = "",
-  separator = "",
-  separator_highlight = { palette.bg2, palette.bg },
+  separator = " ",
+  separator_highlight = { palette.fg, palette.bg2 },
   highlight = { palette.fg, palette.bg2 },
 }
 
