@@ -6,12 +6,17 @@ local KeyCode = {
   Right = "\x1b[C",
   Left = "\x1b[D",
 }
-local powershell_cmd = string.format(
-  "pwsh -NoLogo -NoProfile -NoExit -File %s ",
-  vim.fn.expand "~/dotfiles/win/profile.ps1"
-)
+
+local get_shell = function()
+  local powershell_cmd = string.format(
+    "pwsh -NoLogo -NoProfile -NoExit -File %s ",
+    vim.fn.expand "~/dotfiles/win/profile.ps1"
+  )
+  local zsh_cmd = "zsh -l"
+  return vim.fn.has "win64" == 1 and powershell_cmd or zsh_cmd
+end
+
 function M.config()
-  local shell = vim.fn.has "win64" == 1 and powershell_cmd or vim.o.shell
   require("toggleterm").setup {
     size = function(term)
       if term.direction == "horizontal" then
@@ -21,7 +26,7 @@ function M.config()
       end
     end,
     start_in_insert = false,
-    shell = shell,
+    shell = get_shell(),
     persist_size = true,
     float_opts = {
       winblend = 10,
