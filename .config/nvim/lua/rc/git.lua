@@ -2,22 +2,16 @@ local async = require "plenary.async"
 local job = require "plenary.job"
 
 -- test
-local cache = {}
-cache.dirty = false
-
 local opts = {}
+local git = {}
+
+git.cache = { dirty = false }
 
 local on_git_status_exit = function(j, _)
   -- update dirty
   local r = j:result()
-  if type(r) == "table" and next(r) ~= nil then
-    cache.dirty = true
-  elseif type(r) == "string" and r ~= "" then
-    cache.dirty = true
-  else
-    cache.dirty = false
-  end
-  print(cache.dirty)
+  git.cache.dirty = next(r) ~= nil
+  print(git.cache.dirty)
 end
 
 local git_status_job = job:new {
@@ -29,6 +23,14 @@ local git_status_job = job:new {
 }
 
 local timer = vim.loop.new_timer()
-timer:start(0, 3000, function()
-  git_status_job:start()
-end)
+function git.start_check_dirty()
+  timer:start(0, 3000, function()
+    git_status_job:start()
+  end)
+end
+
+function git.stop_check_dirty()
+  timer:close()
+end
+
+return git
