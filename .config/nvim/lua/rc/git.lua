@@ -22,6 +22,9 @@ end
 git.cache.is_dirty = function()
   return #git.cache.staged_changes ~= 0 or #git.cache.unstaged_changes ~= 0 or #git.cache.untracked_changes ~= 0
 end
+git.context = {}
+git.context.last_job = nil
+git.context.on_cooldown = false
 
 local function update_status_cache(out)
   git.cache.reset()
@@ -63,7 +66,7 @@ local on_git_status_exit = function(j, exit_code)
   update_status_cache(j:result())
 end
 
-local git_status_job = function(cwd, env)
+local make_git_status_job = function(cwd, env)
   return job:new {
     command = "git",
     args = { "status", "--porcelain", "--branch" },
@@ -73,14 +76,18 @@ local git_status_job = function(cwd, env)
   }
 end
 
-local running = false
-function git.check_dirty(cwd)
-  if not running then
-    git_status_job(cwd):start()
-    running = true
+function git.check_dirty_cached(cwd)
+  if git.context.last_job ~= nil and not git.context.last_job.is_shutdown then
+    print "git status is running"
+  elseif not git.context.on_cooldown then
+    git.context.last_job = make_git_status_job(cwd)
+    git.context.last_job:start()
+    git.context.on_cooldown = true
     vim.defer_fn(function()
-      running = false
+      git.context.on_cooldown = false
     end, opts.status_refresh_interval)
+  else
+    -- on cooldown
   end
   return git.cache.is_dirty()
 end
