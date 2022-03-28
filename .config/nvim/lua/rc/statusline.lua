@@ -1,3 +1,4 @@
+
 local cmd = vim.cmd
 local fn = vim.fn
 local gl = require "galaxyline"
@@ -151,7 +152,9 @@ local nvimGPS = {
     end
     return loc
   end,
-  condition = gps.is_available,
+  condition = function()
+    return vim.bo.buftype ~= "terminal" and gps.is_available()
+  end,
   separator_highlight = palette.separator_highlight,
   highlight = { palette.fg, palette.bg },
 }
