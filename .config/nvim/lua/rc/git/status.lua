@@ -1,25 +1,31 @@
-local a = require "plenary.async"
-local async = a.async
-local await = a.await
 local job = require "plenary.job"
-local log = require "plenary.log"
-local autil = require "plenary.async.util"
 
 -- test
 local opts = {
   status_refresh_interval = 3000,
 }
-local cache = {}
-cache.staged_changes = {}
-cache.unstaged_changes = {}
-cache.untracked_changes = {}
-cache.reset = function()
-  cache.staged_changes = {}
-  cache.unstaged_changes = {}
-  cache.untracked_changes = {}
+
+local status_cache = {}
+status_cache.staged_changes = {}
+status_cache.unstaged_changes = {}
+status_cache.untracked_changes = {}
+status_cache.branch = ""
+status_cache.remote_branch = ""
+status_cache.ahead_num = 0
+status_cache.behind_num = 0
+status_cache.reset = function()
+  status_cache.staged_changes = {}
+  status_cache.unstaged_changes = {}
+  status_cache.untracked_changes = {}
+  status_cache.branch = ""
+  status_cache.remote_branch = ""
+  status_cache.ahead_num = 0
+  status_cache.behind_num = 0
 end
-cache.is_dirty = function()
-  return #cache.staged_changes ~= 0 or #cache.unstaged_changes ~= 0 or #cache.untracked_changes ~= 0
+status_cache.is_dirty = function()
+  return #status_cache.staged_changes ~= 0
+    or #status_cache.unstaged_changes ~= 0
+    or #status_cache.untracked_changes ~= 0
 end
 
 local state = {}
@@ -27,7 +33,7 @@ state.last_job = nil
 state.on_cooldown = false
 
 local function update_status_cache(out)
-  cache.reset()
+  status_cache.reset()
   if #out == 0 then
     return
   end
@@ -42,21 +48,21 @@ local function update_status_cache(out)
   for i = 2, #out, 1 do
     local staged, unstaged, file = string.match(out[i], STATUS_PATTERNS)
     if staged == "?" or unstaged == "?" then
-      table.insert(cache.untracked_changes, file)
+      table.insert(status_cache.untracked_changes, file)
     else
       if staged ~= " " then
-        table.insert(cache.staged_changes, { file = file, status = staged })
+        table.insert(status_cache.staged_changes, { file = file, status = staged })
       end
       if unstaged ~= " " then
-        table.insert(cache.unstaged_changes, { file = file, status = unstaged })
+        table.insert(status_cache.unstaged_changes, { file = file, status = unstaged })
       end
     end
   end
   print(branch, remote_branch, ahead_num, behind_num)
-  print(vim.inspect(cache.staged_changes))
-  print(vim.inspect(cache.unstaged_changes))
-  print(vim.inspect(cache.untracked_changes))
-  print("is_dirty : " .. tostring(cache.is_dirty()))
+  print(vim.inspect(status_cache.staged_changes))
+  print(vim.inspect(status_cache.unstaged_changes))
+  print(vim.inspect(status_cache.untracked_changes))
+  print("is_dirty : " .. tostring(status_cache.is_dirty()))
 end
 local on_git_status_exit = function(j, exit_code)
   if exit_code ~= 0 then
@@ -89,11 +95,11 @@ local function check_dirty_cached(cwd)
   else
     -- on cooldown
   end
-  return cache.is_dirty()
+  return status_cache.is_dirty()
 end
 
 return {
-  cache = cache,
+  status_cache = status_cache,
   check_dirty_cached = check_dirty_cached,
   internal_state = state,
 }
