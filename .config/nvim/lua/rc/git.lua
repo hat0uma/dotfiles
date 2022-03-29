@@ -9,25 +9,25 @@ local autil = require "plenary.async.util"
 local opts = {
   status_refresh_interval = 3000,
 }
-local git = {}
-git.cache = {}
-git.cache.staged_changes = {}
-git.cache.unstaged_changes = {}
-git.cache.untracked_changes = {}
-git.cache.reset = function()
-  git.cache.staged_changes = {}
-  git.cache.unstaged_changes = {}
-  git.cache.untracked_changes = {}
+local cache = {}
+cache.staged_changes = {}
+cache.unstaged_changes = {}
+cache.untracked_changes = {}
+cache.reset = function()
+  cache.staged_changes = {}
+  cache.unstaged_changes = {}
+  cache.untracked_changes = {}
 end
-git.cache.is_dirty = function()
-  return #git.cache.staged_changes ~= 0 or #git.cache.unstaged_changes ~= 0 or #git.cache.untracked_changes ~= 0
+cache.is_dirty = function()
+  return #cache.staged_changes ~= 0 or #cache.unstaged_changes ~= 0 or #cache.untracked_changes ~= 0
 end
-git.context = {}
-git.context.last_job = nil
-git.context.on_cooldown = false
+
+local state = {}
+state.last_job = nil
+state.on_cooldown = false
 
 local function update_status_cache(out)
-  git.cache.reset()
+  cache.reset()
   if #out == 0 then
     return
   end
@@ -42,21 +42,21 @@ local function update_status_cache(out)
   for i = 2, #out, 1 do
     local staged, unstaged, file = string.match(out[i], STATUS_PATTERNS)
     if staged == "?" or unstaged == "?" then
-      table.insert(git.cache.untracked_changes, file)
+      table.insert(cache.untracked_changes, file)
     else
       if staged ~= " " then
-        table.insert(git.cache.staged_changes, { file = file, status = staged })
+        table.insert(cache.staged_changes, { file = file, status = staged })
       end
       if unstaged ~= " " then
-        table.insert(git.cache.unstaged_changes, { file = file, status = unstaged })
+        table.insert(cache.unstaged_changes, { file = file, status = unstaged })
       end
     end
   end
   print(branch, remote_branch, ahead_num, behind_num)
-  print(vim.inspect(git.cache.staged_changes))
-  print(vim.inspect(git.cache.unstaged_changes))
-  print(vim.inspect(git.cache.untracked_changes))
-  print("is_dirty : " .. tostring(git.cache.is_dirty()))
+  print(vim.inspect(cache.staged_changes))
+  print(vim.inspect(cache.unstaged_changes))
+  print(vim.inspect(cache.untracked_changes))
+  print("is_dirty : " .. tostring(cache.is_dirty()))
 end
 local on_git_status_exit = function(j, exit_code)
   if exit_code ~= 0 then
@@ -76,20 +76,24 @@ local make_git_status_job = function(cwd, env)
   }
 end
 
-function git.check_dirty_cached(cwd)
-  if git.context.last_job ~= nil and not git.context.last_job.is_shutdown then
+local function check_dirty_cached(cwd)
+  if state.last_job ~= nil and not state.last_job.is_shutdown then
     print "git status is running"
-  elseif not git.context.on_cooldown then
-    git.context.last_job = make_git_status_job(cwd)
-    git.context.last_job:start()
-    git.context.on_cooldown = true
+  elseif not state.on_cooldown then
+    state.last_job = make_git_status_job(cwd)
+    state.last_job:start()
+    state.on_cooldown = true
     vim.defer_fn(function()
-      git.context.on_cooldown = false
+      state.on_cooldown = false
     end, opts.status_refresh_interval)
   else
     -- on cooldown
   end
-  return git.cache.is_dirty()
+  return cache.is_dirty()
 end
 
-return git
+return {
+  cache = cache,
+  check_dirty_cached = check_dirty_cached,
+  internal_state = state,
+}
