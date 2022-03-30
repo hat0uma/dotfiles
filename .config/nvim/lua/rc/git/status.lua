@@ -51,6 +51,17 @@ local function get_status_cached(cwd)
   return status_cache
 end
 
+function _G.test_status_v2()
+  local status_job = job:new {
+    command = "git",
+    args = { "status", "--porcelain=v2", "--branch", "--show-stash" },
+    cwd = vim.loop.cwd(),
+    env = {},
+  }
+  local r, code = status_job:sync(1000, 10)
+  parser.parse_status_v2(r)
+end
+
 return {
   status_cache = status_cache,
   get_status_cached = get_status_cached,

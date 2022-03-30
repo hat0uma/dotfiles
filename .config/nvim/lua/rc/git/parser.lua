@@ -48,4 +48,185 @@ function parser.parse_status_v1(out)
   }
 end
 
+local BRANCH_COMPONENTS = {
+  oid = {
+    n = 1,
+    pattern = "# branch%.oid (%S+)",
+    transform = unpack,
+  },
+  head = {
+    n = 1,
+    pattern = "# branch%.head (%S+)",
+    transform = unpack,
+  },
+  upstream = {
+    n = 1,
+    pattern = "# branch%.upstream (%S+)",
+    transform = unpack,
+  },
+  ab = {
+    n = 2,
+    pattern = "# branch%.ab %+(%d) %-(%d)",
+    transform = function(tbl)
+      local a, b = unpack(tbl)
+      return { a = tonumber(a) or 0, b = tonumber(b) or 0 }
+    end,
+  },
+}
+
+local function escape_entry(pattern)
+  -- git status --help
+  return pattern
+    :gsub("<XY>", "[%%.MADRCU][%%.MADRCU]")
+    :gsub("<sub>", "[NS][CMU%%.]+")
+    :gsub("<mH>", "%%d+")
+    :gsub("<mI>", "%%d+")
+    :gsub("<mW>", "%%d+")
+    :gsub("<hH>", "%%S+")
+    :gsub("<hI>", "%%S+")
+    :gsub("<X>", "[RC]")
+    :gsub("<score>", "%%w+")
+    :gsub("<path>", "%%S+")
+    :gsub("<sep>", "%%t")
+    :gsub("<origPath>", "%%S+")
+    -- unmerged entries
+    :gsub("<m1>", "%%d+")
+    :gsub("<m2>", "%%d+")
+    :gsub("<m3>", "%%d+")
+    :gsub("<h1>", "%%S+")
+    :gsub("<h2>", "%%S+")
+    :gsub("<h3>", "%%S+")
+end
+
+local ENTRY_PATTERNS = {
+  ordinary_changed = {
+    n = 8,
+    pattern = escape_entry "1 (<XY>) (<sub>) (<mH>) (<mI>) (<mW>) (<hH>) (<hI>) (<path>)",
+    transform = function(matches)
+      return {
+        status = {
+          staged = matches[1]:sub(1, 1),
+          unstaged = matches[1]:sub(2, 2),
+        },
+        submodule = matches[2],
+        filemodes = {
+          head = matches[3],
+          index = matches[4],
+          worktree = matches[5],
+        },
+        object_names = {
+          head = matches[6],
+          index = matches[7],
+        },
+        path = matches[8],
+      }
+    end,
+  },
+  renamed_or_copied = {
+    n = 10,
+    pattern = escape_entry "2 (<XY>) (<sub>) (<mH>) (<mI>) (<mW>) (<hH>) (<hI>) (<X><score>) (<path>)<sep>(<origPath>)",
+    transform = function(matches)
+      return {
+        status = {
+          staged = matches[1]:sub(1, 1),
+          unstaged = matches[1]:sub(2, 2),
+        },
+        submodule = matches[2],
+        filemodes = {
+          head = matches[3],
+          index = matches[4],
+          worktree = matches[5],
+        },
+        object_names = {
+          head = matches[6],
+          index = matches[7],
+        },
+        score = matches[8],
+        path = matches[9],
+        orig_path = matches[10],
+      }
+    end,
+  },
+  unmerged = {
+    n = 10,
+    pattern = escape_entry "u (<XY>) (<sub>) (<m1>) (<m2>) (<m3>) (<mW>) (<h1>) (<h2>) (<h3>) (<path>)",
+    transform = function(matches)
+      return {
+        status = {
+          staged = matches[1]:sub(1, 1),
+          unstaged = matches[1]:sub(2, 2),
+        },
+        submodule = matches[2],
+        filemodes = {
+          stage1 = matches[3],
+          stage2 = matches[4],
+          stage3 = matches[5],
+          worktree = matches[6],
+        },
+        object_names = {
+          stage1 = matches[7],
+          stage2 = matches[8],
+          stage3 = matches[9],
+        },
+        path = matches[10],
+      }
+    end,
+  },
+  untracked = {
+    n = 1,
+    pattern = escape_entry "? (<path>)",
+    transform = unpack,
+  },
+  ignored = {
+    n = 1,
+    pattern = escape_entry "! (<path>)",
+    transform = unpack,
+  },
+}
+
+function parser.parse_status_v2(out)
+  if #out == 0 then
+    return {}
+  end
+
+  local branch_lines = vim.tbl_filter(function(line)
+    return line:sub(1, 1) == "#"
+  end, out)
+  local entry_lines = vim.tbl_filter(function(line)
+    return line:sub(1, 1) ~= "#"
+  end, out)
+
+  local branch = {}
+  for _, line in ipairs(branch_lines) do
+    for name, component in pairs(BRANCH_COMPONENTS) do
+      local matches = { line:match(component.pattern) }
+      if #matches == component.n then
+        branch[name] = component.transform(matches)
+        break
+      end
+    end
+  end
+
+  local function safe_insert_item(tbl, key, value)
+    if not tbl[key] then
+      tbl[key] = {}
+    end
+    table.insert(tbl[key], value)
+  end
+  local entries = {}
+  for _, line in ipairs(entry_lines) do
+    for name, p in pairs(ENTRY_PATTERNS) do
+      local matches = { line:match(p.pattern) }
+      if #matches == p.n then
+        safe_insert_item(entries, name, p.transform(matches))
+        break
+      end
+    end
+  end
+
+  print(vim.inspect(out))
+  print(vim.inspect(branch))
+  print(vim.inspect(entries))
+end
+
 return parser
