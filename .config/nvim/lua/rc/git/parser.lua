@@ -3,10 +3,10 @@ local parser = {}
 local STATUS_CHARS = " MADRCU?"
 local STATUS_PATTERNS = ("([STATUS_CHARS])([STATUS_CHARS]) (.*)"):gsub("STATUS_CHARS", STATUS_CHARS)
 
---- parse git status output
+--- parse git status -- porcelain v1
 ---@param out string[]
 -- @return table
-function parser.parse(out)
+function parser.parse_status_v1(out)
   if #out == 0 then
     return {}
   end
