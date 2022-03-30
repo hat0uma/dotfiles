@@ -1,5 +1,6 @@
 local job = require "plenary.job"
 local parser = require "rc.git.parser"
+local a = require "plenary.async"
 
 -- test
 local config = {
@@ -21,11 +22,6 @@ local update_status_cache = function(j, exit_code)
   end
   local out = j:result()
   status_cache = parser.parse_status_v1(out)
-  print(status_cache.branch, status_cache.remote_branch, status_cache.ahead_num, status_cache.behind_num)
-  print(vim.inspect(status_cache.staged_changes))
-  print(vim.inspect(status_cache.unstaged_changes))
-  print(vim.inspect(status_cache.untracked_changes))
-  print("is_dirty : " .. tostring(status_cache.is_dirty))
 end
 
 local make_git_status_job = function(opts)
@@ -39,24 +35,24 @@ local make_git_status_job = function(opts)
   }
 end
 
-local function check_dirty_cached(cwd)
-  if state.last_job ~= nil and not state.last_job.is_shutdown then
+local function get_status_cached(cwd)
+  if state.on_cooldown then
+    -- do nothing
+  elseif state.last_job ~= nil and not state.last_job.is_shutdown then
     print "git status is running"
-  elseif not state.on_cooldown then
+  else
     state.last_job = make_git_status_job { cwd = cwd, on_exit = update_status_cache }
     state.last_job:start()
     state.on_cooldown = true
     vim.defer_fn(function()
       state.on_cooldown = false
     end, config.status_refresh_interval)
-  else
-    -- on cooldown
   end
-  return status_cache.is_dirty
+  return status_cache
 end
 
 return {
   status_cache = status_cache,
-  check_dirty_cached = check_dirty_cached,
+  get_status_cached = get_status_cached,
   internal_state = state,
 }

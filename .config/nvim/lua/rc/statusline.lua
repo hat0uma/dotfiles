@@ -1,4 +1,3 @@
-
 local cmd = vim.cmd
 local fn = vim.fn
 local gl = require "galaxyline"
@@ -230,22 +229,11 @@ local DiagnosticHint = {
 }
 
 local function git_status()
-  local ahead = vim.fn["gina#component#traffic#ahead"]()
-  local behind = vim.fn["gina#component#traffic#behind"]()
-  local staged = vim.fn["gina#component#status#staged"]()
-  local unstaged = vim.fn["gina#component#status#unstaged"]()
-  local conflicted = vim.fn["gina#component#status#conflicted"]()
+  local s = require("rc.git.status").get_status_cached()
 
-  local function has(value)
-    if type(value) == "string" then
-      value = tonumber(value) or 0
-    end
-    return value ~= 0
-  end
-  local dirty = has(unstaged) or has(staged)
-  local ahead_arrow = ahead ~= 0 and "↑" or ""
-  local behind_arrow = behind ~= 0 and "↓" or ""
-  return string.format("%s %s%s", dirty and "*" or "", ahead_arrow, behind_arrow)
+  local ahead_arrow = s.ahead_num ~= 0 and "↑" or ""
+  local behind_arrow = s.behind_num ~= 0 and "↓" or ""
+  return string.format("%s %s%s", s.is_dirty and "*" or "", ahead_arrow, behind_arrow)
 end
 
 local GitBranch = {
@@ -253,7 +241,7 @@ local GitBranch = {
     -- local icon = " "
     local icon = " "
     local branch = vcs.get_git_branch() or ""
-    return string.format("  %s%s", icon, branch)
+    return string.format("  %s%s%s", icon, branch, git_status())
   end,
   condition = condition.check_git_workspace,
   -- separator = "  ",
