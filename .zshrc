@@ -107,8 +107,8 @@ if [ $ON_WSL2 = true ]; then
 fi
 
 # for hidpi
-export QT_SCALE_FACTOR=2
-export GDK_SCALE=2
+# export QT_SCALE_FACTOR=2
+# export GDK_SCALE=2
 
 export http_proxy="$HTTP_PROXY"
 export https_proxy="$HTTPS_PROXY"
