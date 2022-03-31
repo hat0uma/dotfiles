@@ -106,8 +106,8 @@ local ENTRY_PATTERNS = {
       --- @class OrdinaryChangedEntry
       local entry = {
         status = {
-          staged = matches[1]:sub(1, 1),
-          unstaged = matches[1]:sub(2, 2),
+          staged = string.sub(matches[1], 1),
+          unstaged = string.sub(matches[1], 2),
         },
         submodule = matches[2],
         filemodes = {
@@ -130,8 +130,8 @@ local ENTRY_PATTERNS = {
       --- @class RenamedOrCopiedEntry
       local entry = {
         status = {
-          staged = matches[1]:sub(1, 1),
-          unstaged = matches[1]:sub(2, 2),
+          staged = string.sub(matches[1], 1),
+          unstaged = string.sub(matches[1], 2),
         },
         submodule = matches[2],
         filemodes = {
@@ -157,8 +157,8 @@ local ENTRY_PATTERNS = {
       --- @class UnmergedEntry
       local entry = {
         status = {
-          staged = matches[1]:sub(1, 1),
-          unstaged = matches[1]:sub(2, 2),
+          staged = string.sub(matches[1], 1),
+          unstaged = string.sub(matches[1], 2),
         },
         submodule = matches[2],
         filemodes = {
@@ -197,10 +197,10 @@ local ENTRY_PATTERNS = {
   },
 }
 
-local list_partition = function(predicate, tbl)
+local list_partition = function(predicate, list)
   local part1 = {}
   local part2 = {}
-  for _, value in ipairs(tbl) do
+  for _, value in ipairs(list) do
     if predicate(value) then
       table.insert(part1, value)
     else
