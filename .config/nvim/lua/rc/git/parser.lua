@@ -103,7 +103,8 @@ local ENTRY_PATTERNS = {
     n = 8,
     pattern = escape_entry "1 (<XY>) (<sub>) (<mH>) (<mI>) (<mW>) (<hH>) (<hI>) (<path>)",
     transform = function(matches)
-      return {
+      --- @class OrdinaryChangedEntry
+      local entry = {
         status = {
           staged = matches[1]:sub(1, 1),
           unstaged = matches[1]:sub(2, 2),
@@ -126,7 +127,8 @@ local ENTRY_PATTERNS = {
     n = 10,
     pattern = escape_entry "2 (<XY>) (<sub>) (<mH>) (<mI>) (<mW>) (<hH>) (<hI>) (<X><score>) (<path>)<sep>(<origPath>)",
     transform = function(matches)
-      return {
+      --- @class RenamedOrCopiedEntry
+      local entry = {
         status = {
           staged = matches[1]:sub(1, 1),
           unstaged = matches[1]:sub(2, 2),
@@ -145,13 +147,15 @@ local ENTRY_PATTERNS = {
         path = matches[9],
         orig_path = matches[10],
       }
+      return entry
     end,
   },
   unmerged = {
     n = 10,
     pattern = escape_entry "u (<XY>) (<sub>) (<m1>) (<m2>) (<m3>) (<mW>) (<h1>) (<h2>) (<h3>) (<path>)",
     transform = function(matches)
-      return {
+      --- @class UnmergedEntry
+      local entry = {
         status = {
           staged = matches[1]:sub(1, 1),
           unstaged = matches[1]:sub(2, 2),
@@ -170,17 +174,26 @@ local ENTRY_PATTERNS = {
         },
         path = matches[10],
       }
+      return entry
     end,
   },
   untracked = {
     n = 1,
     pattern = escape_entry "? (<path>)",
-    transform = unpack,
+    transform = function(matches)
+      --- @class UntrackedEntry
+      local entry = { path = unpack(matches) }
+      return entry
+    end,
   },
   ignored = {
     n = 1,
     pattern = escape_entry "! (<path>)",
-    transform = unpack,
+    transform = function(matches)
+      --- @class ignoredEntry
+      local entry = { path = unpack(matches) }
+      return entry
+    end,
   },
 }
 
