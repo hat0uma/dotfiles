@@ -184,14 +184,14 @@ local ENTRY_PATTERNS = {
   },
 }
 
-local tbl_partition = function(predicate, tbl)
+local list_partition = function(predicate, tbl)
   local part1 = {}
   local part2 = {}
-  for key, value in pairs(tbl) do
+  for _, value in ipairs(tbl) do
     if predicate(value) then
-      part1[key] = value
+      table.insert(part1, value)
     else
-      part2[key] = value
+      table.insert(part2, value)
     end
   end
   return part1, part2
@@ -202,7 +202,7 @@ function parser.parse_status_v2(out)
     return {}
   end
 
-  local branch_lines, entry_lines = tbl_partition(function(line)
+  local branch_lines, entry_lines = list_partition(function(line)
     return vim.startswith(line, "#")
   end, out)
 
@@ -234,7 +234,8 @@ function parser.parse_status_v2(out)
     end
   end
 
-  print(vim.inspect(out))
+  print(vim.inspect(branch_lines))
+  print(vim.inspect(entry_lines))
   print(vim.inspect(branch))
   print(vim.inspect(entries))
 end
