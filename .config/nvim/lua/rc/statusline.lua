@@ -231,9 +231,11 @@ local DiagnosticHint = {
 local function git_status()
   local s = require("rc.git.status").get_status_cached()
 
-  local ahead_arrow = s.ahead_num ~= 0 and "↑" or ""
-  local behind_arrow = s.behind_num ~= 0 and "↓" or ""
-  return string.format("%s %s%s", s.is_dirty and "*" or "", ahead_arrow, behind_arrow)
+  local ahead_arrow = s.branch.ab.a ~= 0 and "↑" or ""
+  local behind_arrow = s.branch.ab.b ~= 0 and "↓" or ""
+  local change_num = #s.ordinary_changed + #s.renamed_or_copied + #s.unmerged + #s.ignored + #s.untracked
+  local dirty = change_num ~= 0
+  return string.format("%s %s%s", dirty and "*" or "", ahead_arrow, behind_arrow)
 end
 
 local GitBranch = {

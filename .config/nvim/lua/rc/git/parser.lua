@@ -1,5 +1,66 @@
 local parser = {}
 
+--- @class GitStatus
+--- @field branch GitBranchStatus
+--- @field ordinary_changed GitOrdinaryChangedEntry
+--- @field renamed_or_copied GitRenamedOrCopiedEntry
+--- @field unmerged GitUnmergedEntry
+--- @field untracked GitUntrackedEntry
+--- @field ignored GitIgnoredEntry
+parser.GitStatus = {}
+
+---@return GitStatus
+function parser.GitStatus.new()
+  local obj = {}
+  obj.branch = {
+    oid = "",
+    head = "",
+    upstream = "",
+    ab = { a = 0, b = 0 },
+  }
+  obj.ordinary_changed = {}
+  obj.renamed_or_copied = {}
+  obj.unmerged = {}
+  obj.untracked = {}
+  obj.ignored = {}
+  return obj
+end
+
+--- @class GitBranchStatus
+--- @field oid string
+--- @field head string
+--- @field upstream string
+--- @field ab {a:number,b:number}
+
+--- @class GitOrdinaryChangedEntry
+--- @field status{ staged:string, unstaged:string }
+--- @field submodule string
+--- @field filemodes {head:string,index:string,worktree:string}
+--- @field object_names {head:string,index:string}
+--- @field path string
+
+--- @class GitRenamedOrCopiedEntry
+--- @field status{ staged:string, unstaged:string }
+--- @field submodule string
+--- @field filemodes {head:string,index:string,worktree:string}
+--- @field object_names {head:string,index:string}
+--- @field score string
+--- @field path string
+--- @field orig_path string
+
+--- @class GitUnmergedEntry
+--- @field status{ staged:string, unstaged:string }
+--- @field submodule string
+--- @field filemodes {stage1:string,stage2:string,stage3:string,worktree:string}
+--- @field object_names {stage1:string,stage2:string,stage3:string}
+--- @field path string
+
+--- @class GitUntrackedEntry
+--- @field path string
+
+--- @class GitIgnoredEntry
+--- @field path string
+
 local STATUS_CHARS = " MADRCU?"
 local STATUS_PATTERNS = ("([STATUS_CHARS])([STATUS_CHARS]) (.*)"):gsub("STATUS_CHARS", STATUS_CHARS)
 
@@ -67,8 +128,8 @@ local BRANCH_COMPONENTS = {
   ab = {
     n = 2,
     pattern = "# branch%.ab %+(%d) %-(%d)",
-    transform = function(tbl)
-      local a, b = unpack(tbl)
+    transform = function(matches)
+      local a, b = unpack(matches)
       return { a = tonumber(a) or 0, b = tonumber(b) or 0 }
     end,
   },
@@ -103,8 +164,7 @@ local ENTRY_PATTERNS = {
     n = 8,
     pattern = escape_entry "1 (<XY>) (<sub>) (<mH>) (<mI>) (<mW>) (<hH>) (<hI>) (<path>)",
     transform = function(matches)
-      --- @class OrdinaryChangedEntry
-      local entry = {
+      return {
         status = {
           staged = string.sub(matches[1], 1),
           unstaged = string.sub(matches[1], 2),
@@ -127,8 +187,7 @@ local ENTRY_PATTERNS = {
     n = 10,
     pattern = escape_entry "2 (<XY>) (<sub>) (<mH>) (<mI>) (<mW>) (<hH>) (<hI>) (<X><score>) (<path>)<sep>(<origPath>)",
     transform = function(matches)
-      --- @class RenamedOrCopiedEntry
-      local entry = {
+      return {
         status = {
           staged = string.sub(matches[1], 1),
           unstaged = string.sub(matches[1], 2),
@@ -147,15 +206,13 @@ local ENTRY_PATTERNS = {
         path = matches[9],
         orig_path = matches[10],
       }
-      return entry
     end,
   },
   unmerged = {
     n = 10,
     pattern = escape_entry "u (<XY>) (<sub>) (<m1>) (<m2>) (<m3>) (<mW>) (<h1>) (<h2>) (<h3>) (<path>)",
     transform = function(matches)
-      --- @class UnmergedEntry
-      local entry = {
+      return {
         status = {
           staged = string.sub(matches[1], 1),
           unstaged = string.sub(matches[1], 2),
@@ -174,30 +231,25 @@ local ENTRY_PATTERNS = {
         },
         path = matches[10],
       }
-      return entry
     end,
   },
   untracked = {
     n = 1,
     pattern = escape_entry "? (<path>)",
     transform = function(matches)
-      --- @class UntrackedEntry
-      local entry = { path = unpack(matches) }
-      return entry
+      return { path = unpack(matches) }
     end,
   },
   ignored = {
     n = 1,
     pattern = escape_entry "! (<path>)",
     transform = function(matches)
-      --- @class ignoredEntry
-      local entry = { path = unpack(matches) }
-      return entry
+      return { path = unpack(matches) }
     end,
   },
 }
 
-local list_partition = function(predicate, list)
+local function list_partition(predicate, list)
   local part1 = {}
   local part2 = {}
   for _, value in ipairs(list) do
@@ -210,47 +262,40 @@ local list_partition = function(predicate, list)
   return part1, part2
 end
 
+--- parse git status --porcelain=v2
+---@param out string[]
+---@return GitStatus|nil
 function parser.parse_status_v2(out)
   if #out == 0 then
-    return {}
+    return nil
   end
 
   local branch_lines, entry_lines = list_partition(function(line)
     return vim.startswith(line, "#")
   end, out)
 
-  local branch = {}
+  local status = parser.GitStatus.new()
   for _, line in ipairs(branch_lines) do
     for name, component in pairs(BRANCH_COMPONENTS) do
       local matches = { line:match(component.pattern) }
       if #matches == component.n then
-        branch[name] = component.transform(matches)
+        status.branch[name] = component.transform(matches)
         break
       end
     end
   end
 
-  local function safe_insert_item(tbl, key, value)
-    if not tbl[key] then
-      tbl[key] = {}
-    end
-    table.insert(tbl[key], value)
-  end
-  local entries = {}
   for _, line in ipairs(entry_lines) do
     for name, p in pairs(ENTRY_PATTERNS) do
       local matches = { line:match(p.pattern) }
       if #matches == p.n then
-        safe_insert_item(entries, name, p.transform(matches))
+        table.insert(status[name], p.transform(matches))
         break
       end
     end
   end
 
-  print(vim.inspect(branch_lines))
-  print(vim.inspect(entry_lines))
-  print(vim.inspect(branch))
-  print(vim.inspect(entries))
+  return status
 end
 
 return parser
