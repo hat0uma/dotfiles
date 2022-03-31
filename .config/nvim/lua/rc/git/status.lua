@@ -59,6 +59,8 @@ function _G.test_status_v2()
     env = {},
   }
   local r, code = status_job:sync(1000, 10)
+  package.loaded["rc.git.parser"] = nil
+  parser = require "rc.git.parser"
   parser.parse_status_v2(r)
 end
 

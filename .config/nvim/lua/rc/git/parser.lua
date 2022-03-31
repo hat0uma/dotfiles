@@ -184,16 +184,26 @@ local ENTRY_PATTERNS = {
   },
 }
 
+local tbl_partition = function(predicate, tbl)
+  local part1 = {}
+  local part2 = {}
+  for key, value in pairs(tbl) do
+    if predicate(value) then
+      part1[key] = value
+    else
+      part2[key] = value
+    end
+  end
+  return part1, part2
+end
+
 function parser.parse_status_v2(out)
   if #out == 0 then
     return {}
   end
 
-  local branch_lines = vim.tbl_filter(function(line)
-    return line:sub(1, 1) == "#"
-  end, out)
-  local entry_lines = vim.tbl_filter(function(line)
-    return line:sub(1, 1) ~= "#"
+  local branch_lines, entry_lines = tbl_partition(function(line)
+    return vim.startswith(line, "#")
   end, out)
 
   local branch = {}
