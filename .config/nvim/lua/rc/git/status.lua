@@ -7,7 +7,7 @@ local config = {
   status_refresh_interval = 3000,
 }
 
-local status_cache = GitStatus.new() 
+local status_cache = GitStatus.new()
 
 local state = {}
 state.last_job = nil

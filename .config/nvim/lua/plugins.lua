@@ -391,7 +391,8 @@ function M.init()
     {
       "kana/vim-operator-replace",
       config = function()
-        vim.keymap.set("", "_", "<Plug>(operator-replace)", { silent = true })
+        vim.keymap.set("n", "_", "<Plug>(operator-replace)", { silent = true })
+        vim.keymap.set("x", "_", "<Plug>(operator-replace)", { silent = true })
       end,
     },
     {

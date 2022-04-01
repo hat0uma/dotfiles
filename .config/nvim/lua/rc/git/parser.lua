@@ -222,11 +222,11 @@ function parser.parse_status_v2(out)
     return nil
   end
 
+  local status = parser.GitStatus.new()
   local branch_lines, entry_lines = list_partition(function(line)
     return vim.startswith(line, "#")
   end, out)
 
-  local status = parser.GitStatus.new()
   for _, line in ipairs(branch_lines) do
     for name, component in pairs(BRANCH_COMPONENTS) do
       local matches = { line:match(component.pattern) }
