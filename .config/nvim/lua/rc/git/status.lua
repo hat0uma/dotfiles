@@ -1,12 +1,13 @@
 local job = require "plenary.job"
 local parser = require "rc.git.parser"
+local GitStatus = parser.GitStatus
 
 -- test
 local config = {
   status_refresh_interval = 3000,
 }
 
-local status_cache = parser.GitStatus.new()
+local status_cache = GitStatus.new() 
 
 local state = {}
 state.last_job = nil
@@ -15,7 +16,7 @@ state.on_cooldown = false
 --- update status cache(on exit status)
 ---@param j Job
 ---@param exit_code number
-local update_status_cache = function(j, exit_code)
+local function update_status_cache(j, exit_code)
   if exit_code ~= 0 then
     print "git status failed"
     return
@@ -24,7 +25,10 @@ local update_status_cache = function(j, exit_code)
   status_cache = parser.parse_status_v2(out)
 end
 
-local make_git_status_job = function(opts)
+--- make git status job
+---@param opts table
+---@return Job
+local function make_git_status_job(opts)
   opts = vim.tbl_extend("keep", opts or {}, { env = {}, cwd = vim.loop.cwd(), on_exit = nil })
   return job:new {
     command = "git",
@@ -35,6 +39,9 @@ local make_git_status_job = function(opts)
   }
 end
 
+--- get cached status
+---@param cwd string
+---@return GitStatus
 local function get_status_cached(cwd)
   if state.on_cooldown then
     -- do nothing
