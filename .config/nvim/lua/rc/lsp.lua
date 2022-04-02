@@ -172,12 +172,26 @@ local function omnisharp_config()
     end,
   }
 end
+local function omnisharp_mono_config()
+  -- https://github.com/OmniSharp/omnisharp-roslyn/issues/1948#issuecomment-1008443985
+  local pid = vim.fn.getpid()
+  local omnisharp_bin = vim.fn.expand "~/.local/share/omnisharp-mono/OmniSharp.exe"
+  local config = omnisharp_config()
+  config.cmd = { "mono", omnisharp_bin, "--languageserver", "--hostPID", tostring(pid) }
+  config.on_new_config = function(new_config, new_root_dir)
+    if new_root_dir then
+      table.insert(new_config.cmd, "-s")
+      table.insert(new_config.cmd, new_root_dir)
+    end
+  end
+  return config
+end
 
 M.configured_servers = {
   auto = {
     sumneko_lua = { config = lua_config() },
     vimls = { config = default_config() },
-    omnisharp = { config = omnisharp_config() },
+    -- omnisharp = { config = omnisharp_config() },
     dockerls = { config = default_config() },
     pyright = { config = default_config() },
     bashls = { config = default_config() },
@@ -188,6 +202,7 @@ M.configured_servers = {
   manual = {
     denols = { config = denols_config() },
     gopls = { config = gopls_config() },
+    omnisharp = { config = omnisharp_mono_config() },
   },
 }
 
