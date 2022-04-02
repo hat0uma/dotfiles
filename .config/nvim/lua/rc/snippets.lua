@@ -20,7 +20,7 @@ function M.config()
     s("printt", {
       t "print(vim.inspect(",
       i(1, "tbl"),
-      t "))\n",
+      t "))",
       i(0),
     }),
     -- printf

@@ -13,17 +13,29 @@ local STATUS_TBL = {
 }
 
 --- display
----@param entry GitOrdinaryChangedEntry
-function display.staged_ordinary_changes(entry)
+---@param entry GitOrdinaryChangedEntry|GitRenamedOrCopiedEntry|GitUnmergedEntry
+function display.staged_changes(entry)
   local s = entry.status.staged
   return string.format("%s: %s", STATUS_TBL[s], entry.path)
 end
 
 --- display
----@param entry GitOrdinaryChangedEntry
-function display.unstaged_ordinary_changes(entry)
+---@param entry GitOrdinaryChangedEntry|GitRenamedOrCopiedEntry|GitUnmergedEntry
+function display.unstaged_changes(entry)
   local s = entry.status.unstaged
   return string.format("%s: %s", STATUS_TBL[s], entry.path)
+end
+
+--- display
+---@param entry GitIgnoredEntry
+function display.ignored(entry)
+  return string.format("%s", entry.path)
+end
+
+--- display
+---@param entry GitUntrackedEntry
+function display.untracked(entry)
+  return string.format("%s", entry.path)
 end
 
 return display
