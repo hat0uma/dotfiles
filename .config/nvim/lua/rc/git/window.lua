@@ -26,7 +26,7 @@ local config = {
     end
     for _, win in ipairs(M.ordered) do
       local opt = { noremap = true, buffer = win.bufnr }
-      vim.keymap.set("n", "Q", M.close, {})
+      vim.keymap.set("n", "q", M.close, {})
       vim.keymap.set("n", "1", bind(M.focus, 1), opt)
       vim.keymap.set("n", "2", bind(M.focus, 2), opt)
       vim.keymap.set("n", "3", bind(M.focus, 3), opt)
