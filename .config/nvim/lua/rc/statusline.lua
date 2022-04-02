@@ -145,15 +145,17 @@ local FileName = {
 
 local nvimGPS = {
   provider = function()
+    -- needs
+    if not gps.is_available() then
+      return ""
+    end
     local loc = gps.get_location()
     if loc ~= "" then
       loc = "> " .. loc
     end
     return loc
   end,
-  condition = function()
-    return vim.bo.buftype ~= "terminal" and gps.is_available()
-  end,
+  condition = gps.is_available,
   separator_highlight = palette.separator_highlight,
   highlight = { palette.fg, palette.bg },
 }
@@ -235,7 +237,7 @@ local function git_status()
   local behind_arrow = s.branch.ab.b ~= 0 and "↓" or ""
   local change_num = #s.ordinary_changed + #s.renamed_or_copied + #s.unmerged + #s.ignored + #s.untracked
   local dirty = change_num ~= 0
-  return string.format("%s %s%s", dirty and "*" or "", ahead_arrow, behind_arrow)
+  return string.format("%s%s %s%s", s.branch.head, dirty and "*" or "", ahead_arrow, behind_arrow)
 end
 
 local GitBranch = {
@@ -243,7 +245,7 @@ local GitBranch = {
     -- local icon = " "
     local icon = " "
     local branch = vcs.get_git_branch() or ""
-    return string.format("  %s%s%s", icon, branch, git_status())
+    return string.format("  %s%s", icon, git_status())
   end,
   condition = condition.check_git_workspace,
   -- separator = "  ",
