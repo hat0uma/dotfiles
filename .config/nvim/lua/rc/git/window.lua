@@ -16,6 +16,7 @@ local config = {
   untracked_ft = "GitUntracked",
   preview_ft = "GitPreview",
   on_open = function()
+    -- M.focus "staged"
     M.focus(1)
     local function bind(f, ...)
       local args = { ... }
@@ -36,6 +37,7 @@ local config = {
 M.branch = {
   bufnr = 0,
   winid = 0,
+  name = "branch",
   height = config.branch_height,
   ft = config.branch_ft,
   focus = false,
@@ -44,6 +46,7 @@ M.branch = {
 M.staged = {
   bufnr = 0,
   winid = 0,
+  name = "staged",
   height = config.staged_height,
   ft = config.staged_ft,
   focus = true,
@@ -52,6 +55,7 @@ M.staged = {
 M.unstaged = {
   bufnr = 0,
   winid = 0,
+  name = "unstaged",
   height = config.unstaged_height,
   ft = config.unstaged_ft,
   focus = true,
@@ -60,6 +64,7 @@ M.unstaged = {
 M.untracked = {
   bufnr = 0,
   winid = 0,
+  name = "untracked",
   height = config.untracked_height,
   ft = config.untracked_ft,
   focus = true,
@@ -173,11 +178,31 @@ function M.close()
   end
 end
 
-function M.focus(num)
-  local focusables = vim.tbl_filter(function(win)
-    return win.focus
-  end, M.ordered)
-  vim.api.nvim_set_current_win(focusables[num].winid)
+---@alias GitWinName
+---| '"branch"'
+---| '"staged"'
+---| '"unstaged"'
+---| '"untracked"'
+--- focus
+---@param window number|GitWinName
+function M.focus(window)
+  if type(window) == "number" then
+    -- focus with ordered number
+    local focusables = vim.tbl_filter(function(win)
+      return win.focus
+    end, M.ordered)
+    if focusables[window] then
+      vim.api.nvim_set_current_win(focusables[window].winid)
+    end
+  else
+    -- focus with name
+    for _, win in ipairs(M.ordered) do
+      if win.name == window then
+        vim.api.nvim_set_current_win(win.winid)
+        break
+      end
+    end
+  end
 end
 
 return M
