@@ -45,6 +45,12 @@ function M.config()
       vim.keymap.set("n", "J", send_key_action(KeyCode.Down), opts)
       vim.keymap.set("n", "<CR>", send_key_action "\r", opts)
 
+      -- gf
+      vim.keymap.set("n", "gf", function()
+        local cfile = vim.fn.expand "<cfile>"
+        vim.cmd("close | e " .. cfile)
+      end, opts)
+
       -- reload
       local reload = string.format("<Cmd>bdelete! | %dToggleTerm direction=%s<CR>", term.id, term.direction)
       vim.keymap.set("n", "<C-q>", reload, opts)
