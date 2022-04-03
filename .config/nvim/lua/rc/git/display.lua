@@ -13,6 +13,13 @@ local STATUS_TBL = {
 }
 
 --- display
+---@param entry GitBranchStatus
+function display.branch(entry)
+  local branch = entry.head
+  return string.format("%s -> %s (%d,%d)", branch, entry.upstream, entry.ab.a, entry.ab.b)
+end
+
+--- display
 ---@param entry GitOrdinaryChangedEntry|GitRenamedOrCopiedEntry|GitUnmergedEntry
 function display.staged_changes(entry)
   local s = entry.status.staged

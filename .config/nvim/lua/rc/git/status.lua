@@ -1,6 +1,9 @@
 local job = require "plenary.job"
 local parser = require "rc.git.parser"
 local GitStatus = parser.GitStatus
+local window = require "rc.git.window"
+local display = require "rc.git.display"
+local util = require "rc.git.util"
 
 -- test
 local config = {
@@ -69,9 +72,23 @@ function _G.test_status_v2()
   package.loaded["rc.git.parser"] = nil
   parser = require "rc.git.parser"
   local status = parser.parse_status_v2(r)
-  print("exit code : " .. code)
-  print(vim.inspect(r))
-  print(vim.inspect(status))
+  -- print("exit code : " .. code)
+  -- print(vim.inspect(r))
+  -- print(vim.inspect(status))
+  local all_changes = { unpack(status.ordinary_changed), unpack(status.renamed_or_copied), unpack(status.unmerged) }
+  local staged = util.list_partition(function(s)
+    return s.status.staged ~= "."
+  end, all_changes)
+
+  local unstaged = vim.tbl_filter(function(s)
+    return s.status.unstaged ~= "."
+  end, all_changes)
+
+  window.open()
+  vim.api.nvim_buf_set_lines(window.branch.bufnr, 0, -1, false, { display.branch(status.branch) })
+  vim.api.nvim_buf_set_lines(window.staged.bufnr, 0, -1, false, vim.tbl_map(display.staged_changes, staged))
+  vim.api.nvim_buf_set_lines(window.unstaged.bufnr, 0, -1, false, vim.tbl_map(display.unstaged_changes, unstaged))
+  vim.api.nvim_buf_set_lines(window.untracked.bufnr, 0, -1, false, vim.tbl_map(display.untracked, status.untracked))
 end
 
 return {

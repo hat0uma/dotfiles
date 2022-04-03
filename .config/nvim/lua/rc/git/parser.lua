@@ -1,3 +1,4 @@
+local util = require "rc.git.util"
 local parser = {}
 
 --- @class GitStatus
@@ -118,8 +119,8 @@ local ENTRY_PATTERNS = {
     transform = function(matches)
       return {
         status = {
-          staged = string.sub(matches[1], 1),
-          unstaged = string.sub(matches[1], 2),
+          staged = string.sub(matches[1], 1, 1),
+          unstaged = string.sub(matches[1], 2, 2),
         },
         submodule = matches[2],
         filemodes = {
@@ -141,8 +142,8 @@ local ENTRY_PATTERNS = {
     transform = function(matches)
       return {
         status = {
-          staged = string.sub(matches[1], 1),
-          unstaged = string.sub(matches[1], 2),
+          staged = string.sub(matches[1], 1, 1),
+          unstaged = string.sub(matches[1], 2, 2),
         },
         submodule = matches[2],
         filemodes = {
@@ -166,8 +167,8 @@ local ENTRY_PATTERNS = {
     transform = function(matches)
       return {
         status = {
-          staged = string.sub(matches[1], 1),
-          unstaged = string.sub(matches[1], 2),
+          staged = string.sub(matches[1], 1, 1),
+          unstaged = string.sub(matches[1], 2, 2),
         },
         submodule = matches[2],
         filemodes = {
@@ -201,19 +202,6 @@ local ENTRY_PATTERNS = {
   },
 }
 
-local function list_partition(predicate, list)
-  local part1 = {}
-  local part2 = {}
-  for _, value in ipairs(list) do
-    if predicate(value) then
-      table.insert(part1, value)
-    else
-      table.insert(part2, value)
-    end
-  end
-  return part1, part2
-end
-
 --- parse git status --porcelain=v2
 ---@param out string[]
 ---@return GitStatus|nil
@@ -223,7 +211,7 @@ function parser.parse_status_v2(out)
   end
 
   local status = parser.GitStatus.new()
-  local branch_lines, entry_lines = list_partition(function(line)
+  local branch_lines, entry_lines = util.list_partition(function(line)
     return vim.startswith(line, "#")
   end, out)
 
