@@ -14,7 +14,7 @@ local config = {
   staged_ft = "GitStaged",
   unstaged_ft = "GitUnstaged",
   untracked_ft = "GitUntracked",
-  preview_ft = "GitPreview",
+  preview_ft = "diff",
   on_open = function()
     -- M.focus "staged"
     M.focus(1)

@@ -231,7 +231,7 @@ local DiagnosticHint = {
 }
 
 local function git_status()
-  local s = require("rc.git.status").get_status_cached()
+  local s = require("rc.git.component").get_status_cached()
 
   local ahead_arrow = s.branch.ab.a ~= 0 and "↑" or ""
   local behind_arrow = s.branch.ab.b ~= 0 and "↓" or ""

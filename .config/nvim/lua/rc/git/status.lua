@@ -1,64 +1,62 @@
 local job = require "plenary.job"
 local parser = require "rc.git.parser"
-local GitStatus = parser.GitStatus
 local window = require "rc.git.window"
 local display = require "rc.git.display"
-local util = require "rc.git.util"
+local preview = require "rc.git.preview"
 
--- test
-local config = {
-  status_refresh_interval = 3000,
+local M = {}
+M.kinds = {
+  branch = {
+    values = {},
+    display = display.branch,
+    win = window.branch,
+  },
+  staged = {
+    values = {},
+    display = display.staged_changes,
+    preview = preview.staged,
+    win = window.staged,
+  },
+  unstaged = {
+    values = {},
+    display = display.unstaged_changes,
+    preview = nil,
+    win = window.unstaged,
+  },
+  untracked = {
+    values = {},
+    display = display.untracked,
+    preview = nil,
+    win = window.untracked,
+  },
 }
+M.current_preview = nil
 
-local status_cache = GitStatus.new()
-
-local state = {}
-state.last_job = nil
-state.on_cooldown = false
-
---- update status cache(on exit status)
----@param j Job
----@param exit_code number
-local function update_status_cache(j, exit_code)
-  if exit_code ~= 0 then
-    print "git status failed"
-    return
+local function ppreview(kind)
+  local line = vim.fn.line "."
+  local current = kind.values[line]
+  print(vim.inspect(current))
+  if M.current_preview ~= current and kind.preview then
+    M.current_preview = current
+    kind.preview(current, function(r, code)
+      vim.schedule(function()
+        vim.api.nvim_buf_set_lines(window.preview.bufnr, 0, -1, false, r)
+      end)
+    end)
   end
-  local out = j:result()
-  status_cache = parser.parse_status_v2(out)
 end
 
---- make git status job
----@param opts table
----@return Job
-local function make_git_status_job(opts)
-  opts = vim.tbl_extend("keep", opts or {}, { env = {}, cwd = vim.loop.cwd(), on_exit = nil })
-  return job:new {
-    command = "git",
-    args = { "status", "--porcelain=v2", "--branch" },
-    cwd = opts.cwd,
-    env = opts.env,
-    on_exit = opts.on_exit,
-  }
-end
-
---- get cached status
----@param cwd string
----@return GitStatus
-local function get_status_cached(cwd)
-  if state.on_cooldown then
-    -- do nothing
-  elseif state.last_job ~= nil and not state.last_job.is_shutdown then
-    print "git status is running"
-  else
-    state.last_job = make_git_status_job { cwd = cwd, on_exit = update_status_cache }
-    state.last_job:start()
-    state.on_cooldown = true
-    vim.defer_fn(function()
-      state.on_cooldown = false
-    end, config.status_refresh_interval)
+local function register_autocmds()
+  local augroup = vim.api.nvim_create_augroup("git_status_augroup", { clear = true })
+  for _, kind in pairs(M.kinds) do
+    vim.api.nvim_create_autocmd("CursorMoved", {
+      callback = function()
+        ppreview(kind)
+      end,
+      group = augroup,
+      buffer = kind.win.bufnr,
+    })
   end
-  return status_cache
 end
 
 function _G.test_status_v2()
@@ -69,30 +67,36 @@ function _G.test_status_v2()
     env = {},
   }
   local r, code = status_job:sync(1000, 10)
-  package.loaded["rc.git.parser"] = nil
-  parser = require "rc.git.parser"
   local status = parser.parse_status_v2(r)
-  -- print("exit code : " .. code)
-  -- print(vim.inspect(r))
-  -- print(vim.inspect(status))
-  local all_changes = { unpack(status.ordinary_changed), unpack(status.renamed_or_copied), unpack(status.unmerged) }
-  local staged = util.list_partition(function(s)
+  local all_changes = {}
+  -- { unpack(status.ordinary_changed), unpack(status.renamed_or_copied), unpack(status.unmerged) }
+  for _, entry in ipairs(status.ordinary_changed) do
+    table.insert(all_changes, entry)
+  end
+  for _, entry in ipairs(status.renamed_or_copied) do
+    table.insert(all_changes, entry)
+  end
+  for _, entry in ipairs(status.unmerged) do
+    table.insert(all_changes, entry)
+  end
+  M.kinds.branch.values = { status.branch }
+  M.kinds.staged.values = vim.tbl_filter(function(s)
     return s.status.staged ~= "."
   end, all_changes)
-
-  local unstaged = vim.tbl_filter(function(s)
+  M.kinds.unstaged.values = vim.tbl_filter(function(s)
     return s.status.unstaged ~= "."
   end, all_changes)
+  M.kinds.untracked.values = status.untracked
 
   window.open()
-  vim.api.nvim_buf_set_lines(window.branch.bufnr, 0, -1, false, { display.branch(status.branch) })
-  vim.api.nvim_buf_set_lines(window.staged.bufnr, 0, -1, false, vim.tbl_map(display.staged_changes, staged))
-  vim.api.nvim_buf_set_lines(window.unstaged.bufnr, 0, -1, false, vim.tbl_map(display.unstaged_changes, unstaged))
-  vim.api.nvim_buf_set_lines(window.untracked.bufnr, 0, -1, false, vim.tbl_map(display.untracked, status.untracked))
+  local function show(kind)
+    vim.api.nvim_buf_set_lines(kind.win.bufnr, 0, -1, false, vim.tbl_map(kind.display, kind.values))
+  end
+  show(M.kinds.branch)
+  show(M.kinds.staged)
+  show(M.kinds.unstaged)
+  show(M.kinds.untracked)
+  register_autocmds()
 end
 
-return {
-  status_cache = status_cache,
-  get_status_cached = get_status_cached,
-  internal_state = state,
-}
+return M
