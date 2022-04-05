@@ -91,6 +91,7 @@ zinit light-mode for \
 typeset -U path PATH
 
 export EDITOR=/usr/local/bin/nvim
+export BROWSER=/usr/bin/google-chrome-stable
 
 # wsl settings
 export ON_WSL="$(if [ -v WSLENV ]; then echo true; else echo false;fi)" 

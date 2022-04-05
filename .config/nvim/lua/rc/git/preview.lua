@@ -1,6 +1,5 @@
 local job = require "plenary.job"
 local preview = {}
-local a = require "plenary.async"
 
 --- @type Job
 preview.last_job = nil
