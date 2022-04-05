@@ -33,7 +33,7 @@ bindsym $mod+Return exec wezterm
 bindsym $mod+Shift+q kill
 
 # start program launcher
-bindsym $mod+d exec --no-startup-id rofi -modi drun -show drun -icon-theme "Papirus" -show-icons -dpi 192
+bindsym $mod+d exec --no-startup-id rofi -modi combi -show combi -combi-modi window#drun#run -icon-theme "Papirus" -show-icons -dpi 192
 
 # launch categorized menu
 bindsym $mod+z exec --no-startup-id morc_menu
