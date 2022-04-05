@@ -4,17 +4,14 @@ neovim_tmp_dir=${2:-"/tmp/nvim"}
 echo "*** start install neovim@${version} ***"
 
 prerequisites_packages=(
+    "base-devel"
     "cmake"
-    "pkg-config"
-    "libtool-bin"
-    "m4"
-    "automake"
-    "gettext"
-    "build-essential"
     "unzip"
+    "ninja"
+    "tree-sitter"
+    "curl"
 )
-sudo apt-get update
-sudo apt-get install -y "${prerequisites_packages[@]}"
+yay -S --noconfirm "${prerequisites_packages[@]}"
 
 # install
 git clone https://github.com/neovim/neovim -b "$version" "$neovim_tmp_dir" || :
