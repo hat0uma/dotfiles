@@ -132,6 +132,9 @@ local function lua_config()
   table.insert(runtime_path, "lua/?.lua")
   table.insert(runtime_path, "lua/?/init.lua")
   local lib = vim.api.nvim_get_runtime_file("", true)
+  lib = vim.tbl_filter(function(elem)
+    return elem ~= vim.fn.stdpath "config"
+  end, lib)
   config.settings = {
     Lua = {
       runtime = {
