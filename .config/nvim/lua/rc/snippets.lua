@@ -16,22 +16,11 @@ function M.config()
   }
 
   ls.add_snippets("lua", {
-    -- print table
-    s("printt", {
-      t "print(vim.inspect(",
-      i(1, "tbl"),
-      t "))",
-      i(0),
-    }),
-    -- printf
-    s("printf", {
-      t 'print(string.format("',
-      i(1, "format"),
-      t '",',
-      i(2, "va_args"),
-      t "))",
-      i(0),
-    }),
+    -- for vim
+    s("printt", { t "print(vim.inspect(", i(1, "tbl"), t "))", i(0) }),
+    s("printf", { t 'print(string.format("', i(1, "format"), t '",', i(2, "va_args"), t "))", i(0) }),
+    s("tbl_filter", { t "vim.tbl_filter( function() return ", i(2, "expr"), t " end,", i(1, "tbl"), t ")", i(0) }),
+    s("tbl_map", { t "vim.tbl_map( function() return ", i(2, "expr"), t " end,", i(1, "tbl"), t ")", i(0) }),
   })
 
   ls.filetype_extend("cs", { "csharp" })
