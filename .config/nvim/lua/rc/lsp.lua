@@ -234,7 +234,7 @@ function M.setup()
   vim.api.nvim_add_user_command("FormatOnSaveDisable", format_on_save_setter(false), {})
   vim.api.nvim_add_user_command("FormatOnSaveEnable", format_on_save_setter(true), {})
 
-  require("lsp_signature").setup()
+  -- require("lsp_signature").setup()
   setup_nullls()
   lsp_installer.on_server_ready(function(server)
     if M.configured_servers.auto[server.name] == nil then

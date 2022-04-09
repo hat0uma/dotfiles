@@ -58,10 +58,6 @@ function M.init()
       module = "nvim-lsp-installer",
     },
     {
-      "ray-x/lsp_signature.nvim",
-      module = "lsp_signature",
-    },
-    {
       "jose-elias-alvarez/null-ls.nvim",
       module = "null-ls",
     },
@@ -89,6 +85,8 @@ function M.init()
       { "hrsh7th/cmp-path", after = "nvim-cmp" },
       { "saadparwaiz1/cmp_luasnip", after = "nvim-cmp" },
       { "hrsh7th/cmp-cmdline", after = "nvim-cmp" },
+      { "hrsh7th/cmp-nvim-lua", after = "nvim-cmp" },
+      { "hrsh7th/cmp-nvim-lsp-signature-help", after = "nvim-cmp" },
     },
     config = function()
       require "rc.cmp"
