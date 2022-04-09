@@ -194,7 +194,7 @@ M.configured_servers = {
   auto = {
     sumneko_lua = { config = lua_config() },
     vimls = { config = default_config() },
-    -- omnisharp = { config = omnisharp_config() },
+    omnisharp = { config = omnisharp_config() },
     dockerls = { config = default_config() },
     pyright = { config = default_config() },
     bashls = { config = default_config() },
@@ -205,7 +205,6 @@ M.configured_servers = {
   manual = {
     denols = { config = denols_config() },
     gopls = { config = gopls_config() },
-    omnisharp = { config = omnisharp_mono_config() },
   },
 }
 
@@ -239,6 +238,12 @@ function M.setup()
   lsp_installer.on_server_ready(function(server)
     if M.configured_servers.auto[server.name] == nil then
       print(server.name .. " is installed, but not setup.")
+      return
+    end
+
+    if server.name == "omnisharp" and vim.fn.has "win64" == 0 then
+      -- if not windows, use omnisharp-mono
+      nvim_lsp[server.name].setup(omnisharp_mono_config())
       return
     end
 
