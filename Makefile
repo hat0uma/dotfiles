@@ -1,4 +1,4 @@
-.PHONY: link install neovim
+.PHONY: link cli gui neovim
 
 CONFIG_DIRS = $(sort $(abspath $(dir $(wildcard .config/*/))))
 link:
@@ -6,11 +6,9 @@ link:
 	$(foreach dir,$(CONFIG_DIRS),ln -sf $(dir) ${HOME}/.config/;)
 	ln -sf ${PWD}/.zshrc ${HOME}
 
-install:
-	sudo pacman -S --noconfirm yay
+cli:
 	yay -S --noconfirm \
 		unzip \
-		rofi \
 		xsel \
 		github-cli \
 		nodejs \
@@ -18,10 +16,15 @@ install:
 		ripgrep \
 		stylua \
 		shellcheck \
-		zsh \
+		zsh
+	curl -fsSL https://deno.land/x/install/install.sh | sh
+	${PWD}/scripts/install_neovim.sh
+
+gui:
+	yay -S --noconfirm \
+		rofi \
 		papirus-icon-theme \
 		wezterm
-	curl -fsSL https://deno.land/x/install/install.sh | sh
 
 neovim:
 	nvim --headless -c 'lua require("plugins").install_packer()' -c 'qa'

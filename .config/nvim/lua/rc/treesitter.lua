@@ -1,4 +1,3 @@
-
 local M = {}
 
 function M.config()
@@ -76,6 +75,7 @@ M.parsers = {
   "typescript",
   "tsx",
   "c",
+  "c_sharp",
   "cpp",
   "json",
   "yaml",
