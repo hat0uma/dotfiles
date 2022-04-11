@@ -11,15 +11,16 @@ function _G.test_format_change_only()
     table.insert(positions, { start_pos = start_pos, end_pos = end_pos })
   end
 
-  print(vim.inspect(positions))
   for _, pos in ipairs(positions) do
     vim.lsp.buf.range_formatting(pos.start_pos, pos.end_pos)
-    printf(
-      "vim.lsp.buf.range_formatting({%d,%d},{%d,%d})",
-      pos.start_pos[1],
-      pos.start_pos[2],
-      pos.end_pos[1],
-      pos.end_pos[2]
+    print(
+      string.format(
+        "vim.lsp.buf.range_formatting({%d,%d},{%d,%d})",
+        pos.start_pos[1],
+        pos.start_pos[2],
+        pos.end_pos[1],
+        pos.end_pos[2]
+      )
     )
   end
 end
