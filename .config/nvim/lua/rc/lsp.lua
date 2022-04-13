@@ -61,7 +61,7 @@ local make_on_attach = function(override_opts)
     vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, map_opts)
 
     if client.resolved_capabilities.document_formatting then
-      vim.api.nvim_buf_add_user_command(bufnr, "Format", format, {})
+      vim.api.nvim_buf_create_user_command(bufnr, "Format", format, {})
       vim.api.nvim_create_autocmd("BufWritePre", { buffer = bufnr, callback = on_save })
     end
     require("illuminate").on_attach(client)
@@ -229,9 +229,9 @@ local function setup_nullls()
 end
 
 function M.setup()
-  vim.api.nvim_add_user_command("FormatOnSaveToggle", format_on_save_toggle, {})
-  vim.api.nvim_add_user_command("FormatOnSaveDisable", format_on_save_setter(false), {})
-  vim.api.nvim_add_user_command("FormatOnSaveEnable", format_on_save_setter(true), {})
+  vim.api.nvim_create_user_command("FormatOnSaveToggle", format_on_save_toggle, {})
+  vim.api.nvim_create_user_command("FormatOnSaveDisable", format_on_save_setter(false), {})
+  vim.api.nvim_create_user_command("FormatOnSaveEnable", format_on_save_setter(true), {})
 
   -- require("lsp_signature").setup()
   setup_nullls()
