@@ -24,7 +24,8 @@ gl.short_line_list = {
   -- "packer",
 }
 
-local everforest = vim.fn["everforest#get_palette"](vim.fn["everforest#get_configuration"]().background)
+local configuration = vim.fn["everforest#get_configuration"]()
+local everforest = vim.fn["everforest#get_palette"](configuration.background, configuration.colors_override)
 local palette = {
   bg = everforest.bg0[1],
   bg2 = everforest.bg2[1],
