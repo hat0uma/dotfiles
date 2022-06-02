@@ -118,6 +118,7 @@ function M.init()
         vim.g.everforest_background = "hard"
         vim.g.everforest_ui_contrast = "high"
         vim.cmd [[ colorscheme everforest ]]
+        --  vim.cmd [[ highlight! default link WinBar NormalFloat ]]
       end,
     },
     { "morhetz/gruvbox", disable = true },
@@ -293,6 +294,10 @@ function M.init()
       "rikuma-t/nvim-gps",
       config = function()
         require("nvim-gps").setup()
+        function _G.nvim_gps_winbar()
+          return require("nvim-gps").is_available() and require("nvim-gps").get_location() or ""
+        end
+        vim.wo.winbar = "%!v:lua.nvim_gps_winbar()"
       end,
     },
     {

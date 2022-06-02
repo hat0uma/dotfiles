@@ -319,7 +319,7 @@ clear(section.short_line_right)
 table.insert(section.left, { ViMode = ViMode })
 table.insert(section.left, { GitBranch = GitBranch })
 table.insert(section.left, { FileName = FileName })
-table.insert(section.left, { nvimGPS = nvimGPS })
+-- table.insert(section.left, { nvimGPS = nvimGPS })
 
 -- table.insert(section.right,{FileType = FileType})
 table.insert(section.right, { DiagnosticError = DiagnosticError })
