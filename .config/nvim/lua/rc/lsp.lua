@@ -4,7 +4,7 @@ local lsp_installer = require "nvim-lsp-installer"
 
 -- format
 local format = function()
-  vim.lsp.buf.formatting_sync({}, 7000)
+  vim.lsp.buf.format { timeout_ms = 7000 }
 end
 local format_on_save = true
 local on_save = function()
@@ -26,7 +26,8 @@ local make_on_attach = function(override_opts)
   override_opts = override_opts or {}
   return function(client, bufnr)
     if override_opts.document_formatting ~= nil then
-      client.resolved_capabilities.document_formatting = override_opts.document_formatting
+      client.server_capabilities.documentFormattingProvider = override_opts.document_formatting
+      client.server_capabilities.documentRangeFormattingProvider = override_opts.document_formatting
     end
 
     local lsp_document_symbols = function()
@@ -60,7 +61,7 @@ local make_on_attach = function(override_opts)
     vim.keymap.set("n", "]d", vim.diagnostic.goto_next, map_opts)
     vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, map_opts)
 
-    if client.resolved_capabilities.document_formatting then
+    if client.server_capabilities.documentFormattingProvider then
       vim.api.nvim_buf_create_user_command(bufnr, "Format", format, {})
       vim.api.nvim_create_autocmd("BufWritePre", { buffer = bufnr, callback = on_save })
     end
