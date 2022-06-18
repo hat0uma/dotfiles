@@ -140,7 +140,7 @@ local function telescope_packers()
 end
 
 local function telescope_live_grep()
-  require("telescope").extensions.live_grep_raw.live_grep_raw { preview = { hide_on_startup = true } }
+  require("telescope").extensions.live_grep_args.live_grep_args { preview = { hide_on_startup = true } }
 end
 
 local function telescope_gina_p_action_list()

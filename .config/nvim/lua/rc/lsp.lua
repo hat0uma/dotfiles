@@ -60,6 +60,7 @@ local make_on_attach = function(override_opts)
     vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, map_opts)
     vim.keymap.set("n", "]d", vim.diagnostic.goto_next, map_opts)
     vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, map_opts)
+    vim.keymap.set("n", "<leader>a", vim.lsp.buf.code_action, map_opts)
 
     if client.server_capabilities.documentFormattingProvider then
       vim.api.nvim_buf_create_user_command(bufnr, "Format", format, {})
