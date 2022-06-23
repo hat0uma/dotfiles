@@ -15,7 +15,7 @@ cli:
 		npm \
 		ripgrep \
 		stylua \
-		shellcheck \
+		shellcheck-bin \
 		zsh
 	curl -fsSL https://deno.land/x/install/install.sh | sh
 	${PWD}/scripts/install_neovim.sh
