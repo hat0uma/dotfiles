@@ -196,13 +196,13 @@ M.configured_servers = {
   auto = {
     sumneko_lua = { config = lua_config() },
     vimls = { config = default_config() },
-    -- omnisharp = { config = omnisharp_config() },
+    omnisharp = { config = omnisharp_config() },
     dockerls = { config = default_config() },
     pyright = { config = default_config() },
     bashls = { config = default_config() },
-    -- rust_analyzer = { config = default_config() },
-    -- clangd = { config = clangd_config() },
-    -- powershell_es = { config = default_config(), version = "v2.1.2" },
+    rust_analyzer = { config = default_config() },
+    clangd = { config = clangd_config() },
+    powershell_es = { config = default_config(), version = "v2.1.2" },
   },
   manual = {
     denols = { config = denols_config() },
