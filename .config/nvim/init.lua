@@ -3,7 +3,7 @@ pcall(require, "impatient")
 --- define augroup with autocmd
 ---@param name string aurgoup name
 ---@param autocmds autocmd[]
----@param opts table augroup options
+---@param opts? table augroup options
 function _G.aug(name, autocmds, opts)
   vim.api.nvim_create_augroup(name, opts or {})
   for _, autocmd in pairs(autocmds) do

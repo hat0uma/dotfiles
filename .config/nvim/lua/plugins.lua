@@ -471,6 +471,7 @@ function M.init()
       }
     end,
     cmd = "MarkdownPreview",
+    disable = true,
   }
   use {
     "nvim-neorg/neorg",
