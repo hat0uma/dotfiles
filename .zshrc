@@ -88,10 +88,6 @@ zinit light-mode for \
 #####################################################################
 # environment
 #####################################################################
-typeset -U path PATH
-
-export EDITOR=/usr/local/bin/nvim
-export BROWSER=/usr/bin/google-chrome-stable
 
 # wsl settings
 export ON_WSL="$(if [ -v WSLENV ]; then echo true; else echo false;fi)" 
@@ -107,35 +103,6 @@ if [ $ON_WSL2 = true ]; then
     export DISPLAY=${WSL2_X_IP}:0.0
 fi
 
-# for hidpi
-# export QT_SCALE_FACTOR=2
-# export GDK_SCALE=2
-
-export http_proxy="$HTTP_PROXY"
-export https_proxy="$HTTPS_PROXY"
-export ftp_proxy="$FTP_PROXY"
-
-#deno
-export DENO_INSTALL="$HOME/.deno"
-export PATH="$DENO_INSTALL/bin:$PATH"
-
-# golang
-export PATH=$PATH:/usr/local/go/bin
-
-# rust
-export PATH=$PATH:$HOME/.cargo/bin
-
-# nodenv
-export PATH=$HOME/.nodenv/bin:$PATH
-export PATH=$HOME/.nodenv/shims:$PATH
-
-# pyenv/virtualenv
-export PYENV_ROOT=$HOME/.pyenv
-export PATH=$PYENV_ROOT/bin:$PATH
-export PATH=$PYENV_ROOT/shims:$PATH
-
-export PATH=$PATH:~/.local/bin
-export XDG_DATA_HOME=$HOME/.local/share
 #####################################################################
 # aliases
 #####################################################################
@@ -152,7 +119,9 @@ fi
 #####################################################################
 # others
 #####################################################################
+typeset -U path PATH
 autoload -U compinit
+bindkey -e
 
 # histoy
 HISTFILE=$HOME/.zsh-history

@@ -5,6 +5,8 @@ link:
 	mkdir -p ${HOME}/.config
 	$(foreach dir,$(CONFIG_DIRS),ln -sf $(dir) ${HOME}/.config/;)
 	ln -sf ${PWD}/.zshrc ${HOME}
+	ln -sf ${PWD}/.zshenv ${HOME}
+	ln -sf ${PWD}/.xprofile ${HOME}
 
 cli:
 	yay -S --noconfirm \
@@ -24,6 +26,7 @@ gui:
 	yay -S --noconfirm \
 		rofi \
 		papirus-icon-theme \
+		xremap-x11-bin \
 		wezterm
 
 neovim:
