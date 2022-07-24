@@ -3,6 +3,7 @@
 CONFIG_DIRS = $(sort $(abspath $(dir $(wildcard .config/*/))))
 link:
 	mkdir -p ${HOME}/.config
+	mkdir -p ${HOME}/.local/bin
 	$(foreach dir,$(CONFIG_DIRS),ln -sf $(dir) ${HOME}/.config/;)
 	ln -sf ${PWD}/.zshrc ${HOME}
 	ln -sf ${PWD}/.zshenv ${HOME}
@@ -28,6 +29,10 @@ gui:
 		papirus-icon-theme \
 		xremap-x11-bin \
 		wezterm
+	gh release download -R akiyosi/goneovim nightly --pattern 'goneovim-linux.tar.bz2'
+	tar xvf goneovim-linux.tar.bz2 -C ${HOME}/.local/ && \
+		rm goneovim-linux.tar.bz2
+	ln -sf ${HOME}/.local/goneovim-linux/goneovim ~/.local/bin/goneovim
 
 neovim:
 	nvim --headless -c 'lua require("plugins").install_packer()' -c 'qa'
