@@ -300,7 +300,7 @@ function M.init()
         function _G.nvim_gps_winbar()
           return require("nvim-gps").is_available() and require("nvim-gps").get_location() or ""
         end
-        vim.wo.winbar = "%!v:lua.nvim_gps_winbar()"
+        -- vim.wo.winbar = "%!v:lua.nvim_gps_winbar()"
       end,
     },
     {

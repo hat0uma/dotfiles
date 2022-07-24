@@ -8,10 +8,8 @@ local KeyCode = {
 }
 
 local get_shell = function()
-  local powershell_cmd = string.format(
-    "pwsh -NoLogo -NoProfile -NoExit -File %s ",
-    vim.fn.expand "~/dotfiles/win/profile.ps1"
-  )
+  local powershell_cmd =
+    string.format("pwsh -NoLogo -NoProfile -NoExit -File %s ", vim.fn.expand "~/dotfiles/win/profile.ps1")
   local zsh_cmd = "zsh -l"
   return vim.fn.has "win64" == 1 and powershell_cmd or zsh_cmd
 end
@@ -66,6 +64,12 @@ function M.config()
       end
     end,
     direction = "float",
+    winbar = {
+      enabled = false,
+      name_formatter = function(term)
+        return term.name
+      end,
+    },
   }
 end
 
