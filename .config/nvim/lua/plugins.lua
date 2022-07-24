@@ -490,6 +490,7 @@ function M.init()
     "lambdalisue/guise.vim",
     require = "denops.vim",
     config = function() end,
+    disable = true,
   }
   use {
     "akinsho/toggleterm.nvim",
