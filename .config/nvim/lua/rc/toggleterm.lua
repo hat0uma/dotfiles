@@ -25,6 +25,9 @@ function M.config()
     end,
     start_in_insert = false,
     shell = get_shell(),
+    env = {
+      PARENT_NVIM_ADDRESS = vim.v.servername,
+    },
     persist_size = true,
     float_opts = {
       winblend = 10,
