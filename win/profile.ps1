@@ -16,6 +16,12 @@ $MaximumHistoryCount = 10000;
 Set-Alias -Name ll -Value Get-ChildItem
 Set-Alias -Name editor -Value nvim
 
+# if ( Test-Path env:NVIM )
+# {
+#     $nvim_cmd=(gcm nvim).Definition
+#     function nvim(){ $nvim_cmd }
+# }
+
 function edit($file)
 { 
     editor $file
