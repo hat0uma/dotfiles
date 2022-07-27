@@ -116,15 +116,10 @@ else
     alias open='xdg-open'
 fi
 
-function nvim ()
-{
-    if [[ $NVIM ]]; then
-        # /usr/local/bin/nvim --server /tmp/nvim.sock --remote-tab $@
-        /usr/local/bin/nvim --server /tmp/nvim.sock --remote-send "<Cmd>tabnew |n $@<CR>"
-    else
-        /usr/local/bin/nvim --listen /tmp/nvim.sock $@
-    fi
-}
+if [[ $NVIM ]]; then
+    # function nvim () { /usr/local/bin/nvim --server $PARENT_NVIM_ADDRESS --remote-send "<Cmd>tabnew |n $@<CR>"}
+    function nvim () { /usr/local/bin/nvim --server $PARENT_NVIM_ADDRESS --remote-send --remote-tab $@}
+fi
 
 #####################################################################
 # others

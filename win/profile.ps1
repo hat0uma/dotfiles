@@ -21,7 +21,7 @@ if ( Test-Path env:NVIM )
     $nvim_cmd=(gcm nvim).Definition
     function nvim()
     {
-        invoke-expression "$nvim_cmd --server $env:PARENT_NVIM_ADDRESS --remote-send '<Cmd>tabnew |n $args<CR>'"
+        invoke-expression "$nvim_cmd --server $env:PARENT_NVIM_ADDRESS --remote-tab $args"
     }
 }
 
