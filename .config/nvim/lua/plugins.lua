@@ -54,8 +54,15 @@ function M.init()
       end,
     },
     {
-      "williamboman/nvim-lsp-installer",
-      module = "nvim-lsp-installer",
+      "williamboman/mason.nvim",
+      module = "mason",
+      config = function()
+        require("mason").setup()
+      end,
+    },
+    {
+      "williamboman/mason-lspconfig.nvim",
+      module = "mason-lspconfig",
     },
     {
       "jose-elias-alvarez/null-ls.nvim",

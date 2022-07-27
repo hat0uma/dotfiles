@@ -1,3 +1,4 @@
+$PSNativeCommandArgumentPassing = 'Standard'
 # https://github.com/mikemaccana/powershell-profile
 # use emacs keybind
 Set-PSReadLineOption -BellStyle None -EditMode Emacs
@@ -21,7 +22,16 @@ if ( Test-Path env:NVIM )
     $nvim_cmd=(gcm nvim).Definition
     function nvim()
     {
-        invoke-expression "$nvim_cmd --server $env:PARENT_NVIM_ADDRESS --remote-tab $args"
+        # https://stackoverflow.com/a/33466762
+        $arguments=""; foreach($a in $args ){ $arguments+=" "; if($a -match " "){$arguments+="""$a"""}else{$arguments+=$a} };
+        if( $args.Contains("--headless") )
+        {
+            iex "$nvim_cmd $arguments"
+        }
+        else
+        {
+            iex "$nvim_cmd --server $env:PARENT_NVIM_ADDRESS --remote-tab $arguments"
+        }
     }
 }
 

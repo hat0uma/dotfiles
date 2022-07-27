@@ -39,6 +39,5 @@ neovim:
 	nvim --headless -c 'autocmd User PackerCompileDone quitall' -c 'PackerCompile'
 	nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
 	nvim --headless -c 'lua require("rc.treesitter").install_parsers{force=true,sync=true}' -c 'qa'
-	# nvim --headless -c 'lua require("rc.lsp.install").install_configured_servers_sync()' -c 'qa'
-	nvim --headless -c 'LspInstall --sync sumneko_lua vimls pyright' -c 'qa'
+	nvim --headless -c 'MasonInstall lua-language-server vim-language-server pyright' -c 'qa'
 

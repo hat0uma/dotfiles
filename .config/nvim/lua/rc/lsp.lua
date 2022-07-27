@@ -1,6 +1,7 @@
 local M = {}
 local nvim_lsp = require "lspconfig"
-local lsp_installer = require "nvim-lsp-installer"
+local mason = require "mason"
+local mason_lspconfig = require "mason-lspconfig"
 
 -- format
 local format = function()
@@ -193,21 +194,17 @@ local function omnisharp_mono_config()
 end
 
 M.configured_servers = {
-  auto = {
-    sumneko_lua = { config = lua_config() },
-    vimls = { config = default_config() },
-    omnisharp = { config = omnisharp_config() },
-    dockerls = { config = default_config() },
-    pyright = { config = default_config() },
-    bashls = { config = default_config() },
-    rust_analyzer = { config = default_config() },
-    clangd = { config = clangd_config() },
-    powershell_es = { config = default_config(), version = "v2.1.2" },
-  },
-  manual = {
-    denols = { config = denols_config() },
-    gopls = { config = gopls_config() },
-  },
+  sumneko_lua = { config = lua_config() },
+  vimls = { config = default_config() },
+  omnisharp = { config = omnisharp_config() },
+  dockerls = { config = default_config() },
+  pyright = { config = default_config() },
+  bashls = { config = default_config() },
+  rust_analyzer = { config = default_config() },
+  clangd = { config = clangd_config() },
+  powershell_es = { config = default_config(), version = "v2.1.2" },
+  denols = { config = denols_config() },
+  gopls = { config = gopls_config() },
 }
 
 local function setup_nullls()
@@ -236,23 +233,14 @@ function M.setup()
   vim.api.nvim_create_user_command("FormatOnSaveEnable", format_on_save_setter(true), {})
 
   -- require("lsp_signature").setup()
+  mason_lspconfig.setup()
   setup_nullls()
-  lsp_installer.on_server_ready(function(server)
-    if M.configured_servers.auto[server.name] == nil then
-      print(server.name .. " is installed, but not setup.")
-      return
-    end
-
+  for name, server in pairs(M.configured_servers) do
     if server.name == "omnisharp" and vim.fn.has "win64" == 0 then
       -- if not windows, use omnisharp-mono
       nvim_lsp[server.name].setup(omnisharp_mono_config())
       return
     end
-
-    local opts = M.configured_servers.auto[server.name].config
-    server:setup(opts)
-  end)
-  for name, server in pairs(M.configured_servers.manual) do
     nvim_lsp[name].setup(server.config)
   end
 end
