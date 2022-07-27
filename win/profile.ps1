@@ -16,11 +16,14 @@ $MaximumHistoryCount = 10000;
 Set-Alias -Name ll -Value Get-ChildItem
 Set-Alias -Name editor -Value nvim
 
-# if ( Test-Path env:NVIM )
-# {
-#     $nvim_cmd=(gcm nvim).Definition
-#     function nvim(){ $nvim_cmd }
-# }
+if ( Test-Path env:NVIM )
+{
+    $nvim_cmd=(gcm nvim).Definition
+    function nvim()
+    {
+        invoke-expression "$nvim_cmd --server $env:PARENT_NVIM_ADDRESS --remote-send '<Cmd>tabnew |n $args<CR>'"
+    }
+}
 
 function edit($file)
 { 
