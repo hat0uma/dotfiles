@@ -117,8 +117,14 @@ else
 fi
 
 if [[ $NVIM ]]; then
-    # function nvim () { /usr/local/bin/nvim --server $PARENT_NVIM_ADDRESS --remote-send "<Cmd>tabnew |n $@<CR>"}
-    function nvim () { /usr/local/bin/nvim --server $PARENT_NVIM_ADDRESS --remote-send --remote-tab $@}
+    NVIM_CMD=$(which nvim)
+    function nvim () {
+        if [[ $@ =~ "--headless" ]]; then
+            $NVIM_CMD $@
+        else
+            $NVIM_CMD --server $PARENT_NVIM_ADDRESS --remote-tab $@
+        fi
+    }
 fi
 
 #####################################################################
