@@ -45,10 +45,10 @@ zinit for \
     light-mode pick"async.zsh" src"pure.zsh" \
                 sindresorhus/pure
 
-# Binary release in archive, from GitHub-releases page.
-# After automatic unpacking it provides program "fzf".
-zinit ice from"gh-r" as"program"
-zinit load junegunn/fzf-bin
+## Binary release in archive, from GitHub-releases page.
+## After automatic unpacking it provides program "fzf".
+# zinit ice from"gh-r" as"program"
+# zinit load junegunn/fzf-bin
 
 ## One other binary release, it needs renaming from `docker-compose-Linux-x86_64`.
 ## This is done by ice-mod `mv'{from} -> {to}'. There are multiple packages per
@@ -76,45 +76,22 @@ zinit load junegunn/fzf-bin
 ## This one is to be ran just once, in interactive session.
 # zinit creinstall %HOME/my_completions
 
-# (this is currently required for annexes)
-zinit light-mode for \
-    zdharma-continuum/z-a-rust \
-    zdharma-continuum/z-a-as-monitor \
-    zdharma-continuum/z-a-patch-dl \
-    zdharma-continuum/z-a-bin-gem-node
+## (this is currently required for annexes)
+# zinit light-mode for \
+#     zdharma-continuum/z-a-rust \
+#     zdharma-continuum/z-a-as-monitor \
+#     zdharma-continuum/z-a-patch-dl \
+#     zdharma-continuum/z-a-bin-gem-node
 
 ### End of Zinit's installer chunk
 
 #####################################################################
-# environment
-#####################################################################
-
-# wsl settings
-export ON_WSL="$(if [ -v WSLENV ]; then echo true; else echo false;fi)" 
-export ON_WSL2="$(if [ -v WSL_INTEROP ]; then echo true; else echo false;fi)"
-export ON_WSL1="$(if [[ $ON_WSL = true && $ON_WSL2 = false ]]; then echo true; else echo false;fi)" 
-
-if [ $ON_WSL1 = true ]; then
-    export DISPLAY=:0.0
-fi
-
-if [ $ON_WSL2 = true ]; then
-    export WSL2_X_IP=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2; exit;}')
-    export DISPLAY=${WSL2_X_IP}:0.0
-fi
-
-#####################################################################
-# aliases
+# aliases and functions
 #####################################################################
 alias ls='ls --color=auto'
 alias ll='ls -alFh'
 alias edit='nvim'
-
-if [ $ON_WSL = true ]; then
-    alias open='explorer.exe'
-else
-    alias open='xdg-open'
-fi
+alias open='xdg-open'
 
 if [[ $NVIM ]]; then
     NVIM_CMD=$(which nvim)
