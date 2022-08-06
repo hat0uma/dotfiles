@@ -93,16 +93,16 @@ alias ll='ls -alFh'
 alias edit='nvim'
 alias open='xdg-open'
 
-if [[ $NVIM ]]; then
-    NVIM_CMD=$(which nvim)
-    function nvim () {
-        if [[ $@ =~ "--headless" ]]; then
-            $NVIM_CMD $@
-        else
-            $NVIM_CMD --server $PARENT_NVIM_ADDRESS --remote-tab $@
-        fi
-    }
-fi
+# if [[ $NVIM ]]; then
+#     NVIM_CMD=$(which nvim)
+#     function nvim () {
+#         if [[ $@ =~ "--headless" ]]; then
+#             $NVIM_CMD $@
+#         else
+#             $NVIM_CMD --server $PARENT_NVIM_ADDRESS --remote-tab $@
+#         fi
+#     }
+# fi
 
 #####################################################################
 # others

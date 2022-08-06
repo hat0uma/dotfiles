@@ -9,7 +9,7 @@ local KeyCode = {
 
 local pwsh = {
   cmd = string.format("pwsh -NoLogo -NoProfile -NoExit -File %s ", vim.fn.expand "~/dotfiles/win/profile.ps1"),
-  term_bin = vim.fn.expand "~/.config/nvim/lua/rc/terminal/bin",
+  term_bin = vim.fn.expand "~/.config/nvim/lua/rc/terminal/bin.pwsh",
 }
 local zsh = {
   cmd = "zsh -l",
@@ -18,6 +18,7 @@ local zsh = {
 local shell = vim.fn.has "win64" == 1 and pwsh or zsh
 
 function M.config()
+  require "rc.terminal.terminal"
   require("toggleterm").setup {
     size = function(term)
       if term.direction == "horizontal" then

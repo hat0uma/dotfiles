@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+OPENER=${1:-"TEdit"}
+if [ -t 0 ]; then
+    nvim --server "$PARENT_NVIM_ADDRESS" --remote-send "<Cmd>$OPENER $*<CR>"
+else
+    # when stdin piped
+    tmp=$(mktemp)
+    cat - > "$tmp"
+    nvim --server "$PARENT_NVIM_ADDRESS" --remote-send "<Cmd>$OPENER $tmp | au VimLeave * !rm $tmp<CR>"
+fi
+
