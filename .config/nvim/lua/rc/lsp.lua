@@ -199,7 +199,6 @@ M.configured_servers = {
   omnisharp = { config = omnisharp_config() },
   dockerls = { config = default_config() },
   pyright = { config = default_config() },
-  bashls = { config = default_config() },
   rust_analyzer = { config = default_config() },
   clangd = { config = clangd_config() },
   powershell_es = { config = default_config(), version = "v2.1.2" },
