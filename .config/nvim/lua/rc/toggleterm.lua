@@ -7,12 +7,15 @@ local KeyCode = {
   Left = "\x1b[D",
 }
 
-local get_shell = function()
-  local powershell_cmd =
-    string.format("pwsh -NoLogo -NoProfile -NoExit -File %s ", vim.fn.expand "~/dotfiles/win/profile.ps1")
-  local zsh_cmd = "zsh -l"
-  return vim.fn.has "win64" == 1 and powershell_cmd or zsh_cmd
-end
+local pwsh = {
+  cmd = string.format("pwsh -NoLogo -NoProfile -NoExit -File %s ", vim.fn.expand "~/dotfiles/win/profile.ps1"),
+  term_bin = vim.fn.expand "~/.config/nvim/lua/rc/terminal/bin",
+}
+local zsh = {
+  cmd = "zsh -l",
+  term_bin = vim.fn.expand "~/.config/nvim/lua/rc/terminal/bin",
+}
+local shell = vim.fn.has "win64" == 1 and pwsh or zsh
 
 function M.config()
   require("toggleterm").setup {
@@ -24,8 +27,9 @@ function M.config()
       end
     end,
     start_in_insert = false,
-    shell = get_shell(),
+    shell = shell.cmd,
     env = {
+      PATH = string.format("%s:%s", shell.term_bin, vim.env.PATH),
       PARENT_NVIM_ADDRESS = vim.v.servername,
     },
     persist_size = true,

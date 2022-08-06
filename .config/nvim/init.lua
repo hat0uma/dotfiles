@@ -17,7 +17,7 @@ end
 ---@return autocmd
 function _G.au(event, opts)
   --- @class autocmd
-  --- @field define fun(group:string)
+  --- @field define fun(group?:string)
   local _au = {}
   _au.define = function(augroup)
     if augroup ~= nil then
