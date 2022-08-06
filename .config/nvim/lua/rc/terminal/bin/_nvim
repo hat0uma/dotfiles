@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 OPENER=${1:-"TEdit"}
+shift
 if [ -t 0 ]; then
     nvim --server "$PARENT_NVIM_ADDRESS" --remote-send "<Cmd>$OPENER $*<CR>"
 else
