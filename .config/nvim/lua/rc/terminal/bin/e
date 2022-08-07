@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
-_nvim "TEdit" "$@"
+_nvim -e "$@"
 

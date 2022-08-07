@@ -1,7 +1,20 @@
 #!/usr/bin/env bash
 
-OPENER=${1:-"TEdit"}
-shift
+case $1 in
+    -e) OPENER="TEdit"
+        shift
+        ;;
+    -v) OPENER="TVsplit"
+        shift
+        ;;
+    -s) OPENER="TSplit"
+        shift
+        ;;
+    * ) OPENER="TEdit"
+        ;;
+esac
+# echo "opener:$OPENER , files:$*"
+
 if [ -t 0 ]; then
     nvim --server "$PARENT_NVIM_ADDRESS" --remote-send "<Cmd>$OPENER $*<CR>"
 else
