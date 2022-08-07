@@ -16,24 +16,25 @@ $MaximumHistoryCount = 10000;
 # aliases and functions
 Set-Alias -Name ll -Value Get-ChildItem
 Set-Alias -Name editor -Value nvim
+Remove-Alias -Force -Name sp
 
-if ( Test-Path env:NVIM )
-{
-    $nvim_cmd=(gcm nvim).Definition
-    function nvim()
-    {
-        # https://stackoverflow.com/a/33466762
-        $arguments=""; foreach($a in $args ){ $arguments+=" "; if($a -match " "){$arguments+="""$a"""}else{$arguments+=$a} };
-        if( $args.Contains("--headless") )
-        {
-            iex "$nvim_cmd $arguments"
-        }
-        else
-        {
-            iex "$nvim_cmd --server $env:PARENT_NVIM_ADDRESS --remote-tab $arguments"
-        }
-    }
-}
+# if ( Test-Path env:NVIM )
+# {
+#     $nvim_cmd=(gcm nvim).Definition
+#     function nvim()
+#     {
+#         # https://stackoverflow.com/a/33466762
+#         $arguments=""; foreach($a in $args ){ $arguments+=" "; if($a -match " "){$arguments+="""$a"""}else{$arguments+=$a} };
+#         if( $args.Contains("--headless") )
+#         {
+#             iex "$nvim_cmd $arguments"
+#         }
+#         else
+#         {
+#             iex "$nvim_cmd --server $env:PARENT_NVIM_ADDRESS --remote-tab $arguments"
+#         }
+#     }
+# }
 
 function edit($file)
 { 

@@ -17,6 +17,7 @@ local function edit(opts)
 end
 
 local function vsp(opts)
+  close_floating()
   vim.cmd.vsplit()
   for _, arg in pairs(opts.fargs) do
     vim.cmd.edit(arg)

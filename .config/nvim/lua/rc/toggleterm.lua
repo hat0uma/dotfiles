@@ -9,11 +9,11 @@ local KeyCode = {
 
 local pwsh = {
   cmd = string.format("pwsh -NoLogo -NoProfile -NoExit -File %s ", vim.fn.expand "~/dotfiles/win/profile.ps1"),
-  term_bin = vim.fn.expand "~/.config/nvim/lua/rc/terminal/bin.pwsh",
+  PATH = string.format("%s;%s", vim.fn.expand "~/.config/nvim/lua/rc/terminal/bin.pwsh", vim.env.PATH),
 }
 local zsh = {
   cmd = "zsh -l",
-  term_bin = vim.fn.expand "~/.config/nvim/lua/rc/terminal/bin",
+  PATH = string.format("%s:%s", vim.fn.expand "~/.config/nvim/lua/rc/terminal/bin", vim.env.PATH),
 }
 local shell = vim.fn.has "win64" == 1 and pwsh or zsh
 
@@ -30,7 +30,7 @@ function M.config()
     start_in_insert = false,
     shell = shell.cmd,
     env = {
-      PATH = string.format("%s:%s", shell.term_bin, vim.env.PATH),
+      PATH = shell.PATH,
       PARENT_NVIM_ADDRESS = vim.v.servername,
     },
     persist_size = true,
