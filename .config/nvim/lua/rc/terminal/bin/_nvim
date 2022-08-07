@@ -21,6 +21,6 @@ else
     # when stdin piped
     tmp=$(mktemp)
     cat - > "$tmp"
-    nvim --server "$PARENT_NVIM_ADDRESS" --remote-send "<Cmd>$OPENER $tmp | au VimLeave * !rm $tmp<CR>"
+    nvim --server "$PARENT_NVIM_ADDRESS" --remote-send "<Cmd>$OPENER $tmp | au VimLeave * call delete(\"$tmp\")<CR>"
 fi
 
