@@ -63,6 +63,7 @@ function M.config()
         vim.fn.feedkeys "/"
       end,
       ["l"] = actions.edit,
+      ["v"] = actions.vsplit,
       ["h"] = my_actions.up_hold,
       ["q"] = actions.quit,
       ["s"] = my_actions.search,

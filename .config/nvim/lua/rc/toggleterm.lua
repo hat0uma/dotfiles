@@ -1,4 +1,5 @@
 local M = {}
+local shell = require "rc.terminal.shell"
 
 local KeyCode = {
   Up = "\x1b[A",
@@ -7,18 +8,8 @@ local KeyCode = {
   Left = "\x1b[D",
 }
 
-local pwsh = {
-  cmd = string.format("pwsh -NoLogo -NoProfile -NoExit -File %s ", vim.fn.expand "~/dotfiles/win/profile.ps1"),
-  PATH = string.format("%s;%s", vim.fn.expand "~/.config/nvim/lua/rc/terminal/bin.pwsh", vim.env.PATH),
-}
-local zsh = {
-  cmd = "zsh -l",
-  PATH = string.format("%s:%s", vim.fn.expand "~/.config/nvim/lua/rc/terminal/bin", vim.env.PATH),
-}
-local shell = vim.fn.has "win64" == 1 and pwsh or zsh
-
 function M.config()
-  require "rc.terminal.terminal"
+  require("rc.terminal").setup()
   require("toggleterm").setup {
     size = function(term)
       if term.direction == "horizontal" then
@@ -29,10 +20,7 @@ function M.config()
     end,
     start_in_insert = false,
     shell = shell.cmd,
-    env = {
-      PATH = shell.PATH,
-      PARENT_NVIM_ADDRESS = vim.v.servername,
-    },
+    env = shell.env,
     persist_size = true,
     float_opts = {
       winblend = 10,
