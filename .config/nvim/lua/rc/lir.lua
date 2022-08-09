@@ -59,6 +59,9 @@ function M.config()
     show_hidden_files = true,
     devicons_enable = true,
     mappings = {
+      ["i"] = function()
+        vim.fn.feedkeys "/"
+      end,
       ["l"] = actions.edit,
       ["h"] = my_actions.up_hold,
       ["q"] = actions.quit,
