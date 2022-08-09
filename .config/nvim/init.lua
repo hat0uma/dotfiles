@@ -167,6 +167,9 @@ vim.keymap.set("n", "<Down>", "<Cmd>wincmd -<CR>", { noremap = true, silent = tr
 vim.keymap.set("n", "<Right>", "<Cmd>wincmd ><CR>", { noremap = true, silent = true })
 vim.keymap.set("n", "<Left>", "<Cmd>wincmd <<CR>", { noremap = true, silent = true })
 
+-- abbrevs
+vim.cmd.cabbrev("printt", "print(vim.inspect())<Left><Left>")
+
 -------------------------------------------------------------------------
 -- plugins
 vim.cmd [[command! PackerInstall packadd packer.nvim | lua require'plugins'.install()]]

@@ -2,6 +2,7 @@ local M = {}
 local nvim_lsp = require "lspconfig"
 local mason = require "mason"
 local mason_lspconfig = require "mason-lspconfig"
+local cmp_nvim_lsp = require "cmp_nvim_lsp"
 
 -- format
 local format = function()
@@ -103,6 +104,7 @@ local SymbolKind = {
 -- default configurations for lsp
 local function default_config(override_opts)
   local capabilities = vim.lsp.protocol.make_client_capabilities()
+  capabilities = cmp_nvim_lsp.update_capabilities(capabilities)
   capabilities.textDocument.completion.completionItem.snippetSupport = true
   capabilities.workspace.symbol.symbolKind.valueSet = {
     SymbolKind.Module,
