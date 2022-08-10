@@ -38,6 +38,7 @@ function M.init()
         "gina-commit",
         "TelescopePrompt",
         "toggleterm",
+        "terminal",
         "lir",
       }
     end,
@@ -109,6 +110,7 @@ function M.init()
         filetype_exclude = {
           "help",
           "toggleterm",
+          "terminal",
           "TelescopePrompt",
           "packer",
           "translator",

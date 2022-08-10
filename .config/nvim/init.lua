@@ -29,6 +29,7 @@ function _G.au(event, opts)
 end
 
 vim.o.splitright = true
+vim.o.splitbelow = true
 vim.o.termguicolors = true
 vim.o.updatetime = 100
 vim.g.mapleader = " "
@@ -178,3 +179,5 @@ vim.cmd [[command! PackerSync packadd packer.nvim | lua require'plugins'.sync()]
 vim.cmd [[command! PackerClean packadd packer.nvim | lua require'plugins'.clean()]]
 vim.cmd [[command! -nargs=* PackerCompile packadd packer.nvim | lua require'plugins'.compile(<q-args>)]]
 vim.cmd [[command! PackerProfile lua require('plugins').profile_output()]]
+
+require("rc.terminal").setup()

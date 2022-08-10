@@ -420,9 +420,10 @@ font:
 #   - (Linux/BSD) user login shell
 #   - (Windows) powershell
 shell:
- program: powershell
+ program: nvim
  args:
-  - -NoLogo
+  - -c
+  - "lua require'rc.terminal'.show()"
 
 # Startup directory
 #

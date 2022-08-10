@@ -93,7 +93,8 @@ alias ll='ls -alFh'
 alias edit='nvim'
 alias open='xdg-open'
 
-# if [[ $NVIM ]]; then
+if [[ $NVIM ]]; then
+    source _nvim_hooks.zsh
 #     NVIM_CMD=$(which nvim)
 #     function nvim () {
 #         if [[ $@ =~ "--headless" ]]; then
@@ -102,7 +103,7 @@ alias open='xdg-open'
 #             $NVIM_CMD --server $PARENT_NVIM_ADDRESS --remote-tab $@
 #         fi
 #     }
-# fi
+fi
 
 #####################################################################
 # others
