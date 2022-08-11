@@ -1,8 +1,14 @@
 local M = {}
-local shell = require "rc.terminal.shell"
+local shells = require "rc.terminal.shells"
 local config = {
   terminal_ft = "terminal",
   start_in_insert = false,
+  shell = vim.fn.has "win64" == 1 and shells.pwsh or shells.zsh,
+  on_open = function(bufnr)
+    local opts = { noremap = true, buffer = bufnr }
+    vim.keymap.set("t", "<esc>", [[<C-\><C-n>]], opts)
+    vim.keymap.set("t", "jj", [[<C-\><C-n>]], opts)
+  end,
 }
 
 -- functions for script
@@ -32,11 +38,6 @@ end
 local function on_termbufleave()
   -- vim.b.rc_terminal_mode = vim.fn.mode()
 end
-local function on_open(bufnr)
-  local opts = { noremap = true, buffer = bufnr }
-  vim.keymap.set("t", "<esc>", [[<C-\><C-n>]], opts)
-  vim.keymap.set("t", "jj", [[<C-\><C-n>]], opts)
-end
 
 --- open new terminal
 ---@return number bufnr
@@ -44,13 +45,13 @@ local function open_new_terminal()
   local bufnr = vim.api.nvim_create_buf(false, false)
   vim.bo[bufnr].filetype = config.terminal_ft
   vim.api.nvim_buf_call(bufnr, function()
-    vim.fn.termopen(shell.cmd, { env = shell.env })
-    on_open(bufnr)
+    vim.fn.termopen(config.shell.cmd, { env = config.shell.env })
+    config.on_open(bufnr)
   end)
   return bufnr
 end
 
---- show terminal(current window)
+--- show terminal on current window
 function M.show()
   local winid = vim.api.nvim_get_current_win()
   if vim.w.rc_terminal_bufnr ~= nil then
@@ -63,12 +64,12 @@ function M.show()
     end
   end
 end
---- show terminal(vs)
+--- show terminal with vsplit
 function M.show_vs()
   vim.cmd.vsplit()
   M.show()
 end
---- show terminal(sp)
+--- show terminal with split
 function M.show_sp()
   vim.cmd.split()
   M.show()
@@ -88,9 +89,10 @@ function M.setup()
   vim.api.nvim_create_user_command("TSplit", split_files, cmdopts)
 
   -- keymaps
-  vim.keymap.set("n", "<C-t>", M.show, { noremap = true })
-  vim.keymap.set("n", "<leader>%", M.show_vs, { noremap = true })
-  vim.keymap.set("n", '<leader>"', M.show_sp, { noremap = true })
+  local keyopts = { noremap = true }
+  vim.keymap.set("n", "<C-t>", M.show, keyopts)
+  vim.keymap.set("n", "<leader>%", M.show_vs, keyopts)
+  vim.keymap.set("n", '<leader>"', M.show_sp, keyopts)
 end
 
 return M
