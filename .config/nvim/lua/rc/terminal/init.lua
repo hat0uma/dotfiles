@@ -21,14 +21,13 @@ local function _edit(split_cmd)
   end
 end
 
-local function on_bufenter()
-  if vim.bo.filetype == config.terminal_ft then
-    vim.wo.number = false
-    vim.wo.relativenumber = false
-  else
-    vim.wo.number = true
-    vim.wo.relativenumber = true
-  end
+local function on_termenter()
+  vim.wo.number = false
+  vim.wo.relativenumber = false
+end
+local function on_termleave()
+  vim.wo.number = true
+  vim.wo.relativenumber = true
 end
 
 local function on_termbufleave()
@@ -45,7 +44,7 @@ local function open_new_terminal()
   config.setup_terminal(bufnr)
   local winid = vim.api.nvim_get_current_win()
   vim.api.nvim_win_set_buf(winid, bufnr)
-  vim.cmd.startinsert()
+  -- vim.cmd.startinsert()
   return bufnr
 end
 
@@ -71,7 +70,8 @@ end
 function M.setup()
   -- autocmds
   local augid = vim.api.nvim_create_augroup("rc_terminal_aug", {})
-  vim.api.nvim_create_autocmd("BufEnter", { group = augid, pattern = "*", callback = on_bufenter })
+  vim.api.nvim_create_autocmd("TermEnter", { group = augid, pattern = "*", callback = on_termenter })
+  vim.api.nvim_create_autocmd("TermLeave", { group = augid, pattern = "*", callback = on_termleave })
   vim.api.nvim_create_autocmd("BufLeave", { group = augid, pattern = "term:/*", callback = on_termbufleave })
 
   -- commands

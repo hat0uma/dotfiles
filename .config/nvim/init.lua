@@ -151,4 +151,8 @@ vim.cmd [[command! PackerClean packadd packer.nvim | lua require'plugins'.clean(
 vim.cmd [[command! -nargs=* PackerCompile packadd packer.nvim | lua require'plugins'.compile(<q-args>)]]
 vim.cmd [[command! PackerProfile lua require('plugins').profile_output()]]
 
+if vim.env.NVIM_RESTART_ENABLE then
+  vim.api.nvim_create_user_command("Restart", "cq 1", {})
+end
+
 require("rc.terminal").setup()
