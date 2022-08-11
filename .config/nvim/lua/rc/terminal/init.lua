@@ -1,67 +1,74 @@
 local M = {}
 local shell = require "rc.terminal.shell"
-local config = require "rc.terminal.config"
+local config = {
+  terminal_ft = "terminal",
+  start_in_insert = false,
+}
 
-local function is_floating(winid)
-  local cfg = vim.api.nvim_win_get_config(winid)
-  return cfg.relative ~= "" or cfg.external
-end
-
-local function _edit(split_cmd)
-  return function(opts)
-    if is_floating(0) then
-      vim.cmd.close()
-    end
-    if split_cmd then
-      vim.cmd(split_cmd)
-    end
-    for _, arg in pairs(opts.fargs) do
-      vim.cmd.edit(arg)
-    end
+-- functions for script
+local function edit_files(opts)
+  for _, arg in pairs(opts.fargs) do
+    vim.cmd.edit(arg)
   end
 end
+local function vsplit_files(opts)
+  vim.cmd.vsplit()
+  edit_files(opts)
+end
+local function split_files(opts)
+  vim.cmd.split()
+  edit_files(opts)
+end
 
+-- callbacks
 local function on_termenter()
-  vim.wo.number = false
-  vim.wo.relativenumber = false
+  -- vim.wo.number = false
+  -- vim.wo.relativenumber = false
 end
 local function on_termleave()
-  vim.wo.number = true
-  vim.wo.relativenumber = true
+  -- vim.wo.number = true
+  -- vim.wo.relativenumber = true
 end
-
 local function on_termbufleave()
-  vim.b.rc_terminal_mode = vim.fn.mode()
+  -- vim.b.rc_terminal_mode = vim.fn.mode()
+end
+local function on_open(bufnr)
+  local opts = { noremap = true, buffer = bufnr }
+  vim.keymap.set("t", "<esc>", [[<C-\><C-n>]], opts)
+  vim.keymap.set("t", "jj", [[<C-\><C-n>]], opts)
 end
 
+--- open new terminal
+---@return number bufnr
 local function open_new_terminal()
   local bufnr = vim.api.nvim_create_buf(false, false)
   vim.bo[bufnr].filetype = config.terminal_ft
   vim.api.nvim_buf_call(bufnr, function()
     vim.fn.termopen(shell.cmd, { env = shell.env })
+    on_open(bufnr)
   end)
-
-  config.setup_terminal(bufnr)
-  local winid = vim.api.nvim_get_current_win()
-  vim.api.nvim_win_set_buf(winid, bufnr)
-  -- vim.cmd.startinsert()
   return bufnr
 end
 
+--- show terminal(current window)
 function M.show()
   local winid = vim.api.nvim_get_current_win()
   if vim.w.rc_terminal_bufnr ~= nil then
     vim.api.nvim_win_set_buf(winid, vim.w.rc_terminal_bufnr)
   else
     vim.w.rc_terminal_bufnr = open_new_terminal()
+    vim.api.nvim_win_set_buf(winid, vim.w.rc_terminal_bufnr)
+    if config.start_in_insert then
+      vim.cmd.startinsert()
+    end
   end
 end
-
+--- show terminal(vs)
 function M.show_vs()
   vim.cmd.vsplit()
   M.show()
 end
-
+--- show terminal(sp)
 function M.show_sp()
   vim.cmd.split()
   M.show()
@@ -75,9 +82,10 @@ function M.setup()
   vim.api.nvim_create_autocmd("BufLeave", { group = augid, pattern = "term:/*", callback = on_termbufleave })
 
   -- commands
-  vim.api.nvim_create_user_command("TEdit", _edit(), { nargs = "*", complete = "file", bar = true })
-  vim.api.nvim_create_user_command("TVsplit", _edit "vs", { nargs = "*", complete = "file", bar = true })
-  vim.api.nvim_create_user_command("TSplit", _edit "sp", { nargs = "*", complete = "file", bar = true })
+  local cmdopts = { nargs = "*", complete = "file", bar = true }
+  vim.api.nvim_create_user_command("TEdit", edit_files, cmdopts)
+  vim.api.nvim_create_user_command("TVsplit", vsplit_files, cmdopts)
+  vim.api.nvim_create_user_command("TSplit", split_files, cmdopts)
 
   -- keymaps
   vim.keymap.set("n", "<C-t>", M.show, { noremap = true })
