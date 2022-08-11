@@ -130,16 +130,6 @@ function M.init()
         --  vim.cmd [[ highlight! default link WinBar NormalFloat ]]
       end,
     },
-    { "morhetz/gruvbox", disable = true },
-    {
-      "Matsuuu/pinkmare",
-      config = function()
-        vim.cmd [[autocmd ColorScheme * highlight SignColumn guibg=#202330]]
-        vim.cmd [[autocmd ColorScheme * hi! MatchParen cterm=NONE,bold gui=NONE,bold,underline guibg=NONE guifg=NONE]]
-        vim.cmd [[colorscheme pinkmare]]
-      end,
-      disable = true,
-    },
   }
 
   use {
@@ -220,13 +210,6 @@ function M.init()
     end,
     module = "nvim-web-devicons",
     -- after = 'everforest',
-  }
-
-  use {
-    "j-hui/fidget.nvim",
-    config = function()
-      require("fidget").setup()
-    end,
   }
 
   use {
@@ -347,19 +330,17 @@ function M.init()
   }
 
   use {
-    "voldikss/vim-translator",
-    setup = function()
-      vim.g.translator_target_lang = "ja"
-      vim.g.translator_source_lang = "auto"
-      vim.g.translator_default_engines = { "google" }
-      vim.g.translator_window_type = "popup"
-      vim.keymap.set("n", "tr", "<Plug>TranslateW", { silent = true })
-      vim.keymap.set("v", "tr", "<Plug>TranslateWV", { silent = true })
+    "uga-rosa/translate.nvim",
+    config = function()
+      require("translate").setup {
+        default = {
+          command = "google",
+          output = "floating",
+        },
+      }
+      vim.keymap.set("v", "tr", "<Cmd>Translate JA<CR>", { silent = true })
+      vim.keymap.set("n", "tr", "m'viw<Cmd>Translate JA<CR>", { silent = true })
     end,
-    keys = {
-      { "n", "<Plug>TranslateW" },
-      { "v", "<Plug>TranslateWV" },
-    },
   }
 
   use {
@@ -432,13 +413,6 @@ function M.init()
     },
   }
 
-  use {
-    "mg979/vim-visual-multi",
-    config = function()
-      -- \\z normal
-      vim.keymap.set("n", "<C-j>", "<Plug>(VM-Add-Cursor-Down)", { silent = true })
-    end,
-  }
   use "tpope/vim-repeat"
   use {
     "tyru/open-browser.vim",
@@ -468,39 +442,12 @@ function M.init()
   use { "aklt/plantuml-syntax", ft = "plantuml" }
 
   use {
-    "iamcco/markdown-preview.nvim",
-    run = "cd app && yarn install",
+    "rcarriga/nvim-notify",
     config = function()
-      vim.g.mkdp_filetypes = { "markdown", "pandoc.markdown", "rmd", "plantuml" }
-      vim.g.mkdp_preview_options = {
-        uml = {
-          server = "http://localhost:8080",
-          imageFormat = "png",
-        },
-      }
-    end,
-    cmd = "MarkdownPreview",
-    disable = true,
-  }
-  use {
-    "nvim-neorg/neorg",
-    ft = "norg",
-    after = "nvim-treesitter",
-    config = function()
-      require("neorg").setup {
-        load = {
-          ["core.defaults"] = {},
-        },
-      }
+      require "rc.notify"
     end,
   }
 
-  use {
-    "lambdalisue/guise.vim",
-    require = "denops.vim",
-    config = function() end,
-    disable = true,
-  }
   use {
     "akinsho/toggleterm.nvim",
     setup = function()
@@ -516,15 +463,6 @@ function M.init()
     cmd = "ToggleTerm",
   }
 
-  use {
-    "fatih/vim-go",
-    config = function()
-      vim.g.go_fmt_command = "goimports"
-      vim.g.go_def_mapping_enabled = 0
-      vim.g.go_doc_keywordprg_enabled = 0
-    end,
-    ft = { "go" },
-  }
   use {
     "luukvbaal/stabilize.nvim",
     config = function()
