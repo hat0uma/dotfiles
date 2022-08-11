@@ -121,15 +121,13 @@ function M.init()
 
   -- colorscheme
   use {
-    {
-      "sainnhe/everforest",
-      config = function()
-        vim.g.everforest_background = "hard"
-        vim.g.everforest_ui_contrast = "high"
-        vim.cmd [[ colorscheme everforest ]]
-        --  vim.cmd [[ highlight! default link WinBar NormalFloat ]]
-      end,
-    },
+    "sainnhe/everforest",
+    config = function()
+      vim.g.everforest_background = "hard"
+      vim.g.everforest_ui_contrast = "high"
+      vim.cmd [[ colorscheme everforest ]]
+      --  vim.cmd [[ highlight! default link WinBar NormalFloat ]]
+    end,
   }
 
   use {
@@ -331,6 +329,10 @@ function M.init()
 
   use {
     "uga-rosa/translate.nvim",
+    setup = function()
+      vim.keymap.set("v", "tr", "<Cmd>Translate JA<CR><Esc>", { silent = true })
+      vim.keymap.set("n", "tr", "m'viw<Cmd>Translate JA<CR><Esc>``", { silent = true })
+    end,
     config = function()
       require("translate").setup {
         default = {
@@ -338,9 +340,8 @@ function M.init()
           output = "floating",
         },
       }
-      vim.keymap.set("v", "tr", "<Cmd>Translate JA<CR>", { silent = true })
-      vim.keymap.set("n", "tr", "m'viw<Cmd>Translate JA<CR>", { silent = true })
     end,
+    cmd = "Translate",
   }
 
   use {
