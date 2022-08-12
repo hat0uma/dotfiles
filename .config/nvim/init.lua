@@ -129,7 +129,13 @@ vim.g.scriptencoding = "utf-8"
 vim.o.expandtab = true
 vim.o.tabstop = 4
 vim.o.shiftwidth = 4
-
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "toml,yaml,json,lua",
+  callback = function()
+    vim.bo.shiftwidth = 2
+    vim.bo.tabstop = 2
+  end,
+})
 -------------------------------------------------------------------------
 -- key settings
 vim.keymap.set("n", "<Leader>w", ":w<CR>", { noremap = true, silent = true })

@@ -330,8 +330,12 @@ function M.init()
   use {
     "uga-rosa/translate.nvim",
     setup = function()
-      vim.keymap.set("v", "tr", "<Cmd>Translate JA<CR><Esc>", { silent = true })
-      vim.keymap.set("n", "tr", "m'viw<Cmd>Translate JA<CR><Esc>``", { silent = true })
+      local opts = { silent = true, noremap = true }
+      vim.keymap.set("v", "<leader>tj", "<Cmd>Translate JA<CR><Esc>", opts)
+      vim.keymap.set("n", "<leader>tj", "m'viw<Cmd>Translate JA<CR><Esc>``", opts)
+      -- translate to English and replace
+      vim.keymap.set("v", "<leader>te", "<Cmd>Translate EN -output=replace<CR><Esc>", opts)
+      vim.keymap.set("n", "<leader>te", "m'viw<Cmd>Translate EN -output=replace<CR><Esc>``", opts)
     end,
     config = function()
       require("translate").setup {

@@ -27,19 +27,11 @@ local function split_files(opts)
 end
 
 -- callbacks
-local function on_termenter()
-  -- vim.wo.number = false
-  -- vim.wo.relativenumber = false
-end
-local function on_termleave()
-  -- vim.wo.number = true
-  -- vim.wo.relativenumber = true
-end
-local function on_termbufleave()
-  -- vim.b.rc_terminal_mode = vim.fn.mode()
-end
+local function on_termenter() end
+local function on_termleave() end
+local function on_termbufleave() end
 
---- open new terminal
+--- open new terminal buffer
 ---@return number bufnr
 local function open_new_terminal()
   local bufnr = vim.api.nvim_create_buf(false, false)
@@ -52,6 +44,7 @@ local function open_new_terminal()
 end
 
 --- show terminal on current window
+--- Buffers are associated with windows
 function M.show()
   local winid = vim.api.nvim_get_current_win()
   if vim.w.rc_terminal_bufnr ~= nil then

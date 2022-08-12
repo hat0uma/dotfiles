@@ -11,7 +11,7 @@ function ExportEnvs([hashtable]$newEnvs)
 # create link
 function MakeLink([string]$linkto , [string]$target)
 {
-    # no use symlink for permission
+    # Symbolic links cannot be used due to permissions
     if ( (Get-Item $target) -is [System.IO.DirectoryInfo] )
     {
         cmd /c "mklink" /J $linkto $target
