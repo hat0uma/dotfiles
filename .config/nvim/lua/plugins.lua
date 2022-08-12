@@ -182,8 +182,21 @@ function M.init()
       require("rc.lir").config()
     end,
     cmd = { "MyLirOpen" },
+    disable = true,
   }
-
+  use {
+    { "obaland/vfiler-column-devicons" },
+    {
+      "obaland/vfiler.vim",
+      setup = function()
+        vim.keymap.set("n", "<leader>e", "<Cmd>MyVFilerStart<CR>", { silent = true })
+      end,
+      config = function()
+        require "rc.vfiler"
+      end,
+    },
+    cmd = { "MyVFilerStart" },
+  }
   use {
     "vim-skk/denops-skkeleton.vim",
     setup = function()
