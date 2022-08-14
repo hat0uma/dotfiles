@@ -12,7 +12,7 @@ return {
   enable_tab_bar = false,
   -- exit_behavior = "Hold",
   -- xim_im_name = "fcitx",
-  font = wezterm.font "Sarasa Term J Nerd Font",
+  font = wezterm.font_with_fallback { "Sarasa Term J Nerd Font", "Twemoji Mozilla" },
   harfbuzz_features = { "calt=0", "clig=0", "liga=0" },
   default_prog = get_shell(),
   color_scheme = "Afterglow",

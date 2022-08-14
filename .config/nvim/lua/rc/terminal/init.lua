@@ -1,8 +1,10 @@
 local M = {}
 local shells = require "rc.terminal.shells"
+local AUGID = vim.api.nvim_create_augroup("rc_terminal_aug", {})
+---@class TermConfig
 local config = {
   terminal_ft = "terminal",
-  start_in_insert = false,
+  start_in_insert = true,
   shell = vim.fn.has "win64" == 1 and shells.pwsh or shells.zsh,
   on_open = function(bufnr)
     local opts = { noremap = true, buffer = bufnr }
@@ -32,48 +34,82 @@ local function on_termleave() end
 local function on_termbufleave() end
 
 --- open new terminal buffer
+---@param opts TermConfig
 ---@return number bufnr
-local function open_new_terminal()
+local function open_new_terminal(opts)
   local bufnr = vim.api.nvim_create_buf(false, false)
-  vim.bo[bufnr].filetype = config.terminal_ft
+  vim.bo[bufnr].filetype = opts.terminal_ft
   vim.api.nvim_buf_call(bufnr, function()
-    vim.fn.termopen(config.shell.cmd, { env = config.shell.env })
-    config.on_open(bufnr)
+    vim.fn.termopen(opts.shell.cmd, { env = opts.shell.env })
+    opts.on_open(bufnr)
   end)
   return bufnr
 end
 
+--- attach to window
+---@param winid number
+---@param bufnr number
+local function attach_terminal_to_window(winid, bufnr)
+  vim.w[winid].rc_terminal_bufnr = bufnr
+  vim.api.nvim_create_autocmd("TermClose", {
+    group = AUGID,
+    buffer = bufnr,
+    callback = function()
+      vim.w[winid].rc_terminal_bufnr = nil
+    end,
+  })
+  vim.api.nvim_create_autocmd("WinClosed", {
+    group = AUGID,
+    pattern = tostring(winid),
+    callback = function()
+      vim.api.nvim_buf_delete(bufnr, { force = true })
+    end,
+  })
+end
+
+--- find attached terminal
+---@param winid number
+---@return number:bufnr|nil
+local function find_attached_terminal(winid)
+  return vim.w[winid].rc_terminal_bufnr
+end
+
 --- show terminal on current window
---- Buffers are associated with windows
-function M.show()
+---@param opts TermConfig?
+function M.show(opts)
+  opts = vim.tbl_extend("keep", opts or {}, config)
   local winid = vim.api.nvim_get_current_win()
-  if vim.w.rc_terminal_bufnr ~= nil then
-    vim.api.nvim_win_set_buf(winid, vim.w.rc_terminal_bufnr)
+  local term = find_attached_terminal(winid)
+  if term ~= nil then
+    vim.api.nvim_win_set_buf(winid, term)
   else
-    vim.w.rc_terminal_bufnr = open_new_terminal()
-    vim.api.nvim_win_set_buf(winid, vim.w.rc_terminal_bufnr)
-    if config.start_in_insert then
-      vim.cmd.startinsert()
-    end
+    local new_term = open_new_terminal(opts)
+    vim.api.nvim_win_set_buf(winid, new_term)
+    attach_terminal_to_window(winid, new_term)
+  end
+  if opts.start_in_insert then
+    vim.cmd.startinsert()
   end
 end
+
 --- show terminal with vsplit
-function M.show_vs()
+---@param opts TermConfig?
+function M.show_vs(opts)
   vim.cmd.vsplit()
-  M.show()
+  M.show(opts)
 end
 --- show terminal with split
-function M.show_sp()
+---@param opts TermConfig?
+function M.show_sp(opts)
   vim.cmd.split()
-  M.show()
+  M.show(opts)
 end
 
 function M.setup()
   -- autocmds
-  local augid = vim.api.nvim_create_augroup("rc_terminal_aug", {})
-  vim.api.nvim_create_autocmd("TermEnter", { group = augid, pattern = "*", callback = on_termenter })
-  vim.api.nvim_create_autocmd("TermLeave", { group = augid, pattern = "*", callback = on_termleave })
-  vim.api.nvim_create_autocmd("BufLeave", { group = augid, pattern = "term:/*", callback = on_termbufleave })
+  vim.api.nvim_create_autocmd("TermEnter", { group = AUGID, pattern = "*", callback = on_termenter })
+  vim.api.nvim_create_autocmd("TermLeave", { group = AUGID, pattern = "*", callback = on_termleave })
+  vim.api.nvim_create_autocmd("BufLeave", { group = AUGID, pattern = "term:/*", callback = on_termbufleave })
 
   -- commands
   local cmdopts = { nargs = "*", complete = "file", bar = true }
