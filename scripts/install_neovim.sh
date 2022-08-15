@@ -1,4 +1,5 @@
 #!/bin/env bash
+set -e
 version=${1:-"master"}
 neovim_tmp_dir=${2:-"/tmp/nvim"}
 echo "*** start install neovim@${version} ***"
