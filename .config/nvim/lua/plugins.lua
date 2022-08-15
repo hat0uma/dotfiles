@@ -199,19 +199,11 @@ function M.init()
   }
   use {
     "vim-skk/denops-skkeleton.vim",
-    setup = function()
+    config = function()
       vim.keymap.set("i", "<C-j>", "<Plug>(skkeleton-toggle)", {})
       vim.keymap.set("c", "<C-j>", "<Plug>(skkeleton-toggle)", {})
-    end,
-    config = function()
-      require("rc.denops").register "skkeleton"
       require "rc.skkeleton"
     end,
-    wants = "denops.vim",
-    keys = {
-      { "i", "<Plug>(skkeleton-toggle)" },
-      { "c", "<Plug>(skkeleton-toggle)" },
-    },
   }
 
   use {
@@ -480,7 +472,7 @@ function M.init()
     end,
     cmd = "ToggleTerm",
   }
-
+  use { "ojroques/vim-oscyank" }
   use {
     "luukvbaal/stabilize.nvim",
     config = function()

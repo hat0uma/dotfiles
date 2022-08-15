@@ -13,6 +13,7 @@ cli:
 	yay -S --noconfirm \
 		unzip \
 		xsel \
+		tmux \
 		github-cli \
 		nodejs \
 		npm \
@@ -22,6 +23,7 @@ cli:
 		zsh
 	curl -fsSL https://deno.land/x/install/install.sh | sh
 	${PWD}/scripts/install_neovim.sh
+	mkdir -p ~/.eskk && wget -O - 'https://skk-dev.github.io/dict/SKK-JISYO.L.gz'|gzip -d |iconv -f EUC-JP -t UTF-8 > ~/.eskk/SKK-JISYO.L
 
 gui:
 	yay -S --noconfirm \
