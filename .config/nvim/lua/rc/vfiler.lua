@@ -91,7 +91,14 @@ local function my_vfiler_start()
   else
     path = vim.loop.cwd()
   end
-  vf.start(path)
+
+  local configs = {
+    options = {
+      width = math.floor(vim.o.columns * 0.7),
+      height = math.floor(vim.o.lines * 0.7),
+    },
+  }
+  vf.start(path, configs)
   -- vim.cmd [[ doautocmd BufEnter ]]
 end
 vim.api.nvim_create_user_command("MyVFilerStart", my_vfiler_start, {})
