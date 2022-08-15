@@ -23,7 +23,7 @@ cli:
 		zsh
 	curl -fsSL https://deno.land/x/install/install.sh | sh
 	${PWD}/scripts/install_neovim.sh
-	mkdir -p ~/.eskk && wget -O - 'https://skk-dev.github.io/dict/SKK-JISYO.L.gz'|gzip -d |iconv -f EUC-JP -t UTF-8 > ~/.eskk/SKK-JISYO.L
+	mkdir -p ~/.eskk && curl 'https://skk-dev.github.io/dict/SKK-JISYO.L.gz' | gzip -d | iconv -f EUC-JP -t UTF-8 > ~/.eskk/SKK-JISYO.L
 
 gui:
 	yay -S --noconfirm \
