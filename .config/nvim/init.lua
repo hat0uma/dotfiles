@@ -59,10 +59,11 @@ vim.o.scrolloff = 999
 vim.o.sidescrolloff = 16
 vim.o.sidescroll = 1
 vim.o.wrap = false
+vim.o.cursorline = true
 -- fold
-vim.o.foldmethod = "expr"
-vim.o.foldexpr = "nvim_treesitter#foldexpr()"
-vim.o.foldlevelstart = 99
+-- vim.o.foldmethod = "expr"
+-- vim.o.foldexpr = "nvim_treesitter#foldexpr()"
+-- vim.o.foldlevelstart = 99
 
 -- files
 vim.o.confirm = true

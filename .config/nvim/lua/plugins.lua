@@ -33,14 +33,7 @@ function M.init()
   use {
     "RRethy/vim-illuminate",
     config = function()
-      vim.g.Illuminate_ftblacklist = {
-        "gina-status",
-        "gina-commit",
-        "TelescopePrompt",
-        "toggleterm",
-        "terminal",
-        "lir",
-      }
+      require "rc.illuminate"
     end,
   }
 
@@ -68,6 +61,16 @@ function M.init()
     {
       "jose-elias-alvarez/null-ls.nvim",
       module = "null-ls",
+    },
+    use {
+      "rikuma-t/trouble.nvim",
+      requires = "kyazdani42/nvim-web-devicons",
+      config = function()
+        require("trouble").setup {
+          workspace_diagnostics_severity = { min = vim.diagnostic.severity.WARN },
+          document_diagnostics_severity = { min = vim.diagnostic.severity.HINT },
+        }
+      end,
     },
   }
 
@@ -127,6 +130,12 @@ function M.init()
       vim.g.everforest_ui_contrast = "high"
       vim.cmd [[ colorscheme everforest ]]
       --  vim.cmd [[ highlight! default link WinBar NormalFloat ]]
+      vim.cmd [[
+        highlight! default link VirtualTextError CocErrorSign
+        highlight! default link VirtualTextWarning CocWarningsign
+        highlight! default link VirtualTextInfo CocInfoSign
+        highlight! default link VirtualTextHint CocHintSign
+      ]]
     end,
   }
 
