@@ -17,15 +17,6 @@ else
   table.insert(launch_menu, { label = "zsh", args = { "zsh", "-l" } })
 end
 
-local keys = {}
-table.insert(keys, { key = "q", mods = "ALT", action = act.CloseCurrentPane { confirm = false } })
-table.insert(keys, { key = "0", mods = "ALT", action = act.QuitApplication })
-table.insert(keys, { key = "Enter", mods = "ALT", action = wezterm.action.ShowLauncher })
-table.insert(keys, { key = "UpArrow", mods = "ALT", action = wezterm.action.ToggleFullScreen })
-for i = 1, 8 do
-  table.insert(keys, { key = tostring(i), mods = "ALT", action = act.ActivateTab(i - 1) })
-end
-
 wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_width)
   local bg = tab.is_active and "blue" or "navy"
   local title = string.format(" %d ", tab.tab_index + 1)
@@ -49,5 +40,14 @@ return {
   font = wezterm.font_with_fallback { "Sarasa Term J Nerd Font", "Twemoji Mozilla" },
   harfbuzz_features = { "calt=0", "clig=0", "liga=0" },
   default_prog = terminal_on_neovim,
-  keys = keys,
+  keys = {
+    { key = "q", mods = "ALT", action = act.CloseCurrentPane { confirm = false } },
+    { key = "0", mods = "ALT", action = act.QuitApplication },
+    { key = "Enter", mods = "ALT", action = wezterm.action.ShowLauncher },
+    { key = "f", mods = "ALT", action = wezterm.action.ToggleFullScreen },
+    { key = "1", mods = "ALT", action = act.ActivateTab(0) },
+    { key = "2", mods = "ALT", action = act.ActivateTab(1) },
+    { key = "3", mods = "ALT", action = act.ActivateTab(2) },
+    { key = "4", mods = "ALT", action = act.ActivateTab(3) },
+  },
 }

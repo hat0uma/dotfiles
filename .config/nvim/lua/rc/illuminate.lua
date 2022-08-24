@@ -12,6 +12,7 @@ require("illuminate").configure {
     "toggleterm",
     "terminal",
     "lir",
+    "Trouble",
   },
 }
 local aug = vim.api.nvim_create_augroup("rc_illuminate_arg", {})

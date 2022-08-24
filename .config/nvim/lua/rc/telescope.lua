@@ -48,6 +48,7 @@ function M.config()
               vim.fn.feedkeys "\b"
             end
           end,
+          ["<c-t>"] = actions.send_to_qflist + actions.open_qflist,
         },
         n = {
           ["q"] = actions.close,
@@ -55,6 +56,7 @@ function M.config()
           ["p"] = layout_actions.toggle_preview,
           -- ["<C-d>"] = my_actions.shift_selection_pagedown,
           -- ["<C-u>"] = my_actions.shift_selection_pageup,
+          ["<c-t>"] = actions.send_to_qflist + actions.open_qflist,
         },
       },
       initial_mode = "normal",

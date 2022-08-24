@@ -47,9 +47,6 @@ local make_on_attach = function(override_opts)
     local lsp_rename = function()
       require("rc.lsp.rename").rename()
     end
-    local diagnostics = function()
-      require("telescope.builtin").diagnostics { severity_limit = vim.diagnostic.severity.WARN, bufnr = 0 }
-    end
     local map_opts = { noremap = true, silent = true, buffer = bufnr }
     vim.keymap.set("n", "gD", vim.lsp.buf.declaration, map_opts)
     vim.keymap.set("n", "gd", override_opts.go_to_definition or go_to_definition, map_opts)
@@ -63,9 +60,7 @@ local make_on_attach = function(override_opts)
     vim.keymap.set("n", "<leader>D", vim.lsp.buf.type_definition, map_opts)
     vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, map_opts)
     vim.keymap.set("n", "]d", vim.diagnostic.goto_next, map_opts)
-    vim.keymap.set("n", "<leader>q", "<Cmd>TroubleToggle workspace_diagnostics<CR>", map_opts)
     vim.keymap.set("n", "<leader>a", vim.lsp.buf.code_action, map_opts)
-    vim.keymap.set("n", "<leader>d", diagnostics, map_opts)
 
     if client.server_capabilities.documentFormattingProvider then
       vim.api.nvim_buf_create_user_command(bufnr, "Format", format, {})
@@ -234,7 +229,7 @@ function M.setup()
   vim.diagnostic.config {
     underline = {
       severity = {
-        min = vim.diagnostic.severity.INFO,
+        min = vim.diagnostic.severity.HINT,
       },
     },
     virtual_text = {
@@ -244,7 +239,7 @@ function M.setup()
     },
     signs = {
       severity = {
-        min = vim.diagnostic.severity.INFO,
+        min = vim.diagnostic.severity.HINT,
       },
     },
     severity_sort = true,
