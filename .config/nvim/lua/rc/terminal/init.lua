@@ -1,17 +1,7 @@
 local M = {}
-local shells = require "rc.terminal.shells"
+local dir = require "rc.terminal.dir"
+local config = require "rc.terminal.config"
 local AUGID = vim.api.nvim_create_augroup("rc_terminal_aug", {})
----@class TermConfig
-local config = {
-  terminal_ft = "terminal",
-  start_in_insert = true,
-  shell = vim.fn.has "win64" == 1 and shells.pwsh or shells.zsh,
-  on_open = function(bufnr)
-    local opts = { noremap = true, buffer = bufnr }
-    vim.keymap.set("t", "<esc>", [[<C-\><C-n>]], opts)
-    vim.keymap.set("t", "jj", [[<C-\><C-n>]], opts)
-  end,
-}
 
 -- functions for script
 local function edit_files(opts)
@@ -110,6 +100,8 @@ function M.setup()
   vim.api.nvim_create_autocmd("TermEnter", { group = AUGID, pattern = "*", callback = on_termenter })
   vim.api.nvim_create_autocmd("TermLeave", { group = AUGID, pattern = "*", callback = on_termleave })
   vim.api.nvim_create_autocmd("BufLeave", { group = AUGID, pattern = "term:/*", callback = on_termbufleave })
+  vim.api.nvim_create_autocmd("BufEnter", { group = AUGID, pattern = "term:/*", callback = dir.on_termbuf_enter })
+  vim.api.nvim_create_autocmd("User", { group = AUGID, pattern = "TermCwdChanged", callback = dir.on_term_cwd_changed })
 
   -- commands
   local cmdopts = { nargs = "*", complete = "file", bar = true }

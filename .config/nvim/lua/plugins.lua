@@ -364,10 +364,10 @@ function M.init()
     setup = function()
       local opts = { silent = true, noremap = true }
       vim.keymap.set("v", "<leader>tj", "<Cmd>Translate JA<CR><Esc>", opts)
-      vim.keymap.set("n", "<leader>tj", "m'viw<Cmd>Translate JA<CR><Esc>``", opts)
+      vim.keymap.set("n", "<leader>tj", "viw:Translate JA<CR><Esc>", opts)
       -- translate to English and replace
-      vim.keymap.set("v", "<leader>te", "<Cmd>Translate EN -output=replace<CR><Esc>", opts)
-      vim.keymap.set("n", "<leader>te", "m'viw<Cmd>Translate EN -output=replace<CR><Esc>``", opts)
+      vim.keymap.set("v", "<leader>te", "<Cmd>Translate EN -output=replace<CR>", opts)
+      vim.keymap.set("n", "<leader>te", "viw:Translate EN -output=replace<CR>", opts)
     end,
     config = function()
       require("translate").setup {
