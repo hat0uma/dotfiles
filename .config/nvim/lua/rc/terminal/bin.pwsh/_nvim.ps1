@@ -26,11 +26,11 @@ $files=$args | Select-Object -Skip $optind
 $stdinPiped = ( $input.Clone() ).MoveNext()
 if( -not $stdinPiped )
 {
-    nvim --server $env:PARENT_NVIM_ADDRESS --remote-send "<Cmd>$opener $files<CR>"
+    nvim -u NONE -i NONE --server $env:PARENT_NVIM_ADDRESS --remote-send "<Cmd>$opener $files<CR>"
 } else
 {
     $tmpFile=(New-TemporaryFile).FullName
     $input |Out-File -FilePath $tmpFile -Append 
-    nvim --server "$env:PARENT_NVIM_ADDRESS" --remote-send "<Cmd>$opener $tmpFile | au VimLeave * call delete('$tmpFile')<CR>"
+    nvim -u NONE -i NONE --server "$env:PARENT_NVIM_ADDRESS" --remote-send "<Cmd>$opener $tmpFile | au VimLeave * call delete('$tmpFile')<CR>"
 }
 
