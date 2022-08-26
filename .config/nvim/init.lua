@@ -141,10 +141,10 @@ vim.api.nvim_create_autocmd("FileType", {
 -- key settings
 vim.keymap.set("n", "<Leader>w", ":w<CR>", { noremap = true, silent = true })
 vim.keymap.set("i", "jj", "<Esc>", { noremap = true, silent = true })
-vim.keymap.set("n", "<Up>", "<Cmd>wincmd +<CR>", { noremap = true, silent = true })
-vim.keymap.set("n", "<Down>", "<Cmd>wincmd -<CR>", { noremap = true, silent = true })
-vim.keymap.set("n", "<Right>", "<Cmd>wincmd ><CR>", { noremap = true, silent = true })
-vim.keymap.set("n", "<Left>", "<Cmd>wincmd <<CR>", { noremap = true, silent = true })
+-- vim.keymap.set("n", "<Up>", "<Cmd>wincmd +<CR>", { noremap = true, silent = true })
+-- vim.keymap.set("n", "<Down>", "<Cmd>wincmd -<CR>", { noremap = true, silent = true })
+-- vim.keymap.set("n", "<Right>", "<Cmd>wincmd ><CR>", { noremap = true, silent = true })
+-- vim.keymap.set("n", "<Left>", "<Cmd>wincmd <<CR>", { noremap = true, silent = true })
 
 -- abbrevs
 vim.cmd.cabbrev("printt", "print(vim.inspect())<Left><Left>")

@@ -66,28 +66,7 @@ function M.init()
       "rikuma-t/trouble.nvim",
       requires = "kyazdani42/nvim-web-devicons",
       config = function()
-        require("trouble").setup {
-          auto_preview = false,
-          workspace_diagnostics_severity = { min = vim.diagnostic.severity.HINT },
-          document_diagnostics_severity = { min = vim.diagnostic.severity.HINT },
-        }
-        local current_mode = "document_diagnostics"
-        local trouble_toggle = function()
-          require("trouble").toggle { mode = current_mode }
-        end
-        vim.keymap.set("n", "<leader>d", trouble_toggle, { noremap = true })
-        vim.api.nvim_create_autocmd("FileType", {
-          pattern = "Trouble",
-          callback = function()
-            local function open()
-              current_mode = current_mode == "document_diagnostics" and "workspace_diagnostics"
-                or "document_diagnostics"
-              require("trouble").open { mode = current_mode }
-            end
-            local opts = { noremap = true, buffer = true }
-            vim.keymap.set("n", "<leader><leader>", open, opts)
-          end,
-        })
+        require "rc.trouble"
       end,
     },
   }
