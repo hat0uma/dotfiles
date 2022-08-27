@@ -1,5 +1,5 @@
 local M = {}
-local shell = require "rc.terminal.shell"
+local shell = require("rc.terminal.config").shell
 
 local KeyCode = {
   Up = "\x1b[A",

@@ -508,22 +508,6 @@ function M.init()
         nohlsearch = { jump = true },
         markers = vim.split("ABCDEFGHIJKLMNOPQRSTUVWXYZ", ""),
       }
-      local old_scrolloff = vim.o.scrolloff
-      aug("searchx_settings", {
-        au("User", {
-          pattern = "SearchxEnter",
-          callback = function()
-            old_scrolloff = vim.o.scrolloff
-            vim.o.scrolloff = 0
-          end,
-        }),
-        au("User", {
-          pattern = "SearchxLeave",
-          callback = function()
-            vim.o.scrolloff = old_scrolloff
-          end,
-        }),
-      })
       vim.cmd [[
         " Convert search pattern.
         function g:searchx.convert(input) abort

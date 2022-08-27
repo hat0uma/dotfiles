@@ -87,9 +87,9 @@ M.parsers = {
   "bash",
   "go",
   "rust",
-  "norg",
-  "norg_meta",
-  "norg_table",
+  -- "norg",
+  -- "norg_meta",
+  -- "norg_table",
 }
 
 function M.install_parsers(opts)
