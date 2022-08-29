@@ -102,4 +102,4 @@ end
 notify.setup {
   stages = stages,
 }
-lsp_setup()
+-- lsp_setup()

@@ -70,6 +70,12 @@ function M.init()
         require "rc.trouble"
       end,
     },
+    use {
+      "j-hui/fidget.nvim",
+      config = function()
+        require("fidget").setup {}
+      end,
+    },
   }
 
   use {
@@ -330,6 +336,10 @@ function M.init()
       "nvim-treesitter/playground",
       after = "nvim-treesitter",
       cmd = "TSPlaygroundToggle",
+    },
+    use {
+      requires = { "nvim-treesitter/nvim-treesitter" },
+      "Badhi/nvim-treesitter-cpp-tools",
     },
   }
 
