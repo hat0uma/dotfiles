@@ -17,6 +17,7 @@ function M.init()
     packer = require "packer"
     packer.init {
       disable_commands = true,
+      max_jobs = vim.fn.has "win64" == 1 and 10 or nil,
       display = {
         open_cmd = "lefta 65vnew \\[packer\\]",
       },
@@ -125,7 +126,8 @@ function M.init()
     config = function()
       vim.g.everforest_background = "hard"
       vim.g.everforest_ui_contrast = "high"
-      vim.cmd [[ colorscheme everforest ]]
+      vim.g.everforest_better_performance = 1
+      vim.cmd [[ autocmd VimEnter * ++nested colorscheme everforest ]]
       --  vim.cmd [[ highlight! default link WinBar NormalFloat ]]
       vim.cmd [[
         highlight! default link VirtualTextError CocErrorSign
