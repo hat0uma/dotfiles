@@ -5,7 +5,7 @@ local terminal_on_neovim = {}
 if wezterm.target_triple == "x86_64-pc-windows-msvc" then
   terminal_on_neovim = { os.getenv "UserProfile" .. "/dotfiles/win/nvim_terminal.cmd" }
 else
-  terminal_on_neovim { os.getenv "HOME" .. "/dotfiles/scripts/nvim_terminal.sh" }
+  terminal_on_neovim = { os.getenv "HOME" .. "/dotfiles/scripts/nvim_terminal.sh" }
 end
 
 local launch_menu = {}

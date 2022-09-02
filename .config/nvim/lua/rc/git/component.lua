@@ -39,7 +39,7 @@ local function make_git_status_job(opts)
 end
 
 --- get cached status
----@param cwd string
+---@param cwd string?
 ---@return GitStatus
 function M.get_status_cached(cwd)
   if M.internal.on_cooldown then

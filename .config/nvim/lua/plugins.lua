@@ -134,13 +134,19 @@ function M.init()
       vim.g.everforest_ui_contrast = "high"
       vim.g.everforest_better_performance = 1
       vim.cmd [[ autocmd VimEnter * ++nested colorscheme everforest ]]
-      --  vim.cmd [[ highlight! default link WinBar NormalFloat ]]
-      vim.cmd [[
-        highlight! default link VirtualTextError CocErrorSign
-        highlight! default link VirtualTextWarning CocWarningsign
-        highlight! default link VirtualTextInfo CocInfoSign
-        highlight! default link VirtualTextHint CocHintSign
-      ]]
+      aug("rc_everforest_settings", {
+        au("ColorScheme", {
+          pattern = "everforest",
+          callback = function()
+            vim.cmd [[highlight! default link VirtualTextError CocErrorSign]]
+            vim.cmd [[highlight! default link VirtualTextWarning CocWarningsign]]
+            vim.cmd [[highlight! default link VirtualTextInfo CocInfoSign]]
+            vim.cmd [[highlight! default link VirtualTextHint CocHintSign]]
+            --  vim.cmd [[ highlight! default link WinBar NormalFloat ]]
+          end,
+          nested = true,
+        }),
+      }, {})
     end,
   }
 
@@ -383,21 +389,22 @@ function M.init()
     {
       "lambdalisue/gina.vim",
       setup = function()
-        vim.keymap.set("n", ",s", ":<C-u>Gina status<CR>", {})
-        vim.keymap.set("n", ",c", ":<C-u>Gina commit -v<CR>", {})
-        vim.keymap.set("n", ",a", ":<C-u>Gina commit --amend -v<CR>", {})
-        vim.keymap.set("n", ",b", ":<C-u>Gina branch -a<CR>", {})
-        vim.keymap.set("n", ",l", ":<C-u>Gina log<CR>", {})
+        local opts = { silent = true, noremap = true }
+        vim.keymap.set("n", ",s", ":<C-u>Gina status<CR>", opts)
+        vim.keymap.set("n", ",c", ":<C-u>Gina commit -v<CR>", opts)
+        vim.keymap.set("n", ",a", ":<C-u>Gina commit --amend -v<CR>", opts)
+        vim.keymap.set("n", ",b", ":<C-u>Gina branch -a<CR>", opts)
+        vim.keymap.set("n", ",l", ":<C-u>Gina log<CR>", opts)
 
         local yank_cmd = "Gina browse --exact : --yank<CR>:let @+=@0"
-        vim.keymap.set("n", ",y", "<Cmd>" .. yank_cmd .. "<CR>", { silent = true })
-        vim.keymap.set("v", ",y", ":" .. yank_cmd .. "<CR>", { silent = true })
+        vim.keymap.set("n", ",y", "<Cmd>" .. yank_cmd .. "<CR>", opts)
+        vim.keymap.set("v", ",y", ":" .. yank_cmd .. "<CR>", opts)
 
         local browse_cmd = "Gina browse --exact :"
-        vim.keymap.set("n", ",x", "<Cmd>" .. browse_cmd .. "<CR>", { silent = true })
-        vim.keymap.set("v", ",x", ":" .. browse_cmd .. "<CR>", { silent = true })
+        vim.keymap.set("n", ",x", "<Cmd>" .. browse_cmd .. "<CR>", opts)
+        vim.keymap.set("v", ",x", ":" .. browse_cmd .. "<CR>", opts)
       end,
-      cmd = { "Gina" },
+      cmd = "Gina",
     },
     {
       "lewis6991/gitsigns.nvim",

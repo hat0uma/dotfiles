@@ -40,7 +40,7 @@ vim.o.relativenumber = true
 vim.o.laststatus = 3
 vim.o.cmdheight = 1
 vim.o.showmatch = true
-vim.o.helpheight = 999
+-- vim.o.helpheight = 999
 vim.o.list = true
 vim.o.hls = true
 vim.o.showmode = false
@@ -119,7 +119,8 @@ vim.g.loaded_zipPlugin = 1
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "vim,lua",
   callback = function()
-    vim.bo.keywordprg = ":vert help"
+    -- vim.bo.keywordprg = ":vert help"
+    vim.bo.keywordprg = ":abo help"
   end,
 })
 -------------------------------------------------------------------------
