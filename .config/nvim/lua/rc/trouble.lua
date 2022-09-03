@@ -66,7 +66,7 @@ require("trouble").setup {
   document_diagnostics_severity = { min = vim.diagnostic.severity.HINT },
 }
 
-vim.keymap.set("n", "<leader>d", toggle, { noremap = true })
+vim.keymap.set("n", "<leader>q", toggle, { noremap = true })
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "Trouble",
   callback = function()

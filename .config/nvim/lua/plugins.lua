@@ -326,7 +326,13 @@ function M.init()
     },
   }
 
-  use "mfussenegger/nvim-dap"
+  use {
+    "mfussenegger/nvim-dap",
+    config = function()
+      require "rc.dap"
+    end,
+  }
+  use { "rcarriga/nvim-dap-ui" }
 
   use {
     {
@@ -404,7 +410,7 @@ function M.init()
         vim.keymap.set("n", ",x", "<Cmd>" .. browse_cmd .. "<CR>", opts)
         vim.keymap.set("v", ",x", ":" .. browse_cmd .. "<CR>", opts)
       end,
-      cmd = "Gina",
+      -- cmd = "Gina",
     },
     {
       "lewis6991/gitsigns.nvim",

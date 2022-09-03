@@ -177,25 +177,9 @@ local function omnisharp_config()
     end,
   }
 end
-local function omnisharp_mono_config()
-  -- https://github.com/OmniSharp/omnisharp-roslyn/issues/1948#issuecomment-1008443985
-  local pid = vim.fn.getpid()
-  local omnisharp_bin = vim.fn.expand "~/.local/share/omnisharp-mono/OmniSharp.exe"
-  local config = omnisharp_config()
-  config.cmd = { "mono", omnisharp_bin, "--languageserver", "--hostPID", tostring(pid) }
-  config.on_new_config = function(new_config, new_root_dir)
-    if new_root_dir then
-      table.insert(new_config.cmd, "-s")
-      table.insert(new_config.cmd, new_root_dir)
-    end
-  end
-  return config
-end
-
-M.configured_servers = {
+M.servers = {
   sumneko_lua = { config = lua_config() },
   vimls = { config = default_config() },
-  omnisharp = { config = omnisharp_config() },
   dockerls = { config = default_config() },
   pyright = { config = default_config() },
   rust_analyzer = { config = default_config() },
@@ -204,6 +188,12 @@ M.configured_servers = {
   denols = { config = denols_config() },
   gopls = { config = gopls_config() },
 }
+if vim.fn.has "win64" ~= 0 then
+  M.servers["omnisharp"] = { config = omnisharp_config() }
+else
+  -- M.servers["omnisharp"] = { config = omnisharp_mono_config() }
+  M.servers["omnisharp_mono"] = { config = omnisharp_config() }
+end
 
 local function setup_nullls()
   local null_ls = require "null-ls"
@@ -256,12 +246,7 @@ function M.setup()
   -- require("lsp_signature").setup()
   mason_lspconfig.setup()
   setup_nullls()
-  for name, server in pairs(M.configured_servers) do
-    if server.name == "omnisharp" and vim.fn.has "win64" == 0 then
-      -- if not windows, use omnisharp-mono
-      nvim_lsp[server.name].setup(omnisharp_mono_config())
-      return
-    end
+  for name, server in pairs(M.servers) do
     nvim_lsp[name].setup(server.config)
   end
 end
