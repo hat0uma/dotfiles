@@ -1,5 +1,4 @@
 local dap = require "dap"
-local mason_registry = require "mason-registry"
 local uv = vim.loop
 
 local function read_file_sync(path)
@@ -16,11 +15,24 @@ local function get_pid_of_unity_editor()
   return editor_instance_json.process_id
 end
 
+local function extend_path(path)
+  local sep = vim.fn.has "win64" == 1 and ";" or ":"
+  return string.format("%s%s%s", path, sep, vim.env.PATH)
+end
+
+local mason_bin = vim.fn.stdpath "data" .. "/mason/bin"
 dap.adapters.coreclr = {
   type = "executable",
-  command = mason_registry.get_package("netcoredbg"):get_install_path() .. "/netcoredbg",
+  command = "netcoredbg",
   args = { "--interpreter=vscode" },
+  options = {
+    env = {
+      PATH = extend_path(mason_bin),
+    },
+  },
 }
+
+-- FIXME
 dap.configurations.cs = {
   {
     type = "coreclr",
