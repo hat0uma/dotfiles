@@ -100,8 +100,11 @@ local SymbolKind = {
 }
 -- default configurations for lsp
 local function default_config(override_opts)
-  local capabilities = vim.lsp.protocol.make_client_capabilities()
-  capabilities = cmp_nvim_lsp.update_capabilities(capabilities)
+  local capabilities = vim.tbl_extend(
+    "force",
+    vim.lsp.protocol.make_client_capabilities(),
+    cmp_nvim_lsp.default_capabilities()
+  )
   capabilities.textDocument.completion.completionItem.snippetSupport = true
   capabilities.workspace.symbol.symbolKind.valueSet = {
     SymbolKind.Module,
