@@ -42,6 +42,7 @@ function M.init()
   use {
     { "p00f/clangd_extensions.nvim" },
     { "Hoffs/omnisharp-extended-lsp.nvim" },
+    { "jose-elias-alvarez/typescript.nvim" },
     {
       "neovim/nvim-lspconfig",
       config = function()
@@ -420,6 +421,8 @@ function M.init()
         require("rc.gitsigns").setup()
       end,
     },
+    -- test
+    { "TimUntersberger/neogit", requires = "nvim-lua/plenary.nvim" },
   }
 
   -- textobj

@@ -100,11 +100,8 @@ local SymbolKind = {
 }
 -- default configurations for lsp
 local function default_config(override_opts)
-  local capabilities = vim.tbl_extend(
-    "force",
-    vim.lsp.protocol.make_client_capabilities(),
-    cmp_nvim_lsp.default_capabilities()
-  )
+  local capabilities =
+    vim.tbl_extend("force", vim.lsp.protocol.make_client_capabilities(), cmp_nvim_lsp.default_capabilities())
   capabilities.textDocument.completion.completionItem.snippetSupport = true
   capabilities.workspace.symbol.symbolKind.valueSet = {
     SymbolKind.Module,
@@ -210,7 +207,8 @@ M.servers = {
   powershell_es = { config = default_config(), version = "v2.1.2" },
   denols = { config = denols_config() },
   gopls = { config = gopls_config() },
-  tsserver = { config = tsserver_config() },
+  -- use typescript.nvim
+  -- tsserver = { config = tsserver_config() },
 }
 if vim.fn.has "win64" ~= 0 then
   M.servers["omnisharp"] = { config = omnisharp_config() }
@@ -226,6 +224,11 @@ local function setup_nullls()
       return utils.root_has_file { ".eslintrc.json" }
     end,
   }
+  local has_prettierrc = {
+    condition = function(utils)
+      return utils.root_has_file { ".prettierrc" }
+    end,
+  }
   local sources = {
     null_ls.builtins.formatting.stylua.with {
       condition = function(utils)
@@ -236,6 +239,8 @@ local function setup_nullls()
     null_ls.builtins.diagnostics.eslint_d.with(has_eslintrc),
     null_ls.builtins.code_actions.eslint_d.with(has_eslintrc),
     null_ls.builtins.formatting.eslint_d.with(has_eslintrc),
+    null_ls.builtins.formatting.prettierd.with(has_prettierrc),
+    require "typescript.extensions.null-ls.code-actions",
   }
   null_ls.setup { sources = sources, on_attach = make_on_attach {} }
   local function register_my_nullls_settings()
@@ -281,6 +286,16 @@ function M.setup()
   for name, server in pairs(M.servers) do
     nvim_lsp[name].setup(server.config)
   end
+  require("typescript").setup {
+    disable_commands = false,
+    debug = false,
+    go_to_source_definition = {
+      fallback = true,
+    },
+    server = {
+      on_attach = default_config({ document_formatting = false }).on_attach,
+    },
+  }
 end
 
 return M
