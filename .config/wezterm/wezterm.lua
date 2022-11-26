@@ -1,29 +1,21 @@
 local wezterm = require "wezterm"
 local act = wezterm.action
 local is_windows = wezterm.target_triple == "x86_64-pc-windows-msvc"
+local home = is_windows and os.getenv "UserProfile" or os.getenv "HOME"
+local dotfiles = home .. "/dotfiles"
 
-local terminal_on_neovim
-if is_windows then
-  terminal_on_neovim = { os.getenv "UserProfile" .. "/dotfiles/win/nvim_terminal.cmd" }
-else
-  terminal_on_neovim = { os.getenv "HOME" .. "/dotfiles/scripts/nvim_terminal.sh" }
-end
-
-local launch_menu = {}
-if is_windows then
-  table.insert(launch_menu, { label = "pwsh", args = { "pwsh", "-NoLogo" } })
-else
-  table.insert(launch_menu, { label = "zsh", args = { "zsh", "-l" } })
-end
-table.insert(launch_menu, { label = "neovim", args = { "nvim" } })
-table.insert(launch_menu, { label = "neovim-terminal", args = terminal_on_neovim })
-
-local default_prog
-if is_windows then
-  default_prog = { "pwsh", "-NoLogo" }
-else
-  default_prog = { "zsh", "-l" }
-end
+local pwsh = { label = "pwsh", args = { "pwsh", "-NoLogo" } }
+local zsh = { label = "zsh", args = { "zsh", "-l" } }
+local neovim = { label = "neovim", args = { "nvim" } }
+local neovim_terminal = {
+  label = "neovim-terminal",
+  args = is_windows and { dotfiles .. "/win/nvim_terminal.cmd" } or { dotfiles .. "/scripts/nvim_terminal.sh" },
+}
+local launch_menu = {
+  is_windows and pwsh or zsh,
+  neovim_terminal,
+  neovim,
+}
 
 wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_width)
   local bg = tab.is_active and "blue" or "navy"
@@ -36,6 +28,7 @@ end)
 
 return {
   launch_menu = launch_menu,
+  audible_bell = "Disabled",
   use_ime = true,
   enable_tab_bar = true,
   use_fancy_tab_bar = false,
@@ -47,8 +40,7 @@ return {
   -- xim_im_name = "fcitx",
   font = wezterm.font_with_fallback { "Sarasa Term J Nerd Font", "Twemoji Mozilla" },
   harfbuzz_features = { "calt=0", "clig=0", "liga=0" },
-  -- default_prog = terminal_on_neovim,
-  default_prog = default_prog,
+  default_prog = is_windows and pwsh.args or zsh.args,
   leader = { key = "b", mods = "CTRL" },
   keys = {
     { key = "q", mods = "ALT", action = act.CloseCurrentPane { confirm = false } },
