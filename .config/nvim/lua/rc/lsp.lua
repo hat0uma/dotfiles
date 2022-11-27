@@ -182,7 +182,7 @@ local function denols_config()
 end
 
 local function tsserver_config()
-  local config = default_config()
+  local config = default_config { document_formatting = false }
   config.root_dir = nvim_lsp.util.root_pattern "package.json"
   return config
 end
@@ -221,6 +221,11 @@ end
 
 local function setup_nullls()
   local null_ls = require "null-ls"
+  local has_eslintrc = {
+    condition = function(utils)
+      return utils.root_has_file { ".eslintrc.json" }
+    end,
+  }
   local sources = {
     null_ls.builtins.formatting.stylua.with {
       condition = function(utils)
@@ -228,6 +233,9 @@ local function setup_nullls()
       end,
     },
     null_ls.builtins.diagnostics.shellcheck,
+    null_ls.builtins.diagnostics.eslint_d.with(has_eslintrc),
+    null_ls.builtins.code_actions.eslint_d.with(has_eslintrc),
+    null_ls.builtins.formatting.eslint_d.with(has_eslintrc),
   }
   null_ls.setup { sources = sources, on_attach = make_on_attach {} }
   local function register_my_nullls_settings()
