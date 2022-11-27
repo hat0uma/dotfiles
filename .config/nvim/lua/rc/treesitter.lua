@@ -71,6 +71,12 @@ function M.config()
   }
 end
 
+require("nvim-treesitter.configs").setup {
+  autotag = {
+    enable = true,
+  },
+}
+
 M.parsers = {
   "typescript",
   "tsx",

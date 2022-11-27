@@ -163,7 +163,27 @@ end
 
 local function denols_config()
   local config = default_config()
-  config.init_options = { enable = true, lint = true, unstable = true }
+  config.root_dir = nvim_lsp.util.root_pattern "deno.json"
+  config.init_options = {
+    enable = true,
+    lint = true,
+    unstable = true,
+    suggest = {
+      imports = {
+        hosts = {
+          ["https://deno.land"] = true,
+          ["https://cdn.nest.land"] = true,
+          ["https://crux.land"] = true,
+        },
+      },
+    },
+  }
+  return config
+end
+
+local function tsserver_config()
+  local config = default_config()
+  config.root_dir = nvim_lsp.util.root_pattern "package.json"
   return config
 end
 
@@ -190,6 +210,7 @@ M.servers = {
   powershell_es = { config = default_config(), version = "v2.1.2" },
   denols = { config = denols_config() },
   gopls = { config = gopls_config() },
+  tsserver = { config = tsserver_config() },
 }
 if vim.fn.has "win64" ~= 0 then
   M.servers["omnisharp"] = { config = omnisharp_config() }
