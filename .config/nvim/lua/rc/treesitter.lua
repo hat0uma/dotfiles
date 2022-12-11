@@ -77,6 +77,13 @@ require("nvim-treesitter.configs").setup {
   },
 }
 
+require("nvim-treesitter.configs").setup {
+  context_commentstring = {
+    enable = true,
+    enable_autocmd = false,
+  },
+}
+
 M.parsers = {
   "typescript",
   "tsx",

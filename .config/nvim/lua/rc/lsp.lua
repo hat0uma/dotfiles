@@ -207,6 +207,8 @@ M.servers = {
   powershell_es = { config = default_config(), version = "v2.1.2" },
   denols = { config = denols_config() },
   gopls = { config = gopls_config() },
+  cssmodules_ls = { config = default_config() },
+  cssls = { config = default_config() },
   -- use typescript.nvim
   -- tsserver = { config = tsserver_config() },
 }
