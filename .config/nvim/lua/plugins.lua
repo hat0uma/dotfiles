@@ -258,6 +258,8 @@ function M.init()
         enabled = true,
         languages = {
           cs = { template = { annotation_convention = "xmldoc" } },
+          typescript = { template =  { annotation_convention = "tsdoc" } },
+          typescriptreact = { template =  { annotation_convention = "tsdoc" } }
         },
       }
       local generator = function(type)

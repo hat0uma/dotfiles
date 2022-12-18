@@ -2,6 +2,9 @@ local M = {}
 
 function M.setup()
   require("gitsigns").setup {
+    signcolumn = false,
+    numhl = true,
+    linehl = false,
     signs = {
       add = {
         hl = "GitSignsAdd",
