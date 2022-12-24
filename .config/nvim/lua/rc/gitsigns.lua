@@ -1,5 +1,19 @@
 local M = {}
 
+local function define_reversed_hl(name, newname)
+  local hl = vim.api.nvim_get_hl_by_name(name, true)
+  local bg = hl.foreground and string.format("#%x", hl.foreground) or nil
+  local fg = hl.background and string.format("#%x", hl.background) or nil
+  vim.api.nvim_set_hl(0, newname, { bg = bg, fg = fg })
+end
+vim.api.nvim_create_autocmd("ColorScheme", {
+  callback = function()
+    define_reversed_hl("Green", "GitSignsAddNrReversed")
+    define_reversed_hl("Blue", "GitSignsChangeNrReversed")
+    define_reversed_hl("Red", "GitSignsDeleteNrReversed")
+  end,
+})
+
 function M.setup()
   require("gitsigns").setup {
     signcolumn = false,
@@ -9,31 +23,36 @@ function M.setup()
       add = {
         hl = "GitSignsAdd",
         text = "┃",
-        numhl = "GitSignsAddNr",
+        -- numhl = "GitSignsAddNrReversed",
+        numhl = "GitSignsAddLn",
         linehl = "GitSignsAddLn",
       },
       change = {
         hl = "GitSignsChange",
         text = "┃",
-        numhl = "GitSignsChangeNr",
+        -- numhl = "GitSignsChangeNrReversed",
+        numhl = "GitSignsChangeLn",
         linehl = "GitSignsChangeLn",
       },
       delete = {
         hl = "GitSignsDelete",
         text = "┃",
-        numhl = "GitSignsDeleteNr",
+        -- numhl = "GitSignsDeleteNrReversed",
+        numhl = "GitSignsDeleteLn",
         linehl = "GitSignsDeleteLn",
       },
       topdelete = {
         hl = "GitSignsDelete",
         text = "┃",
-        numhl = "GitSignsDeleteNr",
+        -- numhl = "GitSignsDeleteNrReversed",
+        numhl = "GitSignsDeleteLn",
         linehl = "GitSignsDeleteLn",
       },
       changedelete = {
         hl = "GitSignsChange",
         text = "┃",
-        numhl = "GitSignsChangeNr",
+        -- numhl = "GitSignsChangeNrReversed",
+        numhl = "GitSignsChangeLn",
         linehl = "GitSignsChangeLn",
       },
     },
