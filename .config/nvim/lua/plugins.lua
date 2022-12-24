@@ -217,6 +217,7 @@ function M.init()
       end,
     },
     cmd = { "MyVFilerStart" },
+    disable = true,
   }
   use {
     "vim-skk/denops-skkeleton.vim",
@@ -258,8 +259,8 @@ function M.init()
         enabled = true,
         languages = {
           cs = { template = { annotation_convention = "xmldoc" } },
-          typescript = { template =  { annotation_convention = "tsdoc" } },
-          typescriptreact = { template =  { annotation_convention = "tsdoc" } }
+          typescript = { template = { annotation_convention = "tsdoc" } },
+          typescriptreact = { template = { annotation_convention = "tsdoc" } },
         },
       }
       local generator = function(type)
@@ -305,6 +306,13 @@ function M.init()
       after = "telescope.nvim",
       config = function()
         require("telescope").load_extension "live_grep_args"
+      end,
+    },
+    {
+      "nvim-telescope/telescope-file-browser.nvim",
+      after = "telescope.nvim",
+      config = function()
+        require("telescope").load_extension "file_browser"
       end,
     },
   }

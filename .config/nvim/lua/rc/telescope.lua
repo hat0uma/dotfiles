@@ -63,7 +63,7 @@ function M.config()
         },
       },
       initial_mode = "normal",
-      winblend = 10,
+      -- winblend = 10,
       preview = {
         hide_on_startup = false,
       },
@@ -83,6 +83,14 @@ function M.config()
         override_generic_sorter = true,
         override_file_sorter = true,
         case_mode = "smart_case",
+      },
+      file_browser = {
+        theme = "ivy",
+        hijack_netrw = true,
+        mappings = {
+          ["i"] = {},
+          ["n"] = {},
+        },
       },
     },
   }
@@ -178,7 +186,7 @@ function M.setup()
   vim.keymap.set("n", "<leader>p", telescope_packers, opt)
   vim.keymap.set("n", "<leader>g", telescope_live_grep, opt)
   vim.keymap.set("n", "<leader>b", telescope_buffers, opt)
-
+  vim.keymap.set("n", "<space>e", "<Cmd>Telescope file_browser<CR>", opt)
   aug("my_telescope_aug", {
     au("FileType", {
       pattern = "gina-status",
