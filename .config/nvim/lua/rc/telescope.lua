@@ -30,6 +30,7 @@ local grep_command = {
 function M.config()
   local actions = require "telescope.actions"
   local layout_actions = require "telescope.actions.layout"
+  local fb_actions = require("telescope").extensions.file_browser.actions
   local my_actions = require "rc.telescope.actions"
   require("telescope").setup {
     defaults = {
@@ -86,10 +87,13 @@ function M.config()
       },
       file_browser = {
         theme = "ivy",
-        hijack_netrw = true,
+        -- hijack_netrw = true,
         mappings = {
           ["i"] = {},
-          ["n"] = {},
+          ["n"] = {
+            ["h"] = fb_actions.goto_parent_dir,
+            ["l"] = require("telescope.actions").select_default,
+          },
         },
       },
     },
@@ -186,7 +190,7 @@ function M.setup()
   vim.keymap.set("n", "<leader>p", telescope_packers, opt)
   vim.keymap.set("n", "<leader>g", telescope_live_grep, opt)
   vim.keymap.set("n", "<leader>b", telescope_buffers, opt)
-  vim.keymap.set("n", "<space>e", "<Cmd>Telescope file_browser<CR>", opt)
+  -- vim.keymap.set("n", "<space>e", "<Cmd>Telescope file_browser<CR>", opt)
   aug("my_telescope_aug", {
     au("FileType", {
       pattern = "gina-status",

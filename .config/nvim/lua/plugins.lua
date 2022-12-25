@@ -203,7 +203,7 @@ function M.init()
       require("rc.lir").config()
     end,
     cmd = { "MyLirOpen" },
-    disable = true,
+    -- disable = true,
   }
   use {
     { "obaland/vfiler-column-devicons" },
@@ -215,9 +215,9 @@ function M.init()
       config = function()
         require "rc.vfiler"
       end,
+      disable = true,
+      cmd = { "MyVFilerStart" },
     },
-    cmd = { "MyVFilerStart" },
-    disable = true,
   }
   use {
     "vim-skk/denops-skkeleton.vim",
@@ -314,6 +314,7 @@ function M.init()
       config = function()
         require("telescope").load_extension "file_browser"
       end,
+      diable = true,
     },
   }
 

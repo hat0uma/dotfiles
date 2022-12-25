@@ -118,7 +118,7 @@ function M.config()
     hide_cursor = true,
     on_init = function()
       my_actions.search_in_ctx_dir()
-      vim.cmd [[ highlight! default link CursorLine TelescopeSelection]]
+      vim.cmd [[ highlight! default link LirFloatCursorLine TelescopeSelection]]
     end,
   }
 
