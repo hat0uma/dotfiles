@@ -145,6 +145,8 @@ function M.init()
             vim.cmd [[highlight! default link VirtualTextInfo CocInfoSign]]
             vim.cmd [[highlight! default link VirtualTextHint CocHintSign]]
             --  vim.cmd [[ highlight! default link WinBar NormalFloat ]]
+            -- for noice.nvim
+            vim.cmd [[highlight! default link MsgArea LineNr]]
           end,
           nested = true,
         }),
