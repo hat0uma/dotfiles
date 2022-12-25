@@ -525,6 +525,7 @@ function M.init()
           },
         },
       }
+      vim.keymap.set("n", "<leader>n", "<Cmd>Noice telescope<CR>", { silent = true, noremap = true })
     end,
     requires = {
       "MunifTanjim/nui.nvim",
