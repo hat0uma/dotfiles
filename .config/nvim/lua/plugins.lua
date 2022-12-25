@@ -210,12 +210,12 @@ function M.init()
     {
       "obaland/vfiler.vim",
       setup = function()
-        vim.keymap.set("n", "<leader>e", "<Cmd>MyVFilerStart<CR>", { silent = true })
+        -- vim.keymap.set("n", "<leader>e", "<Cmd>MyVFilerStart<CR>", { silent = true })
       end,
       config = function()
         require "rc.vfiler"
       end,
-      disable = true,
+      -- disable = true,
       cmd = { "MyVFilerStart" },
     },
   }
