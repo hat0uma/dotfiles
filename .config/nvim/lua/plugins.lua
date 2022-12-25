@@ -76,6 +76,7 @@ function M.init()
       config = function()
         require("fidget").setup {}
       end,
+      disable = true,
     },
   }
 
@@ -331,7 +332,7 @@ function M.init()
       end,
     },
     {
-      "NTBBloodbath/galaxyline.nvim",
+      "glepnir/galaxyline.nvim",
       config = function()
         require "rc.statusline"
       end,
@@ -508,6 +509,25 @@ function M.init()
     config = function()
       require "rc.notify"
     end,
+  }
+
+  use {
+    "folke/noice.nvim",
+    config = function()
+      require("noice").setup {
+        lsp = {
+          override = {
+            ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+            ["vim.lsp.util.stylize_markdown"] = true,
+            ["cmp.entry.get_documentation"] = true,
+          },
+        },
+      }
+    end,
+    requires = {
+      "MunifTanjim/nui.nvim",
+      "rcarriga/nvim-notify",
+    },
   }
 
   use {

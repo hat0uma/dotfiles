@@ -2,11 +2,11 @@ local cmd = vim.cmd
 local fn = vim.fn
 local gl = require "galaxyline"
 -- local diagnostic = require('galaxyline.provider_diagnostic')
-local vcs = require "galaxyline.providers.vcs"
-local fileinfo = require "galaxyline.providers.fileinfo"
+local vcs = require "galaxyline.provider_vcs"
+local fileinfo = require "galaxyline.provider_fileinfo"
 -- local extension = require('galaxyline.provider_extensions')
 -- local colors = require('galaxyline.colors')
-local buffer = require "galaxyline.providers.buffer"
+local buffer = require "galaxyline.provider_buffer"
 -- local whitespace = require('galaxyline.provider_whitespace')
 -- local lspclient = require('galaxyline.provider_lsp')
 local condition = require "galaxyline.condition"
@@ -172,6 +172,19 @@ local LineInfo = {
   highlight = { palette.bg, palette.fg },
 }
 
+local Recording = {
+  provider = function()
+    local reg = vim.fn.reg_recording()
+    return reg ~= "" and string.format("Rec @%s", vim.fn.reg_recording()) or ""
+  end,
+  condition = function()
+    return vim.o.cmdheight == 0
+  end,
+  -- provider = require("noice").api.statusline.mode.get,
+  -- condition = require("noice").api.statusline.mode.has,
+  highlight = { "#ff9e64", palette.bg },
+}
+
 local DiffAdd = {
   provider = "DiffAdd",
   condition = checkwidth,
@@ -322,6 +335,7 @@ clear(section.short_line_right)
 table.insert(section.left, { ViMode = ViMode })
 table.insert(section.left, { GitBranch = GitBranch })
 table.insert(section.left, { FileName = FileName })
+table.insert(section.left, { Recording = Recording })
 -- table.insert(section.left, { nvimGPS = nvimGPS })
 
 -- table.insert(section.right,{FileType = FileType})

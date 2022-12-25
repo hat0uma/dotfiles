@@ -130,24 +130,24 @@ end
 -- lua
 local function lua_config()
   local config = default_config { document_formatting = false }
-  local runtime_path = vim.split(package.path, ";")
-  table.insert(runtime_path, "lua/?.lua")
-  table.insert(runtime_path, "lua/?/init.lua")
-  local lib = vim.api.nvim_get_runtime_file("", true)
-  lib = vim.tbl_filter(function(elem)
-    return elem ~= vim.fn.stdpath "config"
-  end, lib)
+  -- local runtime_path = vim.split(package.path, ";")
+  -- table.insert(runtime_path, "lua/?.lua")
+  -- table.insert(runtime_path, "lua/?/init.lua")
+  -- local lib = vim.api.nvim_get_runtime_file("", true)
+  -- lib = vim.tbl_filter(function(elem)
+  --   return elem ~= vim.fn.stdpath "config"
+  -- end, lib)
   config.settings = {
     Lua = {
       runtime = {
         version = "LuaJIT",
-        path = runtime_path,
+        -- path = runtime_path,
       },
       diagnostics = {
         globals = { "vim" },
       },
       workspace = {
-        library = lib,
+        library = vim.api.nvim_get_runtime_file("", true),
         checkThirdParty = false,
       },
       telemetry = {
@@ -216,7 +216,7 @@ if vim.fn.has "win64" ~= 0 then
   M.servers["omnisharp"] = { config = omnisharp_config() }
 else
   -- M.servers["omnisharp"] = { config = omnisharp_mono_config() }
-  M.servers["omnisharp_mono"] = { config = omnisharp_config() }
+  M.servers["omnisharp"] = { config = omnisharp_config() }
 end
 
 local function setup_nullls()

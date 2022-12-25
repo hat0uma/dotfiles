@@ -100,6 +100,6 @@ local function lsp_setup()
 end
 
 notify.setup {
-  stages = stages,
+  -- stages = stages,
 }
 -- lsp_setup()
