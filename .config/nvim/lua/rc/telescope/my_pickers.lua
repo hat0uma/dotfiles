@@ -15,29 +15,31 @@ M.gina_p_action_list = function(opts)
   }
 
   opts = opts or {}
-  pickers.new(opts, {
-    prompt_title = "gina p actions",
-    finder = finders.new_table {
-      results = p_action_list,
-      entry_maker = function(entry)
-        return {
-          value = entry,
-          display = entry.name,
-          ordinal = entry.name,
-        }
+  pickers
+    .new(opts, {
+      prompt_title = "gina p actions",
+      finder = finders.new_table {
+        results = p_action_list,
+        entry_maker = function(entry)
+          return {
+            value = entry,
+            display = entry.name,
+            ordinal = entry.name,
+          }
+        end,
+      },
+      sorter = conf.generic_sorter(opts),
+      attach_mappings = function(prompt_bufnr, map)
+        actions.select_default:replace(function()
+          actions.close(prompt_bufnr)
+          local selection = action_state.get_selected_entry()
+          -- print(":" .. selection.value.cmd)
+          vim.cmd(selection.value.cmd)
+        end)
+        return true
       end,
-    },
-    sorter = conf.generic_sorter(opts),
-    attach_mappings = function(prompt_bufnr, map)
-      actions.select_default:replace(function()
-        actions.close(prompt_bufnr)
-        local selection = action_state.get_selected_entry()
-        print(":" .. selection.value.cmd)
-        vim.cmd(selection.value.cmd)
-      end)
-      return true
-    end,
-  }):find()
+    })
+    :find()
 end
 
 return M
