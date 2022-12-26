@@ -30,7 +30,7 @@ local grep_command = {
 function M.config()
   local actions = require "telescope.actions"
   local layout_actions = require "telescope.actions.layout"
-  local fb_actions = require("telescope").extensions.file_browser.actions
+  -- local fb_actions = require("telescope").extensions.file_browser.actions
   local my_actions = require "rc.telescope.actions"
   require("telescope").setup {
     defaults = {

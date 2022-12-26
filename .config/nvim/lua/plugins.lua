@@ -272,10 +272,6 @@ require("lazy").setup {
     cmd = { "Telescope" },
   },
   {
-    "nvim-telescope/telescope-packer.nvim",
-    dependencies = { "telescope.nvim" },
-  },
-  {
     "nvim-telescope/telescope-fzf-native.nvim",
     dependencies = { "telescope.nvim" },
     config = function()
@@ -296,7 +292,7 @@ require("lazy").setup {
     config = function()
       require("telescope").load_extension "file_browser"
     end,
-    diable = true,
+    enabled = false,
   },
 
   -- statusline
