@@ -119,21 +119,22 @@ require("lazy").setup {
       vim.g.everforest_ui_contrast = "high"
       vim.g.everforest_better_performance = 1
       vim.cmd [[ autocmd VimEnter * ++nested colorscheme everforest ]]
-      aug("rc_everforest_settings", {
-        au("ColorScheme", {
-          pattern = "everforest",
-          callback = function()
-            vim.cmd [[highlight! default link VirtualTextError CocErrorSign]]
-            vim.cmd [[highlight! default link VirtualTextWarning CocWarningsign]]
-            vim.cmd [[highlight! default link VirtualTextInfo CocInfoSign]]
-            vim.cmd [[highlight! default link VirtualTextHint CocHintSign]]
-            --  vim.cmd [[ highlight! default link WinBar NormalFloat ]]
-            -- for noice.nvim
-            vim.cmd [[highlight! default link MsgArea LineNr]]
-          end,
-          nested = true,
-        }),
-      }, {})
+
+      local group = vim.api.nvim_create_augroup("rc_everforest_settings", {})
+      vim.api.nvim_create_autocmd("ColorScheme", {
+        pattern = "everforest",
+        callback = function()
+          vim.cmd [[highlight! default link VirtualTextError CocErrorSign]]
+          vim.cmd [[highlight! default link VirtualTextWarning CocWarningsign]]
+          vim.cmd [[highlight! default link VirtualTextInfo CocInfoSign]]
+          vim.cmd [[highlight! default link VirtualTextHint CocHintSign]]
+          --  vim.cmd [[ highlight! default link WinBar NormalFloat ]]
+          -- for noice.nvim
+          vim.cmd [[highlight! default link MsgArea LineNr]]
+        end,
+        nested = true,
+        group = group,
+      })
     end,
   },
 
@@ -467,7 +468,7 @@ require("lazy").setup {
       end
       vim.g.SimplenoteFiletype = "simplenote-text"
       vim.g.SimplenoteListSize = 20
-      au("FileType", { pattern = "simplenote-text", command = "setl cursorline" }).define()
+      vim.api.nvim_create_autocmd("FileType", { pattern = "simplenote-text", command = "setl cursorline" })
     end,
     cmd = { "SimplenoteList" },
   },

@@ -1,33 +1,4 @@
 -- require "impatient"
-
---- define augroup with autocmd
----@param name string aurgoup name
----@param autocmds autocmd[]
----@param opts? table augroup options
-function _G.aug(name, autocmds, opts)
-  vim.api.nvim_create_augroup(name, opts or {})
-  for _, autocmd in pairs(autocmds) do
-    autocmd.define(name)
-  end
-end
-
---- define autocmd
----@param event string event
----@param opts table autocmd options
----@return autocmd
-function _G.au(event, opts)
-  --- @class autocmd
-  --- @field define fun(group?:string)
-  local _au = {}
-  _au.define = function(augroup)
-    if augroup ~= nil then
-      opts.group = augroup
-    end
-    vim.api.nvim_create_autocmd(event, opts)
-  end
-  return _au
-end
-
 vim.o.splitright = true
 vim.o.splitbelow = true
 vim.o.termguicolors = true

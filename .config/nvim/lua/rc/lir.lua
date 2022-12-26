@@ -131,10 +131,9 @@ function M.config()
     },
   }
 
-  function _G.LirSettings() end
-  aug("my-lir-settings", {
-    au("Filetype", { pattern = "lir", callback = LirSettings }),
-  })
+  local function lirSettings() end
+  local group = vim.api.nvim_create_augroup("my-lir-settings", {})
+  vim.api.nvim_create_autocmd("Filetype", { pattern = "lir", callback = lirSettings, group = group })
 end
 
 return M

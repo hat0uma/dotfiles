@@ -249,9 +249,8 @@ local function setup_nullls()
     null_ls.register(sources)
   end
 
-  aug("register_my_nullls_settings", {
-    au("DirChanged", { pattern = "*", callback = register_my_nullls_settings }),
-  })
+  local group = vim.api.nvim_create_augroup("register_my_nullls_settings", {})
+  vim.api.nvim_create_autocmd("DirChanged", { pattern = "*", callback = register_my_nullls_settings, group = group })
 end
 
 function M.setup()

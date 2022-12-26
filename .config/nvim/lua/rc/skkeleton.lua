@@ -13,6 +13,8 @@ local function my_skkeleton_init()
   })
 end
 
-aug("my_skkeleton_settings", {
-  au("User", { pattern = "skkeleton-initialize-pre", callback = my_skkeleton_init }),
-})
+local group = vim.api.nvim_create_augroup("my_skkeleton_settings", {})
+vim.api.nvim_create_autocmd(
+  "User",
+  { pattern = "skkeleton-initialize-pre", callback = my_skkeleton_init, group = group }
+)

@@ -111,11 +111,11 @@ cmp.setup.cmdline(":", {
 })
 
 -- sources
-aug("my_cmp_settings", {
-  au("FileType", {
-    pattern = { "denite-filter", "TelescopePrompt", "LspRenamePrompt" },
-    callback = function()
-      cmp.setup.buffer { enabled = false }
-    end,
-  }),
+local group = vim.api.nvim_create_augroup("my_cmp_settings", {})
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "denite-filter", "TelescopePrompt", "LspRenamePrompt" },
+  callback = function()
+    cmp.setup.buffer { enabled = false }
+  end,
+  group = group,
 })

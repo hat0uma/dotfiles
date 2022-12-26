@@ -170,16 +170,20 @@ end
 
 local function on_telescope_prompt()
   local bufnr = vim.fn.bufnr()
-  local function buf_au(event, cb)
-    return au(event, { callback = cb, buffer = bufnr })
-  end
-  aug("on_telescope_prompt", {
-    buf_au("InsertEnter", function()
+  local group = vim.api.nvim_create_augroup("on_telescope_prompt", {})
+  vim.api.nvim_create_autocmd("InsertEnter", {
+    callback = function()
       -- require("rc.telescope.actions").disable_preview(bufnr)
-    end),
-    buf_au("InsertLeave", function()
+    end,
+    buffer = bufnr,
+    group = group,
+  })
+  vim.api.nvim_create_autocmd("InsertLeave", {
+    callback = function()
       -- require("rc.telescope.actions").enable_preview(bufnr)
-    end),
+    end,
+    buffer = bufnr,
+    group = group,
   })
 end
 
@@ -191,14 +195,17 @@ function M.setup()
   vim.keymap.set("n", "<leader>g", telescope_live_grep, opt)
   vim.keymap.set("n", "<leader>b", telescope_buffers, opt)
   -- vim.keymap.set("n", "<space>e", "<Cmd>Telescope file_browser<CR>", opt)
-  aug("my_telescope_aug", {
-    au("FileType", {
-      pattern = "gina-status",
-      callback = function()
-        vim.keymap.set("n", "A", telescope_gina_p_action_list, { noremap = true, silent = true, buffer = true })
-      end,
-    }),
-    au("FileType", { pattern = "TelescopePrompt", callback = on_telescope_prompt }),
+  local group = vim.api.nvim_create_augroup("my_telescope_aug", {})
+  vim.api.nvim_create_autocmd("FileType", {
+    pattern = "gina-status",
+    callback = function()
+      vim.keymap.set("n", "A", telescope_gina_p_action_list, { noremap = true, silent = true, buffer = true })
+    end,
+    group = group,
   })
+  vim.api.nvim_create_autocmd(
+    "FileType",
+    { pattern = "TelescopePrompt", callback = on_telescope_prompt, group = group }
+  )
 end
 return M
