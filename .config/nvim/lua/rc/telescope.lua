@@ -85,17 +85,17 @@ function M.config()
         override_file_sorter = true,
         case_mode = "smart_case",
       },
-      file_browser = {
-        theme = "ivy",
-        -- hijack_netrw = true,
-        mappings = {
-          ["i"] = {},
-          ["n"] = {
-            ["h"] = fb_actions.goto_parent_dir,
-            ["l"] = require("telescope.actions").select_default,
-          },
-        },
-      },
+      -- file_browser = {
+      --   theme = "ivy",
+      --   hijack_netrw = true,
+      --   mappings = {
+      --     ["i"] = {},
+      --     ["n"] = {
+      --       ["h"] = fb_actions.goto_parent_dir,
+      --       ["l"] = require("telescope.actions").select_default,
+      --     },
+      --   },
+      -- },
     },
   }
   if package.loaded.project_nvim then
