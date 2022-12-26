@@ -30,6 +30,7 @@ function M.init()
   use { "wbthomason/packer.nvim", opt = true }
   use "lewis6991/impatient.nvim"
   use "vim-jp/vimdoc-ja"
+  use "dstein64/vim-startuptime"
 
   use {
     "RRethy/vim-illuminate",
