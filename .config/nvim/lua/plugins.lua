@@ -31,7 +31,7 @@ require("lazy").setup {
       function _G.navic_winbar()
         return navic.is_available() and navic.get_location() or ""
       end
-      vim.wo.winbar = "%!v:lua.navic_winbar()"
+      vim.o.winbar = "%!v:lua.navic_winbar()"
     end,
   },
   { "p00f/clangd_extensions.nvim" },
