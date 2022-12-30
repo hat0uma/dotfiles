@@ -13,7 +13,10 @@ vim.opt.runtimepath:prepend(lazypath)
 
 require("lazy").setup {
   { "vim-jp/vimdoc-ja" },
-  { "dstein64/vim-startuptime" },
+  {
+    "dstein64/vim-startuptime",
+    cmd = "StartupTime",
+  },
 
   {
     "RRethy/vim-illuminate",
@@ -30,9 +33,9 @@ require("lazy").setup {
       vim.go.winbar = "%{%v:lua.require'nvim-navic'.get_location()%}"
     end,
   },
-  { "p00f/clangd_extensions.nvim" },
-  { "Hoffs/omnisharp-extended-lsp.nvim" },
-  { "jose-elias-alvarez/typescript.nvim" },
+  { "p00f/clangd_extensions.nvim", lazy = true },
+  { "Hoffs/omnisharp-extended-lsp.nvim", lazy = true },
+  { "jose-elias-alvarez/typescript.nvim", lazy = true },
   {
     "neovim/nvim-lspconfig",
     config = function()
@@ -146,24 +149,36 @@ require("lazy").setup {
   {
     "osyo-manga/vim-jplus",
     config = function()
-      vim.keymap.set("n", "J", "<Plug>(jplus)", {})
-      vim.keymap.set("v", "J", "<Plug>(jplus)", {})
-      vim.keymap.set("n", "<leader>J", "<Plug>(jplus-getchar)", {})
-      vim.keymap.set("v", "<leader>J", "<Plug>(jplus-getchar)", {})
+      -- vim.keymap.set("n", "J", "<Plug>(jplus)", {})
+      -- vim.keymap.set("v", "J", "<Plug>(jplus)", {})
+      -- vim.keymap.set("n", "<leader>J", "<Plug>(jplus-getchar)", {})
+      -- vim.keymap.set("v", "<leader>J", "<Plug>(jplus-getchar)", {})
       vim.g["jplus#config"] = { _ = {
         delimiter_format = "%d",
       } }
     end,
+    keys = {
+      { "J", "<Plug>(jplus)", "n" },
+      { "J", "<Plug>(jplus)", "v" },
+      { "<leader>J", "<Plug>(jplus-getchar)", "n" },
+      { "<leader>J", "<Plug>(jplus-getchar)", "v" },
+    },
   },
 
   {
     "haya14busa/vim-asterisk",
     config = function()
-      vim.keymap.set("", "*", "<Plug>(asterisk-z*)", {})
-      vim.keymap.set("", "#", "<Plug>(asterisk-z#)", {})
-      vim.keymap.set("", "g*", "<Plug>(asterisk-gz*)", {})
-      vim.keymap.set("", "g#", "<Plug>(asterisk-gz#)", {})
+      -- vim.keymap.set("", "*", "<Plug>(asterisk-z*)", {})
+      -- vim.keymap.set("", "#", "<Plug>(asterisk-z#)", {})
+      -- vim.keymap.set("", "g*", "<Plug>(asterisk-gz*)", {})
+      -- vim.keymap.set("", "g#", "<Plug>(asterisk-gz#)", {})
     end,
+    keys = {
+      { "*", "<Plug>(asterisk-z*)", "" },
+      { "#", "<Plug>(asterisk-z#)", "" },
+      { "g*", "<Plug>(asterisk-gz*)", "" },
+      { "g#", "<Plug>(asterisk-gz#)", "" },
+    },
   },
 
   {
@@ -191,7 +206,7 @@ require("lazy").setup {
     config = function()
       require("nvim-web-devicons").setup { default = true }
     end,
-    -- dependencies = 'everforest',
+    lazy = true,
   },
 
   {
@@ -248,11 +263,6 @@ require("lazy").setup {
       require("rc.telescope").setup()
     end,
     config = function()
-      -- require("telescope").load_extension "fzf"
-      -- require("telescope").load_extension "live_grep_args"
-      -- require("telescope").load_extension "lazy"
-      -- require("telescope").load_extension "file_browser"
-      -- require("telescope").load_extension "projects"
       require("rc.telescope").config()
     end,
     cmd = { "Telescope" },
@@ -294,18 +304,34 @@ require("lazy").setup {
     config = function()
       require "rc.dap"
     end,
+    lazy = true,
   },
-  { "rcarriga/nvim-dap-ui" },
+  {
+    "rcarriga/nvim-dap-ui",
+    lazy = true,
+  },
 
   {
     "nvim-treesitter/nvim-treesitter",
-    dependencies = {
-      "nvim-treesitter/nvim-treesitter-textobjects",
-      "windwp/nvim-ts-autotag",
-    },
+    dependencies = {},
     config = function()
       require("rc.treesitter").config()
     end,
+  },
+  {
+    "nvim-treesitter/nvim-treesitter-textobjects",
+    dependencies = { "nvim-treesitter" },
+    config = function()
+      require("rc.treesitter").textobjects_config()
+    end,
+  },
+  {
+    "windwp/nvim-ts-autotag",
+    dependencies = { "nvim-treesitter" },
+    config = function()
+      require("rc.treesitter").tsautotag_config()
+    end,
+    ft = { "typescript", "typescriptreact", "javascript", "javascript" },
   },
   {
     "nvim-treesitter/playground",
@@ -314,11 +340,21 @@ require("lazy").setup {
   },
   {
     "Badhi/nvim-treesitter-cpp-tools",
-    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    dependencies = { "nvim-treesitter" },
+    cmd = {
+      "TSCppDefineClassFunc",
+      "TSCppMakeConcreteClass",
+      "TSCppRuleOf3",
+      "TSCppRuleOf5",
+    },
   },
   {
     "JoosepAlviste/nvim-ts-context-commentstring",
-    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    dependencies = { "nvim-treesitter" },
+    config = function()
+      require("rc.treesitter").context_commentstring_config()
+    end,
+    ft = { "typescript", "typescriptreact", "javascript", "javascript" },
   },
 
   {
@@ -383,7 +419,7 @@ require("lazy").setup {
       vim.keymap.set("n", ",x", "<Cmd>" .. browse_cmd .. "<CR>", opts)
       vim.keymap.set("v", ",x", ":" .. browse_cmd .. "<CR>", opts)
     end,
-    -- cmd = "Gina",
+    cmd = "Gina",
   },
   {
     "lewis6991/gitsigns.nvim",
@@ -435,6 +471,9 @@ require("lazy").setup {
       vim.keymap.set("n", "gx", "<Plug>(openbrowser-smart-search)", {})
       vim.keymap.set("v", "gx", "<Plug>(openbrowser-smart-search)", {})
     end,
+    keys = {
+      { "gx", "<Plug>(openbrowser-smart-search)", { "n", "v" } },
+    },
   },
 
   {
@@ -497,7 +536,16 @@ require("lazy").setup {
     end,
     cmd = { "ToggleTerm" },
   },
-  { "ojroques/vim-oscyank" },
+  {
+    "ojroques/vim-oscyank",
+    init = function()
+      vim.cmd [[ autocmd TextYankPost * if v:event.operator is 'y' && v:event.regname is '+' | execute 'OSCYankReg +' | endif ]]
+    end,
+    cmd = {
+      "OSCYank",
+      "OSCYankReg",
+    },
+  },
   {
     "christoomey/vim-tmux-navigator",
     config = function()

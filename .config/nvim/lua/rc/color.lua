@@ -72,6 +72,12 @@ local function setup()
         local v = vim.tbl_extend("keep", hl, { default = true })
         vim.api.nvim_set_hl(0, name, v)
       end
+
+      -- illuminate.vim
+      set_hl("illuminatedWord", { default = true, link = "CurrentWord" })
+      set_hl("illuminatedWordRead", { default = true, link = "CurrentWord" })
+      set_hl("illuminatedWordWrite", { default = true, link = "CurrentWord" })
+      set_hl("illuminatedWordText", { default = true, link = "CurrentWord" })
     end,
     nested = true,
     group = group,

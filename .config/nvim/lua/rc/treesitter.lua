@@ -1,22 +1,6 @@
 local M = {}
 
 function M.config()
-  local parser_configs = require("nvim-treesitter.parsers").get_parser_configs()
-  parser_configs.norg_meta = {
-    install_info = {
-      url = "https://github.com/nvim-neorg/tree-sitter-norg-meta",
-      files = { "src/parser.c" },
-      branch = "main",
-    },
-  }
-  parser_configs.norg_table = {
-    install_info = {
-      url = "https://github.com/nvim-neorg/tree-sitter-norg-table",
-      files = { "src/parser.c" },
-      branch = "main",
-    },
-  }
-
   require("nvim-treesitter.configs").setup {
     highlight = {
       enable = true,
@@ -25,7 +9,9 @@ function M.config()
       },
     },
   }
+end
 
+function M.textobjects_config()
   require("nvim-treesitter.configs").setup {
     textobjects = {
       select = {
@@ -71,18 +57,22 @@ function M.config()
   }
 end
 
-require("nvim-treesitter.configs").setup {
-  autotag = {
-    enable = true,
-  },
-}
+function M.tsautotag_config()
+  require("nvim-treesitter.configs").setup {
+    autotag = {
+      enable = true,
+    },
+  }
+end
 
-require("nvim-treesitter.configs").setup {
-  context_commentstring = {
-    enable = true,
-    enable_autocmd = false,
-  },
-}
+function M.context_commentstring_config()
+  require("nvim-treesitter.configs").setup {
+    context_commentstring = {
+      enable = true,
+      enable_autocmd = false,
+    },
+  }
+end
 
 M.parsers = {
   "typescript",
