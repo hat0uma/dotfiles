@@ -139,19 +139,33 @@ end
 
 -- lua
 local function lua_config()
+  -- runtime_pathだとlazy loadしたpluginを読み込めない
+  local list_installed_plugins = function()
+    local plugin_install_path = vim.fn.stdpath "data" .. "/lazy"
+    local plugins = {}
+    local handle = vim.loop.fs_scandir(plugin_install_path)
+    while handle do
+      local name, t = vim.loop.fs_scandir_next(handle)
+      if not name and t ~= "directory" then
+        break
+      end
+      table.insert(plugins, plugin_install_path .. "/" .. name)
+    end
+    return plugins
+  end
+  local lib = list_installed_plugins()
+  table.insert(lib, vim.fn.stdpath "config")
+
   local config = default_config { document_formatting = false }
-  -- local runtime_path = vim.split(package.path, ";")
-  -- table.insert(runtime_path, "lua/?.lua")
-  -- table.insert(runtime_path, "lua/?/init.lua")
-  local lib = vim.api.nvim_get_runtime_file("", true)
-  lib = vim.tbl_filter(function(elem)
-    return elem ~= vim.fn.stdpath "config"
-  end, lib)
   config.settings = {
     Lua = {
       runtime = {
         version = "LuaJIT",
-        -- path = runtime_path,
+        path = {
+          "lua/?.lua",
+          "lua/?/init.lua",
+        },
+        pathStrict = true,
       },
       diagnostics = {
         globals = { "vim" },

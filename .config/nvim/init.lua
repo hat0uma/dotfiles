@@ -1,4 +1,3 @@
--- require "impatient"
 vim.o.splitright = true
 vim.o.splitbelow = true
 vim.o.termguicolors = true
@@ -95,6 +94,10 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.bo.keywordprg = ":abo help"
   end,
 })
+
+-- load workspace config
+-- .nvim.lua, .nvimrc, and .exrc
+vim.o.exrc = false
 -------------------------------------------------------------------------
 -- files
 vim.o.fileformats = "unix,dos,mac"
