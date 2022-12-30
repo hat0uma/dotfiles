@@ -27,6 +27,7 @@ vim.opt.listchars = {
 vim.opt.backspace = { "indent", "eol", "start" }
 vim.o.whichwrap = "b,s,h,l,<,>,[,]"
 vim.o.scrolloff = 999
+vim.o.splitkeep = "screen"
 vim.o.sidescrolloff = 16
 vim.o.sidescroll = 1
 vim.o.wrap = false

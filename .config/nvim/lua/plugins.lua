@@ -506,12 +506,6 @@ require("lazy").setup {
   },
   { "ojroques/vim-oscyank" },
   {
-    "luukvbaal/stabilize.nvim",
-    config = function()
-      require("stabilize").setup()
-    end,
-  },
-  {
     "christoomey/vim-tmux-navigator",
     config = function()
       local opts = { noremap = true, silent = true }
