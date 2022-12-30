@@ -41,5 +41,5 @@ gui:
 neovim:
 	nvim --headless -c 'lua require("plugins")' -c 'qa'
 	nvim --headless -c 'lua require("rc.treesitter").install_parsers{force=true,sync=true}' -c 'qa'
-	nvim --headless -c 'MasonInstall lua-language-server vim-language-server pyright typescript-language-server eslint_d prettierd cssmodules-language-server css-lsp' -c 'qa'
+	nvim --headless -c 'MasonInstall lua-language-server vim-language-server pyright typescript-language-server eslint_d prettierd css-lsp' -c 'qa'
 

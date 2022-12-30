@@ -3,6 +3,7 @@ local nvim_lsp = require "lspconfig"
 local mason = require "mason"
 local mason_lspconfig = require "mason-lspconfig"
 local cmp_nvim_lsp = require "cmp_nvim_lsp"
+local navic = require "nvim-navic"
 
 -- format
 local format = function()
@@ -30,6 +31,10 @@ local make_on_attach = function(override_opts)
     if override_opts.document_formatting ~= nil then
       client.server_capabilities.documentFormattingProvider = override_opts.document_formatting
       client.server_capabilities.documentRangeFormattingProvider = override_opts.document_formatting
+    end
+
+    if client.server_capabilities.documentSymbolProvider then
+      navic.attach(client, bufnr)
     end
 
     local lsp_document_symbols = function()
@@ -207,7 +212,6 @@ M.servers = {
   powershell_es = { config = default_config(), version = "v2.1.2" },
   denols = { config = denols_config() },
   gopls = { config = gopls_config() },
-  cssmodules_ls = { config = default_config() },
   cssls = { config = default_config() },
   -- use typescript.nvim
   -- tsserver = { config = tsserver_config() },

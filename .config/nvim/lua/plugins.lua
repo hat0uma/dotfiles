@@ -12,7 +12,6 @@ end
 vim.opt.runtimepath:prepend(lazypath)
 
 require("lazy").setup {
-  { "lewis6991/impatient.nvim" },
   { "vim-jp/vimdoc-ja" },
   { "dstein64/vim-startuptime" },
 
@@ -24,6 +23,17 @@ require("lazy").setup {
   },
 
   -- lsp
+  {
+    "SmiteshP/nvim-navic",
+    config = function()
+      local navic = require "nvim-navic"
+      navic.setup { highlight = true }
+      function _G.navic_winbar()
+        return navic.is_available() and navic.get_location() or ""
+      end
+      vim.wo.winbar = "%!v:lua.navic_winbar()"
+    end,
+  },
   { "p00f/clangd_extensions.nvim" },
   { "Hoffs/omnisharp-extended-lsp.nvim" },
   { "jose-elias-alvarez/typescript.nvim" },
@@ -35,6 +45,7 @@ require("lazy").setup {
     dependencies = {
       "hrsh7th/cmp-nvim-lsp",
       "jose-elias-alvarez/null-ls.nvim",
+      "SmiteshP/nvim-navic",
     },
   },
   {
@@ -226,6 +237,22 @@ require("lazy").setup {
   },
   {
     "danymat/neogen",
+    keys = {
+      {
+        "<Leader>hc",
+        function()
+          require("neogen").generate { type = "class" }
+        end,
+        "n",
+      },
+      {
+        "<Leader>hf",
+        function()
+          require("neogen").generate { type = "func" }
+        end,
+        "n",
+      },
+    },
     config = function()
       require("neogen").setup {
         enabled = true,
@@ -235,14 +262,6 @@ require("lazy").setup {
           typescriptreact = { template = { annotation_convention = "tsdoc" } },
         },
       }
-      local generator = function(type)
-        return function()
-          require("neogen").generate { type = type }
-        end
-      end
-      local opts = { noremap = true, silent = true }
-      vim.keymap.set("n", "<Leader>hc", generator "class", opts)
-      vim.keymap.set("n", "<Leader>hf", generator "func", opts)
     end,
     dependencies = { "nvim-treesitter/nvim-treesitter" },
   },
@@ -284,16 +303,6 @@ require("lazy").setup {
   },
 
   -- statusline
-  {
-    "rikuma-t/nvim-gps",
-    config = function()
-      require("nvim-gps").setup()
-      function _G.nvim_gps_winbar()
-        return require("nvim-gps").is_available() and require("nvim-gps").get_location() or ""
-      end
-      -- vim.wo.winbar = "%!v:lua.nvim_gps_winbar()"
-    end,
-  },
   {
     "glepnir/galaxyline.nvim",
     config = function()

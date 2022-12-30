@@ -11,7 +11,7 @@ local buffer = require "galaxyline.provider_buffer"
 -- local lspclient = require('galaxyline.provider_lsp')
 local condition = require "galaxyline.condition"
 local section = gl.section
-local gps = require "nvim-gps"
+local navic = require "nvim-navic"
 
 gl.short_line_list = {
   -- "defx",
@@ -144,19 +144,19 @@ local FileName = {
   highlight = { palette.fg, palette.bg },
 }
 
-local nvimGPS = {
+local Navic = {
   provider = function()
     -- needs
-    if not gps.is_available() then
+    if not navic.is_available() then
       return ""
     end
-    local loc = gps.get_location()
+    local loc = navic.get_location()
     if loc ~= "" then
       loc = "> " .. loc
     end
     return loc
   end,
-  condition = gps.is_available,
+  condition = navic.is_available,
   separator_highlight = palette.separator_highlight,
   highlight = { palette.fg, palette.bg },
 }
