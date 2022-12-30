@@ -26,12 +26,8 @@ require("lazy").setup {
   {
     "SmiteshP/nvim-navic",
     config = function()
-      local navic = require "nvim-navic"
-      navic.setup { highlight = true }
-      function _G.navic_winbar()
-        return navic.is_available() and navic.get_location() or ""
-      end
-      vim.go.winbar = "%!v:lua.navic_winbar()"
+      require("nvim-navic").setup { highlight = true }
+      vim.go.winbar = "%{%v:lua.require'nvim-navic'.get_location()%}"
     end,
   },
   { "p00f/clangd_extensions.nvim" },
