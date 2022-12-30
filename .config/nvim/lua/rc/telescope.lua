@@ -29,6 +29,7 @@ local grep_command = {
 }
 function M.config()
   local actions = require "telescope.actions"
+  local actions_state = require "telescope.actions.state"
   local layout_actions = require "telescope.actions.layout"
   -- local fb_actions = require("telescope").extensions.file_browser.actions
   local my_actions = require "rc.telescope.actions"
@@ -85,6 +86,17 @@ function M.config()
         override_file_sorter = true,
         case_mode = "smart_case",
       },
+      lazy = {
+        attach_mappings = function(prompt_bufnr, map)
+          local vsplit_readme = function()
+            local selection = actions_state.get_selected_entry()
+            actions.close(prompt_bufnr)
+            vim.cmd.vsplit(selection.readme)
+          end
+          map("n", "v", vsplit_readme)
+          return true
+        end,
+      },
       -- file_browser = {
       --   theme = "ivy",
       --   hijack_netrw = true,
@@ -137,23 +149,6 @@ local function telescope_find_files()
   )
 end
 
-local function telescope_lazy()
-  local actions = require "telescope.actions"
-  local action_state = require "telescope.actions.state"
-
-  require("telescope").extensions.lazy.lazy {
-    attach_mappings = function(prompt_bufnr, map)
-      local vsplit_readme = function()
-        local selection = action_state.get_selected_entry()
-        actions.close(prompt_bufnr)
-        vim.cmd(string.format(":vsplit %s", selection.readme))
-      end
-      map("n", "v", vsplit_readme)
-      return true
-    end,
-  }
-end
-
 local function telescope_live_grep()
   require("telescope").extensions.live_grep_args.live_grep_args { preview = { hide_on_startup = true } }
 end
@@ -189,7 +184,7 @@ function M.setup()
   local opt = { noremap = true, silent = true }
   vim.keymap.set("n", "<leader>o", telescope_oldfiles, opt)
   vim.keymap.set("n", "<leader>f", telescope_find_files, opt)
-  vim.keymap.set("n", "<leader>p", telescope_lazy, opt)
+  vim.keymap.set("n", "<leader>p", "<Cmd>Telescope lazy<CR>", opt)
   vim.keymap.set("n", "<leader>g", telescope_live_grep, opt)
   vim.keymap.set("n", "<leader>b", telescope_buffers, opt)
   -- vim.keymap.set("n", "<space>e", "<Cmd>Telescope file_browser<CR>", opt)
