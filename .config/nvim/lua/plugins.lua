@@ -192,18 +192,6 @@ require("lazy").setup {
     cmd = { "MyLirOpen" },
     -- enabled = false,
   },
-  { "obaland/vfiler-column-devicons" },
-  {
-    "obaland/vfiler.vim",
-    init = function()
-      -- vim.keymap.set("n", "<leader>e", "<Cmd>MyVFilerStart<CR>", { silent = true })
-    end,
-    config = function()
-      require "rc.vfiler"
-    end,
-    -- enabled = false,
-    cmd = { "MyVFilerStart" },
-  },
   {
     "vim-skk/denops-skkeleton.vim",
     config = function()
