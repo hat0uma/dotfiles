@@ -175,7 +175,7 @@ local LineInfo = {
 local Recording = {
   provider = function()
     local reg = vim.fn.reg_recording()
-    return reg ~= "" and string.format("Rec @%s", vim.fn.reg_recording()) or ""
+    return reg ~= "" and string.format("recording @%s", vim.fn.reg_recording()) or ""
   end,
   condition = function()
     return vim.o.cmdheight == 0

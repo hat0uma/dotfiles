@@ -137,13 +137,11 @@ local function telescope_find_files()
   )
 end
 
-local function telescope_packers()
+local function telescope_lazy()
   local actions = require "telescope.actions"
   local action_state = require "telescope.actions.state"
 
-  vim.cmd [[ packadd packer.nvim ]]
-  require("plugins").init()
-  require("telescope").extensions.packer.packer {
+  require("telescope").extensions.lazy.lazy {
     attach_mappings = function(prompt_bufnr, map)
       local vsplit_readme = function()
         local selection = action_state.get_selected_entry()
@@ -191,7 +189,7 @@ function M.setup()
   local opt = { noremap = true, silent = true }
   vim.keymap.set("n", "<leader>o", telescope_oldfiles, opt)
   vim.keymap.set("n", "<leader>f", telescope_find_files, opt)
-  vim.keymap.set("n", "<leader>p", telescope_packers, opt)
+  vim.keymap.set("n", "<leader>p", telescope_lazy, opt)
   vim.keymap.set("n", "<leader>g", telescope_live_grep, opt)
   vim.keymap.set("n", "<leader>b", telescope_buffers, opt)
   -- vim.keymap.set("n", "<space>e", "<Cmd>Telescope file_browser<CR>", opt)

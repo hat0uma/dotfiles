@@ -12,7 +12,7 @@ end
 vim.opt.runtimepath:prepend(lazypath)
 
 require("lazy").setup {
-  { "vim-jp/vimdoc-ja" },
+  -- { "vim-jp/vimdoc-ja" },
   { "dstein64/vim-startuptime" },
 
   {
@@ -31,7 +31,7 @@ require("lazy").setup {
       function _G.navic_winbar()
         return navic.is_available() and navic.get_location() or ""
       end
-      vim.o.winbar = "%!v:lua.navic_winbar()"
+      vim.go.winbar = "%!v:lua.navic_winbar()"
     end,
   },
   { "p00f/clangd_extensions.nvim" },
@@ -67,14 +67,6 @@ require("lazy").setup {
       require "rc.trouble"
     end,
   },
-  {
-    "j-hui/fidget.nvim",
-    config = function()
-      require("fidget").setup {}
-    end,
-    enabled = false,
-  },
-
   {
     "L3MON4D3/LuaSnip",
     dependencies = {
@@ -300,6 +292,13 @@ require("lazy").setup {
       require("telescope").load_extension "file_browser"
     end,
     enabled = false,
+  },
+  {
+    "tsakirist/telescope-lazy.nvim",
+    dependencies = { "telescope.nvim" },
+    config = function()
+      require("telescope").load_extension "lazy"
+    end,
   },
 
   -- statusline
