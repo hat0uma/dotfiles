@@ -187,6 +187,7 @@ function M.setup()
   vim.keymap.set("n", "<leader>p", "<Cmd>Telescope lazy<CR>", opt)
   vim.keymap.set("n", "<leader>g", telescope_live_grep, opt)
   vim.keymap.set("n", "<leader>b", telescope_buffers, opt)
+  vim.keymap.set("n", "<leader>r", "<Cmd>Telescope resume<CR>", opt)
   -- vim.keymap.set("n", "<space>e", "<Cmd>Telescope file_browser<CR>", opt)
   local group = vim.api.nvim_create_augroup("my_telescope_aug", {})
   vim.api.nvim_create_autocmd("FileType", {

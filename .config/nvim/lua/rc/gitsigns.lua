@@ -6,11 +6,20 @@ local function define_reversed_hl(name, newname)
   local fg = hl.background and string.format("#%x", hl.background) or nil
   vim.api.nvim_set_hl(0, newname, { bg = bg, fg = fg })
 end
+
+local function define_nr_bg(name, newname)
+  local hl = vim.api.nvim_get_hl_by_name(name, true)
+  local nr = vim.api.nvim_get_hl_by_name("LineNr", true)
+  local bg = hl.background and string.format("#%x", hl.background) or nil
+  local fg = nr.foreground and string.format("#%x", nr.foreground) or nil
+  vim.api.nvim_set_hl(0, newname, { bg = bg, fg = fg })
+end
+
 vim.api.nvim_create_autocmd("ColorScheme", {
   callback = function()
-    define_reversed_hl("Green", "GitSignsAddNrReversed")
-    define_reversed_hl("Blue", "GitSignsChangeNrReversed")
-    define_reversed_hl("Red", "GitSignsDeleteNrReversed")
+    define_nr_bg("GitSignsAddLn", "GitSignsAddNrBg")
+    define_nr_bg("GitSignsChangeLn", "GitSignsChangeNrBg")
+    define_nr_bg("GitSignsDeleteLn", "GitSignsDeleteNrBg")
   end,
 })
 
@@ -23,42 +32,43 @@ function M.setup()
       add = {
         hl = "GitSignsAdd",
         text = "┃",
-        -- numhl = "GitSignsAddNrReversed",
-        numhl = "GitSignsAddLn",
+        numhl = "GitSignsAddNrBg",
+        -- numhl = "GitSignsAddLn",
         linehl = "GitSignsAddLn",
       },
       change = {
         hl = "GitSignsChange",
         text = "┃",
-        -- numhl = "GitSignsChangeNrReversed",
-        numhl = "GitSignsChangeLn",
+        numhl = "GitSignsChangeNrBg",
+        -- numhl = "GitSignsChangeLn",
         linehl = "GitSignsChangeLn",
       },
       delete = {
         hl = "GitSignsDelete",
         text = "┃",
-        -- numhl = "GitSignsDeleteNrReversed",
-        numhl = "GitSignsDeleteLn",
+        numhl = "GitSignsDeleteNrBg",
+        -- numhl = "GitSignsDeleteLn",
         linehl = "GitSignsDeleteLn",
       },
       topdelete = {
         hl = "GitSignsDelete",
         text = "┃",
-        -- numhl = "GitSignsDeleteNrReversed",
-        numhl = "GitSignsDeleteLn",
+        numhl = "GitSignsDeleteNrBg",
+        -- numhl = "GitSignsDeleteLn",
         linehl = "GitSignsDeleteLn",
       },
       changedelete = {
         hl = "GitSignsChange",
         text = "┃",
-        -- numhl = "GitSignsChangeNrReversed",
-        numhl = "GitSignsChangeLn",
+        numhl = "GitSignsChangeNrBg",
+        -- numhl = "GitSignsChangeLn",
         linehl = "GitSignsChangeLn",
       },
       untracked = {
         hl = "GitSignsAdd",
         text = "┆",
-        numhl = "GitSignsAddLn",
+        -- numhl = "GitSignsAddLn",
+        numhl = "GitSignsAddNrBg",
         linehl = "GitSignsAddLn",
       },
     },

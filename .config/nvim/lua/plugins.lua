@@ -12,7 +12,7 @@ end
 vim.opt.runtimepath:prepend(lazypath)
 
 require("lazy").setup {
-  -- { "vim-jp/vimdoc-ja" },
+  { "vim-jp/vimdoc-ja" },
   { "dstein64/vim-startuptime" },
 
   {
@@ -26,6 +26,46 @@ require("lazy").setup {
   {
     "SmiteshP/nvim-navic",
     config = function()
+      local hls = {
+        NavicIconsArray = { link = "@class" },
+        NavicIconsBoolean = { link = "@boolean" },
+        NavicIconsClass = { link = "CmpItemKindClass" },
+        NavicIconsConstant = { link = "CmpItemKindConstant" },
+        NavicIconsConstructor = { link = "CmpItemKindConstructor" },
+        NavicIconsEnum = { link = "CmpItemKindEnum" },
+        NavicIconsEnumMember = { link = "CmpItemKindEnumMember" },
+        NavicIconsEvent = { link = "CmpItemKindEvent" },
+        NavicIconsField = { link = "CmpItemKindField" },
+        NavicIconsFile = { link = "CmpItemKindFile" },
+        NavicIconsFunction = { link = "CmpItemKindFunction" },
+        NavicIconsInterface = { link = "CmpItemKindInterface" },
+        NavicIconsKey = { link = "@class" },
+        NavicIconsKeyword = { link = "CmpItemKindKeyword" },
+        NavicIconsMethod = { link = "CmpItemKindMethod" },
+        NavicIconsModule = { link = "CmpItemKindModule" },
+        NavicIconsNamespace = { link = "CmpItemKindNamespace" },
+        NavicIconsNull = { link = "@class" },
+        NavicIconsNumber = { link = "@number" },
+        NavicIconsObject = { link = "@class" },
+        NavicIconsOperator = { link = "CmpItemKindOperator" },
+        NavicIconsPackage = { link = "@class" },
+        NavicIconsProperty = { link = "CmpItemKindProperty" },
+        NavicIconsString = { link = "@string" },
+        NavicIconsStruct = { link = "CmpItemKindStruct" },
+        NavicIconsTypeParameter = { link = "CmpItemKindTypeParameter" },
+        NavicIconsVariable = { link = "CmpItemKindVariable" },
+        NavicSeparator = { link = "NonText" },
+        NavicText = { link = "Conceal" },
+      }
+
+      vim.api.nvim_create_autocmd("ColorScheme", {
+        callback = function()
+          for name, hl in pairs(hls) do
+            local v = vim.tbl_extend("keep", hl, { default = true })
+            vim.api.nvim_set_hl(0, name, v)
+          end
+        end,
+      })
       require("nvim-navic").setup { highlight = true }
       vim.go.winbar = "%{%v:lua.require'nvim-navic'.get_location()%}"
     end,
