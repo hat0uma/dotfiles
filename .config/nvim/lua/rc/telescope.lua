@@ -110,13 +110,6 @@ function M.config()
       -- },
     },
   }
-  if package.loaded.project_nvim then
-    require("telescope").load_extension "projects"
-  end
-  -- vim.cmd[[
-  --   highlight! default link TelescopeNormal NormalFloat
-  --   highlight! default link TelescopePreviewNormal NormalFloat
-  -- ]]
 end
 
 local function dropdown_theme(entry_maker)
@@ -184,11 +177,13 @@ function M.setup()
   local opt = { noremap = true, silent = true }
   vim.keymap.set("n", "<leader>o", telescope_oldfiles, opt)
   vim.keymap.set("n", "<leader>f", telescope_find_files, opt)
-  vim.keymap.set("n", "<leader>p", "<Cmd>Telescope lazy<CR>", opt)
+  vim.keymap.set("n", "<leader>p", function()
+    require("telescope").extensions.lazy.lazy()
+  end, opt)
   vim.keymap.set("n", "<leader>g", telescope_live_grep, opt)
   vim.keymap.set("n", "<leader>b", telescope_buffers, opt)
   vim.keymap.set("n", "<leader>r", "<Cmd>Telescope resume<CR>", opt)
-  -- vim.keymap.set("n", "<space>e", "<Cmd>Telescope file_browser<CR>", opt)
+
   local group = vim.api.nvim_create_augroup("my_telescope_aug", {})
   vim.api.nvim_create_autocmd("FileType", {
     pattern = "gina-status",

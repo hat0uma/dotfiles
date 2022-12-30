@@ -9,19 +9,23 @@ local navic = require "nvim-navic"
 local format = function()
   vim.lsp.buf.format { timeout_ms = 7000 }
 end
-local format_on_save = true
-local on_save = function()
-  if format_on_save then
+
+local format_on_save = {}
+format_on_save.enabled = true
+format_on_save.handle = function()
+  if format_on_save.enabled then
     format()
   end
 end
-local format_on_save_setter = function(value)
-  return function()
-    format_on_save = value
-  end
+format_on_save.toggle = function()
+  format_on_save.enabled = not format_on_save.enabled
 end
-local format_on_save_toggle = function()
-  format_on_save = not format_on_save
+format_on_save.enable = function()
+  format_on_save.enabled = true
+end
+
+format_on_save.disable = function()
+  format_on_save.enabled = false
 end
 
 -- lsp callback
@@ -69,7 +73,7 @@ local make_on_attach = function(override_opts)
 
     if client.server_capabilities.documentFormattingProvider then
       vim.api.nvim_buf_create_user_command(bufnr, "Format", format, {})
-      vim.api.nvim_create_autocmd("BufWritePre", { buffer = bufnr, callback = on_save })
+      vim.api.nvim_create_autocmd("BufWritePre", { buffer = bufnr, callback = format_on_save.handle })
     end
   end
 end
@@ -103,22 +107,23 @@ local SymbolKind = {
   Operator = 25,
   TypeParameter = 26,
 }
+
+local capabilities =
+  vim.tbl_extend("force", vim.lsp.protocol.make_client_capabilities(), cmp_nvim_lsp.default_capabilities())
+capabilities.textDocument.completion.completionItem.snippetSupport = true
+capabilities.workspace.symbol.symbolKind.valueSet = {
+  SymbolKind.Module,
+  SymbolKind.Package,
+  SymbolKind.Class,
+  SymbolKind.Method,
+  SymbolKind.Enum,
+  SymbolKind.Interface,
+  SymbolKind.Function,
+  SymbolKind.Constant,
+  SymbolKind.Struct,
+}
 -- default configurations for lsp
 local function default_config(override_opts)
-  local capabilities =
-    vim.tbl_extend("force", vim.lsp.protocol.make_client_capabilities(), cmp_nvim_lsp.default_capabilities())
-  capabilities.textDocument.completion.completionItem.snippetSupport = true
-  capabilities.workspace.symbol.symbolKind.valueSet = {
-    SymbolKind.Module,
-    SymbolKind.Package,
-    SymbolKind.Class,
-    SymbolKind.Method,
-    SymbolKind.Enum,
-    SymbolKind.Interface,
-    SymbolKind.Function,
-    SymbolKind.Constant,
-    SymbolKind.Struct,
-  }
   return {
     on_attach = make_on_attach(override_opts),
     capabilities = capabilities,
@@ -243,10 +248,8 @@ local function setup_nullls()
     },
     null_ls.builtins.diagnostics.shellcheck,
     null_ls.builtins.diagnostics.eslint_d.with(has_eslintrc),
-    null_ls.builtins.code_actions.eslint_d.with(has_eslintrc),
     null_ls.builtins.formatting.eslint_d.with(has_eslintrc),
     null_ls.builtins.formatting.prettierd.with(has_prettierrc),
-    require "typescript.extensions.null-ls.code-actions",
   }
   null_ls.setup { sources = sources, on_attach = make_on_attach {} }
   local function register_my_nullls_settings()
@@ -281,11 +284,10 @@ function M.setup()
   vim.cmd [[sign define DiagnosticSignWarn text= texthl=DiagnosticSignWarn linehl= numhl=]]
   vim.cmd [[sign define DiagnosticSignInfo text= texthl=DiagnosticSignInfo linehl= numhl=]]
   vim.cmd [[sign define DiagnosticSignHint text= texthl=DiagnosticSignHint linehl= numhl=]]
-  vim.api.nvim_create_user_command("FormatOnSaveToggle", format_on_save_toggle, {})
-  vim.api.nvim_create_user_command("FormatOnSaveDisable", format_on_save_setter(false), {})
-  vim.api.nvim_create_user_command("FormatOnSaveEnable", format_on_save_setter(true), {})
+  vim.api.nvim_create_user_command("FormatOnSaveToggle", format_on_save.toggle, {})
+  vim.api.nvim_create_user_command("FormatOnSaveDisable", format_on_save.enable, {})
+  vim.api.nvim_create_user_command("FormatOnSaveEnable", format_on_save.disable, {})
 
-  -- require("lsp_signature").setup()
   mason_lspconfig.setup()
   setup_nullls()
   for name, server in pairs(M.servers) do

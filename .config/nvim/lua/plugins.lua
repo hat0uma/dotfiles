@@ -72,6 +72,7 @@ require("lazy").setup {
     config = function()
       require("rc.snippets").config()
     end,
+    event = { "InsertEnter", "CmdlineEnter" },
   },
 
   -- cmp
@@ -247,6 +248,11 @@ require("lazy").setup {
       require("rc.telescope").setup()
     end,
     config = function()
+      -- require("telescope").load_extension "fzf"
+      -- require("telescope").load_extension "live_grep_args"
+      -- require("telescope").load_extension "lazy"
+      -- require("telescope").load_extension "file_browser"
+      -- require("telescope").load_extension "projects"
       require("rc.telescope").config()
     end,
     cmd = { "Telescope" },
@@ -254,32 +260,24 @@ require("lazy").setup {
   {
     "nvim-telescope/telescope-fzf-native.nvim",
     dependencies = { "telescope.nvim" },
-    config = function()
-      require("telescope").load_extension "fzf"
-    end,
     build = "make",
+    lazy = true,
   },
   {
     "nvim-telescope/telescope-live-grep-args.nvim",
     dependencies = { "telescope.nvim" },
-    config = function()
-      require("telescope").load_extension "live_grep_args"
-    end,
+    lazy = true,
   },
   {
     "nvim-telescope/telescope-file-browser.nvim",
     dependencies = { "telescope.nvim" },
-    config = function()
-      require("telescope").load_extension "file_browser"
-    end,
     enabled = false,
+    lazy = true,
   },
   {
     "tsakirist/telescope-lazy.nvim",
     dependencies = { "telescope.nvim" },
-    config = function()
-      require("telescope").load_extension "lazy"
-    end,
+    lazy = true,
   },
 
   -- statusline
@@ -354,10 +352,16 @@ require("lazy").setup {
   },
 
   {
-    "rhysd/clever-f.vim",
-    config = function()
-      vim.g.clever_f_use_migemo = 1
+    "ggandor/lightspeed.nvim",
+    init = function()
+      vim.g.lightspeed_no_default_keymaps = true
     end,
+    keys = {
+      { "f", "<Plug>Lightspeed_f", { "n", "x", "o" } },
+      { "F", "<Plug>Lightspeed_F", { "n", "x", "o" } },
+      { "t", "<Plug>Lightspeed_t", { "n", "x", "o" } },
+      { "T", "<Plug>Lightspeed_T", { "n", "x", "o" } },
+    },
   },
 
   -- git

@@ -1,6 +1,7 @@
 local M = {}
 function M.setup()
   require("gitsigns").setup {
+    trouble = false,
     signcolumn = false,
     numhl = true,
     linehl = false,
