@@ -26,46 +26,6 @@ require("lazy").setup {
   {
     "SmiteshP/nvim-navic",
     config = function()
-      local hls = {
-        NavicIconsArray = { link = "@class" },
-        NavicIconsBoolean = { link = "@boolean" },
-        NavicIconsClass = { link = "CmpItemKindClass" },
-        NavicIconsConstant = { link = "CmpItemKindConstant" },
-        NavicIconsConstructor = { link = "CmpItemKindConstructor" },
-        NavicIconsEnum = { link = "CmpItemKindEnum" },
-        NavicIconsEnumMember = { link = "CmpItemKindEnumMember" },
-        NavicIconsEvent = { link = "CmpItemKindEvent" },
-        NavicIconsField = { link = "CmpItemKindField" },
-        NavicIconsFile = { link = "CmpItemKindFile" },
-        NavicIconsFunction = { link = "CmpItemKindFunction" },
-        NavicIconsInterface = { link = "CmpItemKindInterface" },
-        NavicIconsKey = { link = "@class" },
-        NavicIconsKeyword = { link = "CmpItemKindKeyword" },
-        NavicIconsMethod = { link = "CmpItemKindMethod" },
-        NavicIconsModule = { link = "CmpItemKindModule" },
-        NavicIconsNamespace = { link = "CmpItemKindNamespace" },
-        NavicIconsNull = { link = "@class" },
-        NavicIconsNumber = { link = "@number" },
-        NavicIconsObject = { link = "@class" },
-        NavicIconsOperator = { link = "CmpItemKindOperator" },
-        NavicIconsPackage = { link = "@class" },
-        NavicIconsProperty = { link = "CmpItemKindProperty" },
-        NavicIconsString = { link = "@string" },
-        NavicIconsStruct = { link = "CmpItemKindStruct" },
-        NavicIconsTypeParameter = { link = "CmpItemKindTypeParameter" },
-        NavicIconsVariable = { link = "CmpItemKindVariable" },
-        NavicSeparator = { link = "NonText" },
-        NavicText = { link = "Conceal" },
-      }
-
-      vim.api.nvim_create_autocmd("ColorScheme", {
-        callback = function()
-          for name, hl in pairs(hls) do
-            local v = vim.tbl_extend("keep", hl, { default = true })
-            vim.api.nvim_set_hl(0, name, v)
-          end
-        end,
-      })
       require("nvim-navic").setup { highlight = true }
       vim.go.winbar = "%{%v:lua.require'nvim-navic'.get_location()%}"
     end,
@@ -158,22 +118,7 @@ require("lazy").setup {
       vim.g.everforest_ui_contrast = "high"
       vim.g.everforest_better_performance = 1
       vim.cmd [[ autocmd VimEnter * ++nested colorscheme everforest ]]
-
-      local group = vim.api.nvim_create_augroup("rc_everforest_settings", {})
-      vim.api.nvim_create_autocmd("ColorScheme", {
-        pattern = "everforest",
-        callback = function()
-          vim.cmd [[highlight! default link VirtualTextError CocErrorSign]]
-          vim.cmd [[highlight! default link VirtualTextWarning CocWarningsign]]
-          vim.cmd [[highlight! default link VirtualTextInfo CocInfoSign]]
-          vim.cmd [[highlight! default link VirtualTextHint CocHintSign]]
-          --  vim.cmd [[ highlight! default link WinBar NormalFloat ]]
-          -- for noice.nvim
-          vim.cmd [[highlight! default link MsgArea LineNr]]
-        end,
-        nested = true,
-        group = group,
-      })
+      require("rc.color").setup()
     end,
   },
 
