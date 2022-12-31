@@ -12,7 +12,10 @@ end
 vim.opt.runtimepath:prepend(lazypath)
 
 require("lazy").setup {
-  { "vim-jp/vimdoc-ja" },
+  {
+    "vim-jp/vimdoc-ja",
+    event = { "CmdlineEnter" },
+  },
   {
     "dstein64/vim-startuptime",
     cmd = "StartupTime",
@@ -665,8 +668,6 @@ require("lazy").setup {
       -- vim.keymap.set("c", ";", "<Cmd>call searchx#select()<CR>", opts)
       vim.keymap.set("n", "N", "<Cmd>call searchx#prev_dir()<CR>", opts)
       vim.keymap.set("n", "n", "<Cmd>call searchx#next_dir()<CR>", opts)
-      vim.keymap.set("n", "N", "<Cmd>call searchx#prev_dir()<CR>", opts)
-      vim.keymap.set("n", "n", "<Cmd>call searchx#next_dir()<CR>", opts)
       vim.keymap.set("c", "<C-p>", "<Cmd>call searchx#prev()<CR>", opts)
       vim.keymap.set("c", "<C-n>", "<Cmd>call searchx#next()<CR>", opts)
       vim.g.searchx = {
@@ -686,5 +687,13 @@ require("lazy").setup {
         endfunction
       ]]
     end,
+    keys = {
+      { "?", mode = { "n", "x" } },
+      { "/", mode = { "n", "x" } },
+      { "n", mode = { "n", "x" } },
+      { "N", mode = { "n", "x" } },
+      { "<C-p>", mode = { "c" } },
+      { "<C-n>", mode = { "c" } },
+    },
   },
 }
