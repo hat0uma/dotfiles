@@ -98,12 +98,16 @@ require("lazy").setup {
     config = function()
       require("mason").setup()
     end,
+    lazy = true,
+    cmd = { "Mason", "MasonInstall" },
   },
   {
     "williamboman/mason-lspconfig.nvim",
+    lazy = true,
   },
   {
     "jose-elias-alvarez/null-ls.nvim",
+    lazy = true,
   },
   {
     "rikuma-t/trouble.nvim",
@@ -160,6 +164,7 @@ require("lazy").setup {
         },
       }
     end,
+    event = "BufReadPre",
   },
 
   -- colorscheme
@@ -172,6 +177,7 @@ require("lazy").setup {
       vim.cmd [[ autocmd VimEnter * ++nested colorscheme everforest ]]
       require("rc.color").setup()
     end,
+    priority = 999,
   },
 
   {
@@ -261,6 +267,7 @@ require("lazy").setup {
         detection_methods = { "pattern", "lsp" },
       }
     end,
+    event = "BufReadPost",
   },
   {
     "danymat/neogen",
@@ -335,6 +342,7 @@ require("lazy").setup {
       require "rc.statusline"
     end,
     dependencies = { "sainnhe/everforest" },
+    event = "VeryLazy",
   },
 
   {
@@ -355,6 +363,7 @@ require("lazy").setup {
     config = function()
       require("rc.treesitter").config()
     end,
+    event = "BufReadPost",
   },
   {
     "nvim-treesitter/nvim-treesitter-textobjects",
@@ -362,6 +371,7 @@ require("lazy").setup {
     config = function()
       require("rc.treesitter").textobjects_config()
     end,
+    event = "BufReadPost",
   },
   {
     "windwp/nvim-ts-autotag",
@@ -480,9 +490,10 @@ require("lazy").setup {
     config = function()
       require("rc.gitsigns").setup()
     end,
+    event = "BufReadPre",
   },
   -- test
-  { "TimUntersberger/neogit", dependencies = { "nvim-lua/plenary.nvim" } },
+  { "TimUntersberger/neogit", dependencies = { "nvim-lua/plenary.nvim" }, lazy = true },
 
   -- textobj
   {
@@ -564,6 +575,7 @@ require("lazy").setup {
     config = function()
       require "rc.notify"
     end,
+    event = "VeryLazy",
   },
 
   {
@@ -585,6 +597,7 @@ require("lazy").setup {
       "MunifTanjim/nui.nvim",
       "rcarriga/nvim-notify",
     },
+    event = "VeryLazy",
   },
 
   {
@@ -621,6 +634,12 @@ require("lazy").setup {
       vim.keymap.set("t", "<c-k>", "<C-><C-N><cmd>TmuxNavigateUp<cr>", opts)
       vim.keymap.set("t", "<c-l>", "<C-><C-N><cmd>TmuxNavigateRight<cr>", opts)
     end,
+    keys = {
+      { "<c-h>", mode = { "n", "t" } },
+      { "<c-j>", mode = { "n", "t" } },
+      { "<c-k>", mode = { "n", "t" } },
+      { "<c-l>", mode = { "n", "t" } },
+    },
   },
   {
     "RyanMillerC/better-vim-tmux-resizer",
@@ -632,6 +651,7 @@ require("lazy").setup {
       vim.keymap.set("n", "<m-k>", "<cmd>TmuxResizeUp<cr>", opts)
       vim.keymap.set("n", "<m-l>", "<cmd>TmuxResizeRight<cr>", opts)
     end,
+    keys = { { "<m-h>" }, { "<m-j>" }, { "<m-k>" }, { "<m-l>" } },
   },
   -- test
   {
