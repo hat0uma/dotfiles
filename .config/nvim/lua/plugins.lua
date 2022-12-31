@@ -89,7 +89,6 @@ require("lazy").setup {
       "hrsh7th/cmp-path",
       "saadparwaiz1/cmp_luasnip",
       "hrsh7th/cmp-cmdline",
-      -- "hrsh7th/cmp-nvim-lua",
       "hrsh7th/cmp-nvim-lsp-signature-help",
     },
     config = function()
@@ -146,23 +145,13 @@ require("lazy").setup {
     dependencies = { "nvim-cmp" },
     event = { "InsertEnter" },
   },
-
   {
-    "osyo-manga/vim-jplus",
+    "Wansmer/treesj",
     config = function()
-      -- vim.keymap.set("n", "J", "<Plug>(jplus)", {})
-      -- vim.keymap.set("v", "J", "<Plug>(jplus)", {})
-      -- vim.keymap.set("n", "<leader>J", "<Plug>(jplus-getchar)", {})
-      -- vim.keymap.set("v", "<leader>J", "<Plug>(jplus-getchar)", {})
-      vim.g["jplus#config"] = { _ = {
-        delimiter_format = "%d",
-      } }
+      require("treesj").setup { use_default_keymaps = false }
     end,
     keys = {
-      { "J", "<Plug>(jplus)", "n" },
-      { "J", "<Plug>(jplus)", "v" },
-      { "<leader>J", "<Plug>(jplus-getchar)", "n" },
-      { "<leader>J", "<Plug>(jplus-getchar)", "v" },
+      { "J", "<cmd>TSJToggle<cr>" },
     },
   },
 
