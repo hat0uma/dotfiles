@@ -139,39 +139,28 @@ end
 
 -- lua
 local function lua_config()
-  -- runtime_pathだとlazy loadしたpluginを読み込めない
   local list_installed_plugins = function()
-    local plugin_install_path = vim.fn.stdpath "data" .. "/lazy"
-    local plugins = {}
-    local handle = vim.loop.fs_scandir(plugin_install_path)
-    while handle do
-      local name, t = vim.loop.fs_scandir_next(handle)
-      if not name and t ~= "directory" then
-        break
-      end
-      table.insert(plugins, plugin_install_path .. "/" .. name)
-    end
-    return plugins
+    return vim.tbl_map(function(plugin)
+      return plugin.dir .. "/lua"
+    end, require("lazy").plugins())
   end
   local lib = list_installed_plugins()
-  table.insert(lib, vim.fn.stdpath "config")
-
   local config = default_config { document_formatting = false }
   config.settings = {
     Lua = {
-      runtime = {
-        version = "LuaJIT",
-        path = {
-          "lua/?.lua",
-          "lua/?/init.lua",
-        },
-        pathStrict = true,
-      },
+      -- runtime = {
+      --   version = "LuaJIT",
+      --   path = {
+      --     "?.lua",
+      --     "?/init.lua",
+      --   },
+      --   pathStrict = true,
+      -- },
       diagnostics = {
         globals = { "vim" },
       },
       workspace = {
-        library = lib,
+        -- library = lib,
         checkThirdParty = false,
       },
       telemetry = {
@@ -302,6 +291,16 @@ function M.setup()
   vim.api.nvim_create_user_command("FormatOnSaveDisable", format_on_save.enable, {})
   vim.api.nvim_create_user_command("FormatOnSaveEnable", format_on_save.disable, {})
 
+  require("neodev").setup {
+    library = {
+      enabled = true,
+      runtime = true,
+      types = true,
+      plugins = true,
+    },
+    setup_jsonls = false,
+    lspconfig = true,
+  }
   mason_lspconfig.setup()
   setup_nullls()
   for name, server in pairs(M.servers) do

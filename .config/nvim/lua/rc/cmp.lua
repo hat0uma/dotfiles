@@ -64,7 +64,6 @@ cmp.setup {
     { name = "buffer" },
     { name = "path" },
     { name = "skkeleton" },
-    { name = "nvim_lua" },
     { name = "nvim_lsp_signature_help" },
   },
 
