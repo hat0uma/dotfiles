@@ -38,6 +38,21 @@ require("lazy").setup {
   { "jose-elias-alvarez/typescript.nvim", lazy = true },
   { "folke/neodev.nvim", lazy = true },
   {
+    "smjonas/inc-rename.nvim",
+    config = function()
+      require("inc_rename").setup()
+    end,
+    lazy = true,
+    cmd = "IncRename",
+  },
+  {
+    "stevearc/aerial.nvim",
+    config = function()
+      require("aerial").setup()
+    end,
+    cmd = "AerialToggle",
+  },
+  {
     "neovim/nvim-lspconfig",
     config = function()
       require("rc.lsp").setup()
@@ -435,25 +450,23 @@ require("lazy").setup {
   { "TimUntersberger/neogit", dependencies = { "nvim-lua/plenary.nvim" } },
 
   -- textobj
-  { "kana/vim-textobj-user" },
-  { "kana/vim-operator-user" },
   {
     "kana/vim-operator-replace",
-    dependencies = { "vim-operator-user" },
+    dependencies = { "kana/vim-operator-user" },
     config = function()
       vim.keymap.set("n", "_", "<Plug>(operator-replace)", { silent = true })
       vim.keymap.set("x", "_", "<Plug>(operator-replace)", { silent = true })
     end,
+    event = "VeryLazy",
   },
   {
     "osyo-manga/vim-textobj-multiblock",
-    dependencies = { "vim-textobj-user" },
+    dependencies = { "kana/vim-textobj-user" },
     config = function()
-      vim.keymap.set("o", "ib", "<Plug>(textobj-multiblock-i)", { silent = true })
-      vim.keymap.set("o", "ab", "<Plug>(textobj-multiblock-a)", { silent = true })
-      vim.keymap.set("v", "ib", "<Plug>(textobj-multiblock-i)", { silent = true })
-      vim.keymap.set("v", "ab", "<Plug>(textobj-multiblock-a)", { silent = true })
+      vim.keymap.set({ "o", "v" }, "ib", "<Plug>(textobj-multiblock-i)", { silent = true })
+      vim.keymap.set({ "o", "v" }, "ab", "<Plug>(textobj-multiblock-a)", { silent = true })
     end,
+    event = "VeryLazy",
   },
 
   {
@@ -479,16 +492,16 @@ require("lazy").setup {
       vim.keymap.set("n", "sdd", "<Plug>(nvim-surround-delete)b", { silent = true })
       vim.keymap.set("n", "srr", "<Plug>(nvim-surround-change)b", { silent = true })
     end,
+    event = "VeryLazy",
   },
   { "tpope/vim-repeat" },
   {
     "tyru/open-browser.vim",
     config = function()
-      vim.keymap.set("n", "gx", "<Plug>(openbrowser-smart-search)", {})
-      vim.keymap.set("v", "gx", "<Plug>(openbrowser-smart-search)", {})
+      vim.keymap.set({ "n", "v" }, "gx", "<Plug>(openbrowser-smart-search)", {})
     end,
     keys = {
-      { "gx", "<Plug>(openbrowser-smart-search)", { "n", "v" } },
+      { "gx", mode = { "n", "v" } },
     },
   },
 
@@ -529,6 +542,7 @@ require("lazy").setup {
             ["cmp.entry.get_documentation"] = true,
           },
         },
+        presets = { inc_rename = true },
       }
       vim.keymap.set("n", "<leader>n", "<Cmd>Noice telescope<CR>", { silent = true, noremap = true })
     end,
@@ -557,10 +571,7 @@ require("lazy").setup {
     init = function()
       vim.cmd [[ autocmd TextYankPost * if v:event.operator is 'y' && v:event.regname is '+' | execute 'OSCYankReg +' | endif ]]
     end,
-    cmd = {
-      "OSCYank",
-      "OSCYankReg",
-    },
+    cmd = { "OSCYank", "OSCYankReg" },
   },
   {
     "christoomey/vim-tmux-navigator",

@@ -53,18 +53,15 @@ local make_on_attach = function(override_opts)
     local go_to_definition = function()
       require("telescope.builtin").lsp_definitions()
     end
-    local lsp_rename = function()
-      require("rc.lsp.rename").rename()
-    end
     local map_opts = { noremap = true, silent = true, buffer = bufnr }
     vim.keymap.set("n", "gD", vim.lsp.buf.declaration, map_opts)
     vim.keymap.set("n", "gd", override_opts.go_to_definition or go_to_definition, map_opts)
     vim.keymap.set("n", "gh", vim.lsp.buf.hover, map_opts)
     vim.keymap.set("n", "gi", vim.lsp.buf.implementation, map_opts)
     vim.keymap.set("n", "gr", lsp_references, map_opts)
-    vim.keymap.set("n", "<leader>s", lsp_document_symbols, map_opts)
+    vim.keymap.set("n", "<leader>s", "<Cmd>AerialToggle<CR>", map_opts)
     vim.keymap.set("n", "<leader>S", lsp_workspace_symbol, map_opts)
-    vim.keymap.set("n", "<leader>rn", lsp_rename, map_opts)
+    vim.keymap.set("n", "<leader>rn", ":IncRename ", map_opts)
     vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, map_opts)
     vim.keymap.set("n", "<leader>D", vim.lsp.buf.type_definition, map_opts)
     vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, map_opts)
@@ -111,17 +108,17 @@ local SymbolKind = {
 local capabilities =
   vim.tbl_extend("force", vim.lsp.protocol.make_client_capabilities(), cmp_nvim_lsp.default_capabilities())
 capabilities.textDocument.completion.completionItem.snippetSupport = true
-capabilities.workspace.symbol.symbolKind.valueSet = {
-  SymbolKind.Module,
-  SymbolKind.Package,
-  SymbolKind.Class,
-  SymbolKind.Method,
-  SymbolKind.Enum,
-  SymbolKind.Interface,
-  SymbolKind.Function,
-  SymbolKind.Constant,
-  SymbolKind.Struct,
-}
+-- capabilities.workspace.symbol.symbolKind.valueSet = {
+--   SymbolKind.Module,
+--   SymbolKind.Package,
+--   SymbolKind.Class,
+--   SymbolKind.Method,
+--   SymbolKind.Enum,
+--   SymbolKind.Interface,
+--   SymbolKind.Function,
+--   SymbolKind.Constant,
+--   SymbolKind.Struct,
+-- }
 -- default configurations for lsp
 local function default_config(override_opts)
   return {
