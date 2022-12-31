@@ -36,18 +36,16 @@ require("lazy").setup({
       require("nvim-navic").setup { highlight = true }
       vim.go.winbar = "%{%v:lua.require'nvim-navic'.get_location()%}"
     end,
-    lazy = true,
   },
-  { "p00f/clangd_extensions.nvim", lazy = true },
-  { "Hoffs/omnisharp-extended-lsp.nvim", lazy = true },
-  { "jose-elias-alvarez/typescript.nvim", lazy = true },
-  { "folke/neodev.nvim", lazy = true },
+  { "p00f/clangd_extensions.nvim" },
+  { "Hoffs/omnisharp-extended-lsp.nvim" },
+  { "jose-elias-alvarez/typescript.nvim" },
+  { "folke/neodev.nvim" },
   {
     "smjonas/inc-rename.nvim",
     config = function()
       require("inc_rename").setup()
     end,
-    lazy = true,
   },
   {
     "stevearc/aerial.nvim",
@@ -101,16 +99,13 @@ require("lazy").setup({
     config = function()
       require("mason").setup()
     end,
-    lazy = true,
     cmd = { "Mason", "MasonInstall" },
   },
   {
     "williamboman/mason-lspconfig.nvim",
-    lazy = true,
   },
   {
     "jose-elias-alvarez/null-ls.nvim",
-    lazy = true,
   },
   {
     "rikuma-t/trouble.nvim",
@@ -180,12 +175,13 @@ require("lazy").setup({
       vim.cmd [[ autocmd VimEnter * ++nested colorscheme everforest ]]
       require("rc.color").setup()
     end,
+    lazy = false,
     priority = 999,
   },
 
   {
     "vim-denops/denops.vim",
-    -- lazy = true,
+    lazy = false,
     config = function()
       if vim.fn.executable "deno" ~= 1 then
         vim.g["denops#deno"] = vim.fn.expand "~/.deno/bin/deno"
@@ -246,6 +242,7 @@ require("lazy").setup({
       vim.keymap.set("c", "<C-j>", "<Plug>(skkeleton-toggle)", {})
       require "rc.skkeleton"
     end,
+    lazy = false,
   },
 
   {
@@ -253,7 +250,6 @@ require("lazy").setup({
     config = function()
       require("nvim-web-devicons").setup { default = true }
     end,
-    lazy = true,
   },
 
   {
@@ -319,23 +315,19 @@ require("lazy").setup({
     "nvim-telescope/telescope-fzf-native.nvim",
     dependencies = { "telescope.nvim" },
     build = "make",
-    lazy = true,
   },
   {
     "nvim-telescope/telescope-live-grep-args.nvim",
     dependencies = { "telescope.nvim" },
-    lazy = true,
   },
   {
     "nvim-telescope/telescope-file-browser.nvim",
     dependencies = { "telescope.nvim" },
     enabled = false,
-    lazy = true,
   },
   {
     "tsakirist/telescope-lazy.nvim",
     dependencies = { "telescope.nvim" },
-    lazy = true,
   },
 
   -- statusline
@@ -353,11 +345,9 @@ require("lazy").setup({
     config = function()
       require "rc.dap"
     end,
-    lazy = true,
   },
   {
     "rcarriga/nvim-dap-ui",
-    lazy = true,
   },
 
   {
@@ -431,6 +421,13 @@ require("lazy").setup({
       { "gc", mode = "v" },
     },
   },
+  {
+    "andymass/vim-matchup",
+    event = "BufReadPost",
+    config = function()
+      vim.g.matchup_matchparen_offscreen = { method = "status_manual" }
+    end,
+  },
 
   {
     "uga-rosa/translate.nvim",
@@ -496,7 +493,7 @@ require("lazy").setup({
     event = "BufReadPre",
   },
   -- test
-  { "TimUntersberger/neogit", dependencies = { "nvim-lua/plenary.nvim" }, lazy = true },
+  { "TimUntersberger/neogit", dependencies = { "nvim-lua/plenary.nvim" } },
 
   -- textobj
   {
@@ -697,6 +694,7 @@ require("lazy").setup({
     },
   },
 }, {
+  defaults = { lazy = true },
   performance = {
     cache = {
       enabled = true,
