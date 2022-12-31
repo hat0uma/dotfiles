@@ -346,6 +346,19 @@ require("lazy").setup {
     end,
     ft = { "typescript", "typescriptreact", "javascript", "javascript" },
   },
+  {
+    "cshuaimin/ssr.nvim",
+    keys = {
+      {
+        "<leader>c",
+        function()
+          require("ssr").open()
+        end,
+        mode = { "n", "x" },
+        desc = "Structural Replace",
+      },
+    },
+  },
 
   {
     "numToStr/Comment.nvim",
@@ -433,20 +446,9 @@ require("lazy").setup {
     end,
   },
   {
-    "rhysd/vim-operator-surround",
-    dependencies = { "vim-operator-user" },
-    config = function()
-      vim.keymap.set("", "sa", "<Plug>(operator-surround-append)", { silent = true })
-      vim.keymap.set("", "sd", "<Plug>(operator-surround-delete)", { silent = true })
-      vim.keymap.set("", "sr", "<Plug>(operator-surround-replace)", { silent = true })
-    end,
-  },
-  {
     "osyo-manga/vim-textobj-multiblock",
-    dependencies = { "vim-operator-surround", "vim-textobj-user" },
+    dependencies = { "vim-textobj-user" },
     config = function()
-      vim.keymap.set("n", "sdd", "<Plug>(operator-surround-delete)<Plug>(textobj-multiblock-a)", { silent = true })
-      vim.keymap.set("n", "srr", "<Plug>(operator-surround-replace)<Plug>(textobj-multiblock-a)", { silent = true })
       vim.keymap.set("o", "ib", "<Plug>(textobj-multiblock-i)", { silent = true })
       vim.keymap.set("o", "ab", "<Plug>(textobj-multiblock-a)", { silent = true })
       vim.keymap.set("v", "ib", "<Plug>(textobj-multiblock-i)", { silent = true })
@@ -454,6 +456,30 @@ require("lazy").setup {
     end,
   },
 
+  {
+    "kylechui/nvim-surround",
+    config = function()
+      require("nvim-surround").setup {
+        keymaps = {
+          insert = "<C-g>s",
+          insert_line = "<C-g>S",
+          normal = "sa",
+          normal_cur = "sasa",
+          normal_line = false,
+          normal_cur_line = false,
+          visual = "sa",
+          visual_line = "sasa",
+          delete = "sd",
+          change = "sr",
+        },
+        aliases = {
+          ["b"] = { "}", "]", ")", ">", '"', "'", "`" },
+        },
+      }
+      vim.keymap.set("n", "sdd", "<Plug>(nvim-surround-delete)b", { silent = true })
+      vim.keymap.set("n", "srr", "<Plug>(nvim-surround-change)b", { silent = true })
+    end,
+  },
   { "tpope/vim-repeat" },
   {
     "tyru/open-browser.vim",
