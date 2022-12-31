@@ -23,6 +23,7 @@ require("lazy").setup {
     config = function()
       require "rc.illuminate"
     end,
+    event = "BufReadPost",
   },
 
   -- lsp
@@ -32,6 +33,7 @@ require("lazy").setup {
       require("nvim-navic").setup { highlight = true }
       vim.go.winbar = "%{%v:lua.require'nvim-navic'.get_location()%}"
     end,
+    lazy = true,
   },
   { "p00f/clangd_extensions.nvim", lazy = true },
   { "Hoffs/omnisharp-extended-lsp.nvim", lazy = true },
@@ -47,12 +49,41 @@ require("lazy").setup {
   {
     "stevearc/aerial.nvim",
     config = function()
-      require("aerial").setup()
+      require("aerial").setup {
+        backends = {
+          "lsp",
+          "treesitter",
+          "markdown",
+          "man",
+        },
+        filter_kind = {
+          "Class",
+          "Constant",
+          "Constructor",
+          "Enum",
+          "Function",
+          "Interface",
+          "Module",
+          "Method",
+          "Struct",
+          "Object",
+          "Array",
+          "Package",
+        },
+        show_guides = true,
+        guides = {
+          mid_item = "├─",
+          last_item = "└─",
+          nested_top = "│",
+          whitespace = "  ",
+        },
+      }
     end,
     cmd = "AerialToggle",
   },
   {
     "neovim/nvim-lspconfig",
+    event = "BufReadPre",
     config = function()
       require("rc.lsp").setup()
     end,
@@ -78,8 +109,11 @@ require("lazy").setup {
     "rikuma-t/trouble.nvim",
     dependencies = { "kyazdani42/nvim-web-devicons" },
     config = function()
-      require "rc.trouble"
+      require("rc.trouble").config()
     end,
+    keys = {
+      { "<leader>q", require("rc.trouble").toggle, "n" },
+    },
   },
   {
     "L3MON4D3/LuaSnip",
@@ -376,6 +410,13 @@ require("lazy").setup {
         pre_hook = require("ts_context_commentstring.integrations.comment_nvim").create_pre_hook(),
       }
     end,
+    keys = {
+      { "gcc", mode = "n" },
+      { "gco", mode = "n" },
+      { "gcO", mode = "n" },
+      { "gcA", mode = "n" },
+      { "gc", mode = "v" },
+    },
   },
 
   {

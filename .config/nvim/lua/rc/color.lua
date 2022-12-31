@@ -17,6 +17,34 @@ local function set_hl(name, opts)
   vim.api.nvim_set_hl(0, name, opts)
 end
 
+local function setup_trouble_winbar_hl()
+  local function get_hl(hl_name)
+    local hl = vim.api.nvim_get_hl_by_name(hl_name, true)
+    return {
+      bg = hl.background and string.format("#%x", hl.background) or nil,
+      fg = hl.foreground and string.format("#%x", hl.foreground) or nil,
+    }
+  end
+  local palette = {
+    Blue = get_hl "Blue",
+    Grey = get_hl "Grey",
+  }
+  local highlights = {
+    TroubleWinBarActiveMode = {
+      bg = palette.Blue.bg,
+      fg = palette.Blue.fg,
+      underline = true,
+    },
+    TroubleWinBarInactiveMode = {
+      bg = palette.Grey.bg,
+      fg = palette.Grey.fg,
+    },
+  }
+  for name, hl in pairs(highlights) do
+    vim.api.nvim_set_hl(0, name, hl)
+  end
+end
+
 local navic_highlights = {
   NavicIconsArray = { link = "@class" },
   NavicIconsBoolean = { link = "@boolean" },
@@ -78,6 +106,9 @@ local function setup()
       set_hl("illuminatedWordRead", { default = true, link = "CurrentWord" })
       set_hl("illuminatedWordWrite", { default = true, link = "CurrentWord" })
       set_hl("illuminatedWordText", { default = true, link = "CurrentWord" })
+
+      -- trouble.nvim
+      setup_trouble_winbar_hl()
     end,
     nested = true,
     group = group,
