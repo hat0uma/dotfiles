@@ -11,7 +11,7 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.runtimepath:prepend(lazypath)
 
-require("lazy").setup {
+require("lazy").setup({
   {
     "vim-jp/vimdoc-ja",
     event = { "CmdlineEnter" },
@@ -696,4 +696,22 @@ require("lazy").setup {
       { "<C-n>", mode = { "c" } },
     },
   },
-}
+}, {
+  performance = {
+    cache = {
+      enabled = true,
+    },
+    rtp = {
+      disabled_plugins = {
+        "gzip",
+        "matchit",
+        "matchparen",
+        "netrwPlugin",
+        "tarPlugin",
+        "tohtml",
+        "tutor",
+        "zipPlugin",
+      },
+    },
+  },
+})
