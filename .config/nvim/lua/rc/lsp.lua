@@ -205,10 +205,86 @@ local function clangd_config()
 end
 
 local function omnisharp_config()
-  return default_config {
-    go_to_definition = function()
-      require("omnisharp_extended").telescope_lsp_definitions()
+  return {
+    on_attach = function(client, bufnr)
+      -- NOTE: https://github.com/OmniSharp/omnisharp-roslyn/issues/2483
+      client.server_capabilities.semanticTokensProvider.legend = {
+        tokenModifiers = { "static" },
+        tokenTypes = {
+          "comment",
+          "excluded",
+          "identifier",
+          "keyword",
+          "keyword",
+          "number",
+          "operator",
+          "operator",
+          "preprocessor",
+          "string",
+          "whitespace",
+          "text",
+          "static",
+          "preprocessor",
+          "punctuation",
+          "string",
+          "string",
+          "class",
+          "delegate",
+          "enum",
+          "interface",
+          "module",
+          "struct",
+          "typeParameter",
+          "field",
+          "enumMember",
+          "constant",
+          "local",
+          "parameter",
+          "method",
+          "method",
+          "property",
+          "event",
+          "namespace",
+          "label",
+          "xml",
+          "xml",
+          "xml",
+          "xml",
+          "xml",
+          "xml",
+          "xml",
+          "xml",
+          "xml",
+          "xml",
+          "xml",
+          "xml",
+          "xml",
+          "xml",
+          "xml",
+          "xml",
+          "xml",
+          "xml",
+          "xml",
+          "xml",
+          "xml",
+          "regexp",
+          "regexp",
+          "regexp",
+          "regexp",
+          "regexp",
+          "regexp",
+          "regexp",
+          "regexp",
+          "regexp",
+        },
+      }
+      make_on_attach {
+        go_to_definition = function()
+          require("omnisharp_extended").telescope_lsp_definitions()
+        end,
+      }(client, bufnr)
     end,
+    capabilities = capabilities,
   }
 end
 M.servers = {
