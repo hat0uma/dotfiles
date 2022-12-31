@@ -43,7 +43,6 @@ require("lazy").setup {
       require("inc_rename").setup()
     end,
     lazy = true,
-    cmd = "IncRename",
   },
   {
     "stevearc/aerial.nvim",
@@ -173,16 +172,16 @@ require("lazy").setup {
   {
     "haya14busa/vim-asterisk",
     config = function()
-      -- vim.keymap.set("", "*", "<Plug>(asterisk-z*)", {})
-      -- vim.keymap.set("", "#", "<Plug>(asterisk-z#)", {})
-      -- vim.keymap.set("", "g*", "<Plug>(asterisk-gz*)", {})
-      -- vim.keymap.set("", "g#", "<Plug>(asterisk-gz#)", {})
+      vim.keymap.set("", "*", "<Plug>(asterisk-z*)", {})
+      vim.keymap.set("", "#", "<Plug>(asterisk-z#)", {})
+      vim.keymap.set("", "g*", "<Plug>(asterisk-gz*)", {})
+      vim.keymap.set("", "g#", "<Plug>(asterisk-gz#)", {})
     end,
     keys = {
-      { "*", "<Plug>(asterisk-z*)", "" },
-      { "#", "<Plug>(asterisk-z#)", "" },
-      { "g*", "<Plug>(asterisk-gz*)", "" },
-      { "g#", "<Plug>(asterisk-gz#)", "" },
+      { "*", mode = "" },
+      { "#", mode = "" },
+      { "g*", mode = "" },
+      { "g#", mode = "" },
     },
   },
 
@@ -346,12 +345,7 @@ require("lazy").setup {
   {
     "Badhi/nvim-treesitter-cpp-tools",
     dependencies = { "nvim-treesitter" },
-    cmd = {
-      "TSCppDefineClassFunc",
-      "TSCppMakeConcreteClass",
-      "TSCppRuleOf3",
-      "TSCppRuleOf5",
-    },
+    cmd = { "TSCppDefineClassFunc", "TSCppMakeConcreteClass", "TSCppRuleOf3", "TSCppRuleOf5" },
   },
   {
     "JoosepAlviste/nvim-ts-context-commentstring",
