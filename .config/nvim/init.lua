@@ -116,7 +116,7 @@ vim.cmd.cabbrev("printt", "print(vim.inspect())<Left><Left>")
 
 -------------------------------------------------------------------------
 -- plugins
-require "plugins"
+require "config.lazy"
 require("rc.terminal").setup()
 if vim.env.NVIM_RESTART_ENABLE then
   vim.api.nvim_create_user_command("Restart", "cq 1", {})
