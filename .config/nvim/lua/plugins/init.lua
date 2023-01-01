@@ -9,162 +9,6 @@ return {
   },
 
   {
-    "RRethy/vim-illuminate",
-    config = function()
-      require "rc.illuminate"
-    end,
-    event = "BufReadPost",
-  },
-
-  -- lsp
-  {
-    "SmiteshP/nvim-navic",
-    config = function()
-      require("nvim-navic").setup {
-        highlight = true,
-        icons = {
-          File = " ",
-          Module = " ",
-          Namespace = " ",
-          Package = " ",
-          Class = " ",
-          Method = " ",
-          Property = " ",
-          Field = " ",
-          Constructor = " ",
-          Enum = " ",
-          Interface = " ",
-          Function = " ",
-          Variable = " ",
-          Constant = " ",
-          String = " ",
-          Number = " ",
-          Boolean = " ",
-          Array = " ",
-          Object = " ",
-          Key = " ",
-          Null = " ",
-          EnumMember = " ",
-          Struct = " ",
-          Event = " ",
-          Operator = " ",
-          TypeParameter = " ",
-        },
-      }
-      vim.go.winbar = "%{%v:lua.require'nvim-navic'.get_location()%}"
-    end,
-  },
-  { "p00f/clangd_extensions.nvim" },
-  { "Hoffs/omnisharp-extended-lsp.nvim" },
-  { "jose-elias-alvarez/typescript.nvim" },
-  { "folke/neodev.nvim" },
-  {
-    "smjonas/inc-rename.nvim",
-    config = function()
-      require("inc_rename").setup()
-    end,
-  },
-  {
-    "stevearc/aerial.nvim",
-    config = function()
-      require("aerial").setup {
-        backends = {
-          "lsp",
-          "treesitter",
-          "markdown",
-          "man",
-        },
-        filter_kind = {
-          "Class",
-          "Constant",
-          "Constructor",
-          "Enum",
-          "Function",
-          "Interface",
-          "Module",
-          "Method",
-          "Struct",
-          "Object",
-          "Array",
-          "Package",
-        },
-        show_guides = true,
-        guides = {
-          mid_item = "├─",
-          last_item = "└─",
-          nested_top = "│",
-          whitespace = "  ",
-        },
-      }
-    end,
-    cmd = "AerialToggle",
-  },
-  {
-    "neovim/nvim-lspconfig",
-    event = "BufReadPre",
-    config = function()
-      require("rc.lsp").setup()
-    end,
-    dependencies = {
-      "hrsh7th/cmp-nvim-lsp",
-      "jose-elias-alvarez/null-ls.nvim",
-      "SmiteshP/nvim-navic",
-    },
-  },
-  {
-    "williamboman/mason.nvim",
-    config = function()
-      require("mason").setup()
-    end,
-    cmd = { "Mason", "MasonInstall" },
-  },
-  {
-    "williamboman/mason-lspconfig.nvim",
-  },
-  {
-    "jose-elias-alvarez/null-ls.nvim",
-  },
-  {
-    "rikuma-t/trouble.nvim",
-    dependencies = { "kyazdani42/nvim-web-devicons" },
-    config = function()
-      require("rc.trouble").config()
-    end,
-    keys = {
-      { "<leader>q", require("rc.trouble").toggle, "n" },
-    },
-  },
-  {
-    "L3MON4D3/LuaSnip",
-    dependencies = {
-      "rafamadriz/friendly-snippets",
-      "kleber-swf/vscode-unity-code-snippets",
-    },
-    config = function()
-      require("rc.snippets").config()
-    end,
-    event = { "InsertEnter", "CmdlineEnter" },
-  },
-
-  -- cmp
-  {
-    "hrsh7th/nvim-cmp",
-    dependencies = {
-      "onsails/lspkind-nvim",
-      "hrsh7th/cmp-nvim-lsp",
-      "hrsh7th/cmp-buffer",
-      "hrsh7th/cmp-path",
-      "saadparwaiz1/cmp_luasnip",
-      "hrsh7th/cmp-cmdline",
-      "hrsh7th/cmp-nvim-lsp-signature-help",
-    },
-    config = function()
-      require "rc.cmp"
-    end,
-    event = { "InsertEnter", "CmdlineEnter" },
-  },
-
-  {
     "lukas-reineke/indent-blankline.nvim",
     config = function()
       require("indent_blankline").setup {
@@ -182,39 +26,6 @@ return {
     event = "BufReadPre",
   },
 
-  -- colorscheme
-  {
-    "sainnhe/everforest",
-    config = function()
-      vim.g.everforest_background = "hard"
-      vim.g.everforest_ui_contrast = "high"
-      vim.g.everforest_better_performance = 1
-      vim.cmd [[ autocmd VimEnter * ++nested colorscheme everforest ]]
-      require("rc.color").setup()
-    end,
-    lazy = false,
-    priority = 999,
-  },
-
-  {
-    "vim-denops/denops.vim",
-    lazy = false,
-    config = function()
-      if vim.fn.executable "deno" ~= 1 then
-        vim.g["denops#deno"] = vim.fn.expand "~/.deno/bin/deno"
-      end
-      -- require("rc.denops").wait_ready()
-    end,
-  },
-
-  {
-    "windwp/nvim-autopairs",
-    config = function()
-      require "rc.autopairs"
-    end,
-    dependencies = { "nvim-cmp" },
-    event = { "InsertEnter" },
-  },
   {
     "Wansmer/treesj",
     config = function()
@@ -239,27 +50,6 @@ return {
       { "g*", mode = "" },
       { "g#", mode = "" },
     },
-  },
-
-  {
-    "tamago324/lir.nvim",
-    init = function()
-      vim.keymap.set("n", "<leader>e", "<Cmd>MyLirOpen<CR>", { silent = true })
-    end,
-    config = function()
-      require("rc.lir").config()
-    end,
-    cmd = { "MyLirOpen" },
-    -- enabled = false,
-  },
-  {
-    "vim-skk/denops-skkeleton.vim",
-    config = function()
-      vim.keymap.set("i", "<C-j>", "<Plug>(skkeleton-toggle)", {})
-      vim.keymap.set("c", "<C-j>", "<Plug>(skkeleton-toggle)", {})
-      require "rc.skkeleton"
-    end,
-    lazy = false,
   },
 
   {
@@ -315,100 +105,7 @@ return {
     end,
     dependencies = { "nvim-treesitter/nvim-treesitter" },
   },
-  {
-    "nvim-telescope/telescope.nvim",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-    },
-    init = function()
-      require("rc.telescope").setup()
-    end,
-    config = function()
-      require("rc.telescope").config()
-    end,
-    cmd = { "Telescope" },
-  },
-  {
-    "nvim-telescope/telescope-fzf-native.nvim",
-    dependencies = { "telescope.nvim" },
-    build = "make",
-  },
-  {
-    "nvim-telescope/telescope-live-grep-args.nvim",
-    dependencies = { "telescope.nvim" },
-  },
-  {
-    "nvim-telescope/telescope-file-browser.nvim",
-    dependencies = { "telescope.nvim" },
-    enabled = false,
-  },
-  {
-    "tsakirist/telescope-lazy.nvim",
-    dependencies = { "telescope.nvim" },
-  },
 
-  -- statusline
-  {
-    "glepnir/galaxyline.nvim",
-    config = function()
-      require "rc.statusline"
-    end,
-    dependencies = { "sainnhe/everforest" },
-    event = "VeryLazy",
-  },
-
-  {
-    "mfussenegger/nvim-dap",
-    config = function()
-      require "rc.dap"
-    end,
-  },
-  {
-    "rcarriga/nvim-dap-ui",
-  },
-
-  {
-    "nvim-treesitter/nvim-treesitter",
-    dependencies = {},
-    config = function()
-      require("rc.treesitter").config()
-    end,
-    event = "BufReadPost",
-  },
-  {
-    "nvim-treesitter/nvim-treesitter-textobjects",
-    dependencies = { "nvim-treesitter" },
-    config = function()
-      require("rc.treesitter").textobjects_config()
-    end,
-    event = "BufReadPost",
-  },
-  {
-    "windwp/nvim-ts-autotag",
-    dependencies = { "nvim-treesitter" },
-    config = function()
-      require("rc.treesitter").tsautotag_config()
-    end,
-    ft = { "typescript", "typescriptreact", "javascript", "javascript" },
-  },
-  {
-    "nvim-treesitter/playground",
-    dependencies = { "nvim-treesitter" },
-    cmd = { "TSPlaygroundToggle" },
-  },
-  {
-    "Badhi/nvim-treesitter-cpp-tools",
-    dependencies = { "nvim-treesitter" },
-    cmd = { "TSCppDefineClassFunc", "TSCppMakeConcreteClass", "TSCppRuleOf3", "TSCppRuleOf5" },
-  },
-  {
-    "JoosepAlviste/nvim-ts-context-commentstring",
-    dependencies = { "nvim-treesitter" },
-    config = function()
-      require("rc.treesitter").context_commentstring_config()
-    end,
-    ft = { "typescript", "typescriptreact", "javascript", "javascript" },
-  },
   {
     "cshuaimin/ssr.nvim",
     keys = {
@@ -501,62 +198,11 @@ return {
     end,
     cmd = "Gina",
   },
-  {
-    "lewis6991/gitsigns.nvim",
-    dependencies = { "nvim-lua/plenary.nvim" },
-    config = function()
-      require("rc.gitsigns").setup()
-    end,
-    event = "BufReadPre",
-  },
+
   -- test
   { "TimUntersberger/neogit", dependencies = { "nvim-lua/plenary.nvim" } },
 
   -- textobj
-  {
-    "kana/vim-operator-replace",
-    dependencies = { "kana/vim-operator-user" },
-    config = function()
-      vim.keymap.set("n", "_", "<Plug>(operator-replace)", { silent = true })
-      vim.keymap.set("x", "_", "<Plug>(operator-replace)", { silent = true })
-    end,
-    event = "VeryLazy",
-  },
-  {
-    "osyo-manga/vim-textobj-multiblock",
-    dependencies = { "kana/vim-textobj-user" },
-    config = function()
-      vim.keymap.set({ "o", "v" }, "ib", "<Plug>(textobj-multiblock-i)", { silent = true })
-      vim.keymap.set({ "o", "v" }, "ab", "<Plug>(textobj-multiblock-a)", { silent = true })
-    end,
-    event = "VeryLazy",
-  },
-
-  {
-    "kylechui/nvim-surround",
-    config = function()
-      require("nvim-surround").setup {
-        keymaps = {
-          insert = "<C-g>s",
-          insert_line = "<C-g>S",
-          normal = "sa",
-          normal_cur = "sasa",
-          normal_line = false,
-          normal_cur_line = false,
-          visual = "sa",
-          visual_line = "sasa",
-          delete = "sd",
-          change = "sr",
-        },
-        aliases = {
-          ["b"] = { "}", "]", ")", ">", '"', "'", "`" },
-        },
-      }
-      vim.keymap.set("n", "sdd", "<Plug>(nvim-surround-delete)b", { silent = true })
-      vim.keymap.set("n", "srr", "<Plug>(nvim-surround-change)b", { silent = true })
-    end,
-    event = "VeryLazy",
-  },
   { "tpope/vim-repeat" },
   {
     "tyru/open-browser.vim",
@@ -587,50 +233,6 @@ return {
   { "kevinoid/vim-jsonc", ft = { "json", "jsonc" } },
   { "aklt/plantuml-syntax", ft = { "plantuml" } },
 
-  {
-    "rcarriga/nvim-notify",
-    config = function()
-      require "rc.notify"
-    end,
-    event = "VeryLazy",
-  },
-
-  {
-    "folke/noice.nvim",
-    config = function()
-      require("noice").setup {
-        lsp = {
-          override = {
-            ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-            ["vim.lsp.util.stylize_markdown"] = true,
-            ["cmp.entry.get_documentation"] = true,
-          },
-        },
-        presets = { inc_rename = true },
-      }
-      vim.keymap.set("n", "<leader>n", "<Cmd>Noice telescope<CR>", { silent = true, noremap = true })
-    end,
-    dependencies = {
-      "MunifTanjim/nui.nvim",
-      "rcarriga/nvim-notify",
-    },
-    event = "VeryLazy",
-  },
-
-  {
-    "akinsho/toggleterm.nvim",
-    init = function()
-      for i = 1, 5 do
-        local key = string.format("<leader>%d", i)
-        local cmd = string.format("<Cmd>exe %d . 'ToggleTerm'<CR>", i)
-        vim.keymap.set("n", key, cmd, { noremap = true, silent = true })
-      end
-    end,
-    config = function()
-      require("rc.toggleterm").config()
-    end,
-    cmd = { "ToggleTerm" },
-  },
   {
     "ojroques/vim-oscyank",
     init = function()
@@ -669,45 +271,5 @@ return {
       vim.keymap.set("n", "<m-l>", "<cmd>TmuxResizeRight<cr>", opts)
     end,
     keys = { { "<m-h>" }, { "<m-j>" }, { "<m-k>" }, { "<m-l>" } },
-  },
-  -- test
-  {
-    "hrsh7th/vim-searchx",
-    config = function()
-      local opts = { noremap = true }
-      vim.keymap.set("n", "?", "<Cmd>call searchx#start({ 'dir': 0 })<CR>", opts)
-      vim.keymap.set("n", "/", "<Cmd>call searchx#start({ 'dir': 1 })<CR>", opts)
-      vim.keymap.set("x", "?", "<Cmd>call searchx#start({ 'dir': 0 })<CR>", opts)
-      vim.keymap.set("x", "/", "<Cmd>call searchx#start({ 'dir': 1 })<CR>", opts)
-      -- vim.keymap.set("c", ";", "<Cmd>call searchx#select()<CR>", opts)
-      vim.keymap.set("n", "N", "<Cmd>call searchx#prev_dir()<CR>", opts)
-      vim.keymap.set("n", "n", "<Cmd>call searchx#next_dir()<CR>", opts)
-      vim.keymap.set("c", "<C-p>", "<Cmd>call searchx#prev()<CR>", opts)
-      vim.keymap.set("c", "<C-n>", "<Cmd>call searchx#next()<CR>", opts)
-      vim.g.searchx = {
-        auto_accept = true,
-        scrolloff = 0,
-        scrolltime = 0,
-        nohlsearch = { jump = true },
-        markers = vim.split("ABCDEFGHIJKLMNOPQRSTUVWXYZ", ""),
-      }
-      vim.cmd [[
-        " Convert search pattern.
-        function g:searchx.convert(input) abort
-          if a:input !~# '\k'
-            return '\V' .. a:input
-          endif
-          return a:input[0] .. substitute(a:input[1:], '\\\@<! ', '.\\{-}', 'g')
-        endfunction
-      ]]
-    end,
-    keys = {
-      { "?", mode = { "n", "x" } },
-      { "/", mode = { "n", "x" } },
-      { "n", mode = { "n", "x" } },
-      { "N", mode = { "n", "x" } },
-      { "<C-p>", mode = { "c" } },
-      { "<C-n>", mode = { "c" } },
-    },
   },
 }

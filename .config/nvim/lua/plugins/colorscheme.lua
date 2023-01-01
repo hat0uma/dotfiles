@@ -1,3 +1,9 @@
+local M = {
+  "sainnhe/everforest",
+  lazy = false,
+  priority = 999,
+}
+
 local function define_reversed_hl(name, newname)
   local hl = vim.api.nvim_get_hl_by_name(name, true)
   local bg = hl.foreground and string.format("#%x", hl.foreground) or nil
@@ -77,7 +83,12 @@ local navic_highlights = {
   NavicText = { link = "Conceal" },
 }
 
-local function setup()
+function M.config()
+  vim.g.everforest_background = "hard"
+  vim.g.everforest_ui_contrast = "high"
+  vim.g.everforest_better_performance = 1
+  vim.cmd [[ autocmd VimEnter * ++nested colorscheme everforest ]]
+
   local group = vim.api.nvim_create_augroup("rc_colorscheme_settings", {})
   vim.api.nvim_create_autocmd("ColorScheme", {
     callback = function()
@@ -115,4 +126,4 @@ local function setup()
   })
 end
 
-return { setup = setup }
+return M

@@ -1,15 +1,25 @@
-local M = {}
-local shell = require("rc.terminal.config").shell
-
-local KeyCode = {
-  Up = "\x1b[A",
-  Down = "\x1b[B",
-  Right = "\x1b[C",
-  Left = "\x1b[D",
+local M = {
+  "akinsho/toggleterm.nvim",
+  cmd = { "ToggleTerm" },
 }
 
-function M.config()
-  require("rc.terminal").setup()
+M.init = function()
+  for i = 1, 5 do
+    local key = string.format("<leader>%d", i)
+    local cmd = string.format("<Cmd>exe %d . 'ToggleTerm'<CR>", i)
+    vim.keymap.set("n", key, cmd, { noremap = true, silent = true })
+  end
+end
+
+M.config = function()
+  local shell = require("rc.terminal.config").shell
+  local KeyCode = {
+    Up = "\x1b[A",
+    Down = "\x1b[B",
+    Right = "\x1b[C",
+    Left = "\x1b[D",
+  }
+
   require("toggleterm").setup {
     size = function(term)
       if term.direction == "horizontal" then
@@ -31,6 +41,7 @@ function M.config()
           vim.api.nvim_chan_send(term.job_id, key)
         end
       end
+
       local opts = { noremap = true, buffer = term.bufnr }
       vim.keymap.set("t", "<esc>", [[<C-\><C-n>]], opts)
       vim.keymap.set("t", "jj", [[<C-\><C-n>]], opts)

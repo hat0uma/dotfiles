@@ -1,18 +1,25 @@
-local M = {}
-local mode_cycle = {
+local MODE_CYCLE = {
   "document_diagnostics",
   "workspace_diagnostics",
 }
 local current_mode = "document_diagnostics"
-function M.toggle()
+local function toggle()
   require("trouble").toggle { mode = current_mode }
 end
 
+local M = {
+  "rikuma-t/trouble.nvim",
+  dependencies = { "kyazdani42/nvim-web-devicons" },
+  keys = {
+    { "<leader>q", toggle, "n" },
+  },
+}
+
 local function cycle_mode()
-  for index, mode in ipairs(mode_cycle) do
+  for index, mode in ipairs(MODE_CYCLE) do
     if mode == current_mode then
-      local next_index = (index % #mode_cycle) + 1
-      current_mode = mode_cycle[next_index]
+      local next_index = (index % #MODE_CYCLE) + 1
+      current_mode = MODE_CYCLE[next_index]
       break
     end
   end
@@ -25,7 +32,7 @@ end
 
 function _G.trouble_winbar()
   local items = {}
-  for _, mode in ipairs(mode_cycle) do
+  for _, mode in ipairs(MODE_CYCLE) do
     local hl = mode == current_mode and "TroubleWinBarActiveMode" or "TroubleWinBarInactiveMode"
     table.insert(items, winbar_item { hl = hl, text = mode })
   end
@@ -49,5 +56,4 @@ function M.config()
     document_diagnostics_severity = { min = vim.diagnostic.severity.HINT },
   }
 end
-
 return M

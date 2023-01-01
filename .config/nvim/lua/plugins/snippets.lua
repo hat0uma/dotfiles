@@ -1,4 +1,12 @@
-local M = {}
+local M = {
+  "L3MON4D3/LuaSnip",
+  dependencies = {
+    "rafamadriz/friendly-snippets",
+    "kleber-swf/vscode-unity-code-snippets",
+  },
+  event = { "InsertEnter", "CmdlineEnter" },
+}
+
 function M.config()
   local ls = require "luasnip"
   local s = ls.snippet

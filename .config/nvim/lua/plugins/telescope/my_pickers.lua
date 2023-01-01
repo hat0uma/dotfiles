@@ -6,8 +6,8 @@ local conf = require("telescope.config").values
 local actions = require "telescope.actions"
 local action_state = require "telescope.actions.state"
 
--- git subcommands startswith p
-M.gina_p_action_list = function(opts)
+-- git subcommands
+M.gina_action_list = function(opts)
   local p_action_list = {
     { name = "push", cmd = "Gina push" },
     { name = "pull rebase", cmd = "Gina pull --rebase" },
@@ -17,7 +17,7 @@ M.gina_p_action_list = function(opts)
   opts = opts or {}
   pickers
     .new(opts, {
-      prompt_title = "gina p actions",
+      prompt_title = "gina actions",
       finder = finders.new_table {
         results = p_action_list,
         entry_maker = function(entry)
