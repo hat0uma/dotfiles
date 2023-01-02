@@ -35,6 +35,13 @@ return {
       { "<leader>j", "<cmd>TSJToggle<cr>" },
     },
   },
+  {
+    "phaazon/hop.nvim",
+    config = function()
+      require("hop").setup()
+    end,
+    keys = { { "<leader><leader>", "<Cmd>HopWord<CR>" } },
+  },
 
   {
     "haya14busa/vim-asterisk",
