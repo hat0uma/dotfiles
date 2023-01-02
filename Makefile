@@ -39,11 +39,11 @@ gui:
 neovim_plugin:
 	nvim --headless "+Lazy! sync" +qa
 
-neovim_paser:
+neovim_parser:
 	nvim --headless '+lua require("plugins.treesitter.parser").install{force=true,sync=true}' +qa
 
 neovim_server:
 	nvim --headless '+lua require("plugins.lsp.server").install()' +qa
 
-neovim: neovim_plugin neovim_paser neovim_server
+neovim: neovim_plugin neovim_parser neovim_server
 
