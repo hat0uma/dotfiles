@@ -40,78 +40,27 @@ local M = {
     "neovim/nvim-lspconfig",
     event = "BufReadPre",
     config = function()
-      local nvim_lsp = require "lspconfig"
-      local navic = require "nvim-navic"
-      local cmp_nvim_lsp = require "cmp_nvim_lsp"
       require "mason-lspconfig"
-      local servers = {
-        sumneko_lua = {
-          settings = {
-            Lua = {
-              diagnostics = {
-                globals = { "vim" },
-              },
-              workspace = {
-                checkThirdParty = false,
-              },
-              telemetry = {
-                enable = false,
-              },
-            },
-          },
-        },
-        vimls = {},
-        dockerls = {},
-        pyright = {},
-        rust_analyzer = {},
-        clangd = {
-          cmd = { "clangd", "--background-index", "--clang-tidy" },
-        },
-        powershell_es = {},
-        denols = {
-          root_dir = nvim_lsp.util.root_pattern "deno.json",
-          init_options = {
-            enable = true,
-            lint = true,
-            unstable = true,
-            suggest = {
-              imports = {
-                hosts = {
-                  ["https://deno.land"] = true,
-                  ["https://cdn.nest.land"] = true,
-                  ["https://crux.land"] = true,
-                },
-              },
-            },
-          },
-        },
-        gopls = {
-          cmd = { vim.fn.expand "~/go/bin/gopls" },
-        },
-        cssls = {},
-        omnisharp = {},
-        tsserver = {},
-      }
 
-      local capabilities =
-        vim.tbl_extend("force", vim.lsp.protocol.make_client_capabilities(), cmp_nvim_lsp.default_capabilities())
+      local capabilities = require("cmp_nvim_lsp").default_capabilities()
       capabilities.textDocument.completion.completionItem.snippetSupport = true
 
       local on_attach = function(client, bufnr)
         if client.server_capabilities.documentSymbolProvider then
-          navic.attach(client, bufnr)
+          require("nvim-navic").attach(client, bufnr)
         end
         require("plugins.lsp.format").on_attach(client, bufnr)
-        require("plugins.lsp.keymaps").on_attach(client, bufnr)
+        require("plugins.lsp.keymap").on_attach(client, bufnr)
       end
-
       local default_opts = { on_attach = on_attach, capabilities = capabilities }
+
+      local servers = require("plugins.lsp.server").configurations
       for name, opts in pairs(servers) do
         opts = vim.tbl_deep_extend("force", default_opts, opts or {})
         if name == "tsserver" then
           require("typescript").setup { server = opts }
         else
-          nvim_lsp[name].setup(opts)
+          require("lspconfig")[name].setup(opts)
         end
       end
 

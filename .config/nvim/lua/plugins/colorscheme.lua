@@ -31,6 +31,7 @@ local function setup_trouble_winbar_hl()
       fg = hl.foreground and string.format("#%x", hl.foreground) or nil,
     }
   end
+
   local palette = {
     Blue = get_hl "Blue",
     Grey = get_hl "Grey",

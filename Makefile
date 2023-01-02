@@ -39,7 +39,7 @@ gui:
 	ln -sf ${HOME}/.local/goneovim-linux/goneovim ~/.local/bin/goneovim
 
 neovim:
-	nvim --headless -c 'lua require("plugins")' -c 'qa'
-	nvim --headless -c 'lua require("rc.treesitter").install_parsers{force=true,sync=true}' -c 'qa'
-	nvim --headless -c 'MasonInstall lua-language-server vim-language-server pyright typescript-language-server eslint_d prettierd css-lsp' -c 'qa'
+	nvim --headless "+Lazy! sync" +qa
+	nvim --headless '+lua require("plugins.treesitter.parser").install{force=true,sync=true}' +qa
+	nvim --headless '+lua require("plugins.lsp.server").install()' +qa
 
