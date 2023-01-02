@@ -57,6 +57,8 @@ function M.install()
     "eslint_d",
     "prettierd",
     "css-lsp",
+    "stylua",
+    "shellcheck",
   }
   require "mason"
   vim.cmd("MasonInstall " .. table.concat(auto_install, " "))

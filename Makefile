@@ -1,4 +1,4 @@
-.PHONY: link cli gui neovim
+.PHONY: link cli gui neovim neovim_plugin neovim_paser neovim_server
 
 CONFIG_DIRS = $(sort $(abspath $(dir $(wildcard .config/*/))))
 link:
@@ -18,8 +18,6 @@ cli:
 		nodejs \
 		npm \
 		ripgrep \
-		stylua \
-		shellcheck-bin \
 		fuse \
 		zsh
 	sudo -v ; curl https://rclone.org/install.sh | sudo bash
@@ -38,8 +36,14 @@ gui:
 		rm goneovim-linux.tar.bz2
 	ln -sf ${HOME}/.local/goneovim-linux/goneovim ~/.local/bin/goneovim
 
-neovim:
+neovim_plugin:
 	nvim --headless "+Lazy! sync" +qa
+
+neovim_paser:
 	nvim --headless '+lua require("plugins.treesitter.parser").install{force=true,sync=true}' +qa
+
+neovim_server:
 	nvim --headless '+lua require("plugins.lsp.server").install()' +qa
+
+neovim: neovim_plugin neovim_paser neovim_server
 
