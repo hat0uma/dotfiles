@@ -206,9 +206,6 @@ return {
       require("plugins.denops").register "gin"
     end,
   },
-
-  -- textobj
-  { "tpope/vim-repeat" },
   {
     "tyru/open-browser.vim",
     config = function()
@@ -218,7 +215,6 @@ return {
       { "gx", mode = { "n", "v" } },
     },
   },
-
   {
     "simplenote-vim/simplenote.vim",
     config = function()
