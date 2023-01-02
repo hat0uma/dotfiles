@@ -50,15 +50,15 @@ M.configurations = {
 
 function M.install()
   local auto_install = {
-    "lua-language-server",
-    "vim-language-server",
-    "pyright",
-    "typescript-language-server",
-    "eslint_d",
-    "prettierd",
     "css-lsp",
-    "stylua",
+    "eslint_d",
+    "lua-language-server",
+    "prettierd",
+    "pyright",
     "shellcheck",
+    "stylua",
+    "typescript-language-server",
+    "vim-language-server",
   }
   require "mason"
   vim.cmd("MasonInstall " .. table.concat(auto_install, " "))
