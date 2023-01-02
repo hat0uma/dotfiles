@@ -79,16 +79,9 @@ return {
     "danymat/neogen",
     keys = {
       {
-        "<Leader>hc",
+        "<Leader>d",
         function()
-          require("neogen").generate { type = "class" }
-        end,
-        "n",
-      },
-      {
-        "<Leader>hf",
-        function()
-          require("neogen").generate { type = "func" }
+          require("neogen").generate {}
         end,
         "n",
       },
@@ -198,9 +191,14 @@ return {
     end,
     cmd = "Gina",
   },
-
-  -- test
-  { "TimUntersberger/neogit", dependencies = { "nvim-lua/plenary.nvim" } },
+  {
+    "lambdalisue/gin.vim",
+    dependencies = { "denops.vim" },
+    build = require("plugins.denops").cache,
+    config = function()
+      require("plugins.denops").register "gin"
+    end,
+  },
 
   -- textobj
   { "tpope/vim-repeat" },

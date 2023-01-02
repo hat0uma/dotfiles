@@ -58,6 +58,7 @@ function M.install()
     "prettierd",
     "css-lsp",
   }
+  require "mason"
   vim.cmd("MasonInstall " .. table.concat(auto_install, " "))
 end
 

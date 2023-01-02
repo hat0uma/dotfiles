@@ -27,10 +27,7 @@ return {
       { pattern = "skkeleton-initialize-pre", callback = my_skkeleton_init, group = group }
     )
   end,
-  dependencies = {
-    "denops.vim",
-  },
-  keys = {
-    { "<C-j>", mode = { "i", "c" } },
-  },
+  dependencies = { "denops.vim" },
+  keys = { { "<C-j>", mode = { "i", "c" } } },
+  build = require("plugins.denops").cache,
 }

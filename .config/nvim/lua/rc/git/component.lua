@@ -4,7 +4,7 @@ local GitStatus = parser.GitStatus
 
 local M = {}
 M.config = {
-  status_refresh_interval = 3000,
+  status_refresh_interval = 10000,
 }
 M.cache = GitStatus.new()
 M.internal = {

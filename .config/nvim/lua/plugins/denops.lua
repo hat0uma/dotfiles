@@ -29,4 +29,9 @@ function M.register(name)
   end
 end
 
+--- @param plugin LazyPlugin
+function M.cache(plugin)
+  require("lazy").load { plugins = { plugin } }
+end
+
 return M
