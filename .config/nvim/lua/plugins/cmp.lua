@@ -13,6 +13,7 @@ local M = {
 }
 
 function M.config()
+  vim.go.completeopt = "menu,menuone,noselect"
   local cmp = require "cmp"
 
   local has_words_before = function()
@@ -61,16 +62,16 @@ function M.config()
           fallback()
         end
       end, { "i", "s" }),
+      ["<C-b>"] = cmp.mapping.scroll_docs(-4),
+      ["<C-f>"] = cmp.mapping.scroll_docs(4),
+      ["<C-space>"] = cmp.mapping.complete {},
       ["<C-n>"] = cmp.mapping(cmp.mapping.select_next_item(), { "i", "c" }),
       ["<C-p>"] = cmp.mapping(cmp.mapping.select_prev_item(), { "i", "c" }),
       ["<C-e>"] = cmp.mapping {
         i = cmp.mapping.abort(),
         c = cmp.mapping.close(),
       },
-      ["<CR>"] = cmp.mapping.confirm {
-        behavior = cmp.ConfirmBehavior.Replace,
-        select = false,
-      },
+      ["<CR>"] = cmp.mapping.confirm { select = true },
     },
 
     sources = {
@@ -111,13 +112,24 @@ function M.config()
         cmp.config.compare.order,
       },
     },
+    -- window = {
+    --   documentation = {
+    --     border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
+    --   },
+    --   completion = {
+    --     border = { "┌", "─", "┐", "│", "┘", "─", "└", "│" },
+    --     winhighlight = "Normal:CmpPmenu,FloatBorder:CmpPmenuBorder,CursorLine:PmenuSel,Search:None",
+    --   },
+    -- },
   }
-  cmp.setup.cmdline("/", {
+  cmp.setup.cmdline({ "/", "?" }, {
+    mapping = cmp.mapping.preset.cmdline(),
     sources = {
       { name = "buffer" },
     },
   })
   cmp.setup.cmdline(":", {
+    mapping = cmp.mapping.preset.cmdline(),
     sources = {
       { name = "path" },
       { name = "cmdline" },
