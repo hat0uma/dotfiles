@@ -52,6 +52,7 @@ function M.config()
     local function format_message(message, percentage)
       return (percentage and percentage .. "%\t" or "") .. (message or "")
     end
+
     -- LSP integration
     -- Make sure to also have the snippet with the common helper functions in your config!
     vim.lsp.handlers["$/progress"] = function(_, result, ctx)
@@ -106,8 +107,11 @@ function M.config()
   end
 
   notify.setup {
+    render = "minimal",
+    minimum_width = 15,
     -- stages = stages,
   }
   -- lsp_setup()
 end
+
 return M

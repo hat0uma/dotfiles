@@ -9,7 +9,20 @@ return {
           ["cmp.entry.get_documentation"] = true,
         },
       },
-      presets = { inc_rename = true },
+      presets = {
+        long_message_to_split = true,
+        inc_rename = true,
+      },
+      routes = {
+        {
+          filter = {
+            event = "msg_show",
+            kind = "",
+            find = "書込み",
+          },
+          opts = { skip = true },
+        },
+      },
     }
     vim.keymap.set("n", "<leader>n", "<Cmd>Noice telescope<CR>", { silent = true, noremap = true })
   end,
