@@ -14,43 +14,37 @@ function M.config()
       add = {
         hl = "GitSignsAdd",
         text = "┃",
-        numhl = "GitSignsAddNrBg",
-        -- numhl = "GitSignsAddLn",
+        numhl = "GitSignsAddNr",
         linehl = "GitSignsAddLn",
       },
       change = {
         hl = "GitSignsChange",
         text = "┃",
-        numhl = "GitSignsChangeNrBg",
-        -- numhl = "GitSignsChangeLn",
+        numhl = "GitSignsChangeNr",
         linehl = "GitSignsChangeLn",
       },
       delete = {
         hl = "GitSignsDelete",
         text = "┃",
-        numhl = "GitSignsDeleteNrBg",
-        -- numhl = "GitSignsDeleteLn",
+        numhl = "GitSignsDeleteNr",
         linehl = "GitSignsDeleteLn",
       },
       topdelete = {
         hl = "GitSignsDelete",
         text = "┃",
-        numhl = "GitSignsDeleteNrBg",
-        -- numhl = "GitSignsDeleteLn",
+        numhl = "GitSignsDeleteNr",
         linehl = "GitSignsDeleteLn",
       },
       changedelete = {
         hl = "GitSignsChange",
         text = "┃",
-        numhl = "GitSignsChangeNrBg",
-        -- numhl = "GitSignsChangeLn",
+        numhl = "GitSignsChangeNr",
         linehl = "GitSignsChangeLn",
       },
       untracked = {
         hl = "GitSignsAdd",
         text = "┆",
-        -- numhl = "GitSignsAddLn",
-        numhl = "GitSignsAddNrBg",
+        numhl = "GitSignsAddNr",
         linehl = "GitSignsAddLn",
       },
     },
@@ -67,6 +61,7 @@ function M.config()
         opts.buffer = bufnr
         vim.keymap.set(mode, l, r, opts)
       end
+
       local blame = function()
         gs.blame_line { full = true }
       end

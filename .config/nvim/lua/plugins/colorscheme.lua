@@ -88,47 +88,40 @@ function M.config()
   vim.g.everforest_background = "hard"
   vim.g.everforest_ui_contrast = "high"
   vim.g.everforest_better_performance = 1
-  vim.cmd [[ autocmd VimEnter * ++nested colorscheme everforest ]]
+  vim.cmd.colorscheme "everforest"
 
-  local group = vim.api.nvim_create_augroup("rc_colorscheme_settings", {})
-  vim.api.nvim_create_autocmd("ColorScheme", {
-    callback = function()
-      -- gitsigns.nvim
-      define_linenr_bg("GitSignsAddLn", "GitSignsAddNrBg")
-      define_linenr_bg("GitSignsChangeLn", "GitSignsChangeNrBg")
-      define_linenr_bg("GitSignsDeleteLn", "GitSignsDeleteNrBg")
+  -- gitsigns.nvim
+  define_linenr_bg("GitSignsAddLn", "GitSignsAddNr")
+  define_linenr_bg("GitSignsChangeLn", "GitSignsChangeNr")
+  define_linenr_bg("GitSignsDeleteLn", "GitSignsDeleteNr")
 
-      -- virtual text
-      set_hl("VirtualTextError", { default = true, link = "CocErrorSign" })
-      set_hl("VirtualTextWarn", { default = true, link = "CocWarningsign" })
-      set_hl("VirtualTextInfo", { default = true, link = "CocInfoSign" })
-      set_hl("VirtualTextHint", { default = true, link = "CocHintSign" })
+  -- virtual text
+  set_hl("VirtualTextError", { default = true, link = "CocErrorSign" })
+  set_hl("VirtualTextWarn", { default = true, link = "CocWarningsign" })
+  set_hl("VirtualTextInfo", { default = true, link = "CocInfoSign" })
+  set_hl("VirtualTextHint", { default = true, link = "CocHintSign" })
 
-      -- noice.nvim
-      set_hl("MsgArea", { default = true, link = "LineNr" })
+  -- noice.nvim
+  set_hl("MsgArea", { default = true, link = "LineNr" })
 
-      -- navic.nvim
-      for name, hl in pairs(navic_highlights) do
-        local v = vim.tbl_extend("keep", hl, { default = true })
-        vim.api.nvim_set_hl(0, name, v)
-      end
+  -- navic.nvim
+  for name, hl in pairs(navic_highlights) do
+    local v = vim.tbl_extend("keep", hl, { default = true })
+    vim.api.nvim_set_hl(0, name, v)
+  end
 
-      -- illuminate.vim
-      set_hl("illuminatedWord", { default = true, link = "CurrentWord" })
-      set_hl("illuminatedWordRead", { default = true, link = "CurrentWord" })
-      set_hl("illuminatedWordWrite", { default = true, link = "CurrentWord" })
-      set_hl("illuminatedWordText", { default = true, link = "CurrentWord" })
+  -- illuminate.vim
+  set_hl("illuminatedWord", { default = true, link = "CurrentWord" })
+  set_hl("illuminatedWordRead", { default = true, link = "CurrentWord" })
+  set_hl("illuminatedWordWrite", { default = true, link = "CurrentWord" })
+  set_hl("illuminatedWordText", { default = true, link = "CurrentWord" })
 
-      -- trouble.nvim
-      setup_trouble_winbar_hl()
+  -- trouble.nvim
+  setup_trouble_winbar_hl()
 
-      -- cmp.nvim
-      set_hl("CmpPmenu", { default = true, link = "Pmenu" })
-      set_hl("CmpPmenuBorder", { default = true, link = "Pmenu" })
-    end,
-    nested = true,
-    group = group,
-  })
+  -- cmp.nvim
+  set_hl("CmpPmenu", { default = true, link = "Pmenu" })
+  set_hl("CmpPmenuBorder", { default = true, link = "Pmenu" })
 end
 
 return M
