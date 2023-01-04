@@ -25,6 +25,9 @@ local M = {
           types = true,
           plugins = true,
         },
+        experimental = {
+          pathStrict = true,
+        },
         setup_jsonls = false,
         lspconfig = true,
       }

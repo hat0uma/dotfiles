@@ -13,25 +13,20 @@ local has_eslintrc = has { ".eslintrc.json" }
 local has_prettierrc = has { ".prettierrc" }
 local has_stylua = has { ".stylua.toml", "stylua.toml" }
 
+--- @param options {on_attach:function}
 function M.setup_sources(options)
-  local null_ls = require "null-ls"
+  local nls = require "null-ls"
   local sources = {
-    null_ls.builtins.formatting.stylua.with(has_stylua),
-    null_ls.builtins.diagnostics.shellcheck,
-    null_ls.builtins.diagnostics.eslint_d.with(has_eslintrc),
-    null_ls.builtins.formatting.eslint_d.with(has_eslintrc),
-    null_ls.builtins.formatting.prettierd.with(has_prettierrc),
+    nls.builtins.formatting.stylua.with(has_stylua),
+    nls.builtins.diagnostics.shellcheck,
+    nls.builtins.diagnostics.eslint_d.with(has_eslintrc),
+    nls.builtins.formatting.eslint_d.with(has_eslintrc),
+    nls.builtins.formatting.prettierd.with(has_prettierrc),
+    nls.builtins.code_actions.refactoring.with {
+      filetypes = { "go", "javascript", "lua", "python", "typescript", "c", "cpp" },
+    },
   }
-  null_ls.setup { sources = sources, on_attach = options.on_attach }
-
-  local group = vim.api.nvim_create_augroup("register_my_nullls_settings", {})
-  vim.api.nvim_create_autocmd("DirChanged", {
-    pattern = "*",
-    callback = function()
-      null_ls.register(sources)
-    end,
-    group = group,
-  })
+  nls.setup { sources = sources, on_attach = options.on_attach }
 end
 
 return M

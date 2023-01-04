@@ -4,7 +4,21 @@ M.configurations = {
     settings = {
       Lua = {
         diagnostics = {
-          globals = { "vim" },
+          -- globals = { "vim" },
+          groupFileStatus = {
+            ["ambiguity"] = "Opened",
+            ["await"] = "Opened",
+            ["codestyle"] = "None",
+            ["duplicate"] = "Opened",
+            ["global"] = "Opened",
+            ["luadoc"] = "Opened",
+            ["redefined"] = "Opened",
+            ["strict"] = "Opened",
+            ["strong"] = "Opened",
+            ["type-check"] = "Opened",
+            ["unbalanced"] = "Opened",
+            ["unused"] = "Opened",
+          },
         },
         workspace = {
           checkThirdParty = false,

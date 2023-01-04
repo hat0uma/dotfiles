@@ -6,20 +6,26 @@ local conf = require("telescope.config").values
 local actions = require "telescope.actions"
 local action_state = require "telescope.actions.state"
 
+---@class GinaAction
+---@field name string
+---@field cmd string
+
+---@type GinaAction[]
+local GINA_ACTIONS = {
+  { name = "push", cmd = "Gina push" },
+  { name = "pull rebase", cmd = "Gina pull --rebase" },
+  { name = "pull ff", cmd = "Gina pull --no-rebase --ff-only" },
+}
+
 -- git subcommands
 M.gina_action_list = function(opts)
-  local p_action_list = {
-    { name = "push", cmd = "Gina push" },
-    { name = "pull rebase", cmd = "Gina pull --rebase" },
-    { name = "pull ff", cmd = "Gina pull --no-rebase --ff-only" },
-  }
-
   opts = opts or {}
   pickers
     .new(opts, {
       prompt_title = "gina actions",
       finder = finders.new_table {
-        results = p_action_list,
+        results = GINA_ACTIONS,
+        ---@param entry GinaAction
         entry_maker = function(entry)
           return {
             value = entry,

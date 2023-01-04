@@ -14,11 +14,17 @@ prerequisites_packages=(
 )
 yay -S --noconfirm "${prerequisites_packages[@]}"
 
-# install
-git clone https://github.com/neovim/neovim -b "$version" "$neovim_tmp_dir" || :
-cd "$neovim_tmp_dir" || exit
-git pull origin "$version"
-make CMAKE_BUILD_TYPE=RelWithDebInfo -j$(nproc)
+# checkout
+if [[ ! -d "$neovim_tmp_dir" ]]; then
+    git clone https://github.com/neovim/neovim "$neovim_tmp_dir" || { echo "failed to clone."; exit 1; }
+else
+    git pull --all
+fi
+cd "$neovim_tmp_dir"
+git checkout "$version"
+
+# build & install
+make CMAKE_BUILD_TYPE=RelWithDebInfo -j"$(nproc)"
 sudo make install
 
 echo "*** finish install neovim@${version} ***"

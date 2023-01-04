@@ -7,7 +7,6 @@ return {
     "dstein64/vim-startuptime",
     cmd = "StartupTime",
   },
-
   {
     "lukas-reineke/indent-blankline.nvim",
     config = function()
@@ -34,6 +33,16 @@ return {
     keys = {
       { "<leader>j", "<cmd>TSJToggle<cr>" },
     },
+  },
+  {
+    "ThePrimeagen/refactoring.nvim",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-treesitter/nvim-treesitter",
+    },
+    config = function()
+      require("refactoring").setup {}
+    end,
   },
   {
     "phaazon/hop.nvim",
@@ -175,6 +184,22 @@ return {
       { "t", "<Plug>Lightspeed_t", { "n", "x", "o" } },
       { "T", "<Plug>Lightspeed_T", { "n", "x", "o" } },
     },
+  },
+
+  {
+    "stevearc/dressing.nvim",
+    init = function()
+      ---@diagnostic disable-next-line: duplicate-set-field
+      vim.ui.select = function(...)
+        require("lazy").load { plugins = { "dressing.nvim" } }
+        return vim.ui.select(...)
+      end
+      ---@diagnostic disable-next-line: duplicate-set-field
+      vim.ui.input = function(...)
+        require("lazy").load { plugins = { "dressing.nvim" } }
+        return vim.ui.input(...)
+      end
+    end,
   },
 
   -- git

@@ -35,4 +35,5 @@ function M.on_attach(client, bufnr)
   vim.keymap.set("n", "]d", vim.diagnostic.goto_next, map_opts)
   vim.keymap.set("n", "<leader>a", vim.lsp.buf.code_action, map_opts)
 end
+
 return M
