@@ -118,10 +118,6 @@ function M.config()
 
   -- trouble.nvim
   setup_trouble_winbar_hl()
-
-  -- cmp.nvim
-  set_hl("CmpPmenu", { default = true, link = "Pmenu" })
-  set_hl("CmpPmenuBorder", { default = true, link = "Pmenu" })
 end
 
 return M

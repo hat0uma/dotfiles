@@ -2,7 +2,12 @@ local M = {
   "hrsh7th/nvim-cmp",
   event = { "InsertEnter", "CmdlineEnter" },
   dependencies = {
-    "onsails/lspkind-nvim",
+    {
+      "onsails/lspkind-nvim",
+      config = function()
+        require("lspkind").init { preset = "codicons" }
+      end,
+    },
     "hrsh7th/cmp-nvim-lsp",
     "hrsh7th/cmp-buffer",
     "hrsh7th/cmp-path",
@@ -12,6 +17,7 @@ local M = {
   },
 }
 
+local BORDER_CHARS = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" }
 function M.config()
   vim.go.completeopt = "menu,menuone,noselect"
   local cmp = require "cmp"
@@ -82,18 +88,17 @@ function M.config()
       { name = "skkeleton" },
       { name = "nvim_lsp_signature_help" },
     },
-
     formatting = {
-      format = require("lspkind").cmp_format {
-        with_text = true,
-        menu = {
-          buffer = "[buffer]",
-          nvim_lsp = "[lsp]",
-          luasnip = "[snip]",
-          path = "[path]",
-          skkeleton = "[skk]",
-        },
-      },
+      fields = { "kind", "abbr", "menu" },
+      format = function(entry, vim_item)
+        local orig_kind = vim_item.kind
+        local kind = require("lspkind").cmp_format { mode = "symbol_text", maxwidth = 50 }(entry, vim_item)
+        local strings = vim.split(kind.kind, "%s", { trimempty = true })
+        kind.kind = " " .. (strings[1] or "") .. " "
+        kind.menu = "    " .. (strings[2] or "")
+        kind.menu_hl_group = "CmpItemKind" .. orig_kind
+        return kind
+      end,
     },
     experimental = {
       ghost_text = true,
@@ -112,15 +117,16 @@ function M.config()
         cmp.config.compare.order,
       },
     },
-    -- window = {
-    --   documentation = {
-    --     border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
-    --   },
-    --   completion = {
-    --     border = { "┌", "─", "┐", "│", "┘", "─", "└", "│" },
-    --     winhighlight = "Normal:CmpPmenu,FloatBorder:CmpPmenuBorder,CursorLine:PmenuSel,Search:None",
-    --   },
-    -- },
+    window = {
+      documentation = {
+        border = BORDER_CHARS,
+        winhighlight = "Normal:Normal,FloatBorder:Grey,CursorLine:PmenuSel,Search:None",
+      },
+      completion = {
+        border = BORDER_CHARS,
+        winhighlight = "Normal:Normal,FloatBorder:Grey,CursorLine:PmenuSel,Search:None",
+      },
+    },
   }
   cmp.setup.cmdline({ "/", "?" }, {
     mapping = cmp.mapping.preset.cmdline(),

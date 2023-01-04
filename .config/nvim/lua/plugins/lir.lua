@@ -61,6 +61,7 @@ function M.config()
       vim.cmd(string.format("%d", index))
     end
   end
+
   vim.api.nvim_create_user_command("MyLirOpen", my_lir_toggle, {})
   require("lir").setup {
     show_hidden_files = true,
@@ -114,7 +115,7 @@ function M.config()
             "─",
             "╰",
             "│",
-          }, "TelescopeBorder"),
+          }, "Grey"),
           width = width,
           height = height,
           row = math.floor((vim.o.lines - height) / 2) - 1,
@@ -139,7 +140,9 @@ function M.config()
   }
 
   local function lirSettings() end
+
   local group = vim.api.nvim_create_augroup("my-lir-settings", {})
   vim.api.nvim_create_autocmd("Filetype", { pattern = "lir", callback = lirSettings, group = group })
 end
+
 return M
