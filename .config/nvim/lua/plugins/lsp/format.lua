@@ -44,8 +44,8 @@ end
 
 function M.setup()
   vim.api.nvim_create_user_command("FormatOnSaveToggle", format_on_save.toggle, {})
-  vim.api.nvim_create_user_command("FormatOnSaveDisable", format_on_save.enable, {})
-  vim.api.nvim_create_user_command("FormatOnSaveEnable", format_on_save.disable, {})
+  vim.api.nvim_create_user_command("FormatOnSaveDisable", format_on_save.disable, {})
+  vim.api.nvim_create_user_command("FormatOnSaveEnable", format_on_save.enable, {})
 end
 
 return M
