@@ -102,7 +102,7 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 -------------------------------------------------------------------------
 -- key settings
-vim.keymap.set("n", "<Leader>w", ":w<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<Leader>w", vim.cmd.write, { noremap = true, silent = true })
 vim.keymap.set("i", "jj", "<Esc>", { noremap = true, silent = true })
 
 -- abbrevs

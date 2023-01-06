@@ -16,9 +16,10 @@ return {
       routes = {
         {
           filter = {
-            event = "msg_show",
-            kind = "",
-            find = "書込み",
+            any = {
+              { event = "msg_show", kind = "", find = "書込み" },
+              { event = "msg_show", kind = "", find = "written" },
+            },
           },
           opts = { skip = true },
         },
