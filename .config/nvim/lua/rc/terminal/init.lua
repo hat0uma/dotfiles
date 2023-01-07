@@ -3,16 +3,26 @@ local dir = require "rc.terminal.dir"
 local config = require "rc.terminal.config"
 local AUGID = vim.api.nvim_create_augroup("rc_terminal_aug", {})
 
+local function is_floating(winid)
+  local cfg = vim.api.nvim_win_get_config(winid)
+  return cfg.relative ~= "" or cfg.external
+end
+
 -- functions for script
 local function edit_files(opts)
+  if is_floating(0) then
+    vim.cmd.close()
+  end
   for _, arg in pairs(opts.fargs) do
     vim.cmd.edit(arg)
   end
 end
+
 local function vsplit_files(opts)
   vim.cmd.vsplit()
   edit_files(opts)
 end
+
 local function split_files(opts)
   vim.cmd.split()
   edit_files(opts)
@@ -20,7 +30,9 @@ end
 
 -- callbacks
 local function on_termenter() end
+
 local function on_termleave() end
+
 local function on_termbufleave() end
 
 --- open new terminal buffer
@@ -88,6 +100,7 @@ function M.show_vs(opts)
   vim.cmd.vsplit()
   M.show(opts)
 end
+
 --- show terminal with split
 ---@param opts TermConfig?
 function M.show_sp(opts)
