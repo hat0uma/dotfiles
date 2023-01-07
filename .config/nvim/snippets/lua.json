@@ -1,0 +1,9 @@
+{
+  "add autocmd": {
+    "prefix": "aug",
+    "body": [
+      "local group = vim.api.nvim_create_augroup(\"$1\", {})",
+      "vim.api.nvim_create_autocmd( \"$2\",{ callback=function() $3 end ,group=group })"
+    ]
+  }
+}

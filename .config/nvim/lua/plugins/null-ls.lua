@@ -30,6 +30,7 @@ function M.setup_sources(options)
     nls.builtins.formatting.eslint_d.with(has_eslintrc),
     nls.builtins.formatting.prettierd.with(has_prettierrc),
     nls.builtins.formatting.stylua.with(has_stylua),
+    nls.builtins.formatting.fixjson,
   }
   nls.setup { sources = sources, on_attach = options.on_attach }
 end
