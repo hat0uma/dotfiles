@@ -274,10 +274,10 @@ return {
       vim.keymap.set("n", "<c-j>", "<cmd>TmuxNavigateDown<cr>", opts)
       vim.keymap.set("n", "<c-k>", "<cmd>TmuxNavigateUp<cr>", opts)
       vim.keymap.set("n", "<c-l>", "<cmd>TmuxNavigateRight<cr>", opts)
-      vim.keymap.set("t", "<c-h>", "<C-><C-N><cmd>TmuxNavigateLeft<cr>", opts)
-      vim.keymap.set("t", "<c-j>", "<C-><C-N><cmd>TmuxNavigateDown<cr>", opts)
-      vim.keymap.set("t", "<c-k>", "<C-><C-N><cmd>TmuxNavigateUp<cr>", opts)
-      vim.keymap.set("t", "<c-l>", "<C-><C-N><cmd>TmuxNavigateRight<cr>", opts)
+      vim.keymap.set("t", "<c-h>", "<C-\\><C-N><cmd>TmuxNavigateLeft<cr>", opts)
+      vim.keymap.set("t", "<c-j>", "<C-\\><C-N><cmd>TmuxNavigateDown<cr>", opts)
+      vim.keymap.set("t", "<c-k>", "<C-\\><C-N><cmd>TmuxNavigateUp<cr>", opts)
+      vim.keymap.set("t", "<c-l>", "<C-\\><C-N><cmd>TmuxNavigateRight<cr>", opts)
     end,
     keys = {
       { "<c-h>", mode = { "n", "t" } },
