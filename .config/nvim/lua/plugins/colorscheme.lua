@@ -103,6 +103,8 @@ function M.config()
 
   -- noice.nvim
   set_hl("MsgArea", { default = true, link = "LineNr" })
+  set_hl("NoicePopup", { default = true, link = "Normal" })
+  set_hl("NoicePopupBorder", { default = true, link = "Grey" })
 
   -- navic.nvim
   for name, hl in pairs(navic_highlights) do
