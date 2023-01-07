@@ -112,6 +112,26 @@ vim.cmd.cabbrev("printt", "vim.pretty_print()<Left>")
 -- plugins
 require "config.lazy"
 require("rc.terminal").setup()
+
+vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
 if vim.env.NVIM_RESTART_ENABLE then
-  vim.api.nvim_create_user_command("Restart", "cq 1", {})
+  local session_dir = vim.fn.stdpath "data" .. "/sessions"
+  local session_path = session_dir .. "/last.vim"
+
+  vim.api.nvim_create_user_command("Restart", function()
+    local group = vim.api.nvim_create_augroup("my_restart_settings", {})
+    vim.api.nvim_create_autocmd("VimLeave", {
+      callback = function()
+        if vim.fn.isdirectory(session_dir) ~= 1 then
+          vim.loop.fs_mkdir(session_dir, 493) -- 755
+        end
+        vim.cmd.mksession { session_path, bang = true }
+      end,
+      group = group,
+    })
+    vim.cmd.cquit()
+  end, {})
+  vim.api.nvim_create_user_command("RestoreSession", function()
+    vim.cmd.source(session_path)
+  end, {})
 end

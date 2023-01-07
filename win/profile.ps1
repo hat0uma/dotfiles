@@ -32,6 +32,18 @@ function ln($target, $link)
     New-Item -ItemType SymbolicLink -Path $link -Value $target
 }
 
+Remove-Alias -Force -Name nv
+function nv()
+{
+    $env:NVIM_RESTART_ENABLE = 1
+    nvim $args
+    while( $LASTEXITCODE -eq 1 )
+    {
+        nvim +RestoreSession
+    }
+    Remove-Item env:NVIM_RESTART_ENABLE
+}
+
 # others
 $MaximumHistoryCount = 10000;
 
