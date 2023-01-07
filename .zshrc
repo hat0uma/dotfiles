@@ -92,6 +92,7 @@ alias ls='ls --color=auto'
 alias ll='ls -alFh'
 alias edit='nvim'
 alias open='xdg-open'
+alias nv='(){ while ! NVIM_RESTART_ENABLE=1 nvim $@; do :; done }'
 
 if [[ $NVIM ]]; then
     source _nvim_hooks.zsh
