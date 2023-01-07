@@ -182,7 +182,7 @@ return {
       vim.api.nvim_set_hl(0, "LightspeedHiddenCursor", { blend = 100, nocombine = true })
 
       local guicursor = vim.go.guicursor
-      local clear_cursor = function()
+      local hide_cursor = function()
         vim.go.guicursor = "a:LightspeedHiddenCursor"
       end
       local restore_cursor = vim.schedule_wrap(function()
@@ -190,7 +190,7 @@ return {
       end)
 
       local group = vim.api.nvim_create_augroup("lightspeed_aug", {})
-      vim.api.nvim_create_autocmd("User", { pattern = "LightspeedFtEnter", callback = clear_cursor, group = group })
+      vim.api.nvim_create_autocmd("User", { pattern = "LightspeedFtEnter", callback = hide_cursor, group = group })
       vim.api.nvim_create_autocmd("User", { pattern = "LightspeedFtLeave", callback = restore_cursor, group = group })
     end,
     keys = {
