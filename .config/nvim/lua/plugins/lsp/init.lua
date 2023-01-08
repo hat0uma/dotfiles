@@ -49,8 +49,9 @@ local M = {
       capabilities.textDocument.completion.completionItem.snippetSupport = true
 
       local on_attach = function(client, bufnr)
+        print("attach to " .. client.name)
         --- https://github.com/OmniSharp/omnisharp-roslyn/issues/2483
-        if client.name == "omnisharp" then
+        if client.name == "omnisharp" or client.name == "omnisharp_mono" then
           client.server_capabilities.semanticTokensProvider = {
             full = vim.empty_dict(),
             legend = {
@@ -139,6 +140,8 @@ local M = {
         opts = vim.tbl_deep_extend("force", default_opts, opts or {})
         if name == "tsserver" then
           require("typescript").setup { server = opts }
+        elseif name == "omnisharp" and vim.fn.has "win64" ~= 1 then
+          require("lspconfig")["omnisharp_mono"].setup(opts)
         else
           require("lspconfig")[name].setup(opts)
         end
