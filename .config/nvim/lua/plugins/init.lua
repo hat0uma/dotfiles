@@ -325,4 +325,13 @@ return {
     end,
     cmd = { "Octo" },
   },
+  {
+    "kat0h/bufpreview.vim",
+    dependencies = { "denops.vim" },
+    build = "deno task prepare",
+    config = function()
+      require("plugins.denops").register "bufpreview"
+    end,
+    cmd = { "PreviewMarkdown" },
+  },
 }

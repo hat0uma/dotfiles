@@ -11,6 +11,17 @@ local M = {
   {
     "osyo-manga/vim-textobj-multiblock",
     dependencies = { "kana/vim-textobj-user" },
+    init = function()
+      vim.g.textobj_multiblock_blocks = {
+        { "(", ")" },
+        { "[", "]" },
+        { "{", "}" },
+        { "<", ">" },
+        { '"', '"', 1 },
+        { "'", "'", 1 },
+        { "`", "`", 1 },
+      }
+    end,
     config = function()
       vim.keymap.set({ "o", "v" }, "ib", "<Plug>(textobj-multiblock-i)", { silent = true })
       vim.keymap.set({ "o", "v" }, "ab", "<Plug>(textobj-multiblock-a)", { silent = true })
