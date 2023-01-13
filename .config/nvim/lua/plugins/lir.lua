@@ -65,7 +65,10 @@ function M.config()
   vim.api.nvim_create_user_command("MyLirOpen", my_lir_toggle, {})
   require("lir").setup {
     show_hidden_files = true,
-    devicons_enable = true,
+    devicons = {
+      enable = true,
+      highlight_dirname = true,
+    },
     mappings = {
       ["i"] = function()
         vim.fn.feedkeys "/"

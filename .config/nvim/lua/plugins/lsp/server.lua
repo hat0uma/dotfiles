@@ -59,7 +59,10 @@ M.configurations = {
   },
   cssls = {},
   omnisharp = {},
-  tsserver = {},
+  tsserver = {
+    root_dir = require("lspconfig").util.root_pattern "package.json",
+    single_file_support = false,
+  },
 }
 
 function M.install()

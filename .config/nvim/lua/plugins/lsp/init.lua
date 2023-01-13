@@ -49,7 +49,7 @@ local M = {
       capabilities.textDocument.completion.completionItem.snippetSupport = true
 
       local on_attach = function(client, bufnr)
-        print("attach to " .. client.name)
+        print("attach " .. client.name)
         --- https://github.com/OmniSharp/omnisharp-roslyn/issues/2483
         if client.name == "omnisharp" or client.name == "omnisharp_mono" then
           client.server_capabilities.semanticTokensProvider = {

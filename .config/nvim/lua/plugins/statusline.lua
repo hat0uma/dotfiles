@@ -1,18 +1,17 @@
 local M = {
   "glepnir/galaxyline.nvim",
   dependencies = { "sainnhe/everforest" },
-  event = "VeryLazy",
+  -- event = "VeryLazy",
+  lazy = false,
 }
 
 function M.config()
   local fn = vim.fn
   local gl = require "galaxyline"
-  local vcs = require "galaxyline.provider_vcs"
   local fileinfo = require "galaxyline.provider_fileinfo"
   local buffer = require "galaxyline.provider_buffer"
   local condition = require "galaxyline.condition"
   local section = gl.section
-  local navic = require "nvim-navic"
 
   gl.short_line_list = {
     -- "defx",
@@ -139,16 +138,18 @@ function M.config()
   local Navic = {
     provider = function()
       -- needs
-      if not navic.is_available() then
+      if not require("nvim-navic").is_available() then
         return ""
       end
-      local loc = navic.get_location()
+      local loc = require("nvim-navic").get_location()
       if loc ~= "" then
         loc = "> " .. loc
       end
       return loc
     end,
-    condition = navic.is_available,
+    condition = function()
+      return require("nvim-navic").is_available
+    end,
     separator_highlight = palette.separator_highlight,
     highlight = { palette.fg, palette.bg },
   }
@@ -253,7 +254,6 @@ function M.config()
     provider = function()
       -- local icon = " "
       local icon = " "
-      local branch = vcs.get_git_branch() or ""
       return string.format("  %s%s", icon, git_status())
     end,
     condition = condition.check_git_workspace,
