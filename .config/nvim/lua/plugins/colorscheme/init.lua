@@ -21,7 +21,7 @@ local function colors(opts)
     table.insert(specs, spec)
   end
 
-  local group = vim.api.nvim_create_augroup("colorscheme_aug ", {})
+  local group = vim.api.nvim_create_augroup("colorscheme_aug", {})
   vim.api.nvim_create_autocmd("Colorscheme", {
     callback = function()
       require("plugins.colorscheme.highlights").setup()

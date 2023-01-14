@@ -26,8 +26,8 @@ setmetatable(M, {
       local kanagawa = require("kanagawa.colors").setup()
       local palette = {
         bg = kanagawa.bg,
-        bg2 = kanagawa.bg_dark,
-        fg = kanagawa.fg,
+        bg2 = kanagawa.bg_light0,
+        fg = kanagawa.fg_dark,
         -- other colors
         yellow = kanagawa.carpYellow,
         cyan = kanagawa.waveAqua1,
