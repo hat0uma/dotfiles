@@ -35,6 +35,12 @@ return {
   hide_tab_bar_if_only_one_tab = false,
   tab_bar_at_bottom = false,
   window_decorations = "RESIZE",
+  window_padding = {
+    left = 0,
+    right = 0,
+    top = 0,
+    bottom = 0,
+  },
   color_scheme = "Afterglow",
   -- exit_behavior = "Hold",
   -- xim_im_name = "fcitx",
