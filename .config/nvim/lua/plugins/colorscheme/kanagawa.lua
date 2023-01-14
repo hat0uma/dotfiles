@@ -27,18 +27,18 @@ setmetatable(M, {
       local palette = {
         bg = kanagawa.bg,
         bg2 = kanagawa.bg_light0,
-        fg = kanagawa.fg_dark,
+        fg = kanagawa.oldWhite,
         -- other colors
-        yellow = kanagawa.carpYellow,
+        yellow = kanagawa.autumnYellow,
         cyan = kanagawa.waveAqua1,
         darkblue = kanagawa.waveBlue1,
-        green = kanagawa.springGreen,
+        green = kanagawa.autumnGreen,
         orange = kanagawa.surimiOrange,
         purple = kanagawa.oniViolet,
         magenta = kanagawa.peachRed,
         grey = kanagawa.katanaGray,
-        blue = kanagawa.springBlue,
-        red = kanagawa.peachRed,
+        blue = kanagawa.dragonBlue,
+        red = kanagawa.autumnRed,
       }
       palette.separator_highlight = { palette.fg, palette.bg }
       palette.vimode_fg = kanagawa.sumiInk0
