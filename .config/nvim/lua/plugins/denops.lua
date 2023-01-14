@@ -12,26 +12,30 @@ function M.config()
   end
 end
 
-function M.register(name)
-  local status = vim.fn["denops#server#status"]()
-  if status == "running" then
-    vim.fn["denops#plugin#register"](name, { mode = "skip" })
-    vim.fn["denops#plugin#wait"](name)
-  else
-    vim.api.nvim_create_autocmd("User", {
-      pattern = "DenopsReady",
-      once = true,
-      callback = function()
+setmetatable(M, {
+  __index = {
+    register = function(name)
+      --- @type string
+      local status = vim.fn["denops#server#status"]()
+      if status == "running" then
         vim.fn["denops#plugin#register"](name, { mode = "skip" })
         vim.fn["denops#plugin#wait"](name)
-      end,
-    })
-  end
-end
-
---- @param plugin LazyPlugin
-function M.cache(plugin)
-  require("lazy").load { plugins = { plugin } }
-end
+      else
+        vim.api.nvim_create_autocmd("User", {
+          pattern = "DenopsReady",
+          once = true,
+          callback = function()
+            vim.fn["denops#plugin#register"](name, { mode = "skip" })
+            vim.fn["denops#plugin#wait"](name)
+          end,
+        })
+      end
+    end,
+    --- @param plugin LazyPlugin
+    cache = function(plugin)
+      require("lazy").load { plugins = { plugin } }
+    end,
+  },
+})
 
 return M

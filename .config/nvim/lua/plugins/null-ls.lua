@@ -14,7 +14,7 @@ local has_prettierrc = has { ".prettierrc" }
 local has_stylua = has { ".stylua.toml", "stylua.toml" }
 
 --- @param options {on_attach:function}
-function M.setup_sources(options)
+local function setup_sources(options)
   local nls = require "null-ls"
   local sources = {
     -- code actions
@@ -35,4 +35,5 @@ function M.setup_sources(options)
   nls.setup { sources = sources, on_attach = options.on_attach }
 end
 
+setmetatable(M, { __index = { setup_sources = setup_sources } })
 return M

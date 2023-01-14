@@ -39,7 +39,7 @@ return {
   keys = {
     { "?", mode = { "n", "x" } },
     { "/", mode = { "n", "x" } },
-    { "<leader><leader>", mode = { "n", "x" } },
+    -- { "<leader><leader>", mode = { "n", "x" } },
     { "n", mode = { "n", "x" } },
     { "N", mode = { "n", "x" } },
   },

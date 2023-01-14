@@ -1,8 +1,4 @@
-local M = {
-  "sainnhe/everforest",
-  lazy = false,
-  priority = 999,
-}
+local M = {}
 
 local function define_reversed_hl(name, newname)
   local hl = vim.api.nvim_get_hl_by_name(name, true)
@@ -84,22 +80,17 @@ local navic_highlights = {
   NavicText = { link = "Conceal" },
 }
 
-function M.config()
-  vim.g.everforest_background = "hard"
-  vim.g.everforest_ui_contrast = "high"
-  vim.g.everforest_better_performance = 1
-  vim.cmd.colorscheme "everforest"
-
+function M.setup()
   -- gitsigns.nvim
-  define_linenr_bg("GitSignsAddLn", "GitSignsAddNr")
-  define_linenr_bg("GitSignsChangeLn", "GitSignsChangeNr")
-  define_linenr_bg("GitSignsDeleteLn", "GitSignsDeleteNr")
+  define_linenr_bg("DiffAdd", "GitSignsAddNr")
+  define_linenr_bg("DiffChange", "GitSignsChangeNr")
+  define_linenr_bg("DiffDelete", "GitSignsDeleteNr")
 
   -- virtual text
-  set_hl("VirtualTextError", { default = true, link = "CocErrorSign" })
-  set_hl("VirtualTextWarn", { default = true, link = "CocWarningsign" })
-  set_hl("VirtualTextInfo", { default = true, link = "CocInfoSign" })
-  set_hl("VirtualTextHint", { default = true, link = "CocHintSign" })
+  -- set_hl("VirtualTextError", { default = true, link = "CocErrorSign" })
+  -- set_hl("VirtualTextWarn", { default = true, link = "CocWarningsign" })
+  -- set_hl("VirtualTextInfo", { default = true, link = "CocInfoSign" })
+  -- set_hl("VirtualTextHint", { default = true, link = "CocHintSign" })
 
   -- noice.nvim
   set_hl("MsgArea", { default = true, link = "LineNr" })

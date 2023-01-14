@@ -25,9 +25,7 @@ local M = {
           types = true,
           plugins = true,
         },
-        experimental = {
-          pathStrict = true,
-        },
+        pathStrict = true,
         setup_jsonls = false,
         lspconfig = true,
       }
@@ -45,6 +43,7 @@ local M = {
     config = function()
       require "mason-lspconfig"
 
+      --- @type table
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
       capabilities.textDocument.completion.completionItem.snippetSupport = true
 

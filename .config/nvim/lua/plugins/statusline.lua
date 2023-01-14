@@ -1,11 +1,27 @@
 local M = {
   "glepnir/galaxyline.nvim",
-  dependencies = { "sainnhe/everforest" },
   -- event = "VeryLazy",
   lazy = false,
 }
 
-function M.config()
+--- @class MyStatuslinePalette
+--- @field bg string
+--- @field bg2 string
+--- @field fg string
+--- @field vimode_fg string
+--- @field yellow string
+--- @field cyan string
+--- @field darkblue string
+--- @field green string
+--- @field orange string
+--- @field purple string
+--- @field magenta string
+--- @field grey string
+--- @field blue string
+--- @field red string
+--- @field separator_highlight string
+
+local function setup_statusline()
   local fn = vim.fn
   local gl = require "galaxyline"
   local fileinfo = require "galaxyline.provider_fileinfo"
@@ -23,28 +39,8 @@ function M.config()
     -- "translate",
     -- "packer",
   }
-
-  local configuration = vim.fn["everforest#get_configuration"]()
-  local everforest = vim.fn["everforest#get_palette"](configuration.background, configuration.colors_override)
-  local palette = {
-    bg = everforest.bg0[1],
-    bg2 = everforest.bg2[1],
-    -- fg = everforest.statusline2[1],
-    fg = everforest.grey2[1],
-    vimode_fg = everforest.bg2[1],
-    -- other colors
-    yellow = everforest.yellow[1],
-    cyan = everforest.aqua[1],
-    darkblue = everforest.blue[1],
-    green = everforest.green[1],
-    orange = everforest.orange[1],
-    purple = everforest.purple[1],
-    magenta = everforest.purple[1],
-    grey = everforest.grey1[1],
-    blue = everforest.blue[1],
-    red = everforest.red[1],
-  }
-  palette.separator_highlight = { palette.fg, palette.bg }
+  --- @type MyStatuslinePalette
+  local palette = require("plugins.colorscheme").get_statusline_palette()
 
   local buffer_name = function()
     local filetype = vim.bo.filetype
@@ -252,13 +248,10 @@ function M.config()
 
   local GitBranch = {
     provider = function()
-      -- local icon = " "
       local icon = " "
       return string.format("  %s%s", icon, git_status())
     end,
     condition = condition.check_git_workspace,
-    -- separator = "  ",
-    -- separator = "",
     separator = " ",
     separator_highlight = { palette.fg, palette.bg2 },
     highlight = { palette.fg, palette.bg2 },
@@ -342,6 +335,10 @@ function M.config()
 
   table.insert(section.short_line_right, { BufferType = BufferType })
   table.insert(section.short_line_right, { BufferIcon = BufferIcon })
+end
+
+function M.config()
+  setup_statusline()
 end
 
 return M

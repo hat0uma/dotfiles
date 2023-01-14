@@ -49,7 +49,7 @@ return {
     config = function()
       require("hop").setup()
     end,
-    -- keys = { { "<leader><leader>", "<Cmd>HopWord<CR>" } },
+    keys = { { "<leader><leader>", "<Cmd>HopWord<CR>" } },
   },
 
   {
@@ -149,6 +149,10 @@ return {
     event = "BufReadPost",
     config = function()
       vim.g.matchup_matchparen_offscreen = { method = "status_manual" }
+      vim.g.matchup_matchpref = {
+        html = { tagnameonly = 1 },
+        typescriptreact = { tagnameonly = 1 },
+      }
     end,
   },
 
