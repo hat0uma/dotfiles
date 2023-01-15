@@ -33,11 +33,11 @@ local function colors(opts)
     __index = {
       --- @return MyStatuslinePalette
       get_statusline_palette = function()
-        return colorschemes[vim.g.colors_name].get_statusline_palette()
+        return colorschemes[opts.startup].get_statusline_palette()
       end,
     },
   })
   return specs
 end
 
-return colors { startup = "everforest" }
+return colors { startup = "kanagawa" }

@@ -34,7 +34,6 @@ function M.config()
       TypeParameter = " ",
     },
   }
-  vim.go.winbar = "%{%v:lua.require'nvim-navic'.get_location()%}"
 end
 
 return M

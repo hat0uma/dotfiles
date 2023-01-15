@@ -330,6 +330,41 @@ return {
     cmd = { "Octo" },
   },
   {
+    "stevearc/oil.nvim",
+    init = function()
+      vim.keymap.set("n", "-", require("oil").open_float, { desc = "Open parent directory" })
+    end,
+    config = function()
+      require("oil").setup {
+        columns = {
+          "icon",
+          -- "permissions",
+          -- "size",
+          -- "mtime",
+        },
+        use_default_keymaps = false,
+        keymaps = {
+          ["?"] = require("oil.actions").show_help,
+          ["q"] = require("oil.actions").close,
+          ["<CR>"] = require("oil.actions").select,
+          ["h"] = require("oil.actions").parent,
+          ["s"] = require("oil.actions").select_split,
+          ["v"] = require("oil.actions").select_vsplit,
+        },
+        float = {
+          padding = 2,
+          max_width = math.floor(vim.o.columns * 0.7),
+          max_height = math.floor(vim.o.lines * 0.7),
+          border = "rounded",
+          win_options = {
+            winblend = 10,
+          },
+        },
+      }
+    end,
+    cmd = { "Oil" },
+  },
+  {
     "kat0h/bufpreview.vim",
     dependencies = { "denops.vim" },
     build = "deno task prepare",

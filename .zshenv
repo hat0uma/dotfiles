@@ -11,3 +11,6 @@ export XDG_DATA_HOME=$HOME/.local/share
 
 export PATH="$HOME/.local/bin:$HOME/.deno/bin:$HOME/.cargo/bin:$PATH"
 
+if infocmp wezterm >/dev/null 2>&1; then
+    export TERM=wezterm
+fi

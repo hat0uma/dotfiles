@@ -112,6 +112,7 @@ vim.cmd.cabbrev("printt", "vim.pretty_print()<Left>")
 -- plugins
 require "config.lazy"
 require("rc.terminal").setup()
+require("rc.winbar").setup()
 
 vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
 if vim.env.NVIM_RESTART_ENABLE then

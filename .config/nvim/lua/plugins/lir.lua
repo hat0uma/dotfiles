@@ -1,9 +1,9 @@
 local M = {
   "tamago324/lir.nvim",
-  init = function()
-    vim.keymap.set("n", "<leader>e", "<Cmd>MyLirOpen<CR>", { silent = true })
-  end,
-  cmd = { "MyLirOpen" },
+  -- init = function()
+  --   vim.keymap.set("n", "<leader>e", "<Cmd>MyLirOpen<CR>", { silent = true })
+  -- end,
+  -- cmd = { "MyLirOpen" },
   -- enabled = false,
 }
 
