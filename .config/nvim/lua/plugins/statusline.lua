@@ -1,7 +1,7 @@
 local M = {
   "glepnir/galaxyline.nvim",
-  -- event = "VeryLazy",
-  lazy = false,
+  -- lazy = false,
+  event = "Colorscheme",
 }
 
 --- @class MyStatuslinePalette
