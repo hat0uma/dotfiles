@@ -27,8 +27,8 @@ local function setup_sources(options)
     -- diagnostics
     nls.builtins.diagnostics.eslint_d.with(has_eslintrc),
     nls.builtins.diagnostics.shellcheck,
-    nls.builtins.diagnostics.mypy(prefer_venv),
-    nls.builtins.diagnostics.flake8(prefer_venv),
+    nls.builtins.diagnostics.mypy.with(prefer_venv),
+    nls.builtins.diagnostics.flake8.with(prefer_venv),
 
     -- formatters
     nls.builtins.formatting.isort.with(prefer_venv),
