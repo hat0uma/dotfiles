@@ -17,7 +17,14 @@ local function oil_location()
 end
 
 local config = {
-  default = require("nvim-navic").get_location,
+  default = function()
+    local success, navic = pcall(require, "nvim-navic")
+    if success then
+      return navic.get_location()
+    else
+      return ""
+    end
+  end,
   ft = {
     oil = oil_location,
   },

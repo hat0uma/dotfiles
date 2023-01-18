@@ -13,7 +13,7 @@ return {
     local key_opts = { noremap = true }
     vim.keymap.set({ "n", "x" }, "?", searchx_start { dir = 0 }, key_opts)
     vim.keymap.set({ "n", "x" }, "/", searchx_start { dir = 1 }, key_opts)
-    vim.keymap.set({ "n", "x" }, "<leader><leader>", searchx_start { dir = 1 }, key_opts)
+    -- vim.keymap.set({ "n", "x" }, "<leader><leader>", searchx_start { dir = 1 }, key_opts)
     -- vim.keymap.set("c", ";", "<Cmd>call searchx#select()<CR>", opts)
     vim.keymap.set("n", "N", "<Cmd>call searchx#prev_dir()<CR>", key_opts)
     vim.keymap.set("n", "n", "<Cmd>call searchx#next_dir()<CR>", key_opts)
