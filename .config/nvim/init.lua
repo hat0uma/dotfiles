@@ -114,3 +114,4 @@ require "config.lazy"
 require("rc.terminal").setup()
 require("rc.winbar").setup()
 require("rc.restart").setup()
+require("rc.terminal_editor").setup()
