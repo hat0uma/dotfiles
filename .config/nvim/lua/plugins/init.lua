@@ -49,7 +49,7 @@ return {
     config = function()
       require("hop").setup()
     end,
-    keys = { { "<leader><leader>", "<Cmd>HopWord<CR>" } },
+    keys = { { "<CR>", "<Cmd>HopWord<CR>" } },
   },
 
   {
