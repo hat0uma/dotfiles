@@ -85,6 +85,9 @@ zinit for \
 
 ### End of Zinit's installer chunk
 
+# other plugins
+zinit light zsh-users/zsh-completions
+
 #####################################################################
 # aliases and functions
 #####################################################################
