@@ -373,4 +373,14 @@ return {
     end,
     cmd = { "PreviewMarkdown" },
   },
+  {
+    "chomosuke/term-edit.nvim",
+    ft = "toggleterm",
+    version = "1.*",
+    config = function()
+      require("term-edit").setup {
+        prompt_end = "❯ ",
+      }
+    end,
+  },
 }

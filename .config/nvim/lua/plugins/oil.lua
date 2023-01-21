@@ -57,6 +57,9 @@ return {
         ["gs"] = select_for_float(require("oil.actions").select_split),
         ["g."] = require("oil.actions").toggle_hidden,
         ["gp"] = require("oil.actions").preview,
+        ["~"] = function()
+          vim.cmd.edit(vim.fn.fnamemodify("~", ":p"))
+        end,
       },
       float = {
         padding = 2,

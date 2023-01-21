@@ -7,8 +7,8 @@ local M = {
 function M.config()
   require("gitsigns").setup {
     trouble = false,
-    signcolumn = false,
-    numhl = true,
+    signcolumn = true,
+    numhl = false,
     linehl = false,
     signs = {
       add = {
@@ -43,7 +43,7 @@ function M.config()
       },
       untracked = {
         hl = "GitSignsAdd",
-        text = "┆",
+        text = "┃",
         numhl = "GitSignsAddNr",
         linehl = "GitSignsAddLn",
       },
