@@ -119,7 +119,13 @@ fi
 # others
 #####################################################################
 typeset -U path PATH
-autoload -U compinit
+# compinit
+# https://gist.github.com/ctechols/ca1035271ad134841284
+autoload -Uz compinit
+for dump in ~/.zcompdump(N.mh+24); do
+  compinit
+done
+compinit -C
 bindkey -e
 
 # histoy
