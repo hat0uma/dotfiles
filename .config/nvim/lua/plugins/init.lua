@@ -51,7 +51,13 @@ return {
     end,
     keys = { { "<CR>", "<Cmd>HopWord<CR>" } },
   },
-
+  {
+    "mfussenegger/nvim-treehopper",
+    init = function()
+      vim.keymap.set({ "o", "x" }, "m", require("tsht").nodes, {})
+    end,
+    dependencies = { "hop.nvim" },
+  },
   {
     "haya14busa/vim-asterisk",
     config = function()
