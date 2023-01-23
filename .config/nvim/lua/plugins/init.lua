@@ -371,6 +371,12 @@ return {
     cmd = { "Oil" },
   },
   {
+    "mg979/vim-visual-multi",
+    config = function()
+      -- \\z normal
+    end,
+  },
+  {
     "kat0h/bufpreview.vim",
     dependencies = { "denops.vim" },
     build = "deno task prepare",
@@ -389,4 +395,20 @@ return {
       }
     end,
   },
+  {
+    "NvChad/nvim-colorizer.lua",
+    config = function()
+      require 'colorizer'.setup {
+        filetypes = {
+          "css",
+          "scss",
+          "typescript",
+          "typescriptreact",
+          "javascript",
+          "javascriptreact",
+        }
+      }
+    end,
+    event = "BufReadPost"
+  }
 }

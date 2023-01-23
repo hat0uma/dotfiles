@@ -29,6 +29,16 @@ local M = {
         return vim.api.nvim_replace_termcodes(str, true, true, true)
       end
 
+      -- #nnnnnn
+      local REGEX_RGBHEX = "#([0-9a-fA-F]+)"
+      local function rgb3_to_6(rgb3)
+        return table.concat {
+          rgb3:sub(1, 1):rep(2),
+          rgb3:sub(2, 2):rep(2),
+          rgb3:sub(3, 3):rep(2),
+        }
+      end
+
       cmp.setup {
         snippet = {
           expand = function(args)
@@ -93,6 +103,21 @@ local M = {
             kind.kind = " " .. (strings[1] or "") .. " "
             kind.menu = "    " .. (strings[2] or "")
             kind.menu_hl_group = "CmpItemKind" .. orig_kind
+
+            if orig_kind == "Color" then
+              local doc = entry.completion_item.documentation or kind.word
+              -- #nnnnnn or #nnn
+              local rgb_hex = string.match(doc, REGEX_RGBHEX)
+              if rgb_hex and #rgb_hex == 3 or #rgb_hex == 6 then
+                if #rgb_hex == 3 then
+                  rgb_hex = rgb3_to_6(rgb_hex)
+                end
+                local group = "RcCmpColor_" .. rgb_hex
+                vim.api.nvim_set_hl(0, group, { fg = "#" .. rgb_hex })
+                kind.menu_hl_group = group
+                kind.menu = "    " .. " "
+              end
+            end
             return kind
           end,
         },
