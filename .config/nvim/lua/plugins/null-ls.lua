@@ -9,8 +9,13 @@ local has = function(files)
     end,
   }
 end
-local has_eslintrc = has { ".eslintrc.json" }
-local has_prettierrc = has { ".prettierrc" }
+local find_cwd = function(files)
+  return {
+    cwd = function()
+      return vim.fs.dirname(vim.fs.find(files, { upward = false })[1])
+    end,
+  }
+end
 local has_stylua = has { ".stylua.toml", "stylua.toml" }
 local prefer_venv = { prefer_local = ".venv/bin" }
 local prefer_node_modules = { prefer_local = "node_modules/.bin" }
@@ -25,7 +30,7 @@ local function setup_sources(options)
     },
 
     -- diagnostics
-    nls.builtins.diagnostics.eslint_d.with(has_eslintrc),
+    nls.builtins.diagnostics.eslint_d.with(find_cwd { ".eslintrc.json" }),
     nls.builtins.diagnostics.shellcheck,
     nls.builtins.diagnostics.mypy.with(prefer_venv),
     nls.builtins.diagnostics.flake8.with(prefer_venv),
@@ -33,8 +38,8 @@ local function setup_sources(options)
     -- formatters
     nls.builtins.formatting.isort.with(prefer_venv),
     nls.builtins.formatting.black.with(prefer_venv),
-    nls.builtins.formatting.eslint_d.with(has_eslintrc),
-    nls.builtins.formatting.prettierd.with(prefer_node_modules),
+    nls.builtins.formatting.eslint_d.with(find_cwd { ".eslintrc.json" }),
+    nls.builtins.formatting.prettierd.with(find_cwd { ".prettierrc" }),
     nls.builtins.formatting.stylua.with(has_stylua),
     nls.builtins.formatting.fixjson,
   }
