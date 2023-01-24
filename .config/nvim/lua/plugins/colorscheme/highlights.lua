@@ -97,6 +97,9 @@ function M.setup()
   set_hl("NoicePopup", { default = true, link = "Normal" })
   set_hl("NoicePopupBorder", { default = true, link = "Grey" })
 
+  set_hl("NormalFloat", { link = "Normal" })
+  set_hl("FloatBorder", { link = "Grey" })
+
   -- navic.nvim
   for name, hl in pairs(navic_highlights) do
     local v = vim.tbl_extend("keep", hl, { default = true })

@@ -1,6 +1,7 @@
 local colorschemes = {
   everforest = require "plugins.colorscheme.everforest",
   kanagawa = require "plugins.colorscheme.kanagawa",
+  catppuccin = require "plugins.colorscheme.catppuccin",
 }
 
 --- @param opts { startup:string }
@@ -40,4 +41,4 @@ local function colors(opts)
   return specs
 end
 
-return colors { startup = "kanagawa" }
+return colors { startup = "catppuccin" }
