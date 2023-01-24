@@ -49,7 +49,7 @@ return {
     config = function()
       require("hop").setup()
     end,
-    keys = { { "<CR>", "<Cmd>HopWord<CR>" } },
+    keys = { { ";", "<Cmd>HopWord<CR>" } },
   },
   {
     "mfussenegger/nvim-treehopper",

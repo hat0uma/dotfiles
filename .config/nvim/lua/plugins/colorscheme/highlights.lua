@@ -112,6 +112,10 @@ function M.setup()
   set_hl("illuminatedWordWrite", { default = true, link = "CurrentWord" })
   set_hl("illuminatedWordText", { default = true, link = "CurrentWord" })
 
+  -- treehopper
+  set_hl("TSNodeUnmatched", { link = "HopUnmatched" })
+  set_hl("TSNodeKey", { link = "HopNextKey" })
+
   -- trouble.nvim
   setup_trouble_winbar_hl()
 end
