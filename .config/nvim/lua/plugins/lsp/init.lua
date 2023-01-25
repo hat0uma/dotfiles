@@ -48,7 +48,7 @@ local M = {
       capabilities.textDocument.completion.completionItem.snippetSupport = true
 
       local on_attach = function(client, bufnr)
-        print("attach " .. client.name)
+        vim.notify(string.format("  %s", client.name))
         --- https://github.com/OmniSharp/omnisharp-roslyn/issues/2483
         if client.name == "omnisharp" or client.name == "omnisharp_mono" then
           client.server_capabilities.semanticTokensProvider = {
@@ -144,6 +144,14 @@ local M = {
         else
           require("lspconfig")[name].setup(opts)
         end
+      end
+
+      --- https://github.com/neovim/nvim-lspconfig/issues/2366
+      vim.lsp.handlers["workspace/diagnostic/refresh"] = function(_, _, ctx)
+        local ns = vim.lsp.diagnostic.get_namespace(ctx.client_id)
+        local bufnr = vim.api.nvim_get_current_buf()
+        vim.diagnostic.reset(ns, bufnr)
+        return true
       end
 
       require("plugins.lsp.format").setup()
