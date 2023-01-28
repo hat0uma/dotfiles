@@ -67,11 +67,8 @@ M.configurations = {
 
 function M.install()
   local auto_install = {
-    "black",
     "css-lsp",
     "eslint_d",
-    "flake8",
-    "isort",
     "lua-language-server",
     "prettierd",
     "pyright",
