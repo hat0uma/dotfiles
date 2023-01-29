@@ -1,6 +1,5 @@
 local colorschemes = {
   everforest = require "plugins.colorscheme.everforest",
-  kanagawa = require "plugins.colorscheme.kanagawa",
   catppuccin = require "plugins.colorscheme.catppuccin",
 }
 
