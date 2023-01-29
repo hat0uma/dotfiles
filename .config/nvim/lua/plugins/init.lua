@@ -305,6 +305,7 @@ return {
     config = function()
       -- \\z normal
     end,
+    keys = { "<C-n>" },
   },
   {
     "kat0h/bufpreview.vim",
