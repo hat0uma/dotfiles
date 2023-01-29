@@ -41,7 +41,7 @@ return {
     top = 0,
     bottom = 0,
   },
-  color_scheme = "Afterglow",
+  color_scheme = "Catppuccin Frappe",
   -- exit_behavior = "Hold",
   -- xim_im_name = "fcitx",
   font = wezterm.font_with_fallback { "Sarasa Term J Nerd Font", "Twemoji Mozilla" },

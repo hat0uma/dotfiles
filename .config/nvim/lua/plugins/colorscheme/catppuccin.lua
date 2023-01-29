@@ -55,6 +55,7 @@ setmetatable(M, {
     --- @return MyStatuslinePalette
     get_statusline_palette = function()
       local frappe = require("catppuccin.palettes").get_palette "frappe"
+      --- @type table <string,string>
       local palette = {
         bg = frappe.base,
         bg2 = frappe.mantle,
@@ -73,6 +74,12 @@ setmetatable(M, {
       }
       palette.separator_highlight = { palette.fg, palette.bg }
       palette.vimode_fg = frappe.base
+      palette.vimode_override = {
+        n = { color = palette.blue },
+        v = { color = palette.green },
+        [""] = { color = palette.green },
+        V = { color = palette.green },
+      }
       return palette
     end,
   },

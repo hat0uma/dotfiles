@@ -20,6 +20,7 @@ local M = {
 --- @field blue string
 --- @field red string
 --- @field separator_highlight string
+--- @field vimode_override table?
 
 local function setup_statusline()
   local fn = vim.fn
@@ -92,6 +93,7 @@ local function setup_statusline()
         ["!"] = { color = palette.red, alias = "SHELL" },
         t = { color = palette.red, alias = "TERMINAL" },
       }
+      modes = vim.tbl_deep_extend("force", modes, palette.vimode_override or {})
       local mode = modes[fn.mode()]
       local alias = mode.alias
       local skkeleton_mode = ""
