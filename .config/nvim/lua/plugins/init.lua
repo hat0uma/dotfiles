@@ -73,6 +73,10 @@ return {
       { "g#", mode = "" },
     },
   },
+  {
+    "lambdalisue/suda.vim",
+    cmd = { "SudaRead", "SudaWrite" }
+  },
 
   {
     "kyazdani42/nvim-web-devicons",

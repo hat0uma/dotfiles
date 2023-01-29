@@ -87,6 +87,7 @@ zinit for \
 
 # other plugins
 zinit light zsh-users/zsh-completions
+zinit light endaaman/lxd-completion-zsh
 
 #####################################################################
 # aliases and functions
