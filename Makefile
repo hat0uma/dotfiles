@@ -19,6 +19,8 @@ cli:
 		npm \
 		ripgrep \
 		fuse \
+		smbclient \
+		cifs-utils \
 		zsh
 	sudo -v ; curl https://rclone.org/install.sh | sudo bash
 	curl -fsSL https://deno.land/x/install/install.sh | sh
