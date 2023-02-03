@@ -108,7 +108,7 @@ local M = {
               local doc = entry.completion_item.documentation or kind.word
               -- #nnnnnn or #nnn
               local rgb_hex = string.match(doc, REGEX_RGBHEX)
-              if rgb_hex and #rgb_hex == 3 or #rgb_hex == 6 then
+              if rgb_hex and (#rgb_hex == 3 or #rgb_hex == 6) then
                 if #rgb_hex == 3 then
                   rgb_hex = rgb3_to_6(rgb_hex)
                 end
