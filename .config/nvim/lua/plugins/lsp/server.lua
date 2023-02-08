@@ -35,6 +35,9 @@ M.configurations = {
   rust_analyzer = {},
   clangd = {
     cmd = { "clangd", "--background-index", "--clang-tidy" },
+    capabilities = {
+      offsetEncoding = "utf-16",
+    },
   },
   powershell_es = {},
   denols = {

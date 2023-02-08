@@ -141,6 +141,8 @@ local M = {
           require("typescript").setup { server = opts }
         elseif name == "omnisharp" and vim.fn.has "win64" ~= 1 then
           require("lspconfig")["omnisharp_mono"].setup(opts)
+        elseif name == "clangd" then
+          require("clangd_extensions").setup { server = opts }
         else
           require("lspconfig")[name].setup(opts)
         end
@@ -164,6 +166,7 @@ local M = {
       "SmiteshP/nvim-navic",
       "mason-lspconfig.nvim",
       "neodev.nvim",
+      "clangd_extensions.nvim",
     },
   },
 }
