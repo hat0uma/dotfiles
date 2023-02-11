@@ -1,4 +1,3 @@
-local config = require "rc.terminal.config"
 local M = {}
 
 function M.notify_cwd_changed(terminal_cwd)
