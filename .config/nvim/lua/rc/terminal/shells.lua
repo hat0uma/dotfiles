@@ -6,7 +6,7 @@ end
 
 return {
   pwsh = shell {
-    cmd = string.format("pwsh -NoLogo -NoProfile -NoExit -File %s ", vim.fn.expand "~/dotfiles/win/profile.ps1"),
+    cmd = "pwsh -NoLogo",
     env = {
       PATH = string.format("%s;%s", vim.fn.expand "~/.config/nvim/lua/rc/terminal/bin.pwsh", vim.env.PATH),
     },
