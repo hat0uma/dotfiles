@@ -1,6 +1,6 @@
 local M = {}
-local dir = require "rc.terminal.dir"
 local config = require "rc.terminal.config"
+local util = require "rc.utils"
 local AUGID = vim.api.nvim_create_augroup("rc_terminal_aug", {})
 
 local function is_floating(winid)
@@ -9,23 +9,28 @@ local function is_floating(winid)
 end
 
 -- functions for script
-local function edit_files(opts)
+local function _edit_files(opts, cwd)
   if is_floating(0) then
     vim.cmd.close()
   end
   for _, arg in pairs(opts.fargs) do
-    vim.cmd.edit(arg)
+    local path = util.accessable_path(cwd, arg)
+    vim.cmd.edit(path)
   end
+end
+
+local function edit_files(opts)
+  _edit_files(opts, vim.b.terminal_cwd)
 end
 
 local function vsplit_files(opts)
   vim.cmd.vsplit()
-  edit_files(opts)
+  _edit_files(opts, vim.b.terminal_cwd)
 end
 
 local function split_files(opts)
   vim.cmd.split()
-  edit_files(opts)
+  _edit_files(opts, vim.b.terminal_cwd)
 end
 
 -- callbacks
@@ -109,12 +114,12 @@ function M.show_sp(opts)
 end
 
 function M.setup()
+  require("rc.terminal.dir").setup()
+
   -- autocmds
   vim.api.nvim_create_autocmd("TermEnter", { group = AUGID, pattern = "*", callback = on_termenter })
   vim.api.nvim_create_autocmd("TermLeave", { group = AUGID, pattern = "*", callback = on_termleave })
   vim.api.nvim_create_autocmd("BufLeave", { group = AUGID, pattern = "term:/*", callback = on_termbufleave })
-  vim.api.nvim_create_autocmd("BufEnter", { group = AUGID, pattern = "term:/*", callback = dir.on_termbuf_enter })
-  vim.api.nvim_create_autocmd("User", { group = AUGID, pattern = "TermCwdChanged", callback = dir.on_term_cwd_changed })
 
   -- commands
   local cmdopts = { nargs = "*", complete = "file", bar = true }

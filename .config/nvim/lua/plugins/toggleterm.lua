@@ -1,3 +1,4 @@
+local util = require "rc.utils"
 local M = {
   "akinsho/toggleterm.nvim",
   cmd = { "ToggleTerm" },
@@ -52,12 +53,9 @@ M.config = function()
 
       -- gf
       vim.keymap.set("n", "gf", function()
-        print(vim.b.terminal_cwd)
         local cfile = vim.fn.expand "<cfile>"
-        if not vim.loop.fs_stat(cfile) then
-          cfile = vim.b.terminal_cwd .. "/" .. cfile
-        end
-        vim.cmd("close | e " .. cfile)
+        local path = util.accessable_path(vim.b.terminal_cwd, cfile)
+        vim.cmd("close | e " .. path)
       end, opts)
 
       -- reload
