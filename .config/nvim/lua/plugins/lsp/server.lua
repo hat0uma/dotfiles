@@ -1,6 +1,6 @@
 local M = {}
 M.configurations = {
-  sumneko_lua = {
+  lua_ls = {
     settings = {
       Lua = {
         diagnostics = {

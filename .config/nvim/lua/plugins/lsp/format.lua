@@ -23,7 +23,7 @@ end
 
 local format_disable_clients = {
   "tsserver",
-  "sumneko_lua",
+  "lua_ls",
 }
 
 function M.on_attach(client, bufnr)
