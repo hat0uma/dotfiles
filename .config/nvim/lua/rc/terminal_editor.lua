@@ -2,19 +2,28 @@ local M = {}
 
 --- call from parent
 function M.setup()
-  local editor = "nvim -u NONE --headless -n -c \"lua require'rc.terminal_editor'.request_edit()\""
+  local editor = [[nvim -u NONE --headless -n -c "lua require'rc.terminal_editor'.edit_on_parent()" -c qa]]
   vim.env.EDITOR = editor
   vim.env.VISUAL = editor
   vim.env.RC_TERMINAL_EDITOR_PARENT_ADDRESS = vim.v.servername
 end
 
 --- call from child
-function M.request_edit()
-  local channel = vim.fn.sockconnect("pipe", vim.env.RC_TERMINAL_EDITOR_PARENT_ADDRESS, { rpc = true })
+function M.edit_on_parent()
   local files = vim.tbl_map(function(file)
     return vim.fn.fnamemodify(file, ":p")
   end, vim.fn.argv())
+
+  local channel = vim.fn.sockconnect("pipe", vim.env.RC_TERMINAL_EDITOR_PARENT_ADDRESS, { rpc = true })
   vim.rpcrequest(channel, "nvim_exec_lua", "return require'rc.terminal_editor'.edit(...)", { files, vim.v.servername })
+  vim.fn.chanclose(channel)
+  while true do
+    if vim.wait(10000, function()
+      return vim.g.parent_nvim_edit_finished
+    end) then
+      break
+    end
+  end
 end
 
 function M.edit(files, servername)
@@ -24,7 +33,8 @@ function M.edit(files, servername)
   vim.api.nvim_create_autocmd({ "BufWipeout", "VimLeave" }, {
     callback = function()
       local child = vim.fn.sockconnect("pipe", servername, { rpc = true })
-      pcall(vim.rpcrequest, child, "nvim_cmd", { cmd = "quit", args = {} }, {})
+      vim.rpcrequest(child, "nvim_exec_lua", "vim.g.parent_nvim_edit_finished = true", {})
+      vim.fn.chanclose(child)
     end,
     once = true,
     buffer = 0,
