@@ -1,3 +1,14 @@
+local function find(name)
+  local lines = vim.fn.line "$"
+  for i = 1, lines, 1 do
+    local entry = require("oil").get_entry_on_line(0, i)
+    if entry and entry.name == name then
+      vim.cmd(string.format("%d", i))
+      break
+    end
+  end
+end
+
 local on_edit = {
   filename = "",
   dir = "",
@@ -14,6 +25,7 @@ local function open()
   -- vim.cmd.tabnew()
   -- require("oil").open(on_edit.dir)
   require("oil").open_float(on_edit.dir)
+  -- find(on_edit.filename)
 end
 
 local function select_for_float(base)
@@ -59,6 +71,9 @@ return {
         ["gp"] = require("oil.actions").preview,
         ["~"] = function()
           vim.cmd.edit(vim.fn.fnamemodify("~", ":p"))
+        end,
+        ["<leader>s"] = function()
+          find(on_edit.filename)
         end,
       },
       float = {
