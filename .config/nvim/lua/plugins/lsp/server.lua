@@ -79,6 +79,7 @@ function M.install()
     "stylua",
     "typescript-language-server",
     "vim-language-server",
+    "gopls",
   }
   require "mason"
   vim.cmd("MasonInstall " .. table.concat(auto_install, " "))

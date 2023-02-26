@@ -26,6 +26,11 @@ local parser = {
 
 function M.install(opts)
   require "nvim-treesitter"
+  local ok, orgmode = pcall(require, "orgmode")
+  if ok then
+    orgmode.setup_ts_grammar()
+    table.insert(parser, "org")
+  end
 
   local _opts = vim.tbl_extend("keep", opts or {}, { force = false, sync = false })
   local parsers_text = table.concat(parser, " ")

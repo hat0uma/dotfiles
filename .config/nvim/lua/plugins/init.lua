@@ -75,7 +75,7 @@ return {
   },
   {
     "lambdalisue/suda.vim",
-    cmd = { "SudaRead", "SudaWrite" }
+    cmd = { "SudaRead", "SudaWrite" },
   },
 
   {
@@ -345,5 +345,13 @@ return {
       }
     end,
     event = "BufReadPost",
+  },
+  {
+    "nvim-orgmode/orgmode",
+    config = function()
+      require("orgmode").setup {}
+      require("orgmode").setup_ts_grammar()
+    end,
+    lazy = false,
   },
 }

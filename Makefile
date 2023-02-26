@@ -17,6 +17,7 @@ cli:
 		github-cli \
 		nodejs \
 		npm \
+		go \
 		ripgrep \
 		fuse \
 		smbclient \
