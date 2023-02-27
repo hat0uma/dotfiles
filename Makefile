@@ -11,6 +11,7 @@ link:
 
 cli:
 	yay -S --noconfirm \
+		expac \
 		unzip \
 		xsel \
 		tmux \
