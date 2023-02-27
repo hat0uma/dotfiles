@@ -13,7 +13,7 @@ local function _edit_files(opts, cwd)
     vim.cmd.close()
   end
   for _, arg in pairs(opts.fargs) do
-    local path = util.accessable_path(cwd, arg)
+    local path = util.rel_or_abs(cwd, arg)
     vim.cmd.edit(path)
   end
 end

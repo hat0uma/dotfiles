@@ -349,7 +349,11 @@ return {
   {
     "nvim-orgmode/orgmode",
     config = function()
-      require("orgmode").setup {}
+      require("orgmode").setup {
+        mappings = {
+          disable_all = true,
+        },
+      }
       require("orgmode").setup_ts_grammar()
     end,
     lazy = false,

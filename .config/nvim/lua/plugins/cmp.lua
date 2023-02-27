@@ -93,6 +93,7 @@ local M = {
           { name = "luasnip" },
           { name = "buffer" },
           { name = "path" },
+          { name = "orgmode" },
         },
         formatting = {
           fields = { "kind", "abbr", "menu" },

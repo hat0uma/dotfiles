@@ -55,8 +55,12 @@ M.config = function()
       -- gf
       vim.keymap.set("n", "gf", function()
         local cfile = vim.fn.expand "<cfile>"
-        local path = util.accessable_path(vim.b.terminal_cwd, cfile)
-        vim.cmd("close | e " .. path)
+        local path = util.rel_or_abs(vim.b.terminal_cwd, cfile)
+        if util.accessable(path) then
+          vim.cmd("close | e " .. path)
+        else
+          vim.notify(string.format("%s is not found on path", path), vim.log.levels.ERROR)
+        end
       end, opts)
 
       -- reload

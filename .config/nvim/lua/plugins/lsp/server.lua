@@ -58,7 +58,7 @@ M.configurations = {
     },
   },
   gopls = {
-    cmd = { vim.fn.expand "~/go/bin/gopls" },
+    -- cmd = { vim.fn.expand "~/go/bin/gopls" },
   },
   cssls = {},
   omnisharp = {},
