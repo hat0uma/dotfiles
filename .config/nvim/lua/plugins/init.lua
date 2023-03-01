@@ -329,6 +329,7 @@ return {
         prompt_end = "❯ ",
       }
     end,
+    enabled = false,
   },
   {
     "NvChad/nvim-colorizer.lua",
