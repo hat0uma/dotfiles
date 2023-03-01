@@ -351,7 +351,7 @@ return {
     config = function()
       require("orgmode").setup {
         mappings = {
-          disable_all = true,
+          prefix = "<Leader>O",
         },
       }
       require("orgmode").setup_ts_grammar()

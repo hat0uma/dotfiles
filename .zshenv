@@ -10,6 +10,7 @@ export XDG_CACHE_HOME=$HOME/.cache
 export XDG_DATA_HOME=$HOME/.local/share
 
 export PATH="$HOME/.local/bin:$HOME/.deno/bin:$HOME/.cargo/bin:$PATH"
+[ -f "/home/hatouma/.ghcup/env" ] && source "/home/hatouma/.ghcup/env"
 
 if infocmp wezterm >/dev/null 2>&1; then
     export TERM=wezterm
