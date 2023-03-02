@@ -39,7 +39,7 @@ function _notify_after_command(){
             _notify "$_nvim_last_command" "$command_status" "$time_elapsed"
         fi
     fi
-    unset zsh_notify_last_command zsh_notify_start_time
+    unset _nvim_last_command _nvim_command_starttime
 }
 
 add-zsh-hook preexec _notify_before_command

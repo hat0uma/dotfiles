@@ -350,12 +350,17 @@ return {
   {
     "nvim-orgmode/orgmode",
     config = function()
+      require("orgmode").setup_ts_grammar()
       require("orgmode").setup {
         mappings = {
           prefix = "<Leader>O",
+          global = {
+            org_agenda = { "<Leader>Oa" },
+            org_capture = { "<Leader>Oc" },
+          },
         },
+        org_default_notes_file = "~/org/refile.org",
       }
-      require("orgmode").setup_ts_grammar()
     end,
     lazy = false,
   },
