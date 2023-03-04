@@ -1,6 +1,8 @@
 local M = {
   "catppuccin/nvim",
   name = "catppuccin",
+  lazy = false,
+  priority = 999,
   config = function()
     require("catppuccin").setup {
       flavour = "frappe",
@@ -47,6 +49,9 @@ local M = {
 
     vim.api.nvim_set_hl(0, "Blue", { fg = "#7FBBB3" })
     vim.api.nvim_set_hl(0, "CurrentWord", { bg = "#3d484d" })
+
+    vim.cmd.colorscheme "catppuccin"
+    require("plugins.colorscheme.highlights").setup()
   end,
 }
 

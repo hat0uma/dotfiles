@@ -32,6 +32,18 @@ local M = {
     end,
   },
   {
+    "ray-x/go.nvim",
+    requires = {
+      "neovim/nvim-lspconfig",
+      "nvim-treesitter/nvim-treesitter",
+    },
+    config = function() end,
+    build = ':lua require("go.install").update_all_sync()',
+    dependencies = {
+      "ray-x/guihua.lua",
+    },
+  },
+  {
     "smjonas/inc-rename.nvim",
     config = function()
       require("inc_rename").setup()
@@ -143,6 +155,13 @@ local M = {
           require("lspconfig")["omnisharp_mono"].setup(opts)
         elseif name == "clangd" then
           require("clangd_extensions").setup { server = opts }
+        elseif name == "gopls" then
+          require("go").setup {
+            lsp_cfg = { capabilities = opts.capabilities },
+            lsp_keymaps = false,
+            lsp_on_attach = opts.on_attach,
+            lsp_diag_hdlr = false,
+          }
         else
           require("lspconfig")[name].setup(opts)
         end
@@ -167,6 +186,7 @@ local M = {
       "mason-lspconfig.nvim",
       "neodev.nvim",
       "clangd_extensions.nvim",
+      "go.nvim",
     },
   },
 }

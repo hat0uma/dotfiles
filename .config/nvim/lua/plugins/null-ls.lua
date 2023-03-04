@@ -28,6 +28,9 @@ local function setup_sources(options)
     nls.builtins.code_actions.refactoring.with {
       filetypes = { "go", "javascript", "lua", "python", "typescript", "c", "cpp" },
     },
+    require("go.null_ls").gotest(),
+    require("go.null_ls").gotest_action(),
+    nls.builtins.diagnostics.golangci_lint,
 
     -- diagnostics
     nls.builtins.diagnostics.eslint_d.with(find_cwd { ".eslintrc.json" }),

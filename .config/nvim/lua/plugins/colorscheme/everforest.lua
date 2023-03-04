@@ -1,7 +1,6 @@
 local M = {
   "sainnhe/everforest",
-  lazy = false,
-  priority = 999,
+  enabled = false,
   init = function()
     vim.g.everforest_background = "hard"
     vim.g.everforest_ui_contrast = "high"
