@@ -1,0 +1,14 @@
+{
+  "if err != nil": {
+    "prefix": "ife",
+    "body": [
+      "if err != nil {\n\t$1\n }"
+    ]
+  },
+  "if err != nil2": {
+    "prefix": "ife2",
+    "body": [
+      "if err := $1;err != nil {\n\t$2\n }"
+    ]
+  }
+}
