@@ -252,7 +252,7 @@ return {
   {
     "lambdalisue/gin.vim",
     dependencies = { "denops.vim" },
-    build = require("plugins.denops").cache,
+    build = require("plugins.denops").cache "gin",
     config = function()
       require("plugins.denops").register "gin"
     end,

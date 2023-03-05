@@ -31,9 +31,9 @@ setmetatable(M, {
         })
       end
     end,
-    --- @param plugin LazyPlugin
-    cache = function(plugin)
-      require("lazy").load { plugins = { plugin } }
+    --- @param name string
+    cache = function(name)
+      return string.format("deno cache ./denops/%s/main.ts", name)
     end,
   },
 })
