@@ -38,7 +38,9 @@ local M = {
       "nvim-treesitter/nvim-treesitter",
     },
     config = function() end,
-    build = ':lua require("go.install").update_all_sync()',
+    build = function()
+      require("go.install").update_all_sync()
+    end,
     dependencies = {
       "ray-x/guihua.lua",
     },
