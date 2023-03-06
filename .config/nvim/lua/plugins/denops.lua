@@ -2,9 +2,10 @@ local M = {
   "vim-denops/denops.vim",
 }
 
+local deno_executable = vim.fn.expand "~/.deno/bin/deno"
 function M.config()
   if vim.fn.executable "deno" ~= 1 then
-    vim.g["denops#deno"] = vim.fn.expand "~/.deno/bin/deno"
+    vim.g["denops#deno"] = deno_executable
   end
 
   if vim.fn.has "vim_starting" == 1 then
@@ -33,7 +34,7 @@ setmetatable(M, {
     end,
     --- @param name string
     cache = function(name)
-      return string.format("deno cache ./denops/%s/main.ts", name)
+      return string.format("%s cache ./denops/%s/main.ts", deno_executable, name)
     end,
   },
 })
