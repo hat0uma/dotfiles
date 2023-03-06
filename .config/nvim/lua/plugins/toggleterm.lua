@@ -1,5 +1,3 @@
-local util = require "rc.utils"
-local shells = require "rc.terminal.shells"
 local M = {
   "akinsho/toggleterm.nvim",
   cmd = { "ToggleTerm" },
@@ -14,6 +12,8 @@ M.init = function()
 end
 
 M.config = function()
+  local util = require "rc.utils"
+  local shells = require "rc.terminal.shells"
   local shell = vim.fn.has "win64" == 1 and shells.pwsh or shells.zsh
   local KeyCode = {
     Up = "\x1b[A",
