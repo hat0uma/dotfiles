@@ -288,7 +288,7 @@ return {
   {
     "ojroques/vim-oscyank",
     init = function()
-      vim.cmd [[ autocmd TextYankPost * if v:event.operator is 'y' && v:event.regname is '+' | execute 'OSCYankReg +' | endif ]]
+      vim.cmd [[ autocmd TextYankPost * if v:event.operator is 'y' && v:event.regname is '+' | execute 'OSCYankRegister +' | endif ]]
     end,
     cmd = { "OSCYank", "OSCYankReg" },
   },
