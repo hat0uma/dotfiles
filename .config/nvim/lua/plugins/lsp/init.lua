@@ -37,7 +37,8 @@ local M = {
       "neovim/nvim-lspconfig",
       "nvim-treesitter/nvim-treesitter",
     },
-    config = function() end,
+    config = function()
+    end,
     build = function()
       require("go.install").update_all_sync()
     end,
@@ -159,7 +160,7 @@ local M = {
           require("clangd_extensions").setup { server = opts }
         elseif name == "gopls" then
           require("go").setup {
-            lsp_cfg = { capabilities = opts.capabilities },
+            lsp_cfg = opts,
             lsp_keymaps = false,
             lsp_on_attach = opts.on_attach,
             lsp_diag_hdlr = false,

@@ -59,6 +59,12 @@ M.configurations = {
   },
   gopls = {
     -- cmd = { vim.fn.expand "~/go/bin/gopls" },
+    settings = {
+      gopls = {
+        -- use from golangci-lint
+        staticcheck = false,
+      }
+    }
   },
   hls = {},
   cssls = {},
