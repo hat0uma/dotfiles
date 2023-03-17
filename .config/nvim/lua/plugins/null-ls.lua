@@ -30,7 +30,7 @@ local function setup_sources(options)
     },
     require("go.null_ls").gotest(),
     require("go.null_ls").gotest_action(),
-    nls.builtins.diagnostics.golangci_lint,
+    nls.builtins.diagnostics.golangci_lint.with(find_cwd { "go.mod" }),
 
     -- diagnostics
     nls.builtins.diagnostics.eslint_d.with(find_cwd { ".eslintrc.json" }),

@@ -29,6 +29,17 @@ return {
         nested_top = "│",
         whitespace = "  ",
       },
+      ---@param bufnr integer
+      ---@param item aerial.Symbol
+      ---@param ctx any
+      post_parse_symbol = function(bufnr, item, ctx)
+        if item.name == "(anonymous struct)" then
+          return false
+        elseif item.name == "(anonymous enum)" then
+          return false
+        end
+        return true
+      end,
     }
   end,
   cmd = "AerialToggle",
