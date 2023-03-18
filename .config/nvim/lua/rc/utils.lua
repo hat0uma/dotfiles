@@ -6,6 +6,8 @@ function M.accessable(path)
   return vim.loop.fs_access(path, "R", nil)
 end
 
+---@param cwd string
+---@param file string
 function M.rel_or_abs(cwd, file)
   --- @type string
   if cwd == nil then

@@ -16,11 +16,11 @@ esac
 # echo "opener:$OPENER , files:$*"
 
 if [ -t 0 ]; then
-    nvim --server "$PARENT_NVIM_ADDRESS" --remote-send "<Cmd>$OPENER $*<CR>"
+    nvim --server "$PARENT_NVIM_ADDRESS" --remote-send "<Cmd>$OPENER $PWD $*<CR>"
 else
     # when stdin piped
     tmp=$(mktemp)
     cat - > "$tmp"
-    nvim --server "$PARENT_NVIM_ADDRESS" --remote-send "<Cmd>$OPENER $tmp | au VimLeave * call delete(\"$tmp\")<CR>"
+    nvim --server "$PARENT_NVIM_ADDRESS" --remote-send "<Cmd>$OPENER $PWD $tmp | au VimLeave * call delete(\"$tmp\")<CR>"
 fi
 

@@ -8,28 +8,33 @@ local function is_floating(winid)
 end
 
 -- functions for script
-local function _edit_files(opts, cwd)
+local function _edit_files(opts)
+  local wd = opts.fargs[1] --- @type string
+  local files = {} --- @type string[]
+  for i = 2, #opts.fargs, 1 do
+    table.insert(files, opts.fargs[i])
+  end
   if is_floating(0) then
     vim.cmd.close()
   end
-  for _, arg in pairs(opts.fargs) do
-    local path = util.rel_or_abs(cwd, arg)
+  for _, file in pairs(files) do
+    local path = util.rel_or_abs(wd, file)
     vim.cmd.edit(path)
   end
 end
 
 local function edit_files(opts)
-  _edit_files(opts, vim.b.terminal_cwd)
+  _edit_files(opts)
 end
 
 local function vsplit_files(opts)
   vim.cmd.vsplit()
-  _edit_files(opts, vim.b.terminal_cwd)
+  _edit_files(opts)
 end
 
 local function split_files(opts)
   vim.cmd.split()
-  _edit_files(opts, vim.b.terminal_cwd)
+  _edit_files(opts)
 end
 
 function M.setup()
