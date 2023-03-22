@@ -290,7 +290,7 @@ return {
     init = function()
       vim.cmd [[ autocmd TextYankPost * if v:event.operator is 'y' && v:event.regname is '+' | execute 'OSCYankRegister +' | endif ]]
     end,
-    cmd = { "OSCYank", "OSCYankReg" },
+    cmd = { "OSCYank", "OSCYankRegister" },
   },
   {
     "pwntester/octo.nvim",
