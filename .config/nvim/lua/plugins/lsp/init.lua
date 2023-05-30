@@ -37,10 +37,9 @@ local M = {
       "neovim/nvim-lspconfig",
       "nvim-treesitter/nvim-treesitter",
     },
-    config = function()
-    end,
+    config = function() end,
     build = function()
-      require("go.install").update_all_sync()
+      -- require("go.install").update_all_sync()
     end,
     dependencies = {
       "ray-x/guihua.lua",

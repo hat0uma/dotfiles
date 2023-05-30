@@ -26,6 +26,7 @@ cli:
 		zsh
 	sudo -v ; curl https://rclone.org/install.sh | sudo bash
 	curl -fsSL https://deno.land/x/install/install.sh | sh
+	curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 	${PWD}/scripts/install_neovim.sh
 	mkdir -p ~/.eskk && curl 'https://skk-dev.github.io/dict/SKK-JISYO.L.gz' | gzip -d | iconv -f EUC-JP -t UTF-8 > ~/.eskk/SKK-JISYO.L
 	curl https://raw.githubusercontent.com/wez/wezterm/master/termwiz/data/wezterm.terminfo | tic -x -
