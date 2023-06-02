@@ -395,4 +395,11 @@ return {
     "folke/zen-mode.nvim",
     cmd = { "ZenMode" },
   },
+  {
+    "nmac427/guess-indent.nvim",
+    config = function()
+      require("guess-indent").setup {}
+    end,
+    event = "BufReadPre",
+  },
 }
