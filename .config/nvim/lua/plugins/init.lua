@@ -389,7 +389,10 @@ return {
         on_create = nil,
       }
     end,
-    opts = {},
     cmd = { "OverseerRun", "OverseerToggle" },
+  },
+  {
+    "folke/zen-mode.nvim",
+    cmd = { "ZenMode" },
   },
 }
