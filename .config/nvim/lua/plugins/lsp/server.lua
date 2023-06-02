@@ -63,8 +63,8 @@ M.configurations = {
       gopls = {
         -- use from golangci-lint
         staticcheck = false,
-      }
-    }
+      },
+    },
   },
   hls = {},
   cssls = {},
@@ -72,6 +72,14 @@ M.configurations = {
   tsserver = {
     root_dir = require("lspconfig").util.root_pattern "package.json",
     single_file_support = false,
+  },
+  jsonls = {
+    settings = {
+      json = {
+        schemas = require("schemastore").json.schemas(),
+        validate = { enable = true },
+      },
+    },
   },
 }
 
@@ -85,7 +93,7 @@ function M.install()
     "shellcheck",
     "stylua",
     "typescript-language-server",
-    "vim-language-server",
+    "json-lsp",
   }
   require "mason"
   vim.cmd("MasonInstall " .. table.concat(auto_install, " "))

@@ -2,6 +2,7 @@ local M = {
   "p00f/clangd_extensions.nvim",
   "Hoffs/omnisharp-extended-lsp.nvim",
   "jose-elias-alvarez/typescript.nvim",
+  "b0o/schemastore.nvim",
   {
     "williamboman/mason.nvim",
     config = function()
