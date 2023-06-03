@@ -33,6 +33,7 @@ setmetatable(M, {
       end
     end,
     --- @param name string
+    ---@return string
     cache = function(name)
       return string.format("%s cache ./denops/%s/main.ts", deno_executable, name)
     end,
