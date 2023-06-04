@@ -16,6 +16,7 @@ $scoopApps = @(
     "sarasa-mono-j-nerd-font"
     "sarasa-term-j-nerd-font"
     "unzip"
+    "wezterm"
 )
 if(!(get-command scoop -errorAction SilentlyContinue ))
 {
