@@ -23,10 +23,29 @@ function MakeLink([string]$linkto , [string]$target)
     }
 }
 
-function UnLink([string]$link)
-{
-    cmd /c "rmdir" $link
+function Unlink ([string]$path){
+    if (-not (Test-Path $path)) {
+        # Write-Host "The specified path '$path' does not exist."
+        return
+    }
+    
+    $item = Get-Item $path
+    
+    if ($item.LinkType -eq "HardLink" -or $item.LinkType -eq "SymbolicLink" -or $item.LinkType -eq "Junction") {
+        Write-Host "Removing link at '$path'."
+        Remove-Item $path
+    }
+    elseif ($item.PSIsContainer) {
+        Write-Host "Skipping directory '$path'."
+    }
+    else {
+        Write-Host "Skipping file '$path'."
+    }
 }
+
+# create profile dir
+$profileDir = Split-Path -Parent $PROFILE
+mkdir -Force $profileDir > $null
 
 # link
 foreach ($linkto in $links.Keys)
