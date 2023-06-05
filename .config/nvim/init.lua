@@ -85,6 +85,14 @@ vim.api.nvim_create_autocmd("FileType", {
 -- load workspace config
 -- .nvim.lua, .nvimrc, and .exrc
 vim.o.exrc = false
+
+-- highlightedyank
+vim.api.nvim_create_autocmd("TextYankPost", {
+  group = vim.api.nvim_create_augroup("highlightedyank", {}),
+  callback = function()
+    vim.highlight.on_yank()
+  end,
+})
 -------------------------------------------------------------------------
 -- files
 vim.o.fileformats = "unix,dos,mac"
