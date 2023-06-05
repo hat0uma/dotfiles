@@ -284,6 +284,14 @@ return {
   { "cespare/vim-toml", ft = { "toml" } },
   { "kevinoid/vim-jsonc", ft = { "json", "jsonc" } },
   { "aklt/plantuml-syntax", ft = { "plantuml" } },
+  {
+    "weirongxu/plantuml-previewer.vim",
+    ft = { "plantuml" },
+    dependencies = {
+      "open-browser.vim",
+      "plantuml-syntax",
+    },
+  },
 
   {
     "ojroques/vim-oscyank",

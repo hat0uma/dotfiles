@@ -3,6 +3,7 @@ local M = {
   dependencies = {
     "rafamadriz/friendly-snippets",
     "kleber-swf/vscode-unity-code-snippets",
+    "qjebbs/vscode-plantuml",
   },
   event = { "InsertEnter", "CmdlineEnter" },
 }
