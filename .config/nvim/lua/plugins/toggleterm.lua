@@ -73,7 +73,7 @@ M.config = function()
         if direction == term.direction then
           local next_idx = (idx % #direction_cycle) + 1
           local cmd = string.format("<Cmd>close | %dToggleTerm direction=%s<CR>", term.id, direction_cycle[next_idx])
-          vim.keymap.set("n", "<leader>j", cmd, opts)
+          vim.keymap.set("n", "<leader><leader>", cmd, opts)
         end
       end
     end,

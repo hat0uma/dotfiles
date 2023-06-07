@@ -377,25 +377,26 @@ return {
     config = function()
       require("overseer").setup {
         strategy = "toggleterm",
-        -- load your default shell before starting the task
         use_shell = false,
-        -- overwrite the default toggleterm "direction" parameter
-        direction = nil,
-        -- overwrite the default toggleterm "highlights" parameter
-        highlights = nil,
-        -- overwrite the default toggleterm "auto_scroll" parameter
+        direction = "float",
         auto_scroll = nil,
         -- have the toggleterm window close automatically after the task exits
         close_on_exit = false,
         -- open the toggleterm window when a task starts
         open_on_start = true,
-        -- mirrors the toggleterm "hidden" parameter, and keeps the task from
-        -- being rendered in the toggleable window
-        hidden = false,
-        -- command to run when the terminal is created. Combine with `use_shell`
-        -- to run a terminal command before starting the task
-        on_create = nil,
       }
+    end,
+    init = function()
+      local opts = { silent = true, noremap = true }
+      vim.keymap.set("n", "<leader>0", "<Cmd>OverseerToggle<CR>", opts)
+      vim.api.nvim_create_autocmd("Filetype", {
+        pattern = "OverseerList",
+        callback = function()
+          vim.keymap.set("n", "q", "<Cmd>OverseerClose<CR>", { silent = true, noremap = true, buffer = true })
+          vim.keymap.set("n", "A", "<Cmd>OverseerRun<CR>", { silent = true, noremap = true, buffer = true })
+        end,
+        group = vim.api.nvim_create_augroup("my-overseer-settings", {}),
+      })
     end,
     cmd = { "OverseerRun", "OverseerToggle" },
   },
