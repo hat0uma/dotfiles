@@ -44,6 +44,32 @@ local function select_for_float(base)
   }
 end
 
+local my_actions = {}
+my_actions.open_explorer = {
+  desc = "open current directory by explorer.",
+  callback = function()
+    local is_windows = vim.loop.os_uname().version:match "Windows"
+    local opener = is_windows and "explorer.exe" or "xdg-open"
+    local oil = require "oil"
+    local dir = oil.get_current_dir()
+    vim.cmd(string.format("!%s %s", opener, dir))
+  end,
+}
+
+my_actions.open_terminal = {
+  desc = "open terminal in current directory.",
+  callback = function()
+    local Terminal = require("toggleterm.terminal").Terminal
+    local oil = require "oil"
+    local dir = oil.get_current_dir()
+    local term = Terminal:new {
+      dir = dir,
+      direction = "float",
+    }
+    term:toggle()
+  end,
+}
+
 return {
   "stevearc/oil.nvim",
   init = function()
@@ -75,6 +101,8 @@ return {
         ["<leader>s"] = function()
           find(on_edit.filename)
         end,
+        ["<leader>x"] = my_actions.open_explorer,
+        ["<C-t>"] = require("oil.actions").open_terminal,
       },
       float = {
         padding = 2,
