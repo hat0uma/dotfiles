@@ -371,6 +371,7 @@ return {
       }
     end,
     lazy = false,
+    enabled = false,
   },
   {
     "stevearc/overseer.nvim",

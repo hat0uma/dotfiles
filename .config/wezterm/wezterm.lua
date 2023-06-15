@@ -47,7 +47,7 @@ return {
   font = wezterm.font_with_fallback { "Sarasa Term J Nerd Font", "Twemoji Mozilla" },
   harfbuzz_features = { "calt=0", "clig=0", "liga=0" },
   default_prog = is_windows and pwsh.args or zsh.args,
-  leader = { key = "b", mods = "CTRL" },
+  leader = { key = "e", mods = "ALT" },
   keys = {
     { key = "q", mods = "ALT", action = act.CloseCurrentPane { confirm = false } },
     { key = "0", mods = "ALT", action = act.QuitApplication },

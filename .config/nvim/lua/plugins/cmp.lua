@@ -76,8 +76,8 @@ local M = {
               fallback()
             end
           end, { "i", "s" }),
-          ["<C-b>"] = cmp.mapping.scroll_docs(-4),
-          ["<C-f>"] = cmp.mapping.scroll_docs(4),
+          -- ["<C-b>"] = cmp.mapping.scroll_docs(-4),
+          -- ["<C-f>"] = cmp.mapping.scroll_docs(4),
           ["<C-space>"] = cmp.mapping.complete {},
           ["<C-n>"] = cmp.mapping(cmp.mapping.select_next_item(), { "i", "c" }),
           ["<C-p>"] = cmp.mapping(cmp.mapping.select_prev_item(), { "i", "c" }),
