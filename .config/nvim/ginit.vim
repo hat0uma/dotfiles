@@ -24,6 +24,7 @@ if exists("g:GuiLoaded")
 elseif exists("g:fvim_loaded")
     " fvim
     set guifont=Sarasa\ Term\ J\ Nerd\ Font:h16
+    set guifontwide=Sarasa\ Term\ J\ Nerd\ Font:h16
     nnoremap <silent> <C-ScrollWheelUp> :set guifont=+<CR>
     nnoremap <silent> <C-ScrollWheelDown> :set guifont=-<CR>
     nnoremap <A-CR> :FVimToggleFullScreen<CR>
