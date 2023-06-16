@@ -65,7 +65,7 @@ M.config = function()
 
       -- reload
       local reload = string.format("<Cmd>bdelete! | %dToggleTerm direction=%s<CR>", term.id, term.direction)
-      vim.keymap.set("n", "<C-q>", reload, opts)
+      vim.keymap.set("n", "<C-r>", reload, opts)
 
       -- cycle direction
       local direction_cycle = { "vertical", "horizontal", "float" }
@@ -76,6 +76,13 @@ M.config = function()
           vim.keymap.set("n", "<leader><leader>", cmd, opts)
         end
       end
+
+      -- direction and float toggle
+      vim.keymap.set("n", "<C-t>", function()
+        vim.cmd.close()
+        local direction = term.direction == "tab" and "float" or "tab"
+        require("toggleterm").toggle(term.id, nil, nil, direction)
+      end, opts)
     end,
     direction = "float",
     winbar = {
