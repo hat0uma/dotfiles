@@ -121,17 +121,27 @@ return {
     end,
     dependencies = { "nvim-treesitter/nvim-treesitter" },
   },
-
   {
-    "cshuaimin/ssr.nvim",
+    "nvim-pack/nvim-spectre",
+    config = function()
+      require("spectre").setup {
+        default = {
+          find = {
+            cmd = "rg",
+            options = { "ignore-case", "hidden" },
+          },
+          replace = { cmd = "sed" },
+        },
+      }
+    end,
     keys = {
       {
         "<leader>c",
         function()
-          require("ssr").open()
+          require("spectre").open()
         end,
-        mode = { "n", "x" },
-        desc = "Structural Replace",
+        mode = { "n" },
+        desc = "Open Spectre",
       },
     },
   },

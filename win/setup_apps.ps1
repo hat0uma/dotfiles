@@ -24,10 +24,11 @@ $scoopApps = @(
     "pwsh"
     # "python"
     "ripgrep"
-    # "rust"
+    "rust"
     "sarasa-mono-j-nerd-font"
     "sarasa-term-j-nerd-font"
     "unzip"
+    "sed"
     "wezterm"
 )
 if(!(get-command scoop -errorAction SilentlyContinue ))
