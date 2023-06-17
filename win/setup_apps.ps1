@@ -1,18 +1,30 @@
 Set-StrictMode -Version Latest
+
+function skkdict {
+    mkdir -ErrorAction SilentlyContinue $HOME/.eskk
+
+    $utf8=[System.Text.Encoding]::UTF8
+    $eucjp=[System.Text.Encoding]::GetEncoding("EUC-JP")
+
+    $response = (Invoke-WebRequest "https://raw.githubusercontent.com/skk-dev/dict/master/SKK-JISYO.L").RawContentStream.ToArray()
+    $utf8Bytes=[System.Text.Encoding]::Convert($eucjp, $utf8, $response)
+    [System.IO.File]::WriteAllBytes("$HOME/.eskk/SKK-JISYO.L", $utf8Bytes)
+}
+
 $scoopApps = @(
     "deno"
     # "dotnet-sdk"
     "gcc"
     "git"
-    "go"
+    # "go"
     "jq"
     "make"
     "neovim-nightly"
     "nodejs"
     "pwsh"
-    "python"
+    # "python"
     "ripgrep"
-    "rust"
+    # "rust"
     "sarasa-mono-j-nerd-font"
     "sarasa-term-j-nerd-font"
     "unzip"
@@ -33,3 +45,6 @@ scoop bucket add "extras"
 scoop bucket add "sarasa-nerd-fonts" "https://github.com/jonz94/scoop-sarasa-nerd-fonts"
 
 scoop install $( $scoopApps -join " " )
+
+skkdict
+
