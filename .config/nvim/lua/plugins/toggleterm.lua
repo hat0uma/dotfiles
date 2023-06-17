@@ -18,6 +18,16 @@ local function is_visible(bufname)
   return #vim.fn.win_findbuf(vim.fn.bufnr(bufname)) > 0
 end
 
+--- check window used by terminal
+---@param winid integer
+---@return boolean
+local function used_by_term(winid)
+  local terms = require("toggleterm.terminal").get_all()
+  return vim.tbl_contains(terms, function(term)
+    return term.window == winid
+  end, { predicate = true })
+end
+
 M.init = function()
   for i = 1, 5 do
     local key = string.format("<leader>%d", i)
@@ -42,21 +52,14 @@ M.config = function()
     pattern = "*",
     callback = function()
       local bufname = vim.api.nvim_buf_get_name(0)
-      if is_term(bufname) then
-        return
-      end
       local winid = vim.api.nvim_get_current_win()
-      local terms = require("toggleterm.terminal").get_all()
-      for _, term in ipairs(terms) do
-        if winid == term.window then
-          -- back to terminal buffer and reopen another window
-          vim.cmd.buffer "#"
-          vim.api.nvim_win_close(winid, false)
-          vim.cmd.edit(bufname)
-          vim.wo.number = true
-          vim.wo.relativenumber = true
-          break
-        end
+      if used_by_term(winid) and not is_term(bufname) then
+        -- back to terminal buffer and reopen another window
+        vim.cmd.buffer "#"
+        vim.api.nvim_win_close(winid, false)
+        vim.cmd.edit(bufname)
+        vim.wo.number = true
+        vim.wo.relativenumber = true
       end
     end,
     group = group,
