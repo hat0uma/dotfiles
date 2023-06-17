@@ -3,6 +3,21 @@ local M = {
   cmd = { "ToggleTerm" },
 }
 
+--- check buffer is terminal
+---@param bufname string
+---@return boolean
+local function is_term(bufname)
+  local prefix = "term://"
+  return bufname:sub(1, #prefix) == prefix
+end
+
+--- check buffer is visible
+---@param bufname string
+---@return boolean
+local function is_visible(bufname)
+  return #vim.fn.win_findbuf(vim.fn.bufnr(bufname)) > 0
+end
+
 M.init = function()
   for i = 1, 5 do
     local key = string.format("<leader>%d", i)
@@ -21,6 +36,31 @@ M.config = function()
     Right = "\x1b[C",
     Left = "\x1b[D",
   }
+  -- lock terminal buffer's window
+  local group = vim.api.nvim_create_augroup("my-toggleterm-settings", {})
+  vim.api.nvim_create_autocmd("BufEnter", {
+    pattern = "*",
+    callback = function()
+      local bufname = vim.api.nvim_buf_get_name(0)
+      if is_term(bufname) then
+        return
+      end
+      local winid = vim.api.nvim_get_current_win()
+      local terms = require("toggleterm.terminal").get_all()
+      for _, term in ipairs(terms) do
+        if winid == term.window then
+          -- back to terminal buffer and reopen another window
+          vim.cmd.buffer "#"
+          vim.api.nvim_win_close(winid, false)
+          vim.cmd.edit(bufname)
+          vim.wo.number = true
+          vim.wo.relativenumber = true
+          break
+        end
+      end
+    end,
+    group = group,
+  })
 
   require("toggleterm").setup {
     size = function(term)
