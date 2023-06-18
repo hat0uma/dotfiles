@@ -1,6 +1,6 @@
 local M = {}
 
-local SESSION_DIR = vim.fn.stdpath "data" .. "/sessions"
+local SESSION_DIR = vim.fn.stdpath "cache" .. "/sessions"
 local SESSION_PATH = SESSION_DIR .. "/last.vim"
 
 local function save_current_session()

@@ -1,7 +1,7 @@
 Set-StrictMode -Version Latest
 
 function skkdict {
-    mkdir -ErrorAction SilentlyContinue $HOME/.eskk
+    mkdir -ErrorAction SilentlyContinue "$HOME/.eskk"
 
     $utf8=[System.Text.Encoding]::UTF8
     $eucjp=[System.Text.Encoding]::GetEncoding("EUC-JP")
@@ -46,6 +46,7 @@ scoop bucket add "extras"
 scoop bucket add "sarasa-nerd-fonts" "https://github.com/jonz94/scoop-sarasa-nerd-fonts"
 
 scoop install $( $scoopApps -join " " )
+scoop update $( $scoopApps -join " " )
 
 skkdict
 
