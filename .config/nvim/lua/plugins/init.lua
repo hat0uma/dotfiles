@@ -145,7 +145,7 @@ return {
       },
     },
   },
-
+  { "kevinhwang91/nvim-bqf", ft = "qf" },
   {
     "numToStr/Comment.nvim",
     config = function()
