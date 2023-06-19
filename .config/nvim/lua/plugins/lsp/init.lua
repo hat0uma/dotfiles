@@ -158,7 +158,7 @@ local M = {
           require("lspconfig")["omnisharp_mono"].setup(opts)
         elseif name == "clangd" then
           require("clangd_extensions").setup { server = opts }
-        elseif name == "gopls" then
+        elseif name == "gopls" and vim.fn.executable "gopls" == 1 then
           require("go").setup {
             lsp_cfg = opts,
             lsp_keymaps = false,

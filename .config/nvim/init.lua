@@ -114,7 +114,7 @@ vim.keymap.set("n", "<Leader>w", vim.cmd.write, { noremap = true, silent = true 
 vim.keymap.set("i", "jj", "<Esc>", { noremap = true, silent = true })
 
 -- abbrevs
-vim.cmd.cabbrev("printt", "vim.pretty_print()<Left>")
+vim.cmd.cabbrev("printt", "vim.print()<Left>")
 
 -------------------------------------------------------------------------
 -- plugins
