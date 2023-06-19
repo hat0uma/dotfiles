@@ -422,4 +422,19 @@ return {
     end,
     event = "BufReadPre",
   },
+  {
+    "TimUntersberger/neogit",
+    config = function()
+      local neogit = require "neogit"
+      neogit.setup {
+        integrations = {
+          diffview = true,
+        },
+      }
+    end,
+    cmd = { "Neogit" },
+    dependencies = {
+      "sindrets/diffview.nvim",
+    },
+  },
 }
