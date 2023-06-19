@@ -243,7 +243,7 @@ return {
     "lambdalisue/gina.vim",
     init = function()
       local opts = { silent = true, noremap = true }
-      vim.keymap.set("n", ",s", ":<C-u>Gina status<CR>", opts)
+      -- vim.keymap.set("n", ",s", ":<C-u>Gina status<CR>", opts)
       vim.keymap.set("n", ",c", ":<C-u>Gina commit -v<CR>", opts)
       vim.keymap.set("n", ",a", ":<C-u>Gina commit --amend -v<CR>", opts)
       vim.keymap.set("n", ",b", ":<C-u>Gina branch -a<CR>", opts)
@@ -424,9 +424,14 @@ return {
   },
   {
     "TimUntersberger/neogit",
+    init = function()
+      local opts = { silent = true, noremap = true }
+      vim.keymap.set("n", ",s", ":<C-u>Neogit<CR>", opts)
+    end,
     config = function()
       local neogit = require "neogit"
       neogit.setup {
+        disable_commit_confirmation = true,
         integrations = {
           diffview = true,
         },
@@ -436,5 +441,17 @@ return {
     dependencies = {
       "sindrets/diffview.nvim",
     },
+  },
+  {
+    "sindrets/diffview.nvim",
+    config = function()
+      require("diffview").setup {
+        hooks = {
+          diff_buf_read = function(bufnr)
+            vim.opt_local.relativenumber = false
+          end,
+        },
+      }
+    end,
   },
 }
