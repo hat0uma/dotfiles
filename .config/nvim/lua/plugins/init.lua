@@ -427,6 +427,7 @@ return {
     init = function()
       local opts = { silent = true, noremap = true }
       vim.keymap.set("n", ",s", ":<C-u>Neogit<CR>", opts)
+      vim.keymap.set("n", ",c", ":<C-u>Neogit commit<CR>", opts)
     end,
     config = function()
       local neogit = require "neogit"
