@@ -244,7 +244,7 @@ return {
     init = function()
       local opts = { silent = true, noremap = true }
       -- vim.keymap.set("n", ",s", ":<C-u>Gina status<CR>", opts)
-      vim.keymap.set("n", ",c", ":<C-u>Gina commit -v<CR>", opts)
+      -- vim.keymap.set("n", ",c", ":<C-u>Gina commit -v<CR>", opts)
       vim.keymap.set("n", ",a", ":<C-u>Gina commit --amend -v<CR>", opts)
       vim.keymap.set("n", ",b", ":<C-u>Gina branch -a<CR>", opts)
       vim.keymap.set("n", ",l", ":<C-u>Gina log<CR>", opts)
@@ -428,6 +428,7 @@ return {
       local opts = { silent = true, noremap = true }
       vim.keymap.set("n", ",s", ":<C-u>Neogit<CR>", opts)
       vim.keymap.set("n", ",c", ":<C-u>Neogit commit<CR>", opts)
+      -- vim.keymap.set("n", ",,", ":<C-u>Neogit<CR>", opts)
     end,
     config = function()
       local neogit = require "neogit"
