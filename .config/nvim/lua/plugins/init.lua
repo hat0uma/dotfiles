@@ -308,7 +308,8 @@ return {
     init = function()
       vim.cmd [[ autocmd TextYankPost * if v:event.operator is 'y' && v:event.regname is '+' | execute 'OSCYankRegister +' | endif ]]
     end,
-    cmd = { "OSCYank", "OSCYankRegister" },
+    -- cmd = { "OSCYank", "OSCYankRegister" },
+    event = "TextYankPost",
   },
   {
     "pwntester/octo.nvim",
@@ -327,7 +328,7 @@ return {
     config = function()
       -- \\z normal
     end,
-    keys = { "<C-n>" },
+    keys = { "<C-n>", "<C-Down>", "<C-Up>" },
   },
   {
     "iamcco/markdown-preview.nvim",
