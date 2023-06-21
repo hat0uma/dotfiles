@@ -330,13 +330,12 @@ return {
     keys = { "<C-n>" },
   },
   {
-    "kat0h/bufpreview.vim",
-    dependencies = { "denops.vim" },
-    build = "deno task prepare",
-    config = function()
-      require("plugins.denops").register "bufpreview"
+    "iamcco/markdown-preview.nvim",
+    build = "cd app && npm install",
+    init = function()
+      vim.g.mkdp_filetypes = { "markdown" }
     end,
-    cmd = { "PreviewMarkdown" },
+    ft = { "markdown" },
   },
   {
     "chomosuke/term-edit.nvim",
