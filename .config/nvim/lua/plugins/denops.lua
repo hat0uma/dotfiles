@@ -2,11 +2,9 @@ local M = {
   "vim-denops/denops.vim",
 }
 
-local deno_executable = vim.fn.expand "~/.deno/bin/deno"
+local deno_executable = vim.fn.executable "deno" == 1 and "deno" or vim.fn.expand "~/.deno/bin/deno"
 function M.config()
-  if vim.fn.executable "deno" ~= 1 then
-    vim.g["denops#deno"] = deno_executable
-  end
+  vim.g["denops#deno"] = deno_executable
 
   if vim.fn.has "vim_starting" == 1 then
     vim.fn["denops#server#start"]()
