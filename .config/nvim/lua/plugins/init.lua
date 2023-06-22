@@ -45,20 +45,6 @@ return {
     end,
   },
   {
-    "phaazon/hop.nvim",
-    config = function()
-      require("hop").setup()
-    end,
-    keys = { { ";", "<Cmd>HopWord<CR>" } },
-  },
-  {
-    "mfussenegger/nvim-treehopper",
-    init = function()
-      vim.keymap.set({ "o", "x" }, "m", require("tsht").nodes, {})
-    end,
-    dependencies = { "hop.nvim" },
-  },
-  {
     "haya14busa/vim-asterisk",
     config = function()
       vim.keymap.set("", "*", "<Plug>(asterisk-z*)", {})
@@ -193,35 +179,6 @@ return {
     end,
     cmd = { "Translate" },
   },
-
-  {
-    "ggandor/lightspeed.nvim",
-    init = function()
-      vim.g.lightspeed_no_default_keymaps = true
-    end,
-    config = function()
-      vim.api.nvim_set_hl(0, "LightspeedHiddenCursor", { blend = 100, nocombine = true })
-
-      local guicursor = vim.go.guicursor
-      local hide_cursor = function()
-        vim.go.guicursor = "a:LightspeedHiddenCursor"
-      end
-      local restore_cursor = vim.schedule_wrap(function()
-        vim.go.guicursor = guicursor
-      end)
-
-      local group = vim.api.nvim_create_augroup("lightspeed_aug", {})
-      vim.api.nvim_create_autocmd("User", { pattern = "LightspeedFtEnter", callback = hide_cursor, group = group })
-      vim.api.nvim_create_autocmd("User", { pattern = "LightspeedFtLeave", callback = restore_cursor, group = group })
-    end,
-    keys = {
-      { "f", "<Plug>Lightspeed_f", { "n", "x", "o" } },
-      { "F", "<Plug>Lightspeed_F", { "n", "x", "o" } },
-      { "t", "<Plug>Lightspeed_t", { "n", "x", "o" } },
-      { "T", "<Plug>Lightspeed_T", { "n", "x", "o" } },
-    },
-  },
-
   {
     "stevearc/dressing.nvim",
     init = function()

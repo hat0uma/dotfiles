@@ -12,7 +12,7 @@ return {
       -- local yank_cmd = "Gina browse --exact : --yank<CR>:let @+=@0"
       -- vim.keymap.set("n", ",y", "<Cmd>" .. yank_cmd .. "<CR>", opts)
       -- vim.keymap.set("v", ",y", ":" .. yank_cmd .. "<CR>", opts)
-      --
+
       -- local browse_cmd = "Gina browse --exact :"
       -- vim.keymap.set("n", ",x", "<Cmd>" .. browse_cmd .. "<CR>", opts)
       -- vim.keymap.set("v", ",x", ":" .. browse_cmd .. "<CR>", opts)
