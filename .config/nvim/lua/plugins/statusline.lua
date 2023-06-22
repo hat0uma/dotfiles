@@ -1,9 +1,3 @@
-local M = {
-  "glepnir/galaxyline.nvim",
-  -- lazy = false,
-  event = "Colorscheme",
-}
-
 --- @class MyStatuslinePalette
 --- @field bg string
 --- @field bg2 string
@@ -152,6 +146,11 @@ local function setup_statusline()
     highlight = { palette.fg, palette.bg },
   }
 
+  -- local LspProgress = {
+  --   provider = require("lsp-progress").progress,
+  --   separator = " ",
+  -- }
+  --
   local LineInfo = {
     provider = function()
       local line = vim.fn.line "."
@@ -327,6 +326,7 @@ local function setup_statusline()
   -- table.insert(section.left, { nvimGPS = nvimGPS })
 
   -- table.insert(section.right,{FileType = FileType})
+  -- table.insert(section.right, { LspProgress = LspProgress })
   table.insert(section.right, { DiagnosticError = DiagnosticError })
   table.insert(section.right, { DiagnosticWarn = DiagnosticWarn })
   table.insert(section.right, { DiagnosticInfo = DiagnosticInfo })
@@ -339,8 +339,21 @@ local function setup_statusline()
   table.insert(section.short_line_right, { BufferIcon = BufferIcon })
 end
 
-function M.config()
-  setup_statusline()
-end
-
-return M
+return {
+  {
+    "glepnir/galaxyline.nvim",
+    -- lazy = false,
+    event = "Colorscheme",
+    config = function()
+      setup_statusline()
+    end,
+    -- dependencies = { "lsp-progress.nvim" },
+  },
+  -- {
+  --   "linrongbin16/lsp-progress.nvim",
+  --   dependencies = { "nvim-web-devicons" },
+  --   config = function()
+  --     require("lsp-progress").setup()
+  --   end,
+  -- },
+}
