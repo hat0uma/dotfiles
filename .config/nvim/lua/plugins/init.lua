@@ -349,4 +349,14 @@ return {
     end,
     event = "BufReadPre",
   },
+  {
+    "rikuma-t/doxygen-previewer.nvim",
+    build = "npm install live-server",
+    config = function(plugin)
+      require("doxygen-previewer").setup {
+        live_server = plugin.dir .. "/node_modules/.bin/live-server",
+      }
+    end,
+    lazy = false,
+  },
 }
