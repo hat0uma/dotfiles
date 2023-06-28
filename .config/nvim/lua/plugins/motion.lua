@@ -28,58 +28,11 @@ return {
     },
   },
   {
-    "hrsh7th/vim-searchx",
-    enabled = false,
-    config = function()
-      local function searchx_start(searchx_opts)
-        return function()
-          local scrolloff = vim.o.scrolloff
-          vim.o.scrolloff = 0
-          vim.fn["searchx#start"](searchx_opts)
-          vim.o.scrolloff = scrolloff
-        end
-      end
-
-      local key_opts = { noremap = true }
-      vim.keymap.set({ "n", "x" }, "?", searchx_start { dir = 0 }, key_opts)
-      vim.keymap.set({ "n", "x" }, "/", searchx_start { dir = 1 }, key_opts)
-      -- vim.keymap.set({ "n", "x" }, "<leader><leader>", searchx_start { dir = 1 }, key_opts)
-      -- vim.keymap.set("c", ";", "<Cmd>call searchx#select()<CR>", opts)
-      vim.keymap.set("n", "N", "<Cmd>call searchx#prev_dir()<CR>", key_opts)
-      vim.keymap.set("n", "n", "<Cmd>call searchx#next_dir()<CR>", key_opts)
-      vim.keymap.set("c", "<C-p>", "<Cmd>call searchx#prev()<CR>", key_opts)
-      vim.keymap.set("c", "<C-n>", "<Cmd>call searchx#next()<CR>", key_opts)
-      vim.g.searchx = {
-        auto_accept = true,
-        scrolloff = 0,
-        scrolltime = 0,
-        nohlsearch = { jump = true },
-        markers = vim.split("ABCDEFGHIJKLMNOPQRSTUVWXYZ", ""),
-      }
-      vim.cmd [[
-        " Convert search pattern.
-        function g:searchx.convert(input) abort
-          if a:input !~# '\k'
-            return '\V' .. a:input
-          endif
-          return a:input[0] .. substitute(a:input[1:], '\\\@<! ', '.\\{-}', 'g')
-        endfunction
-      ]]
-    end,
-    keys = {
-      { "?", mode = { "n", "x" } },
-      { "/", mode = { "n", "x" } },
-      -- { "<leader><leader>", mode = { "n", "x" } },
-      { "n", mode = { "n", "x" } },
-      { "N", mode = { "n", "x" } },
-    },
-  },
-  {
     "phaazon/hop.nvim",
     config = function()
       require("hop").setup()
     end,
-    keys = { { ";", "<Cmd>HopWord<CR>" } },
+    -- keys = { { ";", "<Cmd>HopWord<CR>" } },
   },
   {
     "mfussenegger/nvim-treehopper",
@@ -104,17 +57,47 @@ return {
             keys = { "f", "F", "t", "T" },
             highlight = { backdrop = false },
           },
+          search = {
+            labels = "ASDFGHJKLQWERTYUIOPZXCVBNM",
+          },
+        },
+        highlight = {
+          groups = { label = "HopNextKey" },
         },
       }
     end,
     keys = {
-      -- {
-      --   ";",
-      --   mode = { "n", "x", "o" },
-      --   function()
-      --     require("flash").jump {}
-      --   end,
-      -- },
+      {
+        ";",
+        mode = { "n", "x", "o" },
+        function()
+          local flash = require "flash"
+          flash.jump {
+            search = { mode = "search" },
+            label = { after = false, before = { 0, 0 }, uppercase = false },
+            pattern = [[\<]],
+            action = function(match, state)
+              state:hide()
+              flash.jump {
+                search = { max_length = 0 },
+                label = { distance = false },
+                highlight = { matches = false },
+                matcher = function(win)
+                  return vim.tbl_filter(function(m)
+                    return m.label == match.label and m.win == win
+                  end, state.results)
+                end,
+              }
+            end,
+            labeler = function(matches, state)
+              local labels = state:labels()
+              for m, match in ipairs(matches) do
+                match.label = labels[math.floor((m - 1) / #labels) + 1]
+              end
+            end,
+          }
+        end,
+      },
       {
         "m",
         mode = { "n", "o", "x" },
