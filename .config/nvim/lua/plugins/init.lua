@@ -357,6 +357,6 @@ return {
         live_server = plugin.dir .. "/node_modules/.bin/live-server",
       }
     end,
-    lazy = false,
+    ft = { "c", "cpp" },
   },
 }

@@ -5,9 +5,9 @@ return {
       local opts = { silent = true, noremap = true }
       -- vim.keymap.set("n", ",s", ":<C-u>Gina status<CR>", opts)
       -- vim.keymap.set("n", ",c", ":<C-u>Gina commit -v<CR>", opts)
-      vim.keymap.set("n", ",a", ":<C-u>Gina commit --amend -v<CR>", opts)
+      -- vim.keymap.set("n", ",a", ":<C-u>Gina commit --amend -v<CR>", opts)
       vim.keymap.set("n", ",b", ":<C-u>Gina branch -a<CR>", opts)
-      vim.keymap.set("n", ",l", ":<C-u>Gina log<CR>", opts)
+      -- vim.keymap.set("n", ",l", ":<C-u>Gina log<CR>", opts)
 
       -- local yank_cmd = "Gina browse --exact : --yank<CR>:let @+=@0"
       -- vim.keymap.set("n", ",y", "<Cmd>" .. yank_cmd .. "<CR>", opts)
@@ -71,6 +71,18 @@ return {
           diffview = true,
         },
       }
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = "NeogitLogView",
+        callback = function()
+          local CommitViewBufffer = require "neogit.buffers.commit_view"
+          vim.keymap.set("n", "p", function()
+            local commit = vim.split(vim.fn.getline ".", " ")[2]
+            CommitViewBufffer.new(commit):open()
+            vim.cmd.wincmd "p"
+          end, { silent = true, noremap = true, buffer = true })
+        end,
+        group = vim.api.nvim_create_augroup("my-neogit-settings", {}),
+      })
     end,
     cmd = { "Neogit" },
     dependencies = {
@@ -86,7 +98,15 @@ return {
             vim.opt_local.relativenumber = false
           end,
         },
+        keymaps = {
+          file_history_panel = {
+            { "n", "q", "<Cmd>DiffviewClose<CR>" },
+          },
+        },
       }
     end,
+    keys = {
+      { ",l", "<Cmd>DiffviewFileHistory<CR>", "n" },
+    },
   },
 }
