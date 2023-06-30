@@ -68,7 +68,7 @@ return {
       capabilities.textDocument.completion.completionItem.snippetSupport = true
 
       local on_attach = function(client, bufnr)
-        vim.notify(string.format("  %s", client.name))
+        -- vim.notify(string.format("  %s", client.name))
         --- https://github.com/OmniSharp/omnisharp-roslyn/issues/2483
         if client.name == "omnisharp" or client.name == "omnisharp_mono" then
           local tokenModifiers = client.server_capabilities.semanticTokensProvider.legend.tokenModifiers
