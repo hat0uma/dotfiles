@@ -84,7 +84,7 @@ end
 
 function M.close()
   if M.state.direction == "float" then
-    require("oil.actions").close.callback()
+    require("oil").close()
   elseif M.state.direction == "tab" then
     vim.cmd.tabclose()
   else
