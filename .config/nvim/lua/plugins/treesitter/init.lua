@@ -83,6 +83,12 @@ local M = {
   {
     "Badhi/nvim-treesitter-cpp-tools",
     dependencies = { "nvim-treesitter" },
+    config = function()
+      require 'nt-cpp-tools'.setup({
+        header_extension = 'h',
+        source_extension = 'cpp',
+      })
+    end,
     cmd = { "TSCppDefineClassFunc", "TSCppMakeConcreteClass", "TSCppRuleOf3", "TSCppRuleOf5" },
   },
   {

@@ -42,6 +42,16 @@ function M.on_attach(client, bufnr)
   end
 end
 
+function M.save_without_format()
+  if format_on_save.enabled then
+    format_on_save.disable()
+    vim.cmd.write()
+    format_on_save.enable()
+  else
+    vim.cmd.write()
+  end
+end
+
 function M.setup()
   vim.api.nvim_create_user_command("FormatOnSaveToggle", format_on_save.toggle, {})
   vim.api.nvim_create_user_command("FormatOnSaveDisable", format_on_save.disable, {})

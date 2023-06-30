@@ -40,7 +40,12 @@ function M.on_attach(client, bufnr)
     { "n", "]d", vim.diagnostic.goto_next },
     { { "n", "v" }, "<leader>a", vim.lsp.buf.code_action },
     { "n", "<leader>rn", rename, { expr = true } },
+    { "n", "<leader>W", require("plugins.lsp.format").save_without_format },
   }
+
+  if client.name == "clangd" then
+    vim.keymap.set("n", "g%", "<Cmd>ClangdSwitchSourceHeader<CR>", default_opts)
+  end
 
   for _, keymap in ipairs(keymaps) do
     local map = {
