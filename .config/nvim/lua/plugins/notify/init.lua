@@ -106,10 +106,11 @@ function M.config()
     end
   end
 
+  -- api.nvim_echo({ { string.format('Hunk %d of %d', index, #hunks), 'None' } }, false, {})
   notify.setup {
-    render = "minimal",
+    -- render = "minimal",
     minimum_width = 15,
-    -- stages = stages,
+    stages = stages,
   }
   -- lsp_setup()
 end
