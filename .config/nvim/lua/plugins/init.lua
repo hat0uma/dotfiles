@@ -354,7 +354,12 @@ return {
     build = "npm install live-server",
     config = function(plugin)
       require("doxygen-previewer").setup {
-        live_server = plugin.dir .. "/node_modules/.bin/live-server",
+        viewer = "live-server",
+        viewers = {
+          ["live-server"] = {
+            open = { cmd = plugin.dir .. "/node_modules/.bin/live-server" },
+          },
+        },
       }
     end,
     ft = { "c", "cpp" },

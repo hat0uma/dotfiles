@@ -1,3 +1,10 @@
+local function neogit_log_preview()
+  local CommitViewBufffer = require "neogit.buffers.commit_view"
+  local commit = vim.split(vim.fn.getline ".", " ")[2]
+  CommitViewBufffer.new(commit):open()
+  vim.cmd.wincmd "p"
+end
+
 return {
   {
     "lambdalisue/gina.vim",
@@ -61,6 +68,7 @@ return {
       local opts = { silent = true, noremap = true }
       vim.keymap.set("n", ",s", ":<C-u>Neogit<CR>", opts)
       vim.keymap.set("n", ",c", ":<C-u>Neogit commit<CR>", opts)
+      vim.keymap.set("n", ",l", ":<C-u>Neogit log<CR>", opts)
       -- vim.keymap.set("n", ",,", ":<C-u>Neogit<CR>", opts)
     end,
     config = function()
@@ -74,11 +82,20 @@ return {
       vim.api.nvim_create_autocmd("FileType", {
         pattern = "NeogitLogView",
         callback = function()
-          local CommitViewBufffer = require "neogit.buffers.commit_view"
+          local preview = true
+          vim.api.nvim_create_autocmd("CursorMoved", {
+            callback = function()
+              if preview then
+                neogit_log_preview()
+              end
+            end,
+            buffer = vim.api.nvim_get_current_buf(),
+          })
           vim.keymap.set("n", "p", function()
-            local commit = vim.split(vim.fn.getline ".", " ")[2]
-            CommitViewBufffer.new(commit):open()
-            vim.cmd.wincmd "p"
+            if not preview then
+              neogit_log_preview()
+            end
+            preview = not preview
           end, { silent = true, noremap = true, buffer = true })
         end,
         group = vim.api.nvim_create_augroup("my-neogit-settings", {}),
@@ -91,6 +108,9 @@ return {
   },
   {
     "sindrets/diffview.nvim",
+    init = function()
+      -- vim.keymap.set("n", ",l", "<Cmd>DiffviewFileHistory<CR>", { silent = true, noremap = true })
+    end,
     config = function()
       require("diffview").setup {
         hooks = {
@@ -105,8 +125,6 @@ return {
         },
       }
     end,
-    keys = {
-      { ",l", "<Cmd>DiffviewFileHistory<CR>", "n" },
-    },
+    cmd = { "DiffviewFileHistory" },
   },
 }
