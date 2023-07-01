@@ -110,7 +110,7 @@ function M.config()
   notify.setup {
     -- render = "minimal",
     minimum_width = 15,
-    stages = stages,
+    -- stages = stages,
   }
   -- lsp_setup()
 end

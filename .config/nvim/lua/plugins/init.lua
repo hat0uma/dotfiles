@@ -361,6 +361,13 @@ return {
           },
         },
       }
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = "DoxygenLog",
+        callback = function()
+          vim.keymap.set("n", "q", "<Cmd>close<CR>", { buffer = true, silent = true, noremap = true })
+        end,
+        group = vim.api.nvim_create_augroup("my-doxygen", {}),
+      })
     end,
     ft = { "c", "cpp" },
   },
