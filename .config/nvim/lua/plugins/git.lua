@@ -78,6 +78,11 @@ return {
         integrations = {
           diffview = true,
         },
+        ignored_settings = {
+          "NeogitPushPopup--force-with-lease",
+          "NeogitPushPopup--force",
+          "NeogitCommitPopup--allow-empty",
+        },
       }
       vim.api.nvim_create_autocmd("FileType", {
         pattern = "NeogitLogView",
