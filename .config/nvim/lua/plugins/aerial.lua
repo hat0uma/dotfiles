@@ -22,6 +22,7 @@ return {
         "Array",
         "Package",
       },
+      close_on_select = true,
       show_guides = true,
       guides = {
         mid_item = "├─",
@@ -32,6 +33,7 @@ return {
       ---@param bufnr integer
       ---@param item aerial.Symbol
       ---@param ctx any
+      ---@return boolean
       post_parse_symbol = function(bufnr, item, ctx)
         if item.name == "(anonymous struct)" then
           return false

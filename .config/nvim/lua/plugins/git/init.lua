@@ -63,7 +63,7 @@ return {
     },
   },
   {
-    "TimUntersberger/neogit",
+    "NeogitOrg/neogit",
     init = function()
       local opts = { silent = true, noremap = true }
       vim.keymap.set("n", ",s", ":<C-u>Neogit<CR>", opts)
