@@ -66,6 +66,10 @@ return {
       --- @type table
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
       capabilities.textDocument.completion.completionItem.snippetSupport = true
+      capabilities.textDocument.foldingRange = {
+        dynamicRegistration = false,
+        lineFoldingOnly = true,
+      }
 
       local on_attach = function(client, bufnr)
         -- vim.notify(string.format("  %s", client.name))
