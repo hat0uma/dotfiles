@@ -396,6 +396,18 @@ return {
     dependencies = { "kevinhwang91/promise-async" },
   },
   {
+    "smoka7/multicursors.nvim",
+    event = "VeryLazy",
+    opts = {},
+    keys = {
+      {
+        "<Leader>m",
+        "<cmd>MCstart<cr>",
+        desc = "Create a selection for word under the cursor",
+      },
+    },
+  },
+  {
     "rikuma-t/doxygen-previewer.nvim",
     build = "npm install live-server",
     config = function(plugin)
