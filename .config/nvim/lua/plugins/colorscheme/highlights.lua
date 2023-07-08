@@ -118,6 +118,10 @@ function M.setup()
 
   -- trouble.nvim
   setup_trouble_winbar_hl()
+
+  -- flash.nvim
+  set_hl("FlashMatch", { link = "HopNextKey1" })
+  set_hl("FlashLabel", { link = "HopNextKey2" })
 end
 
 return M
