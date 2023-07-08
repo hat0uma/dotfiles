@@ -42,6 +42,19 @@ return {
         end
         return true
       end,
+      layout = {
+        default_direction = "float",
+      },
+      float = {
+        relative = "win",
+        override = function(conf, source_winid) -- <- the source_winid is new
+          local padding = 1
+          conf.anchor = "NE"
+          conf.row = padding
+          conf.col = vim.api.nvim_win_get_width(source_winid) - padding
+          return conf
+        end,
+      },
     }
   end,
   cmd = "AerialToggle",
