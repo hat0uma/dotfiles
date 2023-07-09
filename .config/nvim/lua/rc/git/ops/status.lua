@@ -1,5 +1,5 @@
 local util = require "rc.git.util"
-local parser = {}
+local M = {}
 
 --- @class GitStatus
 --- @field branch GitBranchStatus
@@ -8,10 +8,10 @@ local parser = {}
 --- @field unmerged GitUnmergedEntry
 --- @field untracked GitUntrackedEntry
 --- @field ignored GitIgnoredEntry
-parser.GitStatus = {}
+M.GitStatus = {}
 
 ---@return GitStatus
-function parser.GitStatus.new()
+function M.GitStatus.new()
   local obj = {}
   obj.branch = {
     oid = "",
@@ -205,12 +205,12 @@ local ENTRY_PATTERNS = {
 --- parse git status --porcelain=v2
 ---@param out string[]
 ---@return GitStatus|nil
-function parser.parse_status_v2(out)
+function M.parse_status_v2(out)
   if #out == 0 then
     return nil
   end
 
-  local status = parser.GitStatus.new()
+  local status = M.GitStatus.new()
   local branch_lines, entry_lines = util.list_partition(function(line)
     return vim.startswith(line, "#")
   end, out)
@@ -238,4 +238,21 @@ function parser.parse_status_v2(out)
   return status
 end
 
-return parser
+--- get status
+---@param opts SystemOpts
+---@param on_exit fun( sts:GitStatus? )
+---@return SystemObj
+function M.run(opts, on_exit)
+  opts = vim.tbl_extend("keep", opts or {}, { env = {}, cwd = vim.loop.cwd(), text = true })
+  ---@type fun(obj:SystemCompleted)
+  local _on_exit = function(obj)
+    if obj.code ~= 0 then
+      on_exit(nil)
+    else
+      on_exit(M.parse_status_v2(vim.split(obj.stdout, "\n")))
+    end
+  end
+  return vim.system({ "git", "status", "--porcelain=v2", "--branch" }, opts, _on_exit)
+end
+
+return M

@@ -64,7 +64,7 @@ M.float_select_split = function()
 end
 
 function M.home()
-  vim.cmd.edit(vim.fn.fnamemodify("~", ":p"))
+  vim.cmd.edit(vim.fs.normalize "~")
 end
 
 function M.toggle_tab()
@@ -96,10 +96,10 @@ function M.find()
 end
 
 function M.open()
-  local buf = vim.fn.expand "%:p"
+  local buf = vim.api.nvim_buf_get_name(0)
   if vim.fn.filereadable(buf) ~= 0 then
-    M.state.filename = vim.fn.expand "%:p:t"
-    M.state.dir = vim.fn.expand "%:p:h"
+    M.state.filename = vim.fs.basename(buf)
+    M.state.dir = vim.fs.dirname(buf)
   else
     M.state.filename = ""
     M.state.dir = vim.loop.cwd()
