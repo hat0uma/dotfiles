@@ -10,11 +10,11 @@ M.options = {
 M.timer = nil --- @type uv_timer_t?
 M.job = nil --- @type SystemObj?
 
-M.is_starting = function()
+function M.is_starting()
   return M.timer and not M.timer:is_closing()
 end
 
-M.auto_fetch_start = function()
+function M.auto_fetch_start()
   if M.is_starting() then
     vim.notify("auto fetch already started.", "INFO")
   end
@@ -29,13 +29,15 @@ M.auto_fetch_start = function()
     end)
   )
 end
-M.auto_fetch_stop = function()
+
+function M.auto_fetch_stop()
   if M.is_starting() then
     util.clearInterval(M.timer)
     M.timer = nil
   end
 end
-M.auto_fetch_status = function()
+
+function M.auto_fetch_status()
   if M.is_starting() then
     vim.notify "auto fetch starting."
   else

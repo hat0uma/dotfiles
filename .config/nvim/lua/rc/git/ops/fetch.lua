@@ -19,9 +19,7 @@ function M.run()
   ---@type fun(obj:SystemCompleted)
   local on_exit = function(obj)
     if obj.code ~= 0 then
-      vim.notify("autofetch failed.", "WARN")
-    else
-      -- vim.notify("autofetch success.", "INFO")
+      vim.notify("fetch failed.\n" .. obj.stderr, "WARN")
     end
   end
   return vim.system(cmd, { text = true }, on_exit)
