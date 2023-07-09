@@ -75,6 +75,14 @@ return {
         flash_2char_jump,
       },
       {
+        "+",
+        mode = { "n" },
+        function()
+          require("flash").jump()
+        end,
+        desc = "Flash",
+      },
+      {
         "m",
         mode = { "n", "o", "x" },
         function()
