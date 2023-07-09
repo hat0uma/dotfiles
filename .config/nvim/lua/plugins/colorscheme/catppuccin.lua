@@ -7,7 +7,7 @@ local M = {
     require("catppuccin").setup {
       flavour = "frappe",
       integrations = {
-        aerial = false,
+        aerial = true,
         cmp = true,
         gitsigns = true,
         hop = true,
