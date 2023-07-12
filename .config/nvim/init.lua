@@ -112,6 +112,15 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.bo.tabstop = 2
   end,
 })
+-- disable newline comment
+vim.api.nvim_create_autocmd("FileType", {
+  callback = function()
+    vim.opt.formatoptions:remove "c"
+    vim.opt.formatoptions:remove "r"
+    vim.opt.formatoptions:remove "o"
+  end,
+  group = vim.api.nvim_create_augroup("disable_newline_comments", {}),
+})
 -------------------------------------------------------------------------
 -- key settings
 vim.keymap.set("n", "<Leader>w", vim.cmd.write, { noremap = true, silent = true })
