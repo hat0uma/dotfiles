@@ -4,10 +4,16 @@ M.format = function()
 end
 
 M.format_on_save = {}
+M.format_on_save.mode = "Buffer" --- @type "Hunks"|"Buffer"
 M.format_on_save.enabled = true
 M.format_on_save.handle = function(client)
-  if M.format_on_save.enabled then
+  if not M.format_on_save.enabled then
+    return
+  end
+  if M.format_on_save.mode == "Buffer" then
     M.format()
+  else
+    M.format_hunks()
   end
 end
 M.format_on_save.toggle = function()
@@ -21,6 +27,21 @@ M.format_on_save.disable = function()
   M.format_on_save.enabled = false
 end
 
+M.format_hunks = function()
+  local hunks = require("gitsigns").get_hunks()
+  for _, hunk in ipairs(hunks) do
+    if hunk.type == "add" or hunk.type == "change" then
+      local start_line = hunk.added.start
+      local end_line = hunk.added.start + hunk.added.count - 1
+      local range = {
+        ["start"] = { start_line, 0 },
+        ["end"] = { end_line, vim.fn.col { end_line, "$" } - 2 },
+      }
+      -- vim.print(range)
+      vim.lsp.buf.format { range = range }
+    end
+  end
+end
 local format_disable_clients = {
   "tsserver",
   "lua_ls",

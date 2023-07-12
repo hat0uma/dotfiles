@@ -330,6 +330,7 @@ return {
   },
   {
     "smoka7/multicursors.nvim",
+    dependencies = { "smoka7/hydra.nvim" },
     event = "VeryLazy",
     opts = {},
     keys = {
