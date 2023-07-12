@@ -54,7 +54,7 @@ vim.o.ignorecase = true
 vim.o.smartcase = true
 vim.o.wrapscan = true
 vim.o.gdefault = true
-vim.o.inccommand = "split"
+vim.o.inccommand = "nosplit"
 
 -- commandline
 vim.o.wildoptions = "pum"

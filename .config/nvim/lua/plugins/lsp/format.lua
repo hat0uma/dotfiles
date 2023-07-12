@@ -3,22 +3,22 @@ M.format = function()
   vim.lsp.buf.format { timeout_ms = 7000 }
 end
 
-local format_on_save = {}
-format_on_save.enabled = true
-format_on_save.handle = function(client)
-  if format_on_save.enabled then
+M.format_on_save = {}
+M.format_on_save.enabled = true
+M.format_on_save.handle = function(client)
+  if M.format_on_save.enabled then
     M.format()
   end
 end
-format_on_save.toggle = function()
-  format_on_save.enabled = not format_on_save.enabled
+M.format_on_save.toggle = function()
+  M.format_on_save.enabled = not M.format_on_save.enabled
 end
-format_on_save.enable = function()
-  format_on_save.enabled = true
+M.format_on_save.enable = function()
+  M.format_on_save.enabled = true
 end
 
-format_on_save.disable = function()
-  format_on_save.enabled = false
+M.format_on_save.disable = function()
+  M.format_on_save.enabled = false
 end
 
 local format_disable_clients = {
@@ -36,26 +36,26 @@ function M.on_attach(client, bufnr)
     vim.api.nvim_create_autocmd("BufWritePre", {
       buffer = bufnr,
       callback = function()
-        format_on_save.handle(client)
+        M.format_on_save.handle(client)
       end,
     })
   end
 end
 
 function M.save_without_format()
-  if format_on_save.enabled then
-    format_on_save.disable()
+  if M.format_on_save.enabled then
+    M.format_on_save.disable()
     vim.cmd.write()
-    format_on_save.enable()
+    M.format_on_save.enable()
   else
     vim.cmd.write()
   end
 end
 
 function M.setup()
-  vim.api.nvim_create_user_command("FormatOnSaveToggle", format_on_save.toggle, {})
-  vim.api.nvim_create_user_command("FormatOnSaveDisable", format_on_save.disable, {})
-  vim.api.nvim_create_user_command("FormatOnSaveEnable", format_on_save.enable, {})
+  vim.api.nvim_create_user_command("FormatOnSaveToggle", M.format_on_save.toggle, {})
+  vim.api.nvim_create_user_command("FormatOnSaveDisable", M.format_on_save.disable, {})
+  vim.api.nvim_create_user_command("FormatOnSaveEnable", M.format_on_save.enable, {})
 end
 
 return M
