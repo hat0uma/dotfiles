@@ -29,6 +29,9 @@ return {
         ["<leader>x"] = my_actions.open_explorer,
         ["<leader>t"] = my_actions.open_terminal,
         ["<C-t>"] = my_actions.toggle_tab,
+        ["g@"] = function()
+          require("plugins.telescope.my_pickers").show_paths(require("telescope.themes").get_cursor())
+        end,
       },
       float = {
         padding = 2,

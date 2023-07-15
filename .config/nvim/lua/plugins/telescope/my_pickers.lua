@@ -6,26 +6,27 @@ local conf = require("telescope.config").values
 local actions = require "telescope.actions"
 local action_state = require "telescope.actions.state"
 
----@class GinaAction
+---@class EditAction
 ---@field name string
----@field cmd string
+---@field target function
 
----@type GinaAction[]
-local GINA_ACTIONS = {
-  { name = "push", cmd = "Gina push" },
-  { name = "pull rebase", cmd = "Gina pull --rebase" },
-  { name = "pull ff", cmd = "Gina pull --no-rebase --ff-only" },
+---@type Action[]
+local EDIT_ACTIONS = {
+  { name = 'stdpath("cache")', target = vim.fn.stdpath "cache" },
+  { name = 'stdpath("config")', target = vim.fn.stdpath "config" },
+  { name = 'stdpath("data")', target = vim.fn.stdpath "data" },
+  { name = 'stdpath("state")', target = vim.fn.stdpath "state" },
 }
 
 -- git subcommands
-M.gina_action_list = function(opts)
+M.show_paths = function(opts)
   opts = opts or {}
   pickers
     .new(opts, {
-      prompt_title = "gina actions",
+      prompt_title = "paths",
       finder = finders.new_table {
-        results = GINA_ACTIONS,
-        ---@param entry GinaAction
+        results = EDIT_ACTIONS,
+        ---@param entry EditAction
         entry_maker = function(entry)
           return {
             value = entry,
@@ -40,7 +41,7 @@ M.gina_action_list = function(opts)
           actions.close(prompt_bufnr)
           local selection = action_state.get_selected_entry()
           -- print(":" .. selection.value.cmd)
-          vim.cmd(selection.value.cmd)
+          vim.cmd.edit(selection.value.target)
         end)
         return true
       end,

@@ -83,10 +83,6 @@ local M = {
         require("telescope").extensions.live_grep_args.live_grep_args { preview = { hide_on_startup = true } }
       end
 
-      local function telescope_gina_p_action_list()
-        require("plugins.telescope.my_pickers").gina_action_list(require("telescope.themes").get_cursor())
-      end
-
       local function telescope_buffers()
         require("telescope.builtin").buffers()
       end
@@ -103,15 +99,6 @@ local M = {
       vim.keymap.set("n", "<leader>P", function()
         require("telescope").extensions.projects.projects {}
       end, opt)
-
-      local group = vim.api.nvim_create_augroup("my_telescope_aug", {})
-      vim.api.nvim_create_autocmd("FileType", {
-        pattern = "gina-status",
-        callback = function()
-          vim.keymap.set("n", "A", telescope_gina_p_action_list, { noremap = true, silent = true, buffer = true })
-        end,
-        group = group,
-      })
     end,
     config = function()
       local actions = require "telescope.actions"
