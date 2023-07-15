@@ -7,34 +7,6 @@ end
 
 return {
   {
-    "lambdalisue/gina.vim",
-    init = function()
-      local opts = { silent = true, noremap = true }
-      -- vim.keymap.set("n", ",s", ":<C-u>Gina status<CR>", opts)
-      -- vim.keymap.set("n", ",c", ":<C-u>Gina commit -v<CR>", opts)
-      -- vim.keymap.set("n", ",a", ":<C-u>Gina commit --amend -v<CR>", opts)
-      -- vim.keymap.set("n", ",b", ":<C-u>Gina branch -a<CR>", opts)
-      -- vim.keymap.set("n", ",l", ":<C-u>Gina log<CR>", opts)
-
-      -- local yank_cmd = "Gina browse --exact : --yank<CR>:let @+=@0"
-      -- vim.keymap.set("n", ",y", "<Cmd>" .. yank_cmd .. "<CR>", opts)
-      -- vim.keymap.set("v", ",y", ":" .. yank_cmd .. "<CR>", opts)
-
-      -- local browse_cmd = "Gina browse --exact :"
-      -- vim.keymap.set("n", ",x", "<Cmd>" .. browse_cmd .. "<CR>", opts)
-      -- vim.keymap.set("v", ",x", ":" .. browse_cmd .. "<CR>", opts)
-    end,
-    cmd = "Gina",
-  },
-  {
-    "lambdalisue/gin.vim",
-    dependencies = { "denops.vim" },
-    build = require("plugins.denops").cache "gin",
-    config = function()
-      require("plugins.denops").register "gin"
-    end,
-  },
-  {
     "linrongbin16/gitlinker.nvim",
     dependencies = {
       "plenary.nvim",
