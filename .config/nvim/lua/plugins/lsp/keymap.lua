@@ -44,6 +44,7 @@ function M.on_attach(client, bufnr)
     { "n", "]d", vim.diagnostic.goto_next },
     { { "n", "v" }, "<leader>a", vim.lsp.buf.code_action },
     { "n", "<leader>rn", rename, { expr = true } },
+    { "n", "<leader>w", require("plugins.lsp.format").format_on_save.handle },
     { "n", "<leader>W", require("plugins.lsp.format").save_without_format },
   }
 
