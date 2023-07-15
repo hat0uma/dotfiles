@@ -25,12 +25,16 @@ function M.on_attach(client, bufnr)
     return ":IncRename " .. vim.fn.expand "<cword>"
   end
 
+  local hover = function()
+    require("pretty_hover").hover()
+  end
+
   local default_opts = { noremap = true, silent = true, buffer = bufnr }
   local keymaps = {
     { "n", "gD", vim.lsp.buf.declaration },
     { "n", "gD", vim.lsp.buf.declaration },
     { "n", "gd", go_to_definition },
-    { "n", "gh", vim.lsp.buf.hover },
+    { "n", "gh", hover },
     { "n", "gi", vim.lsp.buf.implementation },
     { "n", "gr", references },
     { "n", "<leader>s", "<Cmd>AerialToggle<CR>" },
