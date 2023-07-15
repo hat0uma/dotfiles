@@ -86,10 +86,6 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
--- load workspace config
--- .nvim.lua, .nvimrc, and .exrc
-vim.o.exrc = false
-
 -- highlightedyank
 vim.api.nvim_create_autocmd("TextYankPost", {
   group = vim.api.nvim_create_augroup("highlightedyank", {}),
@@ -138,3 +134,4 @@ require("rc.restart").setup()
 require("rc.terminal_editor").setup()
 require("rc.statuscolumn").setup()
 require("rc.git.autofetch").setup()
+require("rc.projectrc").setup()
