@@ -64,6 +64,11 @@ M.format_async_all_client = function(bufnr, opts)
   clients = vim.tbl_filter(function(client)
     return client.supports_method(method) and not vim.tbl_contains(format_disable_clients, client.name)
   end, clients)
+
+  if #clients == 0 then
+    vim.notify "[LSP] Format request failed, no matching language servers."
+  end
+
   local do_format
   do_format = function(idx, client)
     if not client then
@@ -110,21 +115,7 @@ M.format_hunks = function(bufnr, opts)
   do_format(next(hunks))
 end
 
-function M.on_attach(client, bufnr)
-  if vim.tbl_contains(format_disable_clients, client.name) then
-    return
-  end
-
-  if client.server_capabilities.documentFormattingProvider then
-    -- vim.api.nvim_buf_create_user_command(bufnr, "Format", M.format, {})
-    -- vim.api.nvim_create_autocmd("BufWritePre", {
-    --   buffer = bufnr,
-    --   callback = function()
-    --     M.format_on_save.handle(client)
-    --   end,
-    -- })
-  end
-end
+function M.on_attach(client, bufnr) end
 
 function M.save_without_format()
   if M.format_on_save.enabled then
@@ -140,6 +131,9 @@ function M.setup()
   vim.api.nvim_create_user_command("FormatOnSaveToggle", M.format_on_save.toggle, {})
   vim.api.nvim_create_user_command("FormatOnSaveDisable", M.format_on_save.disable, {})
   vim.api.nvim_create_user_command("FormatOnSaveEnable", M.format_on_save.enable, {})
+  vim.api.nvim_create_user_command("Format", function()
+    M.format_async_all_client(0, { on_end = function() end })
+  end, {})
 end
 
 return M
