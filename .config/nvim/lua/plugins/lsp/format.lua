@@ -8,13 +8,14 @@ M.format_on_save = {}
 M.format_on_save.mode = "Buffer" --- @type "Hunks"|"Buffer"
 M.format_on_save.enabled = true
 M.format_on_save.handle = function()
+  local bufnr = vim.api.nvim_get_current_buf()
   if not M.format_on_save.enabled then
     return
   end
   if M.format_on_save.mode == "Buffer" then
-    M.format_async_all_client(0, { on_end = vim.cmd.write })
+    M.format_async_all_client(bufnr, { on_end = vim.cmd.write })
   else
-    M.format_hunks(0, { on_end = vim.cmd.write })
+    M.format_hunks(bufnr, { on_end = vim.cmd.write })
   end
 end
 M.format_on_save.toggle = function()
@@ -23,7 +24,6 @@ end
 M.format_on_save.enable = function()
   M.format_on_save.enabled = true
 end
-
 M.format_on_save.disable = function()
   M.format_on_save.enabled = false
 end
@@ -47,6 +47,7 @@ M.format_async = function(client, bufnr, opts)
   local handler = function(err, result)
     vim.bo[bufnr].modifiable = true
     if not result then
+      vim.print(err)
     else
       vim.lsp.util.apply_text_edits(result, bufnr, client.offset_encoding)
     end
@@ -69,7 +70,7 @@ M.format_async_all_client = function(bufnr, opts)
     vim.notify "[LSP] Format request failed, no matching language servers."
   end
 
-  local do_format
+  local do_format ---@type function
   do_format = function(idx, client)
     if not client then
       opts.on_end()
@@ -93,7 +94,7 @@ M.format_hunks = function(bufnr, opts)
   hunks = vim.tbl_filter(function(hunk)
     return hunk.type == "add" or hunk.type == "change"
   end, hunks)
-  local do_format
+  local do_format ---@type function
   do_format = function(idx, hunk)
     if not hunk then
       opts.on_end()
@@ -118,13 +119,7 @@ end
 function M.on_attach(client, bufnr) end
 
 function M.save_without_format()
-  if M.format_on_save.enabled then
-    M.format_on_save.disable()
-    vim.cmd.write()
-    M.format_on_save.enable()
-  else
-    vim.cmd.write()
-  end
+  vim.cmd.write()
 end
 
 function M.setup()
@@ -132,7 +127,8 @@ function M.setup()
   vim.api.nvim_create_user_command("FormatOnSaveDisable", M.format_on_save.disable, {})
   vim.api.nvim_create_user_command("FormatOnSaveEnable", M.format_on_save.enable, {})
   vim.api.nvim_create_user_command("Format", function()
-    M.format_async_all_client(0, { on_end = function() end })
+    local bufnr = vim.api.nvim_get_current_buf()
+    M.format_async_all_client(bufnr, { on_end = function() end })
   end, {})
 end
 
