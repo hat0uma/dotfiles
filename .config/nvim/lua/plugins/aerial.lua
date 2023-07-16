@@ -18,9 +18,6 @@ return {
         "Module",
         "Method",
         "Struct",
-        "Object",
-        "Array",
-        "Package",
       },
       close_on_select = true,
       show_guides = true,
@@ -47,7 +44,7 @@ return {
       },
       float = {
         relative = "win",
-        override = function(conf, source_winid) -- <- the source_winid is new
+        override = function(conf, source_winid)
           local padding = 1
           conf.anchor = "NE"
           conf.row = padding
