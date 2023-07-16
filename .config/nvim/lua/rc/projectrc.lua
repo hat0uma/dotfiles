@@ -1,5 +1,5 @@
 local M = {}
-local exrc_files = {
+local projectrc_files = {
   { file = ".nvim.lua", ft = "lua" },
   { file = ".nvimrc", ft = "vim" },
   { file = ".exrc", ft = "vim" },
@@ -20,11 +20,11 @@ local loader = {
 local old_cwd = vim.loop.cwd()
 local loaded_hash = {}
 
-local function find_exrc(dir)
-  for _, exrc in ipairs(exrc_files) do
-    local f = vim.fs.joinpath(dir, exrc.file)
+local function find_projectrc(dir)
+  for _, projectrc in ipairs(projectrc_files) do
+    local f = vim.fs.joinpath(dir, projectrc.file)
     if vim.loop.fs_stat(f) then
-      return exrc
+      return projectrc
     end
   end
   return nil
@@ -32,12 +32,12 @@ end
 
 local function load()
   local cwd = vim.loop.cwd()
-  local exrc = find_exrc(cwd)
-  if not exrc then
+  local projectrc = find_projectrc(cwd)
+  if not projectrc then
     return
   end
 
-  local f = vim.fs.joinpath(cwd, exrc.file)
+  local f = vim.fs.joinpath(cwd, projectrc.file)
   local content = vim.secure.read(f)
   if content == nil then
     print(f .. " is not trusted.")
@@ -47,7 +47,7 @@ local function load()
     if not loaded or hash ~= loaded then
       loaded_hash[f] = hash
       print("load " .. f)
-      loader[exrc.ft](content)
+      loader[projectrc.ft](content)
     else
       -- print(f .. " is already loaded.")
     end
@@ -66,7 +66,7 @@ function M.setup()
   vim.o.exrc = true
   vim.api.nvim_create_autocmd("DirChanged", {
     callback = vim.schedule_wrap(on_dirchanged),
-    group = vim.api.nvim_create_augroup("load_exrc", {}),
+    group = vim.api.nvim_create_augroup("LoadProjectrc", {}),
   })
   vim.api.nvim_create_user_command("LoadProjectrc", load, {})
 end
