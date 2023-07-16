@@ -5,9 +5,20 @@ local exrc_files = {
   { file = ".exrc", ft = "vim" },
 }
 local loader = {
-  lua = vim.cmd.luado,
-  vim = vim.cmd,
+  lua = function(content)
+    if content ~= "" then
+      vim.cmd.luado(content)
+    end
+  end,
+  vim = function(content)
+    if content ~= "" then
+      vim.cmd(content)
+    end
+  end,
 }
+
+local old_cwd = vim.loop.cwd()
+local loaded_hash = {}
 
 local function find_exrc(dir)
   for _, exrc in ipairs(exrc_files) do
@@ -31,15 +42,30 @@ local function load()
   if content == nil then
     print(f .. " is not trusted.")
   else
-    print("load " .. f)
-    loader[exrc.ft](content)
+    local loaded = loaded_hash[f]
+    local hash = vim.fn.sha256(content)
+    if not loaded or hash ~= loaded then
+      loaded_hash[f] = hash
+      print("load " .. f)
+      loader[exrc.ft](content)
+    else
+      -- print(f .. " is already loaded.")
+    end
+  end
+end
+
+local on_dirchanged = function()
+  local cwd = vim.loop.cwd()
+  if cwd ~= old_cwd then
+    old_cwd = cwd
+    load()
   end
 end
 
 function M.setup()
   vim.o.exrc = true
   vim.api.nvim_create_autocmd("DirChanged", {
-    callback = vim.schedule_wrap(load),
+    callback = vim.schedule_wrap(on_dirchanged),
     group = vim.api.nvim_create_augroup("load_exrc", {}),
   })
   vim.api.nvim_create_user_command("LoadProjectrc", load, {})
