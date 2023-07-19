@@ -16,6 +16,29 @@ return {
         inc_rename = true,
         lsp_doc_border = true,
       },
+      views = {
+        cmdline_popup = {
+          position = {
+            row = math.floor(vim.o.lines * 0.15) + 1,
+            col = "50%",
+          },
+          size = {
+            width = 60,
+            height = "auto",
+          },
+        },
+        popupmenu = {
+          relative = "editor",
+          position = {
+            row = math.floor(vim.o.lines * 0.15) + 1,
+            col = "50%",
+          },
+          size = {
+            width = 60,
+            height = 10,
+          },
+        },
+      },
       routes = {
         {
           filter = {
