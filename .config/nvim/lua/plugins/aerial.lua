@@ -41,6 +41,7 @@ return {
       end,
       layout = {
         default_direction = "float",
+        max_width = 0.5,
       },
       float = {
         relative = "win",
