@@ -1,6 +1,7 @@
 local MODE_CYCLE = {
   "document_diagnostics",
   "workspace_diagnostics",
+  "todo",
 }
 local current_mode = "document_diagnostics"
 local function toggle()
@@ -8,8 +9,11 @@ local function toggle()
 end
 
 local M = {
-  "rikuma-t/trouble.nvim",
-  dependencies = { "kyazdani42/nvim-web-devicons" },
+  "folke/trouble.nvim",
+  dependencies = {
+    "kyazdani42/nvim-web-devicons",
+    "todo-comments.nvim",
+  },
   keys = {
     { "<leader>q", toggle, "n" },
   },
@@ -52,8 +56,8 @@ function M.config()
   require("trouble").setup {
     padding = false,
     auto_preview = false,
-    workspace_diagnostics_severity = { min = vim.diagnostic.severity.HINT },
-    document_diagnostics_severity = { min = vim.diagnostic.severity.HINT },
+    -- workspace_diagnostics_severity = { min = vim.diagnostic.severity.HINT },
+    -- document_diagnostics_severity = { min = vim.diagnostic.severity.HINT },
   }
 end
 return M

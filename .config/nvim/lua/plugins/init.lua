@@ -329,6 +329,16 @@ return {
     event = "BufReadPre",
   },
   {
+    "folke/todo-comments.nvim",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "trouble.nvim",
+    },
+    config = function()
+      require("todo-comments").setup {}
+    end,
+  },
+  {
     "smoka7/multicursors.nvim",
     dependencies = { "smoka7/hydra.nvim" },
     event = "VeryLazy",

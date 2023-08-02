@@ -40,7 +40,9 @@ return {
   {
     "Fildo7525/pretty_hover",
     event = "LspAttach",
-    opts = {},
+    config = function()
+      require("pretty_hover").setup { max_width = nil }
+    end,
   },
   {
     "ray-x/go.nvim",
