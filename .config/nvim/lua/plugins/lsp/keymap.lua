@@ -37,7 +37,6 @@ function M.on_attach(client, bufnr)
     { "n", "gh", hover },
     { "n", "gi", vim.lsp.buf.implementation },
     { "n", "gr", references },
-    { "n", "<leader>s", "<Cmd>AerialToggle<CR>" },
     { "n", "<leader>S", lsp_workspace_symbol },
     { "n", "<leader>D", vim.lsp.buf.type_definition },
     { "n", "[d", vim.diagnostic.goto_prev },

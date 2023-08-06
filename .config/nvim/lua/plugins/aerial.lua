@@ -1,3 +1,18 @@
+local function get_winids()
+  local winids = vim.api.nvim_tabpage_list_wins(0)
+  return vim.tbl_filter(function(win)
+    return vim.api.nvim_win_get_config(win).relative == ""
+  end, winids)
+end
+
+local function toggle()
+  if #get_winids() == 1 then
+    require("aerial").toggle { direction = "left" }
+  else
+    require("aerial").toggle { direction = "float" }
+  end
+end
+
 return {
   "stevearc/aerial.nvim",
   config = function()
@@ -55,5 +70,8 @@ return {
       },
     }
   end,
+  keys = {
+    { "<leader>s", toggle, mode = { "n" } },
+  },
   cmd = "AerialToggle",
 }
