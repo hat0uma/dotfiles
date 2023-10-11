@@ -34,7 +34,7 @@ function M.column()
     [[%=]],
     -- [[%{&nu?(&rnu&&v:relnum?v:relnum:v:lnum):''} ]],
     [[%{&nu&&!v:virtnum?(&rnu&&v:relnum?v:relnum:v:lnum):''} ]],
-    git_sign and sign_text(git_sign) or " ",
+    git_sign and sign_text(git_sign) or "  ",
   }
   return table.concat(components, "")
 end

@@ -10,15 +10,19 @@ return {
   {
     "lukas-reineke/indent-blankline.nvim",
     config = function()
-      require("indent_blankline").setup {
-        char = "│",
-        filetype_exclude = {
-          "help",
-          "toggleterm",
-          "terminal",
-          "TelescopePrompt",
-          "packer",
-          "translator",
+      require("ibl").setup {
+        indent = {
+          char = "│",
+        },
+        exclude = {
+          filetypes = {
+            "help",
+            "toggleterm",
+            "terminal",
+            "TelescopePrompt",
+            "packer",
+            "translator",
+          },
         },
       }
     end,

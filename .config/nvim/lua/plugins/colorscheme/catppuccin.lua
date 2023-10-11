@@ -44,6 +44,11 @@ local M = {
           enabled = false,
           custom_bg = "NONE",
         },
+        indent_blankline = {
+          enabled = true,
+          scope_color = "overlay1",
+          colored_indent_levels = false,
+        },
       },
       dim_inactive = {
         enabled = false,
