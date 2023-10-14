@@ -377,4 +377,34 @@ return {
     end,
     ft = { "c", "cpp" },
   },
+  {
+    "luukvbaal/statuscol.nvim",
+    config = function()
+      local builtin = require "statuscol.builtin"
+      require("statuscol").setup {
+        relculright = true,
+        segments = {
+          { sign = { name = { "Diagnostic" }, maxwidth = 1, colwidth = 2 } },
+          { text = { builtin.lnumfunc }, click = "v:lua.ScLa" },
+          { text = { " " } },
+          {
+            sign = {
+              name = { "GitSigns" },
+              maxwidth = 1,
+              colwidth = 2,
+            },
+          },
+          {
+            text = {
+              function(args)
+                return builtin.foldfunc(args) .. " "
+              end,
+            },
+            click = "v:lua.ScFa",
+          },
+        },
+      }
+    end,
+    event = "VeryLazy",
+  },
 }

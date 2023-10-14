@@ -32,6 +32,7 @@ vim.o.sidescroll = 1
 vim.o.wrap = false
 vim.o.cursorline = true
 -- fold
+vim.o.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]
 -- vim.o.foldmethod = "expr"
 -- vim.o.foldexpr = "nvim_treesitter#foldexpr()"
 -- vim.o.foldlevelstart = 99
@@ -132,6 +133,6 @@ require("rc.terminal").setup()
 require("rc.winbar").setup()
 require("rc.restart").setup()
 require("rc.terminal_editor").setup()
-require("rc.statuscolumn").setup()
+-- require("rc.statuscolumn").setup()
 require("rc.git.autofetch").setup()
 require("rc.projectrc").setup()

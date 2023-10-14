@@ -113,7 +113,7 @@ return {
             lsp_cfg = opts,
             lsp_keymaps = false,
             lsp_on_attach = opts.on_attach,
-            lsp_diag_hdlr = false,
+            diagnostic_hdlr = false,
           }
         else
           require("lspconfig")[name].setup(opts)
