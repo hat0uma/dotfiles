@@ -345,13 +345,14 @@ return {
   {
     "smoka7/multicursors.nvim",
     dependencies = { "smoka7/hydra.nvim" },
-    event = "VeryLazy",
     opts = {},
+    cmd = { "MCstart", "MCvisual", "MCclear", "MCpattern", "MCvisualPattern", "MCunderCursor" },
     keys = {
       {
+        mode = { "v", "n" },
         "<Leader>m",
         "<cmd>MCstart<cr>",
-        desc = "Create a selection for word under the cursor",
+        desc = "Create a selection for selected text or word under the cursor",
       },
     },
   },
@@ -406,5 +407,25 @@ return {
       }
     end,
     event = "VeryLazy",
+  },
+  {
+    "LunarVim/bigfile.nvim",
+    config = function()
+      require("bigfile").setup {
+        filesize = 1,
+        pattern = { "*" },
+        features = {
+          "indent_blankline",
+          "illuminate",
+          "lsp",
+          "treesitter",
+          "syntax",
+          "matchparen",
+          "vimopts",
+          "filetype",
+        },
+      }
+    end,
+    lazy = false,
   },
 }
