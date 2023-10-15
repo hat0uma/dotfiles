@@ -9,7 +9,9 @@ local config = {
     char = "│",
     hl = "Comment",
   },
-} --- add virt padding
+}
+
+--- add virt padding
 ---@param bufnr integer
 ---@param lnum integer
 ---@param offset integer
@@ -40,7 +42,7 @@ end
 ---@param bufnr integer
 ---@param lnum integer
 ---@param offset integer
-local function render_highlight(bufnr, lnum, offset)
+local function highlight_delimiter(bufnr, lnum, offset)
   vim.api.nvim_buf_set_extmark(bufnr, BORDER_NS, lnum - 1, offset, {
     hl_group = config.border.hl,
     end_col = offset + 1,
@@ -89,7 +91,7 @@ function M.render_line(bufnr, lnum, columns, column_max_width)
     render_field(bufnr, lnum, offset, colwidth, column)
 
     if i < #columns then
-      render_highlight(bufnr, lnum, offset + string.len(column))
+      highlight_delimiter(bufnr, lnum, offset + string.len(column))
       -- render_border(bufnr, lnum, offset)
     end
     offset = offset + string.len(column) + 1

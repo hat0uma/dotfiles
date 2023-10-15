@@ -128,20 +128,22 @@ return {
         return true
       end
 
-      require("plugins.lsp.format").setup()
+      require("plugins.lsp.keymap").global_map()
       require("plugins.lsp.diagnostic").setup()
-      require("plugins.null-ls").setup_sources { on_attach = on_attach }
+      -- require("plugins.null-ls").setup_sources { on_attach = on_attach }
       require("typescript-tools").setup { on_attach = on_attach }
     end,
     dependencies = {
       "hrsh7th/cmp-nvim-lsp",
-      "jose-elias-alvarez/null-ls.nvim",
+      -- "jose-elias-alvarez/null-ls.nvim",
       "SmiteshP/nvim-navic",
       "mason-lspconfig.nvim",
       "neodev.nvim",
       "clangd_extensions.nvim",
       "go.nvim",
       "typescript-tools.nvim",
+      "conform.nvim",
+      "nvim-lint",
     },
   },
 }
