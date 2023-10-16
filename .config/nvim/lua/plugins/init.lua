@@ -421,7 +421,7 @@ return {
           "treesitter",
           "syntax",
           "matchparen",
-          "vimopts",
+          -- "vimopts",
           "filetype",
         },
       }
