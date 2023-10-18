@@ -9,138 +9,202 @@ local config = {
     hl = "Comment",
   },
 }
+--- @class CsvView
+--- @field bufnr integer
+--- @field fields CsvFieldMetrics[][]
+--- @field column_max_widths integer[]
+--- @field top_lnum integer 1-indexed last rendered range
+--- @field bot_lnum integer 1-indexed last rendered range
+local CsvView = {}
 
---- add virt padding
+--- create new view
 ---@param bufnr integer
----@param lnum integer
----@param offset integer
+---@param fields CsvFieldMetrics[][]
+---@param column_max_widths integer[]
+---@return CsvView
+function CsvView:new(bufnr, fields, column_max_widths)
+  self.__index = self
+
+  local obj = {}
+  obj.bufnr = bufnr
+  obj.fields = fields
+  obj.column_max_widths = column_max_widths
+  obj.top_lnum = -1
+  obj.bot_lnum = -1
+  return setmetatable(obj, self)
+end
+
+--- render padding
+---@param lnum integer 1-indexed lnum
+---@param offset integer 0-indexed byte offset
 ---@param padding integer
 ---@param field CsvFieldMetrics
-local function render_right_padding(bufnr, lnum, offset, padding, field)
-  if padding == 0 then
-    return
+---@param border boolean
+function CsvView:_align_left(lnum, offset, padding, field, border)
+  if padding > 0 then
+    vim.api.nvim_buf_set_extmark(self.bufnr, EXTMARK_NS, lnum - 1, offset + field.len, {
+      virt_text = { { string.rep(" ", padding) } },
+      virt_text_pos = "inline",
+      right_gravity = true,
+    })
   end
 
-  vim.api.nvim_buf_set_extmark(bufnr, EXTMARK_NS, lnum - 1, offset + field.len, {
-    virt_text = { { string.rep(" ", padding) } },
-    virt_text_pos = "inline",
-    right_gravity = true,
-  })
+  if border then
+    -- self:_render_border(lnum, offset + field.len, padding)
+    self:_highlight_delimiter(lnum, offset + field.len)
+  end
 end
 
 --- add virt padding
----@param bufnr integer
----@param lnum integer
----@param offset integer
+---@param lnum integer 1-indexed lnum
+---@param offset integer 0-indexed byte offset
 ---@param padding integer
-local function render_left_padding(bufnr, lnum, offset, padding)
-  if padding == 0 then
-    return
+---@param field CsvFieldMetrics
+---@param border boolean
+function CsvView:_align_right(lnum, offset, padding, field, border)
+  if padding > 0 then
+    vim.api.nvim_buf_set_extmark(self.bufnr, EXTMARK_NS, lnum - 1, offset, {
+      virt_text = { { string.rep(" ", padding) } },
+      virt_text_pos = "inline",
+      right_gravity = false,
+    })
   end
 
-  vim.api.nvim_buf_set_extmark(bufnr, EXTMARK_NS, lnum - 1, offset, {
-    virt_text = { { string.rep(" ", padding) } },
-    virt_text_pos = "inline",
-    right_gravity = false,
-  })
+  if border then
+    -- self:_render_border(lnum, offset + field.len, 0)
+    self:_highlight_delimiter(lnum, offset + field.len)
+  end
 end
 
 --- render table border
----@param bufnr integer
----@param lnum integer
----@param offset integer
-local function highlight_delimiter(bufnr, lnum, offset)
-  vim.api.nvim_buf_set_extmark(bufnr, EXTMARK_NS, lnum - 1, offset, {
+---@param lnum integer 1-indexed lnum
+---@param offset integer 0-indexed byte offset
+function CsvView:_highlight_delimiter(lnum, offset)
+  vim.api.nvim_buf_set_extmark(self.bufnr, EXTMARK_NS, lnum - 1, offset, {
     hl_group = config.border.hl,
     end_col = offset + 1,
   })
 end
 
 --- render table border
----@param bufnr integer
----@param lnum integer
----@param offset integer
+---@param lnum integer 1-indexed lnum
+---@param offset integer 0-indexed byte offset
 ---@param padding integer
-local function render_border(bufnr, lnum, offset, padding)
-  vim.api.nvim_buf_set_extmark(bufnr, EXTMARK_NS, lnum - 1, offset, {
+function CsvView:_render_border(lnum, offset, padding)
+  vim.api.nvim_buf_set_extmark(self.bufnr, EXTMARK_NS, lnum - 1, offset, {
     virt_text = { { string.rep(" ", padding) .. config.border.char, config.border.hl } },
     virt_text_pos = "overlay",
   })
 end
 
---- render line
----@param bufnr integer
----@param lnum integer
----@param line_fields CsvFieldMetrics[]
----@param column_max_widths integer[]
-local function render_line(bufnr, lnum, line_fields, column_max_widths)
-  local offset = 0
-  for i, field in ipairs(line_fields) do
-    local colwidth = math.max(column_max_widths[i], config.min_column_width)
-    local padding = colwidth - field.display_width + config.pack
-    local border_padding = 0
-    if field.is_number then
-      -- numbers are right aligned
-      render_left_padding(bufnr, lnum, offset, padding)
-      border_padding = 0
-    else
-      -- text is left aligned
-      -- if put an overlay after inline virtual text, need to add padding for the virtual text.
-      render_right_padding(bufnr, lnum, offset, padding, field)
-      border_padding = padding
-    end
+--- get column width
+---@param column_index integer 1-indexed
+---@return integer
+function CsvView:_colwidth(column_index)
+  return math.max(self.column_max_widths[column_index], config.min_column_width)
+end
 
-    if i < #line_fields then
-      render_border(bufnr, lnum, offset + field.len, border_padding)
-      -- highlight_delimiter(bufnr, lnum, offset + field.len)
-    end
-    offset = offset + field.len + 1
+--- clear view
+--- Clear all if linestart or lineend is -1
+---@param linestart integer 1-indexed
+---@param lineend integer 1-indexed
+function CsvView:clear(linestart, lineend)
+  if linestart == -1 or lineend == -1 then
+    vim.api.nvim_buf_clear_namespace(self.bufnr, EXTMARK_NS, 0, -1)
+  else
+    vim.api.nvim_buf_clear_namespace(self.bufnr, EXTMARK_NS, linestart - 1, lineend)
   end
 end
 
---- start render
----@param preview_bufnr integer
+--- render
+---@param top_lnum integer 1-indexed
+---@param bot_lnum integer 1-indexed
+function CsvView:render(top_lnum, bot_lnum)
+  -- clear last rendered.
+  self:clear(self.top_lnum, self.bot_lnum)
+  self.top_lnum = top_lnum
+  self.bot_lnum = bot_lnum
+
+  --- render all fields in ranges
+  for lnum = top_lnum, bot_lnum do
+    local offset = 0
+    for column_index, field in ipairs(self.fields[lnum]) do
+      local padding = self:_colwidth(column_index) - field.display_width + config.pack
+      local render_border = column_index < #self.fields[lnum]
+      if field.is_number then
+        self:_align_right(lnum, offset, padding, field, render_border)
+      else
+        self:_align_left(lnum, offset, padding, field, render_border)
+      end
+      offset = offset + field.len + 1
+    end
+  end
+end
+
+--- update item
+---@param fields CsvFieldMetrics[][]
+---@param column_max_widths integer[]
+function CsvView:update(fields, column_max_widths)
+  self.fields = fields
+  self.column_max_widths = column_max_widths
+end
+
+--- @type CsvView[]
+local views = {}
+
+--- attach view for buffer
+---@param bufnr integer
 ---@param item { column_max_widths:number[],fields:CsvFieldMetrics[][] }
-function M.start_render(preview_bufnr, item)
-  local old_top = 1
-  local old_bot = -1
+function M.attach(bufnr, item)
+  if views[bufnr] then
+    print "csvview is already attached for this buffer."
+    return
+  end
+  views[bufnr] = CsvView:new(bufnr, item.fields, item.column_max_widths)
+end
+
+--- detach view for buffer
+---@param bufnr integer
+function M.detach(bufnr)
+  if not views[bufnr] then
+    print "csvview is not attached for this buffer."
+    return
+  end
+  views[bufnr]:clear(0, -1)
+  views[bufnr] = nil
+end
+
+--- start render
+---@param bufnr integer
+---@param item { column_max_widths:number[],fields:CsvFieldMetrics[][] }
+function M.update(bufnr, item)
+  if not views[bufnr] then
+    print "csvview is not attached for this buffer."
+    return
+  end
+  views[bufnr]:update(item.fields, item.column_max_widths)
+end
+
+--- setup view
+function M.setup()
   vim.api.nvim_set_decoration_provider(EXTMARK_NS, {
     on_win = function(_, winid, bufnr, _, _)
-      if bufnr ~= preview_bufnr then
+      if not views[bufnr] then
         return false
       end
 
       -- do not rerender when in insert mode
-      local m = vim.api.nvim_get_mode()
-      if string.find(m["mode"], "i") then
-        return true
-      end
+      -- local m = vim.api.nvim_get_mode()
+      -- if string.find(m["mode"], "i") then
+      --   return false
+      -- end
 
-      -- print(os.clock())
       local top = vim.fn.line("w0", winid)
       local bot = vim.fn.line("w$", winid)
-      M.clear(bufnr, old_top - 1, old_bot)
-      for i = top, bot do
-        render_line(bufnr, i, item.fields[i], item.column_max_widths)
-      end
-
-      old_top = top or old_top
-      old_bot = bot or old_bot
-      return true
+      views[bufnr]:render(top, bot)
+      return false
     end,
   })
-end
-
-function M.stop_render()
-  vim.api.nvim_set_decoration_provider(EXTMARK_NS, {})
-end
-
---- clear view
----@param bufnr integer
----@param linestart integer
----@param lineend integer
-function M.clear(bufnr, linestart, lineend)
-  vim.api.nvim_buf_clear_namespace(bufnr, EXTMARK_NS, linestart, lineend)
 end
 
 return M
