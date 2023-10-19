@@ -10,19 +10,18 @@ local enable_buffers = {}
 --- @field display_width integer
 --- @field is_number boolean
 
---- @class CsvMetrics
---- @field column_max_widths number[]
---- @field fields CsvFieldMetrics[][]
-
 --- compute csv metrics
 ---@param bufnr integer
 ---@param startlnum integer?
 ---@param endlnum integer?
----@param current CsvMetrics?
----@return CsvMetrics
-local function compute_csv_metrics(bufnr, startlnum, endlnum, current)
+---@param fields CsvFieldMetrics[][]?
+---@return { column_max_widths:number[],fields:CsvFieldMetrics[][] }
+local function compute_csv_metrics(bufnr, startlnum, endlnum, fields)
   local before = os.clock()
-  local csv = current or { column_max_widths = {}, fields = {} } --- @type CsvMetrics
+  --- @type { column_max_widths:number[],fields:CsvFieldMetrics[][] }
+  local csv = { column_max_widths = {}, fields = fields or {} }
+
+  --- analyze field
   for lnum, columns in parser.iter_lines(bufnr, startlnum, endlnum) do
     csv.fields[lnum] = {}
     for i, column in ipairs(columns) do
@@ -32,8 +31,14 @@ local function compute_csv_metrics(bufnr, startlnum, endlnum, current)
         display_width = width,
         is_number = tonumber(column) ~= nil,
       }
-      if not csv.column_max_widths[i] or width > csv.column_max_widths[i] then
-        csv.column_max_widths[i] = width
+    end
+  end
+  --- update column max width
+  for i = 1, #csv.fields do
+    for j = 1, #csv.fields[i] do
+      local width = csv.fields[i][j].display_width
+      if not csv.column_max_widths[j] or width > csv.column_max_widths[j] then
+        csv.column_max_widths[j] = width
       end
     end
   end
@@ -93,7 +98,7 @@ function M.enable()
   view.attach(bufnr, item)
   register_events(bufnr, {
     on_lines = function(_, _, _, first, last)
-      item = compute_csv_metrics(bufnr, first + 1, last + 1, item)
+      item = compute_csv_metrics(bufnr, first + 1, last + 1, item.fields)
       view.update(bufnr, item)
     end,
     on_reload = function()
