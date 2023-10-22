@@ -123,7 +123,7 @@ local M = {
           end,
         },
         experimental = {
-          ghost_text = true,
+          -- ghost_text = true,
         },
         sorting = {
           comparators = {

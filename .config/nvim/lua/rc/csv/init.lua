@@ -1,52 +1,10 @@
 local M = {}
-local parser = require "rc.csv.parser"
+local a = require "plenary.async"
 local view = require "rc.csv.view"
-local strings = require "plenary.strings"
+local metrics = require "rc.csv.metrics"
 
 --- @type integer[]
 local enable_buffers = {}
-
---- @class CsvFieldMetrics
---- @field len integer
---- @field display_width integer
---- @field is_number boolean
-
---- compute csv metrics
----@param bufnr integer
----@param startlnum integer?
----@param endlnum integer?
----@param fields CsvFieldMetrics[][]?
----@return { column_max_widths:number[],fields:CsvFieldMetrics[][] }
-local function compute_csv_metrics(bufnr, startlnum, endlnum, fields)
-  local before = os.clock()
-  --- @type { column_max_widths:number[],fields:CsvFieldMetrics[][] }
-  local csv = { column_max_widths = {}, fields = fields or {} }
-
-  --- analyze field
-  for lnum, columns in parser.iter_lines(bufnr, startlnum, endlnum) do
-    csv.fields[lnum] = {}
-    for i, column in ipairs(columns) do
-      local width = strings.strdisplaywidth(column)
-      csv.fields[lnum][i] = {
-        len = #column,
-        display_width = width,
-        is_number = tonumber(column) ~= nil,
-      }
-    end
-  end
-  --- update column max width
-  for i = 1, #csv.fields do
-    for j = 1, #csv.fields[i] do
-      local width = csv.fields[i][j].display_width
-      if not csv.column_max_widths[j] or width > csv.column_max_widths[j] then
-        csv.column_max_widths[j] = width
-      end
-    end
-  end
-  local after = os.clock()
-  print(string.format("computed %f", after - before))
-  return csv
-end
 
 --- register buffer events
 ---@param bufnr integer
@@ -98,15 +56,15 @@ function M.enable()
   -- require("profile").start "*"
   -- local item = compute_csv_metrics(bufnr, 1, 10000)
   -- require("profile").stop "profile.json"
-  local item = compute_csv_metrics(bufnr)
+  local item = metrics.compute_csv_metrics(bufnr)
   view.attach(bufnr, item)
   register_events(bufnr, {
     on_lines = function(_, _, _, first, last)
-      item = compute_csv_metrics(bufnr, first + 1, last + 1, item.fields)
+      item = metrics.compute_csv_metrics(bufnr, first + 1, last + 1, item.fields)
       view.update(bufnr, item)
     end,
     on_reload = function()
-      item = compute_csv_metrics(bufnr)
+      item = metrics.compute_csv_metrics(bufnr)
       view.update(bufnr, item)
     end,
   })
