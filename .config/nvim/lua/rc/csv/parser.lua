@@ -1,10 +1,29 @@
 local M = {}
 
---- read fields
+local DELIM = string.byte ","
+
+--- parse line
 ---@param line string
 ---@return string[]
-local function parse_fields(line)
-  return vim.split(line, ",", { trimempty = true })
+function M._parse_line(line)
+  local len = #line
+  if len == 0 then
+    return {}
+  end
+
+  local fields = {} --- @type string[]
+  local field_start_pos = 1
+  local pos = 1
+  while pos <= len do
+    local char = string.byte(line, pos)
+    if char == DELIM then
+      fields[#fields + 1] = string.sub(line, field_start_pos, pos - 1)
+      field_start_pos = pos + 1
+    end
+    pos = pos + 1
+  end
+  fields[#fields + 1] = string.sub(line, field_start_pos, pos - 1)
+  return fields
 end
 
 --- iterate fields
@@ -22,7 +41,7 @@ function M.iter_lines(bufnr, startlnum, endlnum)
 
     local line = vim.api.nvim_buf_get_lines(bufnr, i - 1, i, true)
     i = i + 1
-    return i - 1, parse_fields(line[1])
+    return i - 1, M._parse_line(line[1])
   end
 end
 

@@ -428,4 +428,7 @@ return {
     end,
     lazy = false,
   },
+  {
+    "stevearc/profile.nvim",
+  },
 }
