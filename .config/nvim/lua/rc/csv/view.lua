@@ -34,7 +34,7 @@ function CsvView:new(bufnr, fields, column_max_widths)
   return setmetatable(obj, self)
 end
 
---- render padding
+--- Align field to the left
 ---@param lnum integer 1-indexed lnum
 ---@param offset integer 0-indexed byte offset
 ---@param padding integer
@@ -55,7 +55,7 @@ function CsvView:_align_left(lnum, offset, padding, field, border)
   end
 end
 
---- add virt padding
+--- Align field to the right
 ---@param lnum integer 1-indexed lnum
 ---@param offset integer 0-indexed byte offset
 ---@param padding integer
@@ -76,7 +76,25 @@ function CsvView:_align_right(lnum, offset, padding, field, border)
   end
 end
 
---- render table border
+--- render column index header
+---@param lnum integer 1-indexed lnum.render header above this line.
+function CsvView:render_column_index_header(lnum)
+  local virt = {} --- @type string[][]
+  for i, width in ipairs(self.column_max_widths) do
+    local char = tostring(i)
+    virt[#virt + 1] = { string.rep(" ", width - #char) }
+    virt[#virt + 1] = { char }
+    if i < #self.column_max_widths then
+      virt[#virt + 1] = { "," }
+    end
+  end
+  vim.api.nvim_buf_set_extmark(self.bufnr, EXTMARK_NS, lnum - 1, 0, {
+    virt_lines = { virt },
+    virt_lines_above = true,
+  })
+end
+
+--- highlight delimiter char
 ---@param lnum integer 1-indexed lnum
 ---@param offset integer 0-indexed byte offset
 function CsvView:_highlight_delimiter(lnum, offset)
@@ -125,6 +143,7 @@ function CsvView:render(top_lnum, bot_lnum)
   self.top_lnum = top_lnum
   self.bot_lnum = bot_lnum
 
+  -- self:render_column_index_header(top_lnum)
   --- render all fields in ranges
   for lnum = top_lnum, bot_lnum do
     local offset = 0

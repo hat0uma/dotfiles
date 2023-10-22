@@ -1,6 +1,7 @@
 local M = {}
 local parser = require "rc.csv.parser"
 local view = require "rc.csv.view"
+local strings = require "plenary.strings"
 
 --- @type integer[]
 local enable_buffers = {}
@@ -25,9 +26,9 @@ local function compute_csv_metrics(bufnr, startlnum, endlnum, fields)
   for lnum, columns in parser.iter_lines(bufnr, startlnum, endlnum) do
     csv.fields[lnum] = {}
     for i, column in ipairs(columns) do
-      local width = vim.fn.strdisplaywidth(column)
+      local width = strings.strdisplaywidth(column)
       csv.fields[lnum][i] = {
-        len = string.len(column),
+        len = #column,
         display_width = width,
         is_number = tonumber(column) ~= nil,
       }
@@ -94,6 +95,9 @@ function M.enable()
   table.insert(enable_buffers, bufnr)
 
   -- compute and attach
+  -- require("profile").start "*"
+  -- local item = compute_csv_metrics(bufnr, 1, 10000)
+  -- require("profile").stop "profile.json"
   local item = compute_csv_metrics(bufnr)
   view.attach(bufnr, item)
   register_events(bufnr, {
