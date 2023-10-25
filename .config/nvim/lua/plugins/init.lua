@@ -428,7 +428,12 @@ return {
     end,
     lazy = false,
   },
+  { "stevearc/profile.nvim" },
   {
-    "stevearc/profile.nvim",
+    "rikuma-t/csvview.nvim",
+    ft = { "csv" },
+    config = function()
+      require("csvview").setup()
+    end,
   },
 }
