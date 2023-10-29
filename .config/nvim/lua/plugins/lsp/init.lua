@@ -38,6 +38,12 @@ return {
     end,
   },
   {
+    "folke/neoconf.nvim",
+    config = function()
+      require("neoconf").setup {}
+    end,
+  },
+  {
     "Fildo7525/pretty_hover",
     event = "LspAttach",
     config = function()
@@ -139,6 +145,7 @@ return {
       "SmiteshP/nvim-navic",
       "mason-lspconfig.nvim",
       "neodev.nvim",
+      "neoconf.nvim",
       "clangd_extensions.nvim",
       "go.nvim",
       "typescript-tools.nvim",
