@@ -40,7 +40,13 @@ return {
   {
     "folke/neoconf.nvim",
     config = function()
-      require("neoconf").setup {}
+      require("neoconf").setup {
+        import = {
+          vscode = false,
+          coc = false,
+          nlsp = false,
+        },
+      }
     end,
   },
   {
@@ -112,8 +118,6 @@ return {
           require("typescript").setup { server = opts }
         elseif name == "omnisharp" and vim.fn.has "win64" ~= 1 then
           require("lspconfig")["omnisharp_mono"].setup(opts)
-        elseif name == "clangd" then
-          require("clangd_extensions").setup { server = opts }
         elseif name == "gopls" and vim.fn.executable "gopls" == 1 then
           require("go").setup {
             lsp_cfg = opts,
@@ -138,6 +142,7 @@ return {
       require("plugins.lsp.diagnostic").setup()
       -- require("plugins.null-ls").setup_sources { on_attach = on_attach }
       require("typescript-tools").setup { on_attach = on_attach }
+      require("clangd_extensions").setup {}
     end,
     dependencies = {
       "hrsh7th/cmp-nvim-lsp",
