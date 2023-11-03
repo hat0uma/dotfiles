@@ -26,7 +26,12 @@ function M.edit_on_parent()
   end
 end
 
+---
+---@param files string[]
+---@param servername string
 function M.edit(files, servername)
+  local toggle_number = vim.b.toggle_number
+
   vim.cmd.tabnew(files)
   -- vim.cmd.edit(files)
   vim.bo.bufhidden = "wipe"
@@ -35,6 +40,10 @@ function M.edit(files, servername)
       local child = vim.fn.sockconnect("pipe", servername, { rpc = true })
       vim.rpcrequest(child, "nvim_exec_lua", "vim.g.parent_nvim_edit_finished = true", {})
       vim.fn.chanclose(child)
+      if toggle_number ~= nil then
+        require("toggleterm").toggle(toggle_number)
+        vim.cmd.stopinsert()
+      end
     end,
     once = true,
     buffer = 0,

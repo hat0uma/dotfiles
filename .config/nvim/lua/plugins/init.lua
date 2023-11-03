@@ -436,4 +436,19 @@ return {
       require("csvview").setup()
     end,
   },
+  {
+    "zbirenbaum/copilot.lua",
+    cmd = "Copilot",
+    event = "InsertEnter",
+    config = function()
+      require("copilot").setup {
+        filetypes = {
+          gitcommit = true,
+        },
+      }
+    end,
+    cond = function()
+      return vim.env.ENABLE_NVIM_AI_PLUGINS == "1"
+    end,
+  },
 }
