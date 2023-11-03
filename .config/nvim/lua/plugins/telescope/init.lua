@@ -38,11 +38,6 @@ local M = {
     dependencies = { "telescope.nvim" },
   },
   {
-    "nvim-telescope/telescope-file-browser.nvim",
-    dependencies = { "telescope.nvim" },
-    enabled = false,
-  },
-  {
     "tsakirist/telescope-lazy.nvim",
     dependencies = { "telescope.nvim" },
   },
