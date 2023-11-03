@@ -357,7 +357,7 @@ return {
     },
   },
   {
-    "rikuma-t/doxygen-previewer.nvim",
+    "hat0uma/doxygen-previewer.nvim",
     build = "npm install live-server",
     config = function(plugin)
       require("doxygen-previewer").setup {
@@ -430,7 +430,7 @@ return {
   },
   { "stevearc/profile.nvim" },
   {
-    "rikuma-t/csvview.nvim",
+    "hat0uma/csvview.nvim",
     ft = { "csv" },
     config = function()
       require("csvview").setup()

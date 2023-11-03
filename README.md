@@ -7,5 +7,5 @@ my dotfiles
 - Windows
 
   ```pwsh
-  iwr -useb raw.githubusercontent.com/rikuma-t/dotfiles/main/win/bootstrap.ps1|iex
+  iwr -useb raw.githubusercontent.com/hat0uma/dotfiles/main/win/bootstrap.ps1|iex
   ```
