@@ -40,9 +40,8 @@ function M.edit(files, servername)
       local child = vim.fn.sockconnect("pipe", servername, { rpc = true })
       vim.rpcrequest(child, "nvim_exec_lua", "vim.g.parent_nvim_edit_finished = true", {})
       vim.fn.chanclose(child)
-      if toggle_number ~= nil then
+      if toggle_number then
         require("toggleterm").toggle(toggle_number)
-        vim.cmd.stopinsert()
       end
     end,
     once = true,
