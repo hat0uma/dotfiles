@@ -442,6 +442,9 @@ return {
     event = "InsertEnter",
     config = function()
       require("copilot").setup {
+        suggestion = {
+          auto_trigger = true,
+        },
         filetypes = {
           gitcommit = true,
         },
