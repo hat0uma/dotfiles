@@ -6,6 +6,7 @@ return {
       typescriptreact = { "eslint_d" },
       sh = { "shellcheck" },
       python = { "mypy", "flake8" },
+      markdown = { "markdownlint" },
       -- lua = { "luacheck" },
     }
     local actionlint = require("lint").linters.actionlint

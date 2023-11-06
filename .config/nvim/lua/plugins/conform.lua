@@ -87,6 +87,7 @@ M.config = function()
       typescriptreact = { { "prettierd", "prettier" }, { "eslint_d" } },
       json = { "fixjson" },
       yaml = { { "prettierd", "prettier" } },
+      markdown = { "mdformat" },
     },
   }
 
