@@ -66,6 +66,7 @@ M.configurations = {
       },
     },
   },
+  eslint = {},
   hls = {},
   cssls = {},
   omnisharp = {},
@@ -86,14 +87,15 @@ M.configurations = {
 function M.install()
   local auto_install = {
     "css-lsp",
-    "eslint_d",
+    "eslint-lsp",
+    "json-lsp",
     "lua-language-server",
+    "powershell-editor-services",
     "prettierd",
     "pyright",
     "shellcheck",
     "stylua",
     "typescript-language-server",
-    "json-lsp",
   }
   require "mason"
   vim.cmd("MasonInstall " .. table.concat(auto_install, " "))
