@@ -88,6 +88,7 @@ M.config = function()
       json = { "fixjson" },
       yaml = { { "prettierd", "prettier" } },
       markdown = { "mdformat" },
+      sh = { "shfmt" },
     },
   }
 

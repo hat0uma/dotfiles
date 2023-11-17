@@ -94,6 +94,7 @@ function M.install()
     "prettierd",
     "pyright",
     "shellcheck",
+    "shfmt",
     "stylua",
     "typescript-language-server",
   }
