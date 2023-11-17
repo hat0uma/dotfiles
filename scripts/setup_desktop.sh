@@ -2,6 +2,7 @@
 
 # install ime
 yay -S --noconfirm \
+	sway-im \
 	fcitx5 \
 	fcitx5-configtool \
 	fcitx5-gtk \
@@ -9,11 +10,11 @@ yay -S --noconfirm \
 	fcitx5-qt
 
 # add sway envs
+swayenv="$XDG_CONFIG_HOME/sway/env"
 cat <<EOF | sudo tee /usr/local/bin/start-sway
 #!/bin/env bash
-swayenv="\$XDG_CONFIG_HOME/sway/env"
-if [[ -f \$swayenv ]]; then
-	source \$swayenv
+if [[ -f $swayenv ]]; then
+	source $swayenv
 fi
 sway
 EOF
@@ -29,7 +30,7 @@ Type=Application
 EOF
 
 # chrome settings
-cat <<EOF >"$XDG_CONFIG_HOME/chrome-flags.conf"
+cat <<EOF | tee "$XDG_CONFIG_HOME/chrome-flags.conf"
 --enable-features=UseOzonePlatform
 --ozone-platform=wayland
 --gtk-version=4
