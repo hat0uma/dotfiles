@@ -31,7 +31,14 @@ EOF
 
 # chrome settings
 cat <<EOF | tee "$XDG_CONFIG_HOME/chrome-flags.conf"
---enable-features=UseOzonePlatform
---ozone-platform=wayland
+--force-dark-mode
+--enable-features=WebUIDarkMode
+--ozone-platform-hint=auto
 --gtk-version=4
 EOF
+
+# install themes
+yay -S --noconfirm \
+	catppuccin-gtk-theme-frappe \
+	catppuccin-cursors-frappe \
+	kvantum-theme-catppuccin-git

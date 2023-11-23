@@ -1,0 +1,10 @@
+# --- scaling ---#
+# export QT_SCALE_FACTOR=2
+# export GDK_SCALE=2
+# export GDK_DPI_SCALE=0.5
+
+# --- im settings ---#
+export DefaultIMModule=fcitx
+export GTK_IM_MODULE=fcitx
+export QT_IM_MODULE=fcitx
+export XMODIFIERS=@im=fcitx

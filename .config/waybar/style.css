@@ -1,0 +1,188 @@
+
+/* =============================================================================
+ *
+ * Waybar configuration
+ *
+ * Configuration reference: https://github.com/Alexays/Waybar/wiki/Configuration
+ *
+ * =========================================================================== */
+
+/* import css definitions for current theme */
+@import "catppuccin-frappe.css";
+
+
+/* -----------------------------------------------------------------------------
+ * Keyframes
+ * -------------------------------------------------------------------------- */
+@keyframes blink-warning { 
+    70% { 
+        color: @overlay0;
+    }
+    to {
+        color: @overlay0;
+        background-color: @yellow;
+    }
+}
+
+@keyframes blink-critical {
+    70% {
+        color: @overlay0;
+    }
+    to {
+        color: @overlay0;
+        background-color: @red;
+    }
+}
+
+/* -----------------------------------------------------------------------------
+ * Base styles
+ * -------------------------------------------------------------------------- */
+/* Reset all styles */
+* {
+    border: none;
+    border-radius: 0;
+    min-height: 0; margin: 0;
+    padding: 0;
+    font-family: "JetBrainsMono Nerd Font", "Roboto Mono", sans-serif;
+}
+
+window#waybar {
+    border-radius: 8px;
+    background: transparent;
+    color: @text;
+    font-size: 14px;
+}
+
+.modules-right,
+.modules-left {
+    margin-top: 8px;
+    background-color: @base;
+    padding-left: 8px;
+    padding-right: 8px;
+    border-radius: 8px;
+}
+
+/* Each module */
+#bluetooth,
+#battery,
+#clock,
+#cpu,
+#network,
+#pulseaudio,
+#backlight,
+#tray {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+/* -----------------------------------------------------------------------------
+ * Module styles
+ * -------------------------------------------------------------------------- */
+#battery {
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-direction: alternate; 
+} 
+#battery.warning { 
+    color: @yellow;
+}
+
+#battery.critical {
+    color: @red;
+}
+
+#battery.warning.discharging {
+    animation-name: blink-warning;
+    animation-duration: 3s;
+}
+
+#battery.critical.discharging {
+    animation-name: blink-critical;
+    animation-duration: 2s;
+}
+
+#network.disconnected {
+    color: @yellow;
+}
+
+#pulseaudio.muted {
+    color: @yellow;
+}
+
+#bluetooth.disabled {
+    color: @yellow;
+}
+
+#custom-wf-recorder {
+    color: @red;
+    padding-right: 10px;
+}
+
+#tray,
+#clock,
+#bluetooth,
+#battery,
+#network,
+#pulseaudio,
+#backlight{
+    margin-top: 8px;
+    margin-bottom: 8px;
+    margin-left: 4px;
+    margin-right: 4px;
+    background-color: @surface0;
+    border-radius: 8px;
+}
+#network{
+    border-radius: 8px 0px 0px 8px;
+    margin-right: 0px;
+}
+#bluetooth{
+    border-radius: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
+}
+#pulseaudio{
+    border-radius: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
+}
+#backlight{
+    border-radius: 0px 8px 8px 0px;
+    margin-left: 0px;
+}
+
+#mode {
+    background-color: @base;
+    padding-left: 8px;
+    padding-right: 8px;
+    margin-top: 8px;
+    margin-bottom: 2px;
+    box-shadow: -1px 2px 2px 0 rgba(0, 0, 0, 0.4);
+    border-left: 3px solid @blue;
+}
+
+
+#clock {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    padding: 8px;
+    color: @base;
+    font-weight: bold;
+    background-color: @lavender;
+    border-radius: 8px 8px 8px 8px;
+}
+
+#workspaces button {
+    padding: 8px;
+    color: @text;
+}
+
+#workspaces button.focused {
+    font-weight: bold;
+    color: @blue;
+}
+
+#workspaces button.urgent {
+    border-color: @red;
+    color: @red;
+}
+
