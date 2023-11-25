@@ -35,5 +35,8 @@ include $HOME/.config/sway/config.d/*.conf
 smart_gaps off
 gaps outer 4
 
+# key bindings
+bindsym $mod+F2 exec --no-startup-id firefox
+
 # input method
 exec --no-startup-id "fcitx5 -rd"
