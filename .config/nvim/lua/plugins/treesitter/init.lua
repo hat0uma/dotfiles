@@ -84,10 +84,10 @@ local M = {
     "Badhi/nvim-treesitter-cpp-tools",
     dependencies = { "nvim-treesitter" },
     config = function()
-      require 'nt-cpp-tools'.setup({
-        header_extension = 'h',
-        source_extension = 'cpp',
-      })
+      require("nt-cpp-tools").setup {
+        header_extension = "h",
+        source_extension = "cpp",
+      }
     end,
     cmd = { "TSCppDefineClassFunc", "TSCppMakeConcreteClass", "TSCppRuleOf3", "TSCppRuleOf5" },
   },
@@ -95,11 +95,9 @@ local M = {
     "JoosepAlviste/nvim-ts-context-commentstring",
     dependencies = { "nvim-treesitter" },
     config = function()
-      require("nvim-treesitter.configs").setup {
-        context_commentstring = {
-          enable = true,
-          enable_autocmd = false,
-        },
+      vim.g.skip_ts_context_commentstring_module = true
+      require("ts_context_commentstring").setup {
+        enable_autocmd = false,
       }
     end,
     ft = { "typescript", "typescriptreact", "javascript", "javascript" },

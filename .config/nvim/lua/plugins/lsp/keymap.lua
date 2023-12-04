@@ -26,7 +26,8 @@ function M.on_attach(client, bufnr)
   end
 
   local hover = function()
-    require("pretty_hover").hover()
+    vim.lsp.buf.hover()
+    -- require("pretty_hover").hover()
   end
 
   local default_opts = { noremap = true, silent = true, buffer = bufnr }

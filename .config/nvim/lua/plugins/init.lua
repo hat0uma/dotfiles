@@ -219,6 +219,8 @@ return {
     cmd = { "SimplenoteList" },
   },
 
+  { "gpanders/nvim-parinfer", ft = { "lisp", "yuck" } },
+  { "/elkowar/yuck.vim", ft = { "yuck" } },
   { "PProvost/vim-ps1", ft = { "ps1" } },
   { "hashivim/vim-vagrant", ft = { "ruby" } },
   { "cespare/vim-toml", ft = { "toml" } },
@@ -407,6 +409,7 @@ return {
       }
     end,
     event = "VeryLazy",
+    branch = "0.10",
   },
   {
     "LunarVim/bigfile.nvim",
