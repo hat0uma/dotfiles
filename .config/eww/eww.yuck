@@ -1,0 +1,115 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; events
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(deflisten workspaces :initial "[]" "scripts/get-workspaces.ts")
+(deflisten current_workspace :initial "1" "scripts/get-active-workspace.ts")
+(deflisten window :initial "..." "scripts/get-window-title.ts")
+
+(defpoll battery_status :interval "10s" :run-while time-visible "scripts/get-battery.ts")
+(defpoll wifi_status :interval "1s" :run-while time-visible "scripts/get-wifi.ts")
+(defpoll date :interval "1s" :run-while time-visible "LANG=C date +'%b %d %H:%M'")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; widgets
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defwidget icon [width height path]
+  (box
+    :width width
+    :height height
+    :style "background-image: url('${path}'); background-size: cover; background-position: center; background-repeat: no-repeat;"))
+
+(defwidget battery[]
+  (box
+    :class "battery"
+    :space-evenly false
+    :tooltip "${battery_status.extra}"
+    (label :text "${battery_status.icon} ${battery_status.percentage}%")))
+
+(defwidget clock []
+    (box
+      :class "clock"
+      :space-evenly false
+      (label :text date)))
+
+(defwidget ws []
+    (box
+      :space-evenly false
+      :spacing 0
+      (label :text "${current_workspace}" :visible false)
+      (for workspace in workspaces
+        (eventbox 
+          :width 24
+          :class "workspace ${workspace.id == current_workspace ? "current" : ""} ${workspace.windows > 0 ? "" : "empty"}"
+          :onclick "hyprctl dispatch workspace ${workspace.id}"
+          (label :text "${workspace.name}")))))
+
+(defwidget wifi []
+  (box
+   :class "wifi"
+   (label 
+     :text {wifi_status.icon}
+     :tooltip { wifi_status.state == "connected" ? wifi_status.ssid : "disconnected"})))
+
+; TODO
+(defwidget bluetooth []
+  (box
+   :class "bluetooth"
+   (label :text "")))
+
+; TODO
+(defwidget audio []
+  (box
+   :class "audio"
+   (label :text " ")))
+
+; TODO
+(defwidget backlight []
+  (box
+   :class "backlight"
+   (label :text " ")))
+
+(defwidget system []
+  (box
+    :class "system"
+    :spacing 4
+    (wifi)
+    (bluetooth)
+    (audio)
+    (backlight)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; window
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defwindow bar
+  :monitor 0
+  :stacking "fg"
+  :exclusive true
+  :geometry (geometry 
+             :height "2%"
+             :width "100%" 
+             :anchor "top center")
+  (centerbox 
+    :orientation "h"
+    :class "bar"
+    (box
+      :class "bar-left"
+      :halign "start"
+      :orientation "h"
+      :space-evenly false
+      (ws))
+    (box
+      :class "bar-center"
+      :halign "center"
+      :orientation "h"
+      :space-evenly false)
+    (box 
+      :class "bar-right"
+      :halign "end"
+      :orientation "h"
+      :space-evenly false
+      :spacing 4
+      (battery)
+      (system)
+      (systray :class "systray")
+      (clock))))
+
