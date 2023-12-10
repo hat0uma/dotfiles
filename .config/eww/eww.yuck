@@ -1,17 +1,14 @@
 ; listens
-(deflisten WORKSPACES :initial "[]" "scripts/get-workspaces.ts")
-(deflisten CURRENT_WORKSPACE :initial "1" "scripts/get-active-workspace.ts")
-(deflisten WINDOW :initial "..." "scripts/get-window-title.ts")
+(deflisten WORKSPACES :initial "[]" "~/.local/bin/dots/eww/get-workspaces.ts")
+(deflisten CURRENT_WORKSPACE :initial "1" "~/.local/bin/dots/eww/get-active-workspace.ts")
+(deflisten WINDOW :initial "..." "~/.local/bin/dots/eww/get-window-title.ts")
 
 ; polls
-(defpoll AUDIO :interval "1s" :run-while time-visible "scripts/get-audio.ts")
-(defpoll BRIGHTNESS :interval "1s" :run-while time-visible "scripts/get-brightness.ts")
-(defpoll WIFI_STATUS :interval "1s" :run-while time-visible "scripts/get-wifi.ts")
-(defpoll BATTERY_STATUS :interval "10s" :run-while time-visible "scripts/get-battery.ts")
-(defpoll BLUETOOTH_STATUS :interval "10s" :run-while time-visible "scripts/get-bluetooth.ts")
-
-; vars
-(defvar CLOSER_VISIBLE false)
+(defpoll AUDIO :interval "1s" :run-while time-visible "~/.local/bin/dots/eww/get-audio.ts")
+(defpoll BRIGHTNESS :interval "1s" :run-while time-visible "~/.local/bin/dots/eww/get-brightness.ts")
+(defpoll WIFI_STATUS :interval "1s" :run-while time-visible "~/.local/bin/dots/eww/get-wifi.ts")
+(defpoll BATTERY_STATUS :interval "10s" :run-while time-visible "~/.local/bin/dots/eww/get-battery.ts")
+(defpoll BLUETOOTH_STATUS :interval "10s" :run-while time-visible "~/.local/bin/dots/eww/get-bluetooth.ts")
 
 ; common widgets
 (defwidget _imageicon [width height path]

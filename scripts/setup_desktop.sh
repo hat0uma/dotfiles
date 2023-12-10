@@ -5,16 +5,18 @@
 ########################
 # install wm,dm
 yay -S --noconfirm \
-	hyprland \
-	xdg-desktop-portal-hyprland \
-	otf-font-awesome \
-	gobject-introspection \
-	network-manager-applet \
-	eww-hyprland-tray \
-	ttf-twemoji-color \
-	swaybg \
+	acpi \
 	brightnessctl \
-	acpi
+	eww-hyprland-tray \
+	gobject-introspection \
+	hyprland-git \
+	network-manager-applet \
+	otf-font-awesome \
+	qt5-wayland \
+	qt6-wayland \
+	swaybg \
+	ttf-twemoji-color \
+	xdg-desktop-portal-hyprland
 
 ########################
 # display manager
@@ -68,6 +70,9 @@ yay -S --noconfirm \
 	foot \
 	wezterm \
 	wofi \
+	slurp \
+	webcord-bin \
+	grim \
 	1password
 
 # gh auth login

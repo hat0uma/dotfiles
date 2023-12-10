@@ -5,5 +5,9 @@
       "useTabs": false,
       "indentWidth": 2
     }
+  },
+  "imports": {
+    "/": "./",
+    "./": "./"
   }
 }

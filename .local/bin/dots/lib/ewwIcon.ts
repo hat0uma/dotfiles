@@ -1,5 +1,5 @@
 import * as ini from "https://deno.land/x/ini@v2.1.0/mod.ts";
-import * as gtk from "./gtk.ts";
+import * as gtk from "/lib/gtk.ts";
 
 const DESKTOP_DIRS = [
   "/usr/share/applications",

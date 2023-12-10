@@ -1,8 +1,8 @@
 #!/usr/bin/env -S deno run -A --unstable
 
-import { listenHyprlandSocketEvent } from "./lib/event.ts";
-import * as hyprctl from "./lib/hyprctl.ts";
-import * as gtk from "./lib/gtk.ts";
+import { listenHyprlandSocketEvent } from "/lib/event.ts";
+import * as hyprctl from "/lib/hyprctl.ts";
+import * as gtk from "/lib/gtk.ts";
 
 // initialize
 gtk.initGtk();

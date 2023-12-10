@@ -1,6 +1,6 @@
 #!/usr/bin/env -S deno run -A --unstable
 
-import * as bluetoothctl from "./lib/bluetoothctl.ts";
+import * as bluetoothctl from "/lib/bluetoothctl.ts";
 
 const ICONS = {
   disconnected: "󰂲",

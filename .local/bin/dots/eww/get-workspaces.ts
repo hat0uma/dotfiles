@@ -1,7 +1,7 @@
 #!/usr/bin/env -S deno run -A --unstable
 
-import { listenHyprlandSocketEvent } from "./lib/event.ts";
-import * as hyprctl from "./lib/hyprctl.ts";
+import { listenHyprlandSocketEvent } from "/lib/event.ts";
+import * as hyprctl from "/lib/hyprctl.ts";
 
 const windows = new Map<string, {
   ownerWorkspace: string;
