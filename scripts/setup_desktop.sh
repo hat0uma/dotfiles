@@ -13,6 +13,7 @@ yay -S --noconfirm \
 	eww-hyprland-tray \
 	ttf-twemoji-color \
 	swaybg \
+	brightnessctl \
 	acpi
 
 ########################
