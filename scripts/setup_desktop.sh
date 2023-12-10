@@ -73,6 +73,8 @@ yay -S --noconfirm \
 	slurp \
 	webcord-bin \
 	grim \
+	mako \
+	libnotify \
 	1password
 
 # gh auth login
