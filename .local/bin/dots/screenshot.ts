@@ -6,7 +6,7 @@ import $ from "https://deno.land/x/dax@0.35.0/mod.ts";
 import * as hyprctl from "/lib/hyprctl.ts";
 import { join } from "https://deno.land/std@0.201.0/path/join.ts";
 
-// dependencies: grim, slurp, wl-copy, notify-send, xdg-user-dir, hyprctl
+// dependencies: grim, slurp, wl-copy, notify-send, xdg-user-dir, hyprctl, swappy
 
 // helper functions
 const notify = (title: string, message: string, timeout = 2000) => $`notify-send -t ${timeout} ${title} ${message}`;
@@ -14,6 +14,7 @@ const copyImageToClip = (bytes: Uint8Array) => $`wl-copy -t image/png`.stdin(byt
 const captureRegion = (region: string) => $`grim -g ${region} -`.bytes();
 const captureScreen = () => $`grim -`.bytes();
 const selectRegion = () => $`slurp`.text();
+const edit = (img: Uint8Array) => $`swappy -f -`.stdin(img);
 
 /**
  * Generate file name
@@ -60,31 +61,28 @@ async function captureFullScreen(saveDir: string) {
 }
 
 /**
- * Capture selected region and save to file and clipboard
+ * Capture selected region and edit it
  */
-async function captureSelectedRegion(saveDir: string) {
+async function captureSelectedRegionAndEdit() {
   const region = await selectRegion();
   const cap = await captureRegion(region);
-
-  const name = fileName();
-  await clipAndSave(saveDir, name, cap);
-  await notify("Screenshot(Selected region)", `saved to ${name}`);
+  await edit(cap);
 }
 
 /**
  * Main
  */
 const args = parse(Deno.args, {
-  boolean: ["fullscreen", "activewindow", "region"],
-  default: { fullscreen: false, activewindow: false, region: false },
+  boolean: ["fullscreen", "activewindow", "regionedit"],
+  default: { fullscreen: false, activewindow: false, regionedit: false },
 });
 const saveDir = join(await $`xdg-user-dir PICTURES`.text(), "Screenshots");
 if (args.fullscreen) {
   await captureFullScreen(saveDir);
 } else if (args.activewindow) {
   await captureActiveWindow(saveDir);
-} else if (args.region) {
-  await captureSelectedRegion(saveDir);
+} else if (args.regionedit) {
+  await captureSelectedRegionAndEdit();
 } else {
-  console.error("Usage: screenshot.ts [--fullscreen | --activewindow | --region]");
+  console.error("Usage: screenshot.ts [--fullscreen | --activewindow | --regionedit]");
 }

@@ -1,0 +1,6 @@
+allow_images=true
+allow_markup=true
+always_parse_args=true
+insensitive=true
+show=drun
+show_all=false

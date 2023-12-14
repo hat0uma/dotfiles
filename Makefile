@@ -1,10 +1,12 @@
 .PHONY: link cli gui neovim neovim_plugin neovim_paser neovim_server
 
 CONFIG_DIRS = $(sort $(abspath $(dir $(wildcard .config/*/))))
+BIN_DIRS = $(sort $(abspath $(dir $(wildcard .local/bin/*/))))
 link:
 	mkdir -p ${HOME}/.config
 	mkdir -p ${HOME}/.local/bin
 	$(foreach dir,$(CONFIG_DIRS),ln -sf $(dir) ${HOME}/.config/;)
+	$(foreach dir,$(BIN_DIRS),ln -sf $(dir) ${HOME}/.local/bin/;)
 	ln -sf ${PWD}/.zshrc ${HOME}
 	ln -sf ${PWD}/.zshenv ${HOME}
 	ln -sf ${PWD}/.xprofile ${HOME}
