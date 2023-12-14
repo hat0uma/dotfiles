@@ -74,6 +74,8 @@ yay -S --noconfirm \
 	webcord-bin \
 	grim \
 	mako \
+	swappy \
+	kvantum \
 	libnotify \
 	1password
 
