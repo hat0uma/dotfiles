@@ -1,3 +1,6 @@
+; vars
+(defvar ICON_SIZE_MEDIUM 16)
+
 ; listens
 (deflisten WORKSPACES :initial "[]" "~/.local/bin/dots/eww/get-workspaces.ts")
 (deflisten CURRENT_WORKSPACE :initial "1" "~/.local/bin/dots/eww/get-active-workspace.ts")
@@ -11,22 +14,45 @@
 (defpoll BLUETOOTH_STATUS :interval "10s" :run-while time-visible "~/.local/bin/dots/eww/get-bluetooth.ts")
 
 ; common widgets
-(defwidget _imageicon [width height path]
+(defwidget icon [size name ?tooltip ?class]
   (box
-    :width width
-    :height height
-    :style "background-image: url('${path}'); background-size: cover; background-position: center; background-repeat: no-repeat;"))
+    :width size
+    :height size
+    :class class
+    :tooltip tooltip
+    :style "
+      -gtk-icon-theme: 'Papirus';
+      background-image: -gtk-icontheme('${name}');
+      background-size: ${ size * 0.9 }px ${ size * 0.9 }px;
+      background-position: center;
+      background-repeat: no-repeat;"))
 
-(defwidget icon [text ?tooltip ?style ?class]
+(defwidget icon-medium [name ?tooltip ?class]
+  (icon
+    :name name
+    :tooltip tooltip
+    :class class
+    :size ICON_SIZE_MEDIUM))
+
+(defwidget _ttficon [text ?tooltip ?style ?class]
   (label
     :text text
     :tooltip tooltip
     :justify "center"
     :style style
     :class class
-    :height 14
-    :width 14))
+    :height ICON_SIZE_MEDIUM
+    :width ICON_SIZE_MEDIUM))
 
+(defwidget _imageicon [width height path]
+  (box
+    :width width
+    :height height
+    :style "
+      background-image: url('${path}');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;"))
 
 ; includes
 (include "./bar.yuck")

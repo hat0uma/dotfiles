@@ -5,8 +5,7 @@
   (box
     :class "slider"
     :space-evenly false
-    (icon 
-      :text {AUDIO.icon})
+    (icon-medium :name {AUDIO.icon})
     (scale
       :min 0
       :max 100
@@ -18,8 +17,7 @@
   (box
     :class "slider"
     :space-evenly false
-    (icon 
-      :text {BRIGHTNESS.icon})
+    (icon-medium :name {BRIGHTNESS.icon})
     (scale
       :min 5
       :max 100
@@ -32,7 +30,7 @@
     :class "wifi-details"
     :space-evenly false
     :spacing 8
-    (icon :text {WIFI_STATUS.icon})
+    (icon-medium :name {WIFI_STATUS.icon})
     (label :text {WIFI_STATUS.ssid})))
 
 (defwidget bluetooth_details []
@@ -40,35 +38,26 @@
     :class "bluetooth-details"
     :space-evenly false
     :spacing 8
-    (icon :text {BLUETOOTH_STATUS.icon})
+    (icon-medium :name {BLUETOOTH_STATUS.icon})
     (label :text {BLUETOOTH_STATUS.name})))
 
 ; TODO
 (defwidget power []
-  (box
-    (label
-     :class "icon-menu"
-     :text ""
-     :justify "center"
-     :xalign 0.3)))
+  (icon-medium
+   :class "icon-menu"
+   :name "system-shutdown-symbolic"))
 
 ; TODO
 (defwidget settings []
-  (label
+  (icon-medium
     :class "icon-menu"
-    :text ""
-    :justify "center"
-    :xalign 0.2))
-    ;; :yalign 0))
+    :name "emblem-system-symbolic"))
 
 ; TODO
 (defwidget screenshot []
-  (label
+  (icon-medium
     :class "icon-menu"
-    :text ""
-    :justify "center"
-    :xalign 0.3
-    :yalign 0))
+    :name "camera-photo-symbolic"))
 
 (defwidget systime []
   (box

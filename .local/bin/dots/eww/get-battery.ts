@@ -7,6 +7,35 @@ const ICONS = {
   notCharging: ["󰢟", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
 };
 
+const ICON_NAMES = {
+  charging: [
+    "battery-empty-charging-symbolic",
+    "battery-empty-charging-symbolic",
+    "battery-caution-charging-symbolic",
+    "battery-caution-charging-symbolic",
+    "battery-caution-charging-symbolic",
+    "battery-low-charging-symbolic",
+    "battery-low-charging-symbolic",
+    "battery-good-charging-symbolic",
+    "battery-good-charging-symbolic",
+    "battery-full-charging-symbolic",
+    "battery-full-charging-symbolic",
+  ],
+  notCharging: [
+    "battery-empty-symbolic",
+    "battery-empty-symbolic",
+    "battery-caution-symbolic",
+    "battery-caution-symbolic",
+    "battery-caution-symbolic",
+    "battery-low-symbolic",
+    "battery-low-symbolic",
+    "battery-good-symbolic",
+    "battery-good-symbolic",
+    "battery-full-symbolic",
+    "battery-full-symbolic",
+  ],
+};
+
 type Battery = {
   status: string;
   percentage: number;
@@ -25,9 +54,9 @@ async function getBatteryInfo(): Promise<Battery | null> {
 function getBatteryIcon(status: string, percentage: number) {
   const index = Math.floor(percentage / 10);
   if (status === "Discharging") {
-    return ICONS.notCharging[index];
+    return ICON_NAMES.notCharging[index];
   } else {
-    return ICONS.charging[index];
+    return ICON_NAMES.charging[index];
   }
 }
 

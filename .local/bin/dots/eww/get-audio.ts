@@ -8,6 +8,12 @@ const ICONS = {
   high: "󰕾",
 };
 
+const ICON_NAMES = {
+  muted: "audio-volume-muted-symbolic",
+  low: "audio-volume-low-symbolic",
+  high: "audio-volume-high-symbolic",
+};
+
 type Audio = {
   icon: string;
   volume: number;
@@ -18,7 +24,7 @@ async function getAudio(): Promise<Audio> {
   const [, volumetext] = output.split(":");
   const volume = parseFloat(volumetext);
 
-  const icon = volume <= 0 ? ICONS.muted : volume <= 0.5 ? ICONS.low : ICONS.high;
+  const icon = volume <= 0 ? ICON_NAMES.muted : volume <= 0.5 ? ICON_NAMES.low : ICON_NAMES.high;
   return {
     volume: volume,
     icon: icon,

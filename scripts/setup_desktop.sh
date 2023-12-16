@@ -16,6 +16,7 @@ yay -S --noconfirm \
 	qt6-wayland \
 	swaybg \
 	ttf-twemoji-color \
+	papirus-icon-theme \
 	xdg-desktop-portal-hyprland
 
 ########################

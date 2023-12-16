@@ -30,6 +30,22 @@ const ICONS = {
   },
 };
 
+const ICON_NAMES = {
+  wifi: {
+    disconnected: "network-wireless-offline-symbolic",
+    connected: [
+      "network-wireless-signal-weak-symbolic",
+      "network-wireless-signal-ok-symbolic",
+      "network-wireless-signal-good-symbolic",
+      "network-wireless-signal-excellent-symbolic",
+    ],
+  },
+  ethernet: {
+    connected: "network-wired-symbolic",
+    disconnected: "network-wired-disconnected-symbolic",
+  },
+};
+
 type Wifi = {
   state: "connected";
   icon: string;
@@ -53,7 +69,7 @@ async function getActiveWifiConnection() {
 
 function getWifiIcon(signal: string) {
   const index = Math.floor(parseInt(signal) / 25);
-  return ICONS.wifi.connected[index];
+  return ICON_NAMES.wifi.connected[index];
 }
 
 async function getWifi(): Promise<Wifi> {
@@ -61,7 +77,7 @@ async function getWifi(): Promise<Wifi> {
   if (activeSsid === null) {
     return {
       state: "disconnected",
-      icon: ICONS.wifi.disconnected,
+      icon: ICON_NAMES.wifi.disconnected,
     };
   }
   const icon = getWifiIcon(activeSsid.signal);

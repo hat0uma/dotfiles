@@ -5,8 +5,11 @@
   (box
     :class "battery"
     :space-evenly false
+    :spacing 4
     :tooltip {BATTERY_STATUS.extra}
-    (label :text "${BATTERY_STATUS.icon} ${BATTERY_STATUS.percentage}%")))
+    (icon-medium 
+      :name {BATTERY_STATUS.icon})
+    (label :text "${BATTERY_STATUS.percentage}%")))
 
 (defwidget clock []
     (box
@@ -30,32 +33,32 @@
   (eventbox
    :class "wifi"
    :onclick "eww open --toggle sysmenu && eww open --toggle closer"
-   (icon 
-     :text {WIFI_STATUS.icon}
+   (icon-medium 
+     :name {WIFI_STATUS.icon}
      :tooltip { WIFI_STATUS.state == "connected" ? WIFI_STATUS.ssid : "disconnected"})))
 
 (defwidget bluetooth []
   (eventbox
    :class "bluetooth"
    :onclick "eww open --toggle sysmenu && eww open --toggle closer"
-   (icon
-     :text {BLUETOOTH_STATUS.icon}
+   (icon-medium
+     :name {BLUETOOTH_STATUS.icon}
      :tooltip {BLUETOOTH_STATUS.state == "connected" ? BLUETOOTH_STATUS.name : "disconnected"})))
 
 (defwidget audio []
   (eventbox
    :class "audio"
    :onclick "eww open --toggle sysmenu && eww open --toggle closer"
-   (icon
-     :text {AUDIO.icon}
+   (icon-medium
+     :name {AUDIO.icon}
      :tooltip "${AUDIO.volume * 100}%")))
 
 (defwidget backlight []
   (eventbox
    :class "backlight"
    :onclick "eww open --toggle sysmenu && eww open --toggle closer"
-   (icon 
-     :text {BRIGHTNESS.icon}
+   (icon-medium 
+     :name {BRIGHTNESS.icon}
      :tooltip "${BRIGHTNESS.percentage}%")))
 
 (defwidget system []

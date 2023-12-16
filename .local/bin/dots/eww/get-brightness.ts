@@ -9,6 +9,13 @@ const ICONS = [
   "󰃠",
 ];
 
+const ICON_NAMES = [
+  "display-brightness-off-symbolic",
+  "display-brightness-low-symbolic",
+  "display-brightness-medium-symbolic",
+  "display-brightness-symbolic",
+];
+
 type Brightness = {
   deviceName: string;
   className: string;
@@ -27,7 +34,7 @@ async function getBrightness(): Promise<Brightness> {
     brightness: parseInt(rawBrightness),
     percentage: parseInt(rawPercent),
     maxBrightness: parseInt(rawMaxBrightness),
-    icon: ICONS[Math.floor(parseInt(rawPercent) / 25)],
+    icon: ICON_NAMES[Math.floor(parseInt(rawPercent) / 25)],
   };
 }
 
