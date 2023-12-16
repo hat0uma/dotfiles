@@ -17,7 +17,7 @@
   (box
     :class "slider"
     :space-evenly false
-    (icon-medium :name {BRIGHTNESS.icon})
+    (icon-medium :name "display-brightness-symbolic")
     (scale
       :min 5
       :max 100

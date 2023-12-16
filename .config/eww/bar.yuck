@@ -67,8 +67,8 @@
    :spacing 4
    (wifi)
    (bluetooth)
-   (audio)
-   (backlight)))
+   (audio)))
+   ;; (backlight)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; window

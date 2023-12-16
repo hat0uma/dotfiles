@@ -17,6 +17,7 @@ yay -S --noconfirm \
 	swaybg \
 	ttf-twemoji-color \
 	papirus-icon-theme \
+	pop-icon-theme \
 	xdg-desktop-portal-hyprland
 
 ########################
