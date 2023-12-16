@@ -1,9 +1,10 @@
 #!/usr/bin/env -S deno run -A --unstable
 
-import { parse } from "https://deno.land/std@0.208.0/flags/mod.ts";
-import { format } from "https://deno.land/std@0.208.0/datetime/mod.ts";
 import $ from "https://deno.land/x/dax@0.35.0/mod.ts";
 import * as hyprctl from "/lib/hyprctl.ts";
+import { Command } from "https://deno.land/x/cliffy@v1.0.0-rc.3/command/mod.ts";
+import { delay } from "https://deno.land/std@0.208.0/async/mod.ts";
+import { format } from "https://deno.land/std@0.208.0/datetime/mod.ts";
 import { join } from "https://deno.land/std@0.201.0/path/join.ts";
 
 // dependencies: grim, slurp, wl-copy, notify-send, xdg-user-dir, hyprctl, swappy
@@ -72,17 +73,25 @@ async function captureSelectedRegionAndEdit() {
 /**
  * Main
  */
-const args = parse(Deno.args, {
-  boolean: ["fullscreen", "activewindow", "regionedit"],
-  default: { fullscreen: false, activewindow: false, regionedit: false },
-});
-const saveDir = join(await $`xdg-user-dir PICTURES`.text(), "Screenshots");
-if (args.fullscreen) {
-  await captureFullScreen(saveDir);
-} else if (args.activewindow) {
-  await captureActiveWindow(saveDir);
-} else if (args.regionedit) {
-  await captureSelectedRegionAndEdit();
-} else {
-  console.error("Usage: screenshot.ts [--fullscreen | --activewindow | --regionedit]");
-}
+await new Command()
+  .option("-f, --fullscreen", "Capture full screen", { default: false })
+  .option("-a, --activewindow", "Capture active window", { default: false })
+  .option("-r, --regionedit", "Capture selected region and edit it", { default: false })
+  .option("-d, --delay <seconds:number>", "Delay in seconds", { default: 0 })
+  .action(async (opts) => {
+    const saveDir = join(await $`xdg-user-dir PICTURES`.text(), "Screenshots");
+    const delayMs = opts.delay * 1000;
+    if (opts.fullscreen) {
+      await delay(delayMs);
+      await captureFullScreen(saveDir);
+    } else if (opts.activewindow) {
+      await delay(delayMs);
+      await captureActiveWindow(saveDir);
+    } else if (opts.regionedit) {
+      await delay(delayMs);
+      await captureSelectedRegionAndEdit();
+    } else {
+      console.error("Usage: screenshot.ts [--fullscreen | --activewindow | --regionedit]");
+    }
+  })
+  .parse(Deno.args);

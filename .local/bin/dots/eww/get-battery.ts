@@ -19,7 +19,7 @@ const ICON_NAMES = {
     "battery-level-70-charging-symbolic",
     "battery-level-80-charging-symbolic",
     "battery-level-90-charging-symbolic",
-    "battery-level-100-charging-symbolic",
+    "battery-level-100-charged-symbolic",
   ],
   notCharging: [
     "battery-level-0-symbolic",
