@@ -75,7 +75,7 @@ yay -S --noconfirm \
 	slurp \
 	webcord-bin \
 	grim \
-	mako \
+	swaync \
 	swappy \
 	kvantum \
 	libnotify \

@@ -32,7 +32,7 @@
 (defwidget wifi []
   (eventbox
    :class "wifi"
-   :onclick "eww open --toggle sysmenu && eww open --toggle closer"
+   :onclick "eww open-many --toggle sysmenu closer"
    (icon-medium 
      :name {WIFI_STATUS.icon}
      :tooltip { WIFI_STATUS.state == "connected" ? WIFI_STATUS.ssid : "disconnected"})))
@@ -40,7 +40,7 @@
 (defwidget bluetooth []
   (eventbox
    :class "bluetooth"
-   :onclick "eww open --toggle sysmenu && eww open --toggle closer"
+   :onclick "eww open-many --toggle sysmenu closer"
    (icon-medium
      :name {BLUETOOTH_STATUS.icon}
      :tooltip {BLUETOOTH_STATUS.state == "connected" ? BLUETOOTH_STATUS.name : "disconnected"})))
@@ -48,7 +48,7 @@
 (defwidget audio []
   (eventbox
    :class "audio"
-   :onclick "eww open --toggle sysmenu && eww open --toggle closer"
+   :onclick "eww open-many --toggle sysmenu closer"
    (icon-medium
      :name {AUDIO.icon}
      :tooltip "${AUDIO.volume * 100}%")))
@@ -56,7 +56,7 @@
 (defwidget backlight []
   (eventbox
    :class "backlight"
-   :onclick "eww open --toggle sysmenu && eww open --toggle closer"
+   :onclick "eww open-many --toggle sysmenu closer"
    (icon-medium 
      :name {BRIGHTNESS.icon}
      :tooltip "${BRIGHTNESS.percentage}%")))

@@ -43,21 +43,31 @@
 
 ; TODO
 (defwidget power []
-  (icon-medium
-   :class "icon-menu"
-   :name "system-shutdown-symbolic"))
+  (eventbox
+    :onclick "eww close sysmenu closer; eww open powermenu"
+    :tooltip "Open power menu"
+    (icon-medium
+      :class "icon-menu"
+      :name "system-shutdown-symbolic")))
 
 ; TODO
 (defwidget settings []
-  (icon-medium
-    :class "icon-menu"
-    :name "emblem-system-symbolic"))
+  (eventbox
+    :onclick "eww close sysmenu closer; eww open settings"
+    :tooltip "Open settings"
+    (icon-medium
+      :class "icon-menu"
+      :name "preferences-system-symbolic")))
 
 ; TODO
 (defwidget screenshot []
-  (icon-medium
-    :class "icon-menu"
-    :name "camera-photo-symbolic"))
+  (eventbox
+    :onclick "eww close sysmenu closer; ~/.local/bin/dots/screenshot.ts --fullscreen --delay 5 &"
+    :tooltip "Take screenshot"
+    (icon-medium
+      :class "icon-menu"
+      :name "camera-photo-symbolic")))
+    
 
 (defwidget systime []
   (box
