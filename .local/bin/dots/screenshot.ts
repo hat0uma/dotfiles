@@ -6,7 +6,7 @@ import { Command } from "https://deno.land/x/cliffy@v1.0.0-rc.3/command/mod.ts";
 import { delay } from "https://deno.land/std@0.208.0/async/mod.ts";
 import { format } from "https://deno.land/std@0.208.0/datetime/mod.ts";
 import { join } from "https://deno.land/std@0.201.0/path/join.ts";
-import { notifySend } from "./lib/notify.ts";
+import { notify } from "./lib/notify.ts";
 
 /**
  * Check dependencies are installed, otherwise exit.
@@ -47,15 +47,13 @@ const edit = (img: Uint8Array) => $`swappy -f -`.stdin(img);
  */
 async function notifySave(title: string, message: string, saveDir: string, file: string) {
   const path = join(saveDir, file);
-  const choice = await notifySend(title, message, {
-    actions: [
-      { name: "open_folder", text: "Open Folder" },
-      { name: "edit", text: "Edit" },
-    ],
-    icon: path,
-    timeout: 10000,
-    transient: true,
-  });
+  const choice = await notify(title, message)
+    .setIcon(path)
+    .setTimeout(10000)
+    .setTransient()
+    .addAction("open_folder", "Open Folder")
+    .addAction("edit", "Edit")
+    .send();
 
   switch (choice) {
     case "open_folder":
