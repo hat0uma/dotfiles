@@ -62,7 +62,7 @@
 ; TODO
 (defwidget screenshot []
   (eventbox
-    :onclick "eww close sysmenu closer; ~/.local/bin/dots/screenshot.ts --fullscreen --delay 5 &"
+    :onclick "eww close sysmenu closer; ~/.local/bin/dots/screenshot.ts --fullscreen --delay 0.5 &"
     :tooltip "Take screenshot"
     (icon-medium
       :class "icon-menu"
