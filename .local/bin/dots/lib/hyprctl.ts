@@ -1,6 +1,6 @@
 import $ from "https://deno.land/x/dax@0.35.0/mod.ts";
 
-interface Workspace {
+export type Workspace = {
   id: number;
   name: string;
   monitor: string;
@@ -8,15 +8,15 @@ interface Workspace {
   hasfullscreen: boolean;
   lastwindow: string;
   lastwindowtitle: string;
-}
-type Workspaces = Workspace[];
+};
+export type Workspaces = Workspace[];
 
-interface WorkspaceName {
+export type WorkspaceName = {
   id: number;
   name: string;
-}
+};
 
-interface Monitor {
+export type Monitor = {
   id: number;
   name: string;
   description: string;
@@ -36,11 +36,11 @@ interface Monitor {
   focused: boolean;
   dpmsStatus: boolean;
   vrr: boolean;
-}
+};
 
-type Monitors = Monitor[];
+export type Monitors = Monitor[];
 
-interface Window {
+export type Window = {
   address: string;
   mapped: boolean;
   hidden: boolean;
@@ -61,7 +61,33 @@ interface Window {
   fakeFullscreen: boolean;
   grouped: string[];
   swallowing: string;
-}
+};
+
+export type Client = {
+  address: string;
+  mapped: boolean;
+  hidden: boolean;
+  at: [number, number];
+  size: [number, number];
+  workspace: { id: number; name: string };
+  floating: boolean;
+  monitor: number;
+  class: string;
+  title: string;
+  initialClass: string;
+  initialTitle: string;
+  pid: number;
+  xwayland: boolean;
+  pinned: boolean;
+  fullscreen: boolean;
+  fullscreenMode: number;
+  fakeFullscreen: boolean;
+  grouped: string[];
+  swallowing: string;
+  focusHistoryID: number;
+};
+
+type Clients = Client[];
 
 export async function fetchMonitors() {
   return await $`hyprctl monitors -j`.json<Monitors>();
@@ -73,4 +99,8 @@ export async function fetchWorkspaces() {
 
 export async function fetchActiveWindow() {
   return await $`hyprctl activewindow -j`.json<Window>();
+}
+
+export async function fetchClients() {
+  return await $`hyprctl clients -j`.json<Clients>();
 }

@@ -36,10 +36,39 @@ const gtk = Deno.dlopen(LIBGTK, {
     parameters: ["pointer"],
     result: "pointer",
   },
+  gtk_icon_theme_new: {
+    parameters: [],
+    result: "pointer",
+  },
+  gtk_icon_theme_set_custom_theme: {
+    parameters: ["pointer", "buffer"],
+    result: "void",
+  },
+  g_object_unref: {
+    parameters: ["pointer"],
+    result: "void",
+  },
 });
 
 export function initGtk() {
   gtk.symbols.gtk_init(null, null);
+}
+
+export function getIconPathTheme(themeName: string, iconName: string, size: number, flags: IconLookupFlags) {
+  // default theme is owned by gtk.
+  const theme = gtk.symbols.gtk_icon_theme_new();
+  gtk.symbols.gtk_icon_theme_set_custom_theme(theme, str2cstr(themeName));
+  const iconInfoPtr = gtk.symbols.gtk_icon_theme_lookup_icon(theme, str2cstr(iconName), size, flags);
+  if (!iconInfoPtr) {
+    gtk.symbols.g_object_unref(theme);
+    return null;
+  }
+
+  // filenamePtr is owned by gtk.
+  const filenamePtr = gtk.symbols.gtk_icon_info_get_filename(iconInfoPtr);
+  const filename = filenamePtr ? ptr2str(filenamePtr) : null;
+  gtk.symbols.g_object_unref(theme);
+  return filename;
 }
 
 export function getIconPath(iconName: string, size: number, flags: IconLookupFlags) {

@@ -27,7 +27,10 @@
           :width 24
           :class "workspace ${WORKSPACE.id == CURRENT_WORKSPACE ? "current" : ""} ${WORKSPACE.windows > 0 ? "" : "empty"}"
           :onclick "hyprctl dispatch workspace ${WORKSPACE.id}"
-          (label :text "${WORKSPACE.name}")))))
+          (box 
+            (label :text "${WORKSPACE.name}")
+            (iconfont :text "${WORKSPACE.icon}  "))))))
+            
 
 (defwidget wifi []
   (eventbox

@@ -1,21 +1,41 @@
 #!/usr/bin/env -S deno run -A --unstable
 
+import { lookupIcon } from "/lib/iconfont.ts";
 import { listenHyprlandSocketEvent } from "/lib/event.ts";
 import * as hyprctl from "/lib/hyprctl.ts";
+import type { Workspace } from "/lib/hyprctl.ts";
 
 const windows = new Map<string, {
   ownerWorkspace: string;
   class: string;
 }>();
 
-async function getWorkspaces() {
-  const workspaces = await hyprctl.fetchWorkspaces();
-  return workspaces.sort((a, b) => a.id - b.id);
+async function getWorkspaces(): Promise<(Workspace & { icon: string })[]> {
+  const workspaces = (await hyprctl.fetchWorkspaces()).sort((a, b) => a.id - b.id);
+  return workspaces.map((w) => {
+    const lastwindow = windows.get(w.lastwindow);
+    if (lastwindow) {
+      const icon = lookupIcon(lastwindow.class);
+      return { ...w, icon: icon };
+    } else {
+      return { ...w, icon: "" };
+    }
+  });
+}
+
+async function initWindows() {
+  const clients = await hyprctl.fetchClients();
+  for (const client of clients) {
+    if (client.workspace.id === -1) continue;
+    if (client.workspace.name === "") continue;
+    if (client.class === "") continue;
+    windows.set(client.address, { ownerWorkspace: client.workspace.name, class: client.class });
+  }
 }
 
 // initial value
-const workspaces = await getWorkspaces();
-console.log(JSON.stringify(workspaces));
+await initWindows();
+console.log(JSON.stringify(await getWorkspaces()));
 
 // on changed
 await listenHyprlandSocketEvent(async (event) => {
@@ -30,11 +50,10 @@ await listenHyprlandSocketEvent(async (event) => {
     }
     case "movewindow": {
       const window = windows.get(event.windowAddress);
-      window && (window.ownerWorkspace = event.workspaceName);
+      if (window) window.ownerWorkspace = event.workspaceName;
       break;
     }
   }
   // TODO: handle another event
-  const workspaces = await getWorkspaces();
-  console.log(JSON.stringify(workspaces));
+  console.log(JSON.stringify(await getWorkspaces()));
 });
