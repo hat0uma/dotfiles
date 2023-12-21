@@ -11,16 +11,13 @@ const windows = new Map<string, {
 }>();
 
 async function getWorkspaces(): Promise<(Workspace & { icon: string })[]> {
-  const workspaces = (await hyprctl.fetchWorkspaces()).sort((a, b) => a.id - b.id);
-  return workspaces.map((w) => {
-    const lastwindow = windows.get(w.lastwindow);
-    if (lastwindow) {
-      const icon = lookupIcon(lastwindow.class);
-      return { ...w, icon: icon };
-    } else {
-      return { ...w, icon: "" };
-    }
-  });
+  const workspaces = await hyprctl.fetchWorkspaces();
+  return workspaces
+    .sort((a, b) => a.id - b.id)
+    .map((w) => {
+      const lastwindow = windows.get(w.lastwindow);
+      return { ...w, icon: lastwindow ? lookupIcon(lastwindow.class) : "" };
+    });
 }
 
 async function initWindows() {

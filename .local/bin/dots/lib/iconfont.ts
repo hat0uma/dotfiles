@@ -4,6 +4,7 @@ const ICONS = await fetchIcons();
 const ICON_DEFAULT = "";
 const ICON_OVERRIDES = new Map<string, string>([
   // case insensitive
+  // [window class, icon name]
   ["foot", "terminal"],
   ["wezterm", "terminal"],
   ["webcord", "discord"],
