@@ -5,52 +5,24 @@ import { listenHyprlandSocketEvent } from "/lib/event.ts";
 import * as hyprctl from "/lib/hyprctl.ts";
 import type { Workspace } from "/lib/hyprctl.ts";
 
-const windows = new Map<string, {
-  ownerWorkspace: string;
-  class: string;
-}>();
-
+// fetch workspaces from hyprland
+// Ideally, we should use `openwindow`, `closewindow`, and other events to update windows.
+// However, fetching clients is easier compared to handling these events.
 async function getWorkspaces(): Promise<(Workspace & { icon: string })[]> {
+  const clients = await hyprctl.fetchClients();
   const workspaces = await hyprctl.fetchWorkspaces();
   return workspaces
     .sort((a, b) => a.id - b.id)
     .map((w) => {
-      const lastwindow = windows.get(w.lastwindow);
+      const lastwindow = clients.find((c) => c.address === w.lastwindow);
       return { ...w, icon: lastwindow ? lookupIcon(lastwindow.class) : "" };
     });
 }
 
-async function initWindows() {
-  const clients = await hyprctl.fetchClients();
-  for (const client of clients) {
-    if (client.workspace.id === -1) continue;
-    if (client.workspace.name === "") continue;
-    if (client.class === "") continue;
-    windows.set(client.address, { ownerWorkspace: client.workspace.name, class: client.class });
-  }
-}
-
 // initial value
-await initWindows();
 console.log(JSON.stringify(await getWorkspaces()));
 
 // on changed
-await listenHyprlandSocketEvent(async (event) => {
-  switch (event.eventType) {
-    case "openwindow": {
-      windows.set(event.windowAddress, { ownerWorkspace: event.workspaceName, class: event.windowClass });
-      break;
-    }
-    case "closewindow": {
-      windows.delete(event.windowAddress);
-      break;
-    }
-    case "movewindow": {
-      const window = windows.get(event.windowAddress);
-      if (window) window.ownerWorkspace = event.workspaceName;
-      break;
-    }
-  }
-  // TODO: handle another event
+await listenHyprlandSocketEvent(async (_) => {
   console.log(JSON.stringify(await getWorkspaces()));
 });
