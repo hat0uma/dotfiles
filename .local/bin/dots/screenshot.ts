@@ -6,7 +6,7 @@ import { Command } from "https://deno.land/x/cliffy@v1.0.0-rc.3/command/mod.ts";
 import { delay } from "https://deno.land/std@0.208.0/async/mod.ts";
 import { format } from "https://deno.land/std@0.208.0/datetime/mod.ts";
 import { join } from "https://deno.land/std@0.201.0/path/join.ts";
-import { notify } from "./lib/notify.ts";
+import { notify } from "/lib/notify.ts";
 
 /**
  * Check dependencies are installed, otherwise exit.

@@ -84,7 +84,8 @@ async function loadIcons(): Promise<Map<string, string>> {
 
 // lookup icon by name
 export function lookupIcon(iconName: string): string {
-  const lookupName = (ICON_OVERRIDES.get(iconName) ?? iconName).toLowerCase();
+  const iconNameLower = iconName.toLowerCase();
+  const lookupName = ICON_OVERRIDES.get(iconNameLower) ?? iconNameLower;
   const icon = icons.get(lookupName) ?? ICON_DEFAULT;
   return icon;
 }
