@@ -41,10 +41,9 @@
     (icon-medium :name {BLUETOOTH_STATUS.icon})
     (label :text {BLUETOOTH_STATUS.name})))
 
-; TODO
 (defwidget power []
   (eventbox
-    :onclick "eww close sysmenu closer; eww open powermenu"
+    :onclick "eww close sysmenu closer; eww open powermenu; hyprctl dispatch submap powermenu"
     :tooltip "Open power menu"
     (icon-medium
       :class "icon-menu"

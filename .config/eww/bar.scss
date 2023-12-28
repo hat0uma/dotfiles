@@ -16,6 +16,7 @@
   border: 1px solid $base;
   padding: 0 8px;
 }
+
 .systray {
   border-radius: 8px;
   border: 1px solid $base;
@@ -24,8 +25,10 @@
 .battery,
 .system,
 .systray {
+  color: $text;
   background-color: $surface0;
 }
+
 .clock {
   background-color: $lavender;
   color: $base;

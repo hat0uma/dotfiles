@@ -7,11 +7,11 @@
 (deflisten WINDOW :initial "..." "~/.local/bin/dots/eww/get-window-title.ts")
 
 ; polls
-(defpoll AUDIO :interval "1s" :run-while time-visible "~/.local/bin/dots/eww/get-audio.ts")
-(defpoll BRIGHTNESS :interval "1s" :run-while time-visible "~/.local/bin/dots/eww/get-brightness.ts")
-(defpoll WIFI_STATUS :interval "1s" :run-while time-visible "~/.local/bin/dots/eww/get-wifi.ts")
-(defpoll BATTERY_STATUS :interval "10s" :run-while time-visible "~/.local/bin/dots/eww/get-battery.ts")
-(defpoll BLUETOOTH_STATUS :interval "10s" :run-while time-visible "~/.local/bin/dots/eww/get-bluetooth.ts")
+(defpoll AUDIO :interval "1s" "~/.local/bin/dots/eww/get-audio.ts")
+(defpoll BRIGHTNESS :interval "1s" "~/.local/bin/dots/eww/get-brightness.ts")
+(defpoll WIFI_STATUS :interval "1s" "~/.local/bin/dots/eww/get-wifi.ts")
+(defpoll BATTERY_STATUS :interval "10s" "~/.local/bin/dots/eww/get-battery.ts")
+(defpoll BLUETOOTH_STATUS :interval "10s" "~/.local/bin/dots/eww/get-bluetooth.ts")
 
 ; common widgets
 (defwidget icon [size name ?tooltip ?class]
@@ -58,3 +58,4 @@
 ; includes
 (include "./bar.yuck")
 (include "./sysmenu.yuck")
+(include "./powermenu.yuck")

@@ -1,0 +1,71 @@
+(defpoll DP_WIDTH :interval "1h" "hyprctl monitors -j | jq '.[0].width'")
+(defpoll DP_HEIGHT :interval "1h" "hyprctl monitors -j | jq '.[0].height'")
+
+(defwidget powermenu-item [icon label sublabel onclick]
+  (button
+    :class "powermenu-item"
+    :onclick onclick
+    (box
+      :space-evenly false
+      :orientation "vertical"
+      (icon
+        :class "powermenu-item-icon"
+        :size 72
+        :name icon)
+      (label
+        :class "powermenu-item-label"
+        :text label)
+      (label
+        :class "powermenu-item-sublabel"
+        :text sublabel))))
+
+; keybindings are defined with hyprland's submap `powermenu`
+(defwindow powermenu
+  :monitor 0
+  :stacking "overlay"
+  :geometry (geometry
+             :width "100%"
+             :height "100%"
+             :x "0%"
+             :y "-4%") ; bar height
+  (box
+    :class "powermenu-container"
+    :orientation "vertical"
+    :spacing 0
+    :space-evenly false
+    :halign "center"
+    :valign "center"
+    (box
+      :orientation "horizontal"
+      :spacing 0
+      :space-evenly false
+      (powermenu-item
+        :label "Reboot"
+        :sublabel "Shift+r"
+        :icon "system-reboot-symbolic"
+        :onclick "systemctl reboot")
+      (powermenu-item
+        :label "Poweroff"
+        :sublabel "Shift+s"
+        :icon "system-shutdown-symbolic"
+        :onclick "systemctl poweroff")
+      (powermenu-item
+        :label "Suspend"
+        :sublabel "Shift+z"
+        :icon "system-suspend-symbolic"
+        :onclick "systemctl suspend"))
+    (box
+      :orientation "horizontal"
+      :spacing 0
+      :space-evenly false
+      (powermenu-item
+        :label "Lock"
+        :sublabel "Shift+l"
+        :icon "system-lock-screen-symbolic"
+        :onclick "swaylock -f -c 000000")
+      (powermenu-item
+        :label "Logout"
+        :sublabel "Shift+q"
+        :icon "system-log-out-symbolic"
+        :onclick "hyprctl dispatch exit"))))
+
