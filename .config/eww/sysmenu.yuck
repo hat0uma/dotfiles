@@ -25,6 +25,7 @@
       :width 240
       :onchange "brightnessctl set {}%")))
 
+; TODO
 (defwidget wifi_details []
   (box
     :class "wifi-details"
@@ -33,6 +34,7 @@
     (icon-medium :name {WIFI_STATUS.icon})
     (label :text {WIFI_STATUS.ssid})))
 
+; TODO
 (defwidget bluetooth_details []
   (box
     :class "bluetooth-details"
@@ -49,16 +51,6 @@
       :class "icon-menu"
       :name "system-shutdown-symbolic")))
 
-; TODO
-(defwidget settings []
-  (eventbox
-    :onclick "eww close sysmenu closer; eww open settings"
-    :tooltip "Open settings"
-    (icon-medium
-      :class "icon-menu"
-      :name "preferences-system-symbolic")))
-
-; TODO
 (defwidget screenshot []
   (eventbox
     :onclick "eww close sysmenu closer; ~/.local/bin/dots/screenshot.ts --fullscreen --delay 0.5 &"
@@ -111,7 +103,6 @@
         :orientation "h"
         :spacing 4
         (screenshot)
-        (settings)
         (power)))
     (backlight_slider)
     (volume_slider)

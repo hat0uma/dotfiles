@@ -79,7 +79,8 @@ yay -S --noconfirm \
 	swappy \
 	kvantum \
 	libnotify \
-	1password
+	1password \
+	pcmanfm-qt
 
 # gh auth login
 # gh auth setup-git
