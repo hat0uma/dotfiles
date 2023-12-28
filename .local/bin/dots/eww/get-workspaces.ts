@@ -8,14 +8,16 @@ import type { Workspace } from "/lib/hyprctl.ts";
 // fetch workspaces from hyprland
 // Ideally, we should use `openwindow`, `closewindow`, and other events to update windows.
 // However, fetching clients is easier compared to handling these events.
-async function getWorkspaces(): Promise<(Workspace & { icon: string })[]> {
+async function getWorkspaces(): Promise<(Workspace & { icons: string })[]> {
   const clients = await hyprctl.fetchClients();
   const workspaces = await hyprctl.fetchWorkspaces();
+
   return workspaces
     .sort((a, b) => a.id - b.id)
     .map((w) => {
-      const lastwindow = clients.find((c) => c.address === w.lastwindow);
-      return { ...w, icon: lastwindow ? lookupIcon(lastwindow.class) : "" };
+      const windows = clients.filter((c) => c.workspace.id === w.id);
+      const icons = windows.map((c) => lookupIcon(c.class)).filter((i) => i !== "");
+      return { ...w, icons: icons.join("  ") };
     });
 }
 
