@@ -457,4 +457,17 @@ return {
       return vim.env.ENABLE_NVIM_AI_PLUGINS == "1"
     end,
   },
+  {
+    "chipsenkbeil/distant.nvim",
+    branch = "v0.3",
+    config = function()
+      require("distant"):setup {}
+    end,
+    cmd = {
+      "DistantInstall",
+      "DistantClientVersion",
+      "DistantConnect",
+      "DistantLaunch",
+    },
+  },
 }
