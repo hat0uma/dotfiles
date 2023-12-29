@@ -17,7 +17,7 @@ async function getWorkspaces(): Promise<(Workspace & { icons: string })[]> {
     .map((w) => {
       const windows = clients.filter((c) => c.workspace.id === w.id);
       const icons = windows.map((c) => lookupIcon(c.class)).filter((i) => i !== "");
-      return { ...w, icons: icons.join("  ") };
+      return { ...w, icons: [...new Set(icons)].join("  ") };
     });
 }
 
