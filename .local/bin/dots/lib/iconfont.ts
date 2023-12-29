@@ -13,6 +13,7 @@ const ICON_OVERRIDES = new Map<string, string>([
   ["foot", "terminal"],
   ["wezterm", "terminal"],
   ["webcord", "discord"],
+  ["pcmanfm-qt", "folder"],
 ]);
 
 type FontAwesomeIcon = {
