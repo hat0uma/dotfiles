@@ -24,32 +24,16 @@ yay -S --noconfirm \
 # display manager
 ########################
 say -S --noconfirm \
-	sddm \
-	rsync \
-	qt5-graphicaleffects \
-	qt5-svg \
-	qt5-suickcontrols2
+	greetd \
+	greetd-tuigreet
 
-sudo systemctl enable sddm
-
-git clone https://github.com/catppuccin/sddm /tmp/catppuccin-sddm
-cd /tmp/catppuccin-sddm || exit
-git pull
-sudo rsync -av src/ /usr/share/sddm/themes/
-
-sudo mkdir -p /etc/sddm.conf.d/
-cat <<EOF | sudo tee /etc/sddm.conf.d/user.conf
-[Autologin]
-User=$(whoami)
-Session=hyprland
-[Theme]
-Current=catppuccin-frappe
-[wayland]
-EnableHiDPI=true
+sudo systemctl enable --now greetd
+cat <<EOF | sudo tee /etc/greetd/config.toml
+[terminal]
+vt = 1
+[default_session]
+command = "tuigreet --time --remember --remember-session --asterisks --cmd='zsh --login -c Hyprland'"
 EOF
-# edit /usr/share/sddm/themes/catppuccin-frappe/theme.conf
-# Font="UDEV Gothic NF"
-# FontSize=14
 
 ########################
 # ime
