@@ -78,13 +78,22 @@ local function save_handle()
   end
 end
 
+local formatter_for_ts = function(bufnr)
+  local deno = vim.lsp.get_clients { bufnr = bufnr, name = "denols" }
+  if #deno > 0 then
+    return {} -- deno lsp has its own formatter
+  else
+    return { { "prettierd", "prettier" } }
+  end
+end
+
 M.config = function()
   require("conform").setup {
     formatters_by_ft = {
       lua = { "stylua" },
       python = { "isort", "black" },
-      typescript = { { "prettierd", "prettier" } },
-      typescriptreact = { { "prettierd", "prettier" } },
+      typescript = formatter_for_ts,
+      typescriptreact = formatter_for_ts,
       css = { { "prettierd", "prettier" } },
       scss = { { "prettierd", "prettier" } },
       json = { "fixjson" },
