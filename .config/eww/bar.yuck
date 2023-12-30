@@ -50,7 +50,7 @@
    :class "audio"
    (icon-medium
      :name {AUDIO.icon}
-     :tooltip "${AUDIO.volume * 100}%")))
+     :tooltip "${ round((AUDIO.volume?:0) * 100 ,1)}%")))
 
 (defwidget backlight []
   (eventbox

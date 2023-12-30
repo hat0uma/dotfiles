@@ -7,11 +7,11 @@
 (deflisten WINDOW :initial "..." "~/.local/bin/dots/eww/get-window-title")
 
 ; polls
-(defpoll AUDIO :interval "1s" "~/.local/bin/dots/eww/get-audio")
-(defpoll BRIGHTNESS :interval "1s" "~/.local/bin/dots/eww/get-brightness")
-(defpoll WIFI_STATUS :interval "1s" "~/.local/bin/dots/eww/get-wifi")
-(defpoll BATTERY_STATUS :interval "10s" "~/.local/bin/dots/eww/get-battery")
-(defpoll BLUETOOTH_STATUS :interval "10s" "~/.local/bin/dots/eww/get-bluetooth")
+(defpoll AUDIO :interval "1s" :initial "{}" "~/.local/bin/dots/eww/get-audio")
+(defpoll BRIGHTNESS :interval "1s" :initial "{}" "~/.local/bin/dots/eww/get-brightness")
+(defpoll WIFI_STATUS :interval "1s" :initial "{}" "~/.local/bin/dots/eww/get-wifi")
+(defpoll BATTERY_STATUS :interval "10s" :initial "{}" "~/.local/bin/dots/eww/get-battery")
+(defpoll BLUETOOTH_STATUS :interval "10s" :initial "{}" "~/.local/bin/dots/eww/get-bluetooth")
 
 ; common widgets
 (defwidget icon [size name ?tooltip ?class]
