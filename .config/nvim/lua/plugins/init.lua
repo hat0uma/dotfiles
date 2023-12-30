@@ -236,14 +236,6 @@ return {
   },
 
   {
-    "ojroques/vim-oscyank",
-    init = function()
-      vim.cmd [[ autocmd TextYankPost * if v:event.operator is 'y' && v:event.regname is '+' | execute 'OSCYankRegister +' | endif ]]
-    end,
-    -- cmd = { "OSCYank", "OSCYankRegister" },
-    event = "TextYankPost",
-  },
-  {
     "pwntester/octo.nvim",
     dependencies = {
       "nvim-lua/plenary.nvim",

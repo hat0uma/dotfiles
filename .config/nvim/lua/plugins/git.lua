@@ -11,28 +11,18 @@ return {
     dependencies = {
       "plenary.nvim",
       "open-browser.vim",
-      "vim-oscyank",
     },
-    config = function()
-      require("gitlinker").setup {
-        mapping = false,
-      }
-
-      local opts = { silent = true }
-      local browse = { action = vim.fn["openbrowser#open"] }
-      local yank = { action = vim.fn.OSCYank }
-      vim.keymap.set({ "n", "x" }, ",y", function()
-        require("gitlinker").link(yank)
-      end, opts)
-      vim.keymap.set({ "n", "x" }, ",x", function()
-        require("gitlinker").link(browse)
-      end, opts)
+    init = function()
+      local opts = { silent = true, noremap = true }
+      vim.keymap.set({ "n", "v" }, ",y", "<cmd>GitLink<CR>", opts)
+      vim.keymap.set({ "n", "x" }, ",x", "<cmd>GitLink!<CR>", opts)
+      vim.keymap.set({ "n", "v" }, ",Y", "<cmd>GitLink blame<CR>", opts)
+      vim.keymap.set({ "n", "x" }, ",X", "<cmd>GitLink! blame<CR>", opts)
     end,
-    keys = {
-      { ",y", mode = { "n", "v" } },
-      { ",x", mode = { "n", "v" } },
-      { ",X", mode = "n" },
-    },
+    config = function()
+      require("gitlinker").setup {}
+    end,
+    cmd = { "GitLink" },
   },
   {
     "NeogitOrg/neogit",
