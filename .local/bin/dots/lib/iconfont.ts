@@ -11,6 +11,7 @@ const ICON_OVERRIDES = new Map<string, string>([
   // case insensitive
   // [window class, icon name]
   ["foot", "terminal"],
+  ["footclient", "terminal"],
   ["wezterm", "terminal"],
   ["webcord", "discord"],
   ["pcmanfm-qt", "folder"],
