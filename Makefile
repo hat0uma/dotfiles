@@ -1,4 +1,4 @@
-.PHONY: link cli gui neovim neovim_plugin neovim_paser neovim_server
+.PHONY: link cli gui sdk neovim neovim_plugin neovim_paser neovim_server
 
 CONFIG_DIRS = $(sort $(abspath $(dir $(wildcard .config/*/))))
 BIN_DIRS = $(sort $(abspath $(dir $(wildcard .local/bin/*/))))
@@ -43,6 +43,9 @@ gui:
 	tar xvf goneovim-linux.tar.bz2 -C ${HOME}/.local/ && \
 		rm goneovim-linux.tar.bz2
 	ln -sf ${HOME}/.local/goneovim-linux/goneovim ~/.local/bin/goneovim
+
+sdk:
+	sudo npm install -g vscode-langservers-extracted typescript 
 
 neovim_plugin:
 	nvim --headless "+Lazy! sync" +qa

@@ -23,6 +23,9 @@ M.configurations = {
         workspace = {
           checkThirdParty = false,
         },
+        completion = {
+          callSnippet = "Replace",
+        },
         telemetry = {
           enable = false,
         },

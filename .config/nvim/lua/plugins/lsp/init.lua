@@ -1,5 +1,13 @@
-local function toSnakeCase(str)
-  return string.gsub(str, "%s*[- ]%s*", "_")
+--- make client capabilies
+---@return table
+local function make_client_capabilies()
+  local capabilities = require("cmp_nvim_lsp").default_capabilities()
+  capabilities.textDocument.completion.completionItem.snippetSupport = true
+  capabilities.textDocument.foldingRange = {
+    dynamicRegistration = false,
+    lineFoldingOnly = true,
+  }
+  return capabilities
 end
 
 return {
@@ -7,7 +15,6 @@ return {
   "Hoffs/omnisharp-extended-lsp.nvim",
   "b0o/schemastore.nvim",
   "pmizio/typescript-tools.nvim",
-  -- "jose-elias-alvarez/typescript.nvim",
   {
     "williamboman/mason.nvim",
     config = function()
@@ -82,6 +89,7 @@ return {
     config = function()
       require "mason-lspconfig"
 
+      --- create capabilities
       --- @type table
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
       capabilities.textDocument.completion.completionItem.snippetSupport = true
@@ -90,39 +98,31 @@ return {
         lineFoldingOnly = true,
       }
 
-      local on_attach = function(client, bufnr)
-        -- vim.notify(string.format("  %s", client.name))
-        --- https://github.com/OmniSharp/omnisharp-roslyn/issues/2483
-        if client.name == "omnisharp" or client.name == "omnisharp_mono" then
-          local tokenModifiers = client.server_capabilities.semanticTokensProvider.legend.tokenModifiers
-          for i, v in ipairs(tokenModifiers) do
-            tokenModifiers[i] = toSnakeCase(v)
-          end
-          local tokenTypes = client.server_capabilities.semanticTokensProvider.legend.tokenTypes
-          for i, v in ipairs(tokenTypes) do
-            tokenTypes[i] = toSnakeCase(v)
-          end
-        end
-        if client.server_capabilities.documentSymbolProvider then
-          require("nvim-navic").attach(client, bufnr)
-        end
-        require("plugins.lsp.format").on_attach(client, bufnr)
-        require("plugins.lsp.keymap").on_attach(client, bufnr)
-      end
-      local default_opts = { on_attach = on_attach, capabilities = capabilities }
+      -- autocmd for lsp attach
+      vim.api.nvim_create_autocmd("LspAttach", {
+        group = vim.api.nvim_create_augroup("UserLspConfig", {}),
+        callback = function(ev)
+          local bufnr = ev.buf
+          local client = vim.lsp.get_client_by_id(ev.data.client_id)
+          assert(client, "client not found")
 
+          -- vim.notify(string.format("  %s", client.name))
+          if client.server_capabilities.documentSymbolProvider then
+            require("nvim-navic").attach(client, bufnr)
+          end
+          require("plugins.lsp.format").on_attach(client, bufnr)
+          require("plugins.lsp.keymap").on_attach(client, bufnr)
+        end,
+      })
+
+      -- setup servers with lspconfig
       local servers = require("plugins.lsp.server").configurations
-      for name, opts in pairs(servers) do
-        opts = vim.tbl_deep_extend("force", default_opts, opts or {})
-        if name == "tsserver" then
-          require("typescript").setup { server = opts }
-        elseif name == "omnisharp" and vim.fn.has "win64" ~= 1 then
-          require("lspconfig")["omnisharp_mono"].setup(opts)
-        elseif name == "gopls" and vim.fn.executable "gopls" == 1 then
+      for name, _opts in pairs(servers) do
+        local opts = vim.tbl_deep_extend("force", { capabilities = capabilities }, _opts or {})
+        if name == "gopls" and vim.fn.executable "gopls" == 1 then
           require("go").setup {
             lsp_cfg = opts,
             lsp_keymaps = false,
-            lsp_on_attach = opts.on_attach,
             diagnostic_hdlr = false,
           }
         else
@@ -130,18 +130,14 @@ return {
         end
       end
 
-      --- https://github.com/neovim/nvim-lspconfig/issues/2366
-      vim.lsp.handlers["workspace/diagnostic/refresh"] = function(_, _, ctx)
-        local ns = vim.lsp.diagnostic.get_namespace(ctx.client_id)
-        local bufnr = vim.api.nvim_get_current_buf()
-        vim.diagnostic.reset(ns, bufnr)
-        return true
-      end
-
+      -- others
       require("plugins.lsp.keymap").global_map()
       require("plugins.lsp.diagnostic").setup()
       -- require("plugins.null-ls").setup_sources { on_attach = on_attach }
-      require("typescript-tools").setup { on_attach = on_attach }
+      require("typescript-tools").setup {
+        single_file_support = false,
+        root_dir = require("lspconfig").util.root_pattern "tsconfig.json",
+      }
       require("clangd_extensions").setup {}
     end,
     dependencies = {
