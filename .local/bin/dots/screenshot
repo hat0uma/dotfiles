@@ -1,4 +1,6 @@
-#!/usr/bin/env -S deno run -A --unstable
+#!/usr/bin/env -S deno run -A --unstable --ext=ts
+
+// vim: set ft=typescript:
 
 import $ from "https://deno.land/x/dax@0.35.0/mod.ts";
 import * as hyprctl from "/lib/hyprctl.ts";
@@ -143,7 +145,7 @@ await new Command()
       await delay(delayMs);
       await captureSelectedRegionAndEdit();
     } else {
-      console.error("Usage: screenshot.ts [--fullscreen | --activewindow | --regionedit]");
+      console.error("Usage: screenshot [--fullscreen | --activewindow | --regionedit]");
     }
   })
   .parse(Deno.args);

@@ -64,7 +64,8 @@ yay -S --noconfirm \
 	kvantum \
 	libnotify \
 	1password \
-	pcmanfm-qt
+	pcmanfm-qt \
+	swaylock
 
 # gh auth login
 # gh auth setup-git
