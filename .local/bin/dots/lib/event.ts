@@ -121,6 +121,10 @@ interface LockGroupsEvent {
   state: "0" | "1";
 }
 
+interface ConfigReloadedEvent {
+  eventType: "configreloaded";
+}
+
 export type HyprlandEvent =
   | WorkspaceEvent
   | FocusedMonEvent
@@ -143,7 +147,8 @@ export type HyprlandEvent =
   | ScreencastEvent
   | WindowTitleEvent
   | IgnoreGroupLockEvent
-  | LockGroupsEvent;
+  | LockGroupsEvent
+  | ConfigReloadedEvent;
 
 function parseHyprlandEvent(eventString: string): HyprlandEvent | null {
   const eventTypeMatch = eventString.match(/^(.*?)>>/);
@@ -209,6 +214,8 @@ function parseHyprlandEvent(eventString: string): HyprlandEvent | null {
     case "ignoregrouplock":
     case "lockgroups":
       return { eventType, state: data1 as "0" | "1" };
+    case "configreloaded":
+      return { eventType };
     default:
       return null;
   }
