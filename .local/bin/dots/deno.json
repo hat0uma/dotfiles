@@ -1,0 +1,13 @@
+{
+  "fmt": {
+    "options": {
+      "lineWidth": 120,
+      "useTabs": false,
+      "indentWidth": 2
+    }
+  },
+  "imports": {
+    "/": "./",
+    "./": "./"
+  }
+}

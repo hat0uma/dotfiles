@@ -1,0 +1,123 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; widgets
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defwidget volume_slider []
+  (box
+    :class "slider"
+    :space-evenly false
+    (icon-medium :name {AUDIO.icon})
+    (scale
+      :min 0
+      :max 100
+      :value {AUDIO.volume * 100}
+      :width 240
+      :onchange "wpctl set-volume @DEFAULT_SINK@ {}%")))
+
+(defwidget backlight_slider []
+  (box
+    :class "slider"
+    :space-evenly false
+    (icon-medium :name {BRIGHTNESS.icon})
+    (scale
+      :min 5
+      :max 100
+      :value {BRIGHTNESS.percentage}
+      :width 240
+      :onchange "brightnessctl set {}%")))
+
+; TODO
+(defwidget wifi_details []
+  (box
+    :class "wifi-details"
+    :space-evenly false
+    :spacing 8
+    (icon-medium :name {WIFI_STATUS.icon})
+    (label :text {WIFI_STATUS.ssid})))
+
+; TODO
+(defwidget bluetooth_details []
+  (box
+    :class "bluetooth-details"
+    :space-evenly false
+    :spacing 8
+    (icon-medium :name {BLUETOOTH_STATUS.icon})
+    (label :text {BLUETOOTH_STATUS.name})))
+
+(defwidget power []
+  (eventbox
+    :onclick "eww close sysmenu closer; eww open powermenu; hyprctl dispatch submap powermenu"
+    :tooltip "Open power menu"
+    (icon-medium
+      :class "icon-menu"
+      :name "system-shutdown-symbolic")))
+
+(defwidget screenshot []
+  (eventbox
+    :onclick "eww close sysmenu closer; ~/.local/bin/dots/screenshot --fullscreen --delay 0.5 &"
+    :tooltip "Take screenshot"
+    (icon-medium
+      :class "icon-menu"
+      :name "camera-photo-symbolic")))
+    
+
+(defwidget systime []
+  (box
+    :orientation "v"
+    :space-evenly false
+    (label
+     :justify "left"
+     :class "systime"
+     :halign "start"
+     :text {formattime(EWW_TIME, "%H:%M:%S")})
+    (label
+     :justify "left"
+     :class "sysdate"
+     :halign "start"
+     :text {formattime(EWW_TIME, "%Y年%m月%d日")})))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; window
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defwindow sysmenu
+  :monitor 0
+  :stacking "overlay"
+  :exclusive false
+  :geometry (geometry 
+             :height "2%"
+             :width "10%" 
+             :anchor "top right"
+             :x "4px"
+             :y "4px")
+  (box
+    :orientation "v" :class "sysmenu"
+    :space-evenly false
+    (centerbox
+      (systime) 
+      (box
+        :space-evenly false
+        :halign "end"
+        :orientation "h")
+      (box 
+        :space-evenly false
+        :halign "end"
+        :orientation "h"
+        :spacing 4
+        (screenshot)
+        (power)))
+    (backlight_slider)
+    (volume_slider)
+    (box 
+      :spacing 4
+      :orientation "h"
+      (wifi_details)
+      (bluetooth_details))))
+
+
+(defwindow closer
+  :monitor 0
+  :stacking "fg"
+  :geometry (geometry :width "100%" :height "100%")
+  (eventbox
+    :class "closer"
+    :onclick "eww close sysmenu && eww close closer"))
+

@@ -1,0 +1,5 @@
+{
+  "$schema": "/etc/xdg/swaync/configSchema.json",
+  "notification-window-width": 350,
+  "control-center-width": 350
+}

@@ -1,0 +1,59 @@
+@import "catppuccin-frappe.scss";
+
+.bar {
+  color: $text;
+  background-color: transparent;
+  margin: 4px 4px 0 4px; // bottom is already reserved by hyprland gap
+}
+
+// ------------------------
+// right bar
+// ------------------------
+.battery,
+.system,
+.clock {
+  border-radius: 8px;
+  border: 1px solid $base;
+  padding: 0 8px;
+}
+
+.systray {
+  border-radius: 8px;
+  border: 1px solid $base;
+}
+
+.battery,
+.system,
+.systray {
+  color: $text;
+  background-color: $surface1;
+}
+
+.clock {
+  background-color: $lavender;
+  color: $base;
+  font-weight: bold;
+}
+
+// ------------------------
+// left bar
+// ------------------------
+.bar-left {
+  background-color: $surface0;
+  border: 1px solid $base;
+  border-radius: 8px;
+}
+
+.workspace {
+  color: $text;
+}
+
+.workspace.current {
+  font-weight: bold;
+  color: $blue;
+}
+
+.workspace:hover {
+  background-color: $surface1;
+  border-radius: 8px;
+}

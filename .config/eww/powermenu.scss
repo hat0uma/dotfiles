@@ -1,0 +1,30 @@
+@import "catppuccin-frappe.scss";
+
+.powermenu {
+  background-color: rgba($surface0, 0.3);
+}
+
+.powermenu-container {
+  background-color: $base;
+  border-radius: 8px;
+  padding: 8px;
+}
+
+.powermenu-item {
+  background-color: $base;
+  border-radius: 0px;
+}
+
+.powermenu-item-icon {
+  color: $lavender;
+}
+
+.powermenu-item-label {
+  color: $text;
+  font-size: 16px;
+}
+
+.powermenu-item-sublabel {
+  color: rgba($text, 0.77);
+  font-size: 12px;
+}

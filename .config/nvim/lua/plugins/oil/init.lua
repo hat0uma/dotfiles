@@ -13,6 +13,8 @@ return {
         -- "size",
         -- "mtime",
       },
+      default_file_explorer = true,
+      delete_to_trash = true,
       use_default_keymaps = false,
       keymaps = {
         ["g?"] = require("oil.actions").show_help,

@@ -1,44 +1,78 @@
 #!/usr/bin/env bash
 
+########################
+# window manager
+########################
+# install wm,dm
+yay -S --noconfirm \
+	acpi \
+	brightnessctl \
+	eww-hyprland-tray \
+	gobject-introspection \
+	hyprland-git \
+	network-manager-applet \
+	otf-font-awesome \
+	qt5-wayland \
+	qt6-wayland \
+	swaybg \
+	ttf-twemoji-color \
+	papirus-icon-theme \
+	pop-icon-theme \
+	xdg-desktop-portal-hyprland
+
+########################
+# display manager
+########################
+say -S --noconfirm \
+	greetd \
+	greetd-tuigreet
+
+sudo systemctl enable --now greetd
+cat <<EOF | sudo tee /etc/greetd/config.toml
+[terminal]
+vt = 1
+[default_session]
+command = "tuigreet --time --remember --remember-session --asterisks --cmd='zsh --login -c Hyprland'"
+EOF
+
+########################
+# ime
+########################
 # install ime
 yay -S --noconfirm \
-	sway-im \
 	fcitx5 \
 	fcitx5-configtool \
 	fcitx5-gtk \
 	fcitx5-mozc \
 	fcitx5-qt
 
-# add sway envs
-swayenv="$XDG_CONFIG_HOME/sway/env"
-cat <<EOF | sudo tee /usr/local/bin/start-sway
-#!/bin/env bash
-if [[ -f $swayenv ]]; then
-	source $swayenv
-fi
-sway
-EOF
-sudo chmod +x /usr/local/bin/start-sway
+########################
+# other applications
+########################
+# install applications
+yay -S --noconfirm \
+	wl-clipboard \
+	firefox \
+	foot \
+	wezterm \
+	wofi \
+	slurp \
+	webcord-bin \
+	grim \
+	swaync \
+	swappy \
+	kvantum \
+	libnotify \
+	1password \
+	pcmanfm-qt \
+	swaylock
 
-sudo mkdir -p /usr/local/share/wayland-sessions
-cat <<EOF | sudo tee /usr/share/wayland-sessions/sway-envs.desktop
-[Desktop Entry]
-Name=Sway(with envs)
-Comment=An i3-compatible Wayland compositor
-Exec=start-sway
-Type=Application
-EOF
-
-# chrome settings
-cat <<EOF | tee "$XDG_CONFIG_HOME/chrome-flags.conf"
---force-dark-mode
---enable-features=WebUIDarkMode
---ozone-platform-hint=auto
---gtk-version=4
-EOF
+# gh auth login
+# gh auth setup-git
 
 # install themes
 yay -S --noconfirm \
 	catppuccin-gtk-theme-frappe \
 	catppuccin-cursors-frappe \
+	catppuccin-fcitx5-git \
 	kvantum-theme-catppuccin-git

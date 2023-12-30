@@ -1,0 +1,108 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; widgets
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defwidget battery[]
+  (box
+    :class "battery"
+    :space-evenly false
+    :spacing 4
+    :tooltip {BATTERY_STATUS.extra}
+    (icon-medium 
+      :name {BATTERY_STATUS.icon})
+    (label :text "${BATTERY_STATUS.percentage}%")))
+
+(defwidget clock []
+    (box
+      :class "clock"
+      :space-evenly false
+      (label :text {formattime(EWW_TIME,"%b %d %H:%M")})))
+
+(defwidget workspaces []
+    (box
+      :space-evenly false
+      :spacing 0
+      (label :text "${CURRENT_WORKSPACE}" :visible false)
+      (for WORKSPACE in WORKSPACES
+        (eventbox 
+          :class "workspace ${WORKSPACE.id == CURRENT_WORKSPACE ? "current" : ""} ${WORKSPACE.windows > 0 ? "" : "empty"}"
+          :onclick "hyprctl dispatch workspace ${WORKSPACE.id}"
+          (label 
+             :style "padding: 0px 8px;"
+             :justify "center"
+             :text { WORKSPACE.icons != "" ? "${WORKSPACE.name} ${WORKSPACE.icons} " : "${WORKSPACE.name}"})))))
+
+(defwidget wifi []
+  (eventbox
+   :class "wifi"
+   (icon-medium 
+     :name {WIFI_STATUS.icon}
+     :tooltip { WIFI_STATUS.state == "connected" ? WIFI_STATUS.ssid : "disconnected"})))
+
+(defwidget bluetooth []
+  (eventbox
+   :class "bluetooth"
+   (icon-medium
+     :name {BLUETOOTH_STATUS.icon}
+     :tooltip {BLUETOOTH_STATUS.state == "connected" ? BLUETOOTH_STATUS.name : "disconnected"})))
+
+(defwidget audio []
+  (eventbox
+   :class "audio"
+   (icon-medium
+     :name {AUDIO.icon}
+     :tooltip "${AUDIO.volume * 100}%")))
+
+(defwidget backlight []
+  (eventbox
+   :class "backlight"
+   (icon-medium 
+     :name {BRIGHTNESS.icon}
+     :tooltip "${BRIGHTNESS.percentage}%")))
+
+(defwidget system []
+  (button
+    :class "system"
+    :onclick "eww open-many --toggle sysmenu closer"
+    (box
+     :spacing 4
+     (wifi)
+     (bluetooth)
+     (audio))))
+    ;; (backlight)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; window
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defwindow bar
+  :monitor 0
+  :stacking "fg"
+  :exclusive true
+  :geometry (geometry 
+             :height "4%"
+             :width "100%" 
+             :anchor "top center")
+  (centerbox 
+    :orientation "h"
+    :class "bar"
+    (box
+      :class "bar-left"
+      :halign "start"
+      :orientation "h"
+      :space-evenly false
+      (workspaces))
+    (box
+      :class "bar-center"
+      :halign "center"
+      :orientation "h"
+      :space-evenly false)
+    (box 
+      :class "bar-right"
+      :halign "end"
+      :orientation "h"
+      :space-evenly false
+      :spacing 4
+      (battery)
+      (system)
+      (systray :class "systray")
+      (clock))))
+

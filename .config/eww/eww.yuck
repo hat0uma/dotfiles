@@ -1,0 +1,61 @@
+; vars
+(defvar ICON_SIZE_MEDIUM 16)
+
+; listens
+(deflisten WORKSPACES :initial "[]" "~/.local/bin/dots/eww/get-workspaces")
+(deflisten CURRENT_WORKSPACE :initial "1" "~/.local/bin/dots/eww/get-active-workspace")
+(deflisten WINDOW :initial "..." "~/.local/bin/dots/eww/get-window-title")
+
+; polls
+(defpoll AUDIO :interval "1s" "~/.local/bin/dots/eww/get-audio")
+(defpoll BRIGHTNESS :interval "1s" "~/.local/bin/dots/eww/get-brightness")
+(defpoll WIFI_STATUS :interval "1s" "~/.local/bin/dots/eww/get-wifi")
+(defpoll BATTERY_STATUS :interval "10s" "~/.local/bin/dots/eww/get-battery")
+(defpoll BLUETOOTH_STATUS :interval "10s" "~/.local/bin/dots/eww/get-bluetooth")
+
+; common widgets
+(defwidget icon [size name ?tooltip ?class]
+  (box
+    :width size
+    :height size
+    :class class
+    :tooltip tooltip
+    :style "
+      -gtk-icon-theme: 'Pop';
+      background-image: -gtk-icontheme('${name}');
+      background-size: ${ size * 0.9 }px ${ size * 0.9 }px;
+      background-position: center;
+      background-repeat: no-repeat;"))
+
+(defwidget icon-medium [name ?tooltip ?class]
+  (icon
+    :name name
+    :tooltip tooltip
+    :class class
+    :size ICON_SIZE_MEDIUM))
+
+(defwidget iconfont [text ?tooltip ?style ?class]
+  (label
+    :text text
+    :tooltip tooltip
+    :justify "center"
+    :style style
+    :class class
+    :height ICON_SIZE_MEDIUM
+    :width ICON_SIZE_MEDIUM))
+
+; built-in image widget is blurry on hidpi, so we use as background
+(defwidget _imageicon [width height path]
+  (box
+    :width width
+    :height height
+    :style "
+      background-image: url('${path}');
+      background-size: ${ width }px ${ height }px;
+      background-position: center;
+      background-repeat: no-repeat;"))
+
+; includes
+(include "./bar.yuck")
+(include "./sysmenu.yuck")
+(include "./powermenu.yuck")
