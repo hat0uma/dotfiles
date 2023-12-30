@@ -93,6 +93,7 @@ zinit light endaaman/lxd-completion-zsh
 # aliases and functions
 #####################################################################
 alias ls='ls --color=auto'
+alias ip='ip --color=auto'
 alias ll='ls -alFh'
 alias edit='nvim'
 alias open='xdg-open'
@@ -135,6 +136,7 @@ HISTSIZE=10000
 SAVEHIST=50000
 setopt inc_append_history
 setopt share_history
+setopt completealiases
 
 setopt auto_cd
 setopt auto_pushd

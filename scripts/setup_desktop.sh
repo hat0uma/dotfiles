@@ -65,6 +65,7 @@ yay -S --noconfirm \
 	libnotify \
 	1password \
 	pcmanfm-qt \
+	file-roller \
 	swaylock
 
 # gh auth login
