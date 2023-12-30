@@ -379,12 +379,12 @@ return {
       require("statuscol").setup {
         relculright = true,
         segments = {
-          { sign = { name = { "Diagnostic" }, maxwidth = 1, colwidth = 2 } },
+          { sign = { namespace = { "diagnostic" }, maxwidth = 1, colwidth = 2 } },
           { text = { builtin.lnumfunc }, click = "v:lua.ScLa" },
           { text = { " " } },
           {
             sign = {
-              name = { "GitSigns" },
+              namespace = { "gitsign" },
               maxwidth = 1,
               colwidth = 2,
             },

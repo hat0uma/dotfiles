@@ -6,7 +6,6 @@ local M = {
 
 function M.config()
   require("gitsigns").setup {
-    _extmark_signs = false,
     trouble = false,
     signcolumn = true,
     numhl = false,
