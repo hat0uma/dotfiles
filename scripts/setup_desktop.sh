@@ -67,6 +67,7 @@ yay -S --noconfirm \
 	1password \
 	pcmanfm-qt \
 	file-roller \
+	visual-studio-code-insiders-bin \
 	swaylock
 
 # gh auth login
