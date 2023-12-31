@@ -77,3 +77,6 @@ yay -S --noconfirm \
 	catppuccin-cursors-frappe \
 	catppuccin-fcitx5-git \
 	kvantum-theme-catppuccin-git
+
+# add default flags to webcord
+sed 's/^Exec=webcord/Exec=webcord --ozone-platform=wayland --enable-wayland-ime/g' /usr/share/applications/webcord.desktop | tee ~/.local/share/applications/webcord.desktop
