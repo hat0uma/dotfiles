@@ -21,7 +21,7 @@
     (scale
       :min 5
       :max 100
-      :value {BRIGHTNESS.percentage}
+      :value {BRIGHTNESS.percentage ?: 0}
       :width 240
       :onchange "brightnessctl set {}%")))
 
