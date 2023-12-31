@@ -39,6 +39,7 @@ EOF
 # ime
 ########################
 # install ime
+# and also see https://github.com/hyprwm/Hyprland/issues/2433#issuecomment-1807419531
 yay -S --noconfirm \
 	fcitx5 \
 	fcitx5-configtool \
