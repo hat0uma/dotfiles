@@ -32,7 +32,7 @@ cat <<EOF | sudo tee /etc/greetd/config.toml
 [terminal]
 vt = 1
 [default_session]
-command = "tuigreet --time --remember --remember-session --asterisks --cmd='zsh --login -c Hyprland'"
+command = "tuigreet --time --time-format='%Y/%m/%d %H:%M' --remember --remember-session --asterisks --cmd='zsh --login -c Hyprland'"
 EOF
 
 ########################
