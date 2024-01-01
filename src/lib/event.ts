@@ -150,6 +150,8 @@ export type HyprlandEvent =
   | LockGroupsEvent
   | ConfigReloadedEvent;
 
+export type HyprlandEventListener = (ev: HyprlandEvent) => Promise<void>;
+
 function splitData<T extends string>(rawData: string, ...argNames: T[]): { [key in T]: string } {
   const data: { [key in T]?: string } = {};
   for (let i = 0; i < argNames.length; i++) {
@@ -250,7 +252,7 @@ function parseHyprlandEvent(eventString: string): HyprlandEvent | null {
   }
 }
 
-async function readFromSocket(socket: Deno.Conn, onEvent: (event: HyprlandEvent) => Promise<void>) {
+async function readFromSocket(socket: Deno.Conn, onEvent: HyprlandEventListener) {
   const decoder = new TextDecoder();
   for await (const d of socket.readable) {
     const rawData = decoder.decode(d).trim().split("\n");
@@ -265,7 +267,7 @@ async function readFromSocket(socket: Deno.Conn, onEvent: (event: HyprlandEvent)
   }
 }
 
-export async function listenHyprlandSocketEvent(onEvent: (event: HyprlandEvent) => Promise<void>) {
+export async function listenHyprlandSocketEvent(onEvent: HyprlandEventListener) {
   const instanceSignature = Deno.env.get("HYPRLAND_INSTANCE_SIGNATURE");
   if (!instanceSignature) {
     console.error("$HYPRLAND_INSTANCE_SIGNATURE is not defined.");

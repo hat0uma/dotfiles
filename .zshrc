@@ -117,6 +117,9 @@ if [[ $NVIM ]]; then
 #     }
 fi
 
+if [[ -v HYPRLAND_INSTANCE_SIGNATURE ]]; then
+    alias hyprlisten='socat -U - UNIX-CONNECT:/tmp/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock'
+fi
 #####################################################################
 # others
 #####################################################################
