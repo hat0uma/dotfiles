@@ -1,6 +1,4 @@
-#!/usr/bin/env -S deno run -A --unstable --ext=ts
-
-// vim: set ft=typescript:
+#!/usr/bin/env -S deno run -A --unstable
 
 import { listenHyprlandSocketEvent } from "/lib/event.ts";
 import * as hyprctl from "/lib/hyprctl.ts";

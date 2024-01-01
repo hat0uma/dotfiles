@@ -1,6 +1,4 @@
-#!/usr/bin/env -S deno run -A --unstable --ext=ts
-
-// vim: set ft=typescript:
+#!/usr/bin/env -S deno run -A --unstable
 
 import $ from "https://deno.land/x/dax@0.35.0/mod.ts";
 

@@ -2,16 +2,16 @@
 (defvar ICON_SIZE_MEDIUM 16)
 
 ; listens
-(deflisten WORKSPACES :initial "[]" "~/.local/bin/dots/eww/get-workspaces")
-(deflisten CURRENT_WORKSPACE :initial "1" "~/.local/bin/dots/eww/get-active-workspace")
-(deflisten WINDOW :initial "..." "~/.local/bin/dots/eww/get-window-title")
+(deflisten WORKSPACES :initial "[]" "_dots_eww_workspaces")
+(deflisten CURRENT_WORKSPACE :initial "1" "_dots_eww_active_workspace")
+(deflisten WINDOW :initial "..." "_dots_eww_window_title")
 
 ; polls
-(defpoll AUDIO :interval "1s" :initial "{}" "~/.local/bin/dots/eww/get-audio")
-(defpoll BRIGHTNESS :interval "1s" :initial "{}" "~/.local/bin/dots/eww/get-brightness")
-(defpoll WIFI_STATUS :interval "1s" :initial "{}" "~/.local/bin/dots/eww/get-wifi")
-(defpoll BATTERY_STATUS :interval "10s" :initial "{}" "~/.local/bin/dots/eww/get-battery")
-(defpoll BLUETOOTH_STATUS :interval "10s" :initial "{}" "~/.local/bin/dots/eww/get-bluetooth")
+(defpoll AUDIO :interval "1s" :initial "{}" "_dots_eww_audio")
+(defpoll BRIGHTNESS :interval "1s" :initial "{}" "_dots_eww_brightness")
+(defpoll WIFI_STATUS :interval "1s" :initial "{}" "_dots_eww_wifi")
+(defpoll BATTERY_STATUS :interval "10s" :initial "{}" "_dots_eww_battery")
+(defpoll BLUETOOTH_STATUS :interval "10s" :initial "{}" "_dots_eww_bluetooth")
 
 ; common widgets
 (defwidget icon [size name ?tooltip ?class]
