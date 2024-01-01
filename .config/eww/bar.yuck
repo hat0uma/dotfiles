@@ -24,7 +24,7 @@
       (label :text "${CURRENT_WORKSPACE}" :visible false)
       (for WORKSPACE in WORKSPACES
         (eventbox 
-          :class "workspace ${WORKSPACE.id == CURRENT_WORKSPACE ? "current" : ""} ${WORKSPACE.windows > 0 ? "" : "empty"}"
+          :class "workspace ${WORKSPACE.id == CURRENT_WORKSPACE ? "current" : ""} ${WORKSPACE.windows > 0 ? "" : "empty"} ${WORKSPACE.id < 0 ? "special" : ""}"
           :onclick "hyprctl dispatch workspace ${WORKSPACE.id}"
           (label 
              :style "padding: 0px 8px;"

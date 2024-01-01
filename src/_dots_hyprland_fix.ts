@@ -25,6 +25,37 @@ function opWindowFixer(): HyprlandEventListener {
   };
 }
 
+const trackedWindows = new Map<string, string[]>();
+function windowTracker(): HyprlandEventListener {
+  return async (ev: HyprlandEvent) => {
+    if (ev.eventType === "openwindow") {
+      if (trackedWindows.has(ev.workspaceName)) {
+        trackedWindows.get(ev.workspaceName)?.push(ev.windowAddress);
+      } else {
+        trackedWindows.set(ev.workspaceName, [ev.windowAddress]);
+      }
+    } else if (ev.eventType === "closewindow") {
+      for (const [_, windows] of trackedWindows) {
+        if (windows.includes(ev.windowAddress)) {
+          windows.splice(windows.indexOf(ev.windowAddress), 1);
+        }
+      }
+    } else if (ev.eventType === "movewindow") {
+      for (const [_, windows] of trackedWindows) {
+        if (windows.includes(ev.windowAddress)) {
+          windows.splice(windows.indexOf(ev.windowAddress), 1);
+        }
+      }
+      if (trackedWindows.has(ev.workspaceName)) {
+        trackedWindows.get(ev.workspaceName)?.push(ev.windowAddress);
+      } else {
+        trackedWindows.set(ev.workspaceName, [ev.windowAddress]);
+      }
+    }
+    console.log(trackedWindows);
+  };
+}
+
 async function isolateSpecial(className: string): Promise<HyprlandEventListener> {
   async function getActiveWindow() {
     const monitors = await hyprctl.fetchMonitors();
@@ -55,6 +86,7 @@ async function isolateSpecial(className: string): Promise<HyprlandEventListener>
 
 $.setPrintCommand(true);
 const listeners: HyprlandEventListener[] = [
+  windowTracker(),
   opWindowFixer(),
   await isolateSpecial("webcord"),
 ];

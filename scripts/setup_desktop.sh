@@ -68,6 +68,7 @@ yay -S --noconfirm \
 	pcmanfm-qt \
 	file-roller \
 	visual-studio-code-insiders-bin \
+	neofetch \
 	swaylock
 
 # gh auth login
@@ -84,3 +85,6 @@ yay -S --noconfirm \
 flags='s/^\(Exec=[^ ]\+\)/\1 --ozone-platform=wayland --enable-wayland-ime/g'
 sed "${flags}" /usr/share/applications/webcord.desktop | tee ~/.local/share/applications/webcord.desktop
 sed "${flags}" /usr/share/applications/visual-studio-code-insiders.desktop | tee ~/.local/share/applications/visual-studio-code-insiders.desktop
+
+# steam
+# yay -S steam wqy-zenhei
