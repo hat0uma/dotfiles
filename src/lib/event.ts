@@ -150,6 +150,24 @@ export type HyprlandEvent =
   | LockGroupsEvent
   | ConfigReloadedEvent;
 
+function splitData<T extends string>(rawData: string, ...argNames: T[]): { [key in T]: string } {
+  const data: { [key in T]?: string } = {};
+  for (let i = 0; i < argNames.length; i++) {
+    const delimIdx = rawData.indexOf(",");
+    if (delimIdx === -1 && i !== argNames.length - 1) {
+      // not last argument
+      throw new Error(`fewer arguments: ${rawData}`);
+    } else if (delimIdx === -1) {
+      // last argument
+      data[argNames[i]] = rawData;
+    } else {
+      data[argNames[i]] = rawData.substring(0, delimIdx);
+      rawData = rawData.substring(delimIdx + 1);
+    }
+  }
+  return data as { [key in T]: string };
+}
+
 function parseHyprlandEvent(eventString: string): HyprlandEvent | null {
   const eventTypeMatch = eventString.match(/^(.*?)>>/);
   if (!eventTypeMatch) {
@@ -158,62 +176,73 @@ function parseHyprlandEvent(eventString: string): HyprlandEvent | null {
   const eventType = eventTypeMatch[1];
   const rawData = eventString.substring(eventTypeMatch[0].length);
 
-  const [data1, ...rest] = rawData.split(",");
-
   switch (eventType) {
     case "workspace":
-      return { eventType, workspaceName: data1 };
+      return { eventType, ...splitData(rawData, "workspaceName") };
     case "focusedmon":
-      return { eventType, monName: data1, workspaceName: rest.join("") };
+      return { eventType, ...splitData(rawData, "monName", "workspaceName") };
     case "activewindow":
-      return { eventType, windowClass: data1, windowTitle: rest.join("") };
+      return { eventType, ...splitData(rawData, "windowClass", "windowTitle") };
     case "activewindowv2":
-      return { eventType, windowAddress: data1 };
-    case "fullscreen":
-      return { eventType, state: data1 as "0" | "1" };
+      return { eventType, ...splitData(rawData, "windowAddress") };
+    case "fullscreen": {
+      const data = splitData(rawData, "state");
+      return { eventType, state: data.state === "1" ? "1" : "0" };
+    }
     case "monitorremoved":
     case "monitoradded":
-      return { eventType, monitorName: data1 };
+      return { eventType, ...splitData(rawData, "monitorName") };
     case "createworkspace":
     case "destroyworkspace":
-      return { eventType, workspaceName: data1 };
+      return { eventType, ...splitData(rawData, "workspaceName") };
     case "moveworkspace":
     case "renameworkspace":
-      return { eventType, workspaceName: data1, additionalData: rest.join("") };
+      return { eventType, ...splitData(rawData, "workspaceName", "additionalData") };
     case "activespecial":
-      return { eventType, workspaceName: data1, monName: rest.join("") };
+      return { eventType, ...splitData(rawData, "workspaceName", "monName") };
     case "activelayout":
-      return { eventType, keyboardName: data1, layoutName: rest.join("") };
+      return { eventType, ...splitData(rawData, "keyboardName", "layoutName") };
     case "openwindow":
       return {
         eventType,
-        windowAddress: data1,
-        workspaceName: rest[0] || "",
-        windowClass: rest[1] || "",
-        windowTitle: rest.slice(2).join(""),
+        ...splitData(
+          rawData,
+          "windowAddress",
+          "workspaceName",
+          "windowClass",
+          "windowTitle",
+        ),
       };
     case "closewindow":
-      return { eventType, windowAddress: data1 };
+      return { eventType, ...splitData(rawData, "windowAddress") };
     case "movewindow":
-      return { eventType, windowAddress: data1, workspaceName: rest.join("") };
+      return { eventType, ...splitData(rawData, "windowAddress", "workspaceName") };
     case "openlayer":
     case "closelayer":
-      return { eventType, namespace: data1 };
+      return { eventType, ...splitData(rawData, "namespace") };
     case "submap":
-      return { eventType, submapName: data1 };
-    case "changefloatingmode":
-      return { eventType, windowAddress: data1, floating: rest.join("") as "0" | "1" };
+      return { eventType, ...splitData(rawData, "submapName") };
+    case "changefloatingmode": {
+      const data = splitData(rawData, "windowAddress", "floating");
+      return { eventType, windowAddress: data.windowAddress, floating: data.floating === "1" ? "1" : "0" };
+    }
     case "urgent":
-      return { eventType, windowAddress: data1 };
-    case "minimize":
-      return { eventType, windowAddress: data1, minimized: rest.join("") as "0" | "1" };
-    case "screencast":
-      return { eventType, state: data1 as "0" | "1", owner: rest.join("") as "0" | "1" };
+      return { eventType, ...splitData(rawData, "windowAddress") };
+    case "minimize": {
+      const data = splitData(rawData, "windowAddress", "minimized");
+      return { eventType, windowAddress: data.windowAddress, minimized: data.minimized === "1" ? "1" : "0" };
+    }
+    case "screencast": {
+      const data = splitData(rawData, "state", "owner");
+      return { eventType, state: data.state === "1" ? "1" : "0", owner: data.owner === "1" ? "1" : "0" };
+    }
     case "windowtitle":
-      return { eventType, windowAddress: data1 };
+      return { eventType, ...splitData(rawData, "windowAddress") };
     case "ignoregrouplock":
-    case "lockgroups":
-      return { eventType, state: data1 as "0" | "1" };
+    case "lockgroups": {
+      const data = splitData(rawData, "state");
+      return { eventType, state: data.state === "1" ? "1" : "0" };
+    }
     case "configreloaded":
       return { eventType };
     default:
@@ -223,13 +252,8 @@ function parseHyprlandEvent(eventString: string): HyprlandEvent | null {
 
 async function readFromSocket(socket: Deno.Conn, onEvent: (event: HyprlandEvent) => Promise<void>) {
   const decoder = new TextDecoder();
-  const buf = new Uint8Array(1024);
-  while (true) {
-    const n = await socket.read(buf);
-    if (n === null) {
-      break; // if socket was closed.
-    }
-    const rawData = decoder.decode(buf.subarray(0, n)).trim().split("\n");
+  for await (const d of socket.readable) {
+    const rawData = decoder.decode(d).trim().split("\n");
     for (const text of rawData) {
       const event = parseHyprlandEvent(text);
       if (!event) {
