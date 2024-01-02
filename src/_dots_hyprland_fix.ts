@@ -5,7 +5,7 @@ import { HyprlandEvent, HyprlandEventListener, listenHyprlandSocketEvent } from 
 import * as hyprctl from "/lib/hyprctl.ts";
 
 /**
- * fix 1password quick access's window position.
+ * fix 1password quick access window position.
  */
 function opWindowFixer(): HyprlandEventListener {
   let timer = -1;
@@ -28,38 +28,24 @@ function opWindowFixer(): HyprlandEventListener {
   };
 }
 
-const trackedWindows = new Map<string, string[]>();
-function windowTracker(): HyprlandEventListener {
+/**
+ * If urgent occurs while in special workspace, close special workspace and focus to urgent window.
+ */
+function urgentOnSpecial(): HyprlandEventListener {
+  let inSpecial = false;
   return async (ev: HyprlandEvent) => {
-    if (ev.eventType === "openwindow") {
-      if (trackedWindows.has(ev.workspaceName)) {
-        trackedWindows.get(ev.workspaceName)?.push(ev.windowAddress);
-      } else {
-        trackedWindows.set(ev.workspaceName, [ev.windowAddress]);
-      }
-    } else if (ev.eventType === "closewindow") {
-      for (const [_, windows] of trackedWindows) {
-        if (windows.includes(ev.windowAddress)) {
-          windows.splice(windows.indexOf(ev.windowAddress), 1);
-        }
-      }
-    } else if (ev.eventType === "movewindow") {
-      for (const [_, windows] of trackedWindows) {
-        if (windows.includes(ev.windowAddress)) {
-          windows.splice(windows.indexOf(ev.windowAddress), 1);
-        }
-      }
-      if (trackedWindows.has(ev.workspaceName)) {
-        trackedWindows.get(ev.workspaceName)?.push(ev.windowAddress);
-      } else {
-        trackedWindows.set(ev.workspaceName, [ev.windowAddress]);
-      }
+    if (ev.eventType === "activespecial") {
+      inSpecial = ev.workspaceName !== "";
+    } else if (ev.eventType === "urgent" && inSpecial) {
+      await $`hyprctl dispatch togglespecialworkspace`;
     }
-    console.log(trackedWindows);
   };
 }
 
-async function isolateSpecial(targetWorkspace: string, className: string): Promise<HyprlandEventListener> {
+/**
+ * Limit workspace to specific application only.
+ */
+async function isolateWorkspace(workspaceName: string, className: string): Promise<HyprlandEventListener> {
   async function getActiveWindow() {
     const monitors = await hyprctl.fetchMonitors();
     const focusedmon = monitors.find((mon) => mon.focused);
@@ -69,20 +55,13 @@ async function isolateSpecial(targetWorkspace: string, className: string): Promi
     return null;
   }
 
-  let currentSpecial = "";
   let activeWorkspace = await getActiveWindow();
   return async (ev: HyprlandEvent) => {
-    if (ev.eventType === "activespecial") {
-      // NOTE: workspaceName is empty when deactivating special workspace.
-      currentSpecial = ev.workspaceName;
-    } else if (ev.eventType === "urgent" && currentSpecial !== "") {
-      await $`hyprctl dispatch togglespecialworkspace`;
-    } else if (ev.eventType === "workspace") {
+    if (ev.eventType === "workspace") {
       activeWorkspace = ev.workspaceName;
     } else if (
       ev.eventType === "openwindow" &&
-      ev.workspaceName === currentSpecial &&
-      currentSpecial === targetWorkspace &&
+      ev.workspaceName === workspaceName &&
       ev.windowClass.toLowerCase() !== className
     ) {
       await $`hyprctl dispatch movetoworkspace ${activeWorkspace},address:0x${ev.windowAddress}`;
@@ -90,15 +69,60 @@ async function isolateSpecial(targetWorkspace: string, className: string): Promi
   };
 }
 
-$.setPrintCommand(true);
-const listeners: HyprlandEventListener[] = [
-  windowTracker(),
-  opWindowFixer(),
-  await isolateSpecial("special", "webcord"),
-];
+/**
+ * track window every workspace.
+ */
+function windowTracker(): { callback: HyprlandEventListener; trackedWindows: Map<string, string[]> } {
+  const trackedWindows = new Map<string, string[]>();
+  return {
+    callback: async (ev: HyprlandEvent) => {
+      if (ev.eventType === "openwindow") {
+        if (trackedWindows.has(ev.workspaceName)) {
+          trackedWindows.get(ev.workspaceName)?.push(ev.windowAddress);
+        } else {
+          trackedWindows.set(ev.workspaceName, [ev.windowAddress]);
+        }
+      } else if (ev.eventType === "closewindow") {
+        for (const [_, windows] of trackedWindows) {
+          if (windows.includes(ev.windowAddress)) {
+            windows.splice(windows.indexOf(ev.windowAddress), 1);
+          }
+        }
+      } else if (ev.eventType === "movewindow") {
+        for (const [_, windows] of trackedWindows) {
+          if (windows.includes(ev.windowAddress)) {
+            windows.splice(windows.indexOf(ev.windowAddress), 1);
+          }
+        }
+        if (trackedWindows.has(ev.workspaceName)) {
+          trackedWindows.get(ev.workspaceName)?.push(ev.windowAddress);
+        } else {
+          trackedWindows.set(ev.workspaceName, [ev.windowAddress]);
+        }
+      }
+      // console.log(trackedWindows);
+    },
+    trackedWindows,
+  };
+}
 
-await listenHyprlandSocketEvent(async (ev) => {
-  for (const listener of listeners) {
-    await listener(ev);
-  }
-});
+async function main() {
+  $.setPrintCommand(true);
+  const winTracker = windowTracker();
+  const listeners: HyprlandEventListener[] = [
+    winTracker.callback,
+    opWindowFixer(),
+    urgentOnSpecial(),
+    await isolateWorkspace("special", "webcord"),
+  ];
+
+  await listenHyprlandSocketEvent(async (ev) => {
+    for (const listener of listeners) {
+      await listener(ev);
+    }
+  });
+}
+
+if (import.meta.main) {
+  await main();
+}
