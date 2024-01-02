@@ -4,6 +4,9 @@ import $ from "https://deno.land/x/dax@0.35.0/mod.ts";
 import { HyprlandEvent, HyprlandEventListener, listenHyprlandSocketEvent } from "/lib/event.ts";
 import * as hyprctl from "/lib/hyprctl.ts";
 
+/**
+ * fix 1password quick access's window position.
+ */
 function opWindowFixer(): HyprlandEventListener {
   let timer = -1;
   return async (ev: HyprlandEvent) => {
@@ -56,7 +59,7 @@ function windowTracker(): HyprlandEventListener {
   };
 }
 
-async function isolateSpecial(className: string): Promise<HyprlandEventListener> {
+async function isolateSpecial(targetWorkspace: string, className: string): Promise<HyprlandEventListener> {
   async function getActiveWindow() {
     const monitors = await hyprctl.fetchMonitors();
     const focusedmon = monitors.find((mon) => mon.focused);
@@ -66,17 +69,20 @@ async function isolateSpecial(className: string): Promise<HyprlandEventListener>
     return null;
   }
 
-  let specialWorkspace = "";
+  let currentSpecial = "";
   let activeWorkspace = await getActiveWindow();
   return async (ev: HyprlandEvent) => {
     if (ev.eventType === "activespecial") {
-      specialWorkspace = ev.workspaceName;
-    } else if (ev.eventType === "urgent" && specialWorkspace !== "") {
+      // NOTE: workspaceName is empty when deactivating special workspace.
+      currentSpecial = ev.workspaceName;
+    } else if (ev.eventType === "urgent" && currentSpecial !== "") {
       await $`hyprctl dispatch togglespecialworkspace`;
     } else if (ev.eventType === "workspace") {
       activeWorkspace = ev.workspaceName;
     } else if (
-      ev.eventType === "openwindow" && ev.workspaceName === specialWorkspace &&
+      ev.eventType === "openwindow" &&
+      ev.workspaceName === currentSpecial &&
+      currentSpecial === targetWorkspace &&
       ev.windowClass.toLowerCase() !== className
     ) {
       await $`hyprctl dispatch movetoworkspace ${activeWorkspace},address:0x${ev.windowAddress}`;
@@ -88,7 +94,7 @@ $.setPrintCommand(true);
 const listeners: HyprlandEventListener[] = [
   windowTracker(),
   opWindowFixer(),
-  await isolateSpecial("webcord"),
+  await isolateSpecial("special", "webcord"),
 ];
 
 await listenHyprlandSocketEvent(async (ev) => {

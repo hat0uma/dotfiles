@@ -53,6 +53,11 @@
   color: $blue;
 }
 
+.workspace.special {
+  font-weight: bold;
+  color: $lavender;
+}
+
 .workspace:hover {
   background-color: $surface1;
   border-radius: 8px;
