@@ -12,7 +12,7 @@ function opWindowFixer(): HyprlandEventListener {
   return async (ev: HyprlandEvent) => {
     if (ev.eventType === "activewindow") {
       if (timer === -1 && ev.windowClass === "1Password" && ev.windowTitle === "クイックアクセス — 1Password") {
-        console.log("1password window activated");
+        // console.log("1password window activated");
         timer = setInterval(async () => {
           await $`hyprctl dispatch centerwindow`;
         }, 100);
@@ -20,7 +20,7 @@ function opWindowFixer(): HyprlandEventListener {
     } else {
       const activeWindow = await hyprctl.fetchActiveWindow();
       if (activeWindow.class !== "1Password" && timer !== -1) {
-        console.log("1password window deactivated");
+        // console.log("1password window deactivated");
         clearInterval(timer);
         timer = -1;
       }
