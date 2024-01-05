@@ -64,10 +64,12 @@ const packages = {
     "mesa-utils",
   ],
   nvidia: [
-    "nvidia-dkms",
     "linux-headers",
+    "nvidia-dkms",
+    "nvidia-prime",
     "nvidia-settings",
     "nvidia-utils",
+    "lib32-nvidia-utils",
   ],
 };
 
@@ -112,7 +114,7 @@ const installPackages = async (packages: string[]) => await $`yay -S --needed --
  * Main
  */
 await new Command()
-  .option("--enable-nvidia", "Enable Nvidia Setup", { default: false })
+  .option("--disable-nvidia", "Disable Nvidia Setup", { default: false })
   .action(async (opts) => {
     $.setPrintCommand(true);
     await installPackages(packages.base);
@@ -123,7 +125,7 @@ await new Command()
     await modifyDesktopFiles();
     await setupDM();
     await linkScripts();
-    if (opts.enableNvidia) {
+    if (!opts.disableNvidia) {
       await installPackages(packages.nvidia);
       await setupNvidia();
     }

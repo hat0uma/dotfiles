@@ -1,6 +1,7 @@
 import $ from "https://deno.land/x/dax@0.35.0/mod.ts";
 import { existsSync } from "https://deno.land/std@0.201.0/fs/exists.ts";
 
+// https://wiki.hyprland.org/Nvidia/
 export async function setupNvidia() {
   /**
    * add nvidia_drm.modeset=1 to the end of /boot/loader/entries/arch.conf.
