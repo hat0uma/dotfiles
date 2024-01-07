@@ -16,9 +16,16 @@ async function getWorkspaces(): Promise<(Workspace & { icons: string })[]> {
     .sort((a, b) => a.id - b.id)
     .map((w) => {
       const windows = clients.filter((c) => c.workspace.id === w.id);
-      const icons = windows.map((c) => lookupIcon(c.class)).filter((i) => i !== "");
+      const icons = windows.map((c) => getWindowIcon(c)).filter((i) => i !== "");
       return { ...w, icons: [...new Set(icons)].join("  ") };
     });
+}
+
+function getWindowIcon(c: hyprctl.Client): string {
+  if (c.class.startsWith("FFPWA") && c.title.startsWith("Discord")) {
+    return lookupIcon("discord");
+  }
+  return lookupIcon(c.class);
 }
 
 // initial value

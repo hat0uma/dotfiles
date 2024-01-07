@@ -45,7 +45,10 @@ function urgentOnSpecial(): HyprlandEventListener {
 /**
  * Limit workspace to specific application only.
  */
-async function isolateWorkspace(workspaceName: string, className: string): Promise<HyprlandEventListener> {
+async function isolateWorkspace(
+  workspaceName: string,
+  candidate: { class: string; title?: string },
+): Promise<HyprlandEventListener> {
   async function getActiveWindow() {
     const monitors = await hyprctl.fetchMonitors();
     const focusedmon = monitors.find((mon) => mon.focused);
@@ -55,6 +58,22 @@ async function isolateWorkspace(workspaceName: string, className: string): Promi
     return null;
   }
 
+  // check if window is isolation candidate.
+  function isIsolationCandidate(ev: { windowClass: string; windowTitle: string }): boolean {
+    // share picker is always allowed.
+    if (ev.windowClass === "hyprland-share-picker") {
+      return true;
+    }
+    if (ev.windowClass.match(candidate.class)) {
+      if (candidate.title) {
+        return ev.windowTitle.match(candidate.title) !== null;
+      } else {
+        return true;
+      }
+    }
+    return false;
+  }
+
   let activeWorkspace = await getActiveWindow();
   return async (ev: HyprlandEvent) => {
     if (ev.eventType === "workspace") {
@@ -62,7 +81,7 @@ async function isolateWorkspace(workspaceName: string, className: string): Promi
     } else if (
       ev.eventType === "openwindow" &&
       ev.workspaceName === workspaceName &&
-      ev.windowClass.toLowerCase() !== className
+      !isIsolationCandidate(ev)
     ) {
       await $`hyprctl dispatch movetoworkspace ${activeWorkspace},address:0x${ev.windowAddress}`;
     }
@@ -113,7 +132,7 @@ async function main() {
     winTracker.callback,
     opWindowFixer(),
     urgentOnSpecial(),
-    await isolateWorkspace("special", "webcord"),
+    await isolateWorkspace("special", { class: "FFPWA-.*", title: "^Discord.*" }),
   ];
 
   await listenHyprlandSocketEvent(async (ev) => {

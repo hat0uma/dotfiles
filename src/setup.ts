@@ -20,7 +20,7 @@ const packages = {
     "qt6-wayland",
     "swaybg",
     "ttf-twemoji-color",
-    "xdg-desktop-portal-hyprland",
+    "xdg-desktop-portal-hyprland-git",
   ],
   dm: [
     "greetd",
@@ -57,7 +57,8 @@ const packages = {
     "swaylock",
     "swaync",
     "visual-studio-code-insiders-bin",
-    "webcord-bin",
+    // "webcord-git",
+    "firefox-pwa",
     "wezterm-git",
     "wl-clipboard",
     "wofi",
@@ -69,7 +70,13 @@ const packages = {
     "nvidia-prime",
     "nvidia-settings",
     "nvidia-utils",
+    "nvtop",
     "lib32-nvidia-utils",
+  ],
+  yubikey: [
+    "pam-u2f",
+    "yubikey-manager",
+    "yubikey-manager-qt",
   ],
 };
 
@@ -108,6 +115,10 @@ async function modifyDesktopFiles() {
   ]);
 }
 
+async function setupYubikey() {
+  await $`sudo systemctl enable --now pcscd`;
+}
+
 const installPackages = async (packages: string[]) => await $`yay -S --needed --noconfirm ${packages}`;
 
 /**
@@ -122,9 +133,11 @@ await new Command()
     await installPackages(packages.ime);
     await installPackages(packages.other);
     await installPackages(packages.theme);
+    await installPackages(packages.yubikey);
     await modifyDesktopFiles();
     await setupDM();
     await linkScripts();
+    await setupYubikey();
     if (!opts.disableNvidia) {
       await installPackages(packages.nvidia);
       await setupNvidia();
