@@ -25,6 +25,8 @@ const packages = {
   dm: [
     "greetd",
     "greetd-tuigreet",
+    "gnome-keyring",
+    "seahorse",
   ],
   ime: [
     "fcitx5",
@@ -58,7 +60,7 @@ const packages = {
     "swaync",
     "visual-studio-code-insiders-bin",
     // "webcord-git",
-    "firefox-pwa",
+    "firefox-pwa-bin",
     "wezterm-git",
     "wl-clipboard",
     "wofi",
@@ -88,9 +90,36 @@ vt = 1
 command = "tuigreet --time --time-format='%Y/%m/%d %H:%M' --remember --remember-session --asterisks --cmd='zsh --login -c Hyprland'"
 `;
 
+// deno-fmt-ignore
+const GREETD_PAMCONFIG =
+`#%PAM-1.0
+
+auth       required     pam_securetty.so
+auth       requisite    pam_nologin.so
+auth       include      system-local-login
+auth       optional     pam_gnome_keyring.so
+account    include      system-local-login
+session    include      system-local-login
+session    optional     pam_gnome_keyring.so auto_start
+`
+
 async function setupDM() {
   await $`sudo systemctl enable --now greetd`;
+  await $`systemctl enable --user  --now gnome-keyring-daemon`;
   await $`sudo tee /etc/greetd/config.toml`.stdinText(GREETD_CONFIG);
+  await $`sudo tee /etc/pam.d/greetd`.stdinText(GREETD_PAMCONFIG);
+
+  // Automatically change keyring password with user password
+  const text = await Deno.readTextFile("/etc/pam.d/passwd");
+  const lines = text.split("\n");
+  const pamGnomeKeyring = lines.findIndex((line) => line.includes("pam_gnome_keyring.so"));
+  if (pamGnomeKeyring === -1) {
+    $.log("pam_gnome_keyring.so not found, adding");
+    lines.push("password    optional    pam_gnome_keyring.so");
+  } else {
+    $.log("pam_gnome_keyring.so already exists");
+  }
+  await $`sudo tee /etc/pam.d/passwd`.stdinText(lines.join("\n"));
 }
 
 async function modifyDesktopFiles() {
