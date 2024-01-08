@@ -50,7 +50,6 @@ const packages = {
     "grim",
     "kvantum",
     "libnotify",
-    "mpv",
     "neofetch",
     "pcmanfm-qt",
     "slurp",
@@ -79,6 +78,16 @@ const packages = {
     "pam-u2f",
     "yubikey-manager",
     "yubikey-manager-qt",
+  ],
+  media: [
+    "calf",
+    "lsp-plugins-lv2",
+    "zam-plugins-lv2",
+    "mda.lv2",
+    "yelp",
+    "ardour",
+    "mpv",
+    "youtube-music-bin",
   ],
 };
 
@@ -163,6 +172,7 @@ await new Command()
     await installPackages(packages.other);
     await installPackages(packages.theme);
     await installPackages(packages.yubikey);
+    await installPackages(packages.media);
     await modifyDesktopFiles();
     await setupDM();
     await linkScripts();
