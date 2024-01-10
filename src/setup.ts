@@ -43,7 +43,6 @@ const packages = {
   ],
   other: [
     "1password-beta",
-    "easyeffects",
     "file-roller",
     "firefox",
     "foot",
@@ -86,6 +85,7 @@ const packages = {
     "mda.lv2",
     "yelp",
     "ardour",
+    "easyeffects",
     "mpv",
     "youtube-music-bin",
   ],
