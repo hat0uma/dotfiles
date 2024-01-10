@@ -22,4 +22,4 @@
 
 scriptDir="$(dirname "$(readlink -f "$0")")"
 targetScript="$scriptDir/$(basename "$0").ts"
-deno run -A --unstable "$targetScript"
+deno run -A --unstable "$targetScript" "$@"
