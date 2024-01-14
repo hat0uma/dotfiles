@@ -462,4 +462,5 @@ return {
       "DistantLaunch",
     },
   },
+  { "lbrayner/vim-rzip" },
 }
