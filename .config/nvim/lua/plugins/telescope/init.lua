@@ -120,8 +120,8 @@ local M = {
             },
             n = {
               ["q"] = actions.close,
-              ["v"] = actions.file_vsplit,
-              ["s"] = actions.file_split,
+              ["gv"] = actions.file_vsplit,
+              ["gs"] = actions.file_split,
               ["t"] = actions.file_tab,
               ["p"] = layout_actions.toggle_preview,
               -- ["<C-d>"] = my_actions.shift_selection_pagedown,
