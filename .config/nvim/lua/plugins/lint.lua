@@ -1,10 +1,14 @@
 return {
   "mfussenegger/nvim-lint",
   config = function()
+    require("lint").linters.markdownlint_cli2 = vim.tbl_extend("force", require("lint").linters.markdownlint, {
+      cmd = string.gsub(require("lint").linters.markdownlint.cmd, "markdownlint", "markdownlint-cli2"),
+    })
+
     require("lint").linters_by_ft = {
       sh = { "shellcheck" },
       python = { "mypy", "flake8" },
-      markdown = { "markdownlint" },
+      markdown = { "markdownlint_cli2" },
       -- lua = { "luacheck" },
     }
     local actionlint = require("lint").linters.actionlint

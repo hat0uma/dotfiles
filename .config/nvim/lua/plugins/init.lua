@@ -463,4 +463,11 @@ return {
     },
   },
   { "lbrayner/vim-rzip" },
+  {
+    "mattn/vim-maketable",
+    cmd = {
+      "MakeTable",
+      "UnmakeTable",
+    },
+  },
 }

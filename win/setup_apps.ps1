@@ -1,6 +1,7 @@
 Set-StrictMode -Version Latest
 
-function skkdict {
+function skkdict
+{
     mkdir -ErrorAction SilentlyContinue "$HOME/.eskk"
 
     $utf8=[System.Text.Encoding]::UTF8
@@ -13,7 +14,7 @@ function skkdict {
 
 $scoopApps = @(
     "deno"
-    # "dotnet-sdk"
+    "dotnet-sdk"
     "gcc"
     "git"
     # "go"
@@ -22,14 +23,14 @@ $scoopApps = @(
     "neovim-nightly"
     "nodejs"
     "pwsh"
-    # "python"
+    "python"
     "ripgrep"
-    "rust"
+    # "rust"
     "sarasa-mono-j-nerd-font"
     "sarasa-term-j-nerd-font"
     "unzip"
     "sed"
-    "wezterm"
+    "wezterm-nightly"
 )
 if(!(get-command scoop -errorAction SilentlyContinue ))
 {

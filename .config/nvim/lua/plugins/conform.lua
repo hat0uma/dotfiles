@@ -98,7 +98,7 @@ M.config = function()
       scss = { { "prettierd", "prettier" } },
       json = { "fixjson" },
       yaml = { { "prettierd", "prettier" } },
-      markdown = { "mdformat" },
+      markdown = { "markdownlint-cli2" },
       sh = { "shfmt" },
     },
   }

@@ -28,11 +28,25 @@ local function used_by_term(winid)
   end, { predicate = true })
 end
 
+--- toggle terminal
+---@param count number
+local function toggle(count)
+  local cwd = vim.uv.cwd()
+  local buf = vim.api.nvim_buf_get_name(0)
+  local dir = buf:find(cwd) ~= nil and cwd or vim.fn.fnamemodify(cwd, ":p:h")
+  local size = nil
+  local direction = nil
+  local name = nil
+  require("toggleterm").toggle(count, size, dir, direction, name)
+  vim.cmd()
+end
+
 M.init = function()
   for i = 1, 5 do
     local key = string.format("<leader>%d", i)
-    local cmd = string.format("<Cmd>exe %d . 'ToggleTerm'<CR>", i)
-    vim.keymap.set("n", key, cmd, { noremap = true, silent = true })
+    vim.keymap.set("n", key, function()
+      toggle(i)
+    end, { noremap = true, silent = true })
   end
 end
 
