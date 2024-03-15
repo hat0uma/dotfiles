@@ -15,6 +15,8 @@ function M.on_attach(client, bufnr)
   local go_to_definition = function()
     if client.name == "omnisharp" then
       require("omnisharp_extended").telescope_lsp_definitions()
+    elseif client.name == "typescript-tools" then
+      require("typescript-tools.api").go_to_source_definition(false)
     else
       require("telescope.builtin").lsp_definitions()
     end

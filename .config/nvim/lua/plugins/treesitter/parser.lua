@@ -21,6 +21,7 @@ local parser = {
   "tsx",
   "typescript",
   "vim",
+  "vimdoc",
   "yaml",
 }
 

@@ -462,7 +462,10 @@ return {
       "DistantLaunch",
     },
   },
-  { "lbrayner/vim-rzip" },
+  {
+    "lbrayner/vim-rzip",
+    lazy = false,
+  },
   {
     "mattn/vim-maketable",
     cmd = {

@@ -71,7 +71,31 @@ M.configurations = {
     },
   },
   marksman = {},
-  eslint = {},
+  eslint = {
+    -- on_new_config = function(config, new_root_dir)
+    --   local lspconfig = require "lspconfig"
+    --   local util = require "lspconfig.util"
+    --
+    --   -- apply default `on_new_config`
+    --   lspconfig["eslint"].document_config.default_config.on_new_config(config, new_root_dir)
+    --
+    --   -- patch for yarn pnp on windows
+    --   local sysname = vim.uv.os_uname().sysname
+    --   if sysname:match "Windows" then
+    --     local pnp_cjs = util.path.join(new_root_dir, ".pnp.cjs")
+    --     local pnp_js = util.path.join(new_root_dir, ".pnp.js")
+    --     if util.path.exists(pnp_cjs) or util.path.exists(pnp_js) then
+    --       local yarn = vim.fn.exepath "yarn"
+    --       config.cmd = {
+    --         yarn ~= "" and yarn or "yarn",
+    --         "exec",
+    --         "vscode-eslint-language-server", -- By default, `sanitize_cmd` is applied to this value.
+    --         "--stdio",
+    --       }
+    --     end
+    --   end
+    -- end,
+  },
   hls = {},
   cssls = {},
   omnisharp = {},
