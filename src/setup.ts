@@ -72,6 +72,7 @@ const packages = {
     "nvidia-utils",
     "nvtop",
     "lib32-nvidia-utils",
+    "moonlight-qt-bin",
   ],
   yubikey: [
     "pam-u2f",

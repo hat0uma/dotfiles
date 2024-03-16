@@ -1,3 +1,7 @@
+local ignore_buffers = {
+  "copilot-chat",
+}
+
 return {
   "mfussenegger/nvim-lint",
   config = function()
@@ -18,6 +22,10 @@ return {
       callback = function()
         local lint_status, lint = pcall(require, "lint")
         if not lint_status then
+          return
+        end
+
+        if vim.tbl_contains(ignore_buffers, vim.fn.expand "%:p:t") then
           return
         end
 

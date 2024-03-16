@@ -38,7 +38,6 @@ local function toggle(count)
   local direction = nil
   local name = nil
   require("toggleterm").toggle(count, size, dir, direction, name)
-  vim.cmd()
 end
 
 M.init = function()
