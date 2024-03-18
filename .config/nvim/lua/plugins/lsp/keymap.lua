@@ -13,9 +13,14 @@ function M.on_attach(client, bufnr)
   end
 
   local go_to_definition = function()
-    if client.name == "omnisharp" then
+    local clients = vim.lsp.get_clients { bufnr = 0 }
+    local client_names = vim.tbl_map(function(c)
+      return c.name
+    end, clients)
+
+    if vim.tbl_contains(client_names, "omnisharp") then
       require("omnisharp_extended").telescope_lsp_definitions()
-    elseif client.name == "typescript-tools" then
+    elseif vim.tbl_contains(client_names, "typescript-tools") then
       require("typescript-tools.api").go_to_source_definition(false)
     else
       require("telescope.builtin").lsp_definitions()
@@ -34,7 +39,6 @@ function M.on_attach(client, bufnr)
 
   local default_opts = { noremap = true, silent = true, buffer = bufnr }
   local keymaps = {
-    { "n", "gD", vim.lsp.buf.declaration },
     { "n", "gD", vim.lsp.buf.declaration },
     { "n", "gd", go_to_definition },
     { "n", "gh", hover },

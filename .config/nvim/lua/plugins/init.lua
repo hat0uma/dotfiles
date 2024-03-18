@@ -442,6 +442,9 @@ return {
       require("CopilotChat").setup {}
     end,
     cmd = { "CopilotChat" },
+    cond = function()
+      return vim.env.ENABLE_NVIM_AI_PLUGINS == "1"
+    end,
   },
   {
     "zbirenbaum/copilot.lua",
