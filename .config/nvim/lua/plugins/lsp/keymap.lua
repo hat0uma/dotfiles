@@ -20,11 +20,14 @@ function M.on_attach(client, bufnr)
 
     if vim.tbl_contains(client_names, "omnisharp") then
       require("omnisharp_extended").telescope_lsp_definitions()
-    elseif vim.tbl_contains(client_names, "typescript-tools") then
-      require("typescript-tools.api").go_to_source_definition(false)
     else
-      require("telescope.builtin").lsp_definitions()
+      vim.lsp.buf.definition()
     end
+    -- elseif vim.tbl_contains(client_names, "typescript-tools") then
+    --   require("typescript-tools.api").go_to_source_definition(false)
+    -- else
+    --   require("telescope.builtin").lsp_definitions()
+    -- end
   end
 
   local rename = function()

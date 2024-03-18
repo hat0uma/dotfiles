@@ -88,6 +88,7 @@ return {
     event = "BufReadPre",
     config = function()
       require "mason-lspconfig"
+      require("plugins.lsp.handlers").setup()
 
       --- create capabilities
       --- @type table
