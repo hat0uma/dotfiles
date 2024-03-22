@@ -25,9 +25,10 @@ function M.gen_from_files_prioritize_basename(opts)
       {}, -- dirname
     },
   }
+
   mt_file_entry.display = function(entry)
     local icon, highlight = devicons.get_icon(entry.value, string.match(entry.value, "%a+$"), { default = true })
-    entry.value = vim.fs.normalize(entry.value)
+    entry.value = vim.fs.normalize(vim.fn.resolve(entry.value))
     local dir_name = vim.fn.fnamemodify(entry.value, ":p:~:.:h")
     local file_name = vim.fn.fnamemodify(entry.value, ":p:t")
     return displayer {

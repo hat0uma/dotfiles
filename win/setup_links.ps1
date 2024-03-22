@@ -6,6 +6,7 @@ $links = @{
     "$env:APPDATA\alacritty\"                 = "$env:DOTFILES_PATH\.config\alacritty"
     "$env:USERPROFILE\.goneovim\"             = "$env:DOTFILES_PATH\.config\goneovim"
     "$env:USERPROFILE\.config\wezterm"        = "$env:DOTFILES_PATH\.config\wezterm"
+    "$env:USERPROFILE\.glaze-wm\"             = "$env:DOTFILES_PATH\.config\glaze-wm"
     "$profile"                                = "$env:DOTFILES_PATH\win\profile.ps1"
     # "$env:APPDATA\Code\User\keybindings.json" = "$env:DOTFILES_PATH\.config\Code\User\keybindings.json"
     # "$env:APPDATA\Code\User\settings.json"    = "$env:DOTFILES_PATH\.config\Code\User\settings.json"
@@ -23,22 +24,25 @@ function MakeLink([string]$linkto , [string]$target)
     }
 }
 
-function Unlink ([string]$path){
-    if (-not (Test-Path $path)) {
+function Unlink ([string]$path)
+{
+    if (-not (Test-Path $path))
+    {
         # Write-Host "The specified path '$path' does not exist."
         return
     }
     
     $item = Get-Item $path
     
-    if ($item.LinkType -eq "HardLink" -or $item.LinkType -eq "SymbolicLink" -or $item.LinkType -eq "Junction") {
+    if ($item.LinkType -eq "HardLink" -or $item.LinkType -eq "SymbolicLink" -or $item.LinkType -eq "Junction")
+    {
         Write-Host "Removing link at '$path'."
         Remove-Item $path
-    }
-    elseif ($item.PSIsContainer) {
+    } elseif ($item.PSIsContainer)
+    {
         Write-Host "Skipping directory '$path'."
-    }
-    else {
+    } else
+    {
         Write-Host "Skipping file '$path'."
     }
 }
