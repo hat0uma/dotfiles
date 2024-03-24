@@ -191,6 +191,10 @@ keybindings:
   - command: "exec start http://"
     binding: "Alt+F2"
 
+  # Launch 1password
+  - command: "exec %LOCALAPPDATA%/1Password/app/8/1Password.exe --quick-access"
+    binding: "Alt+O"
+
   # Change focus to a workspace defined in `workspaces` config.
   - command: "focus workspace 1"
     binding: "Alt+1"

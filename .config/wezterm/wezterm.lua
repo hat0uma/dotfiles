@@ -26,6 +26,32 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_wid
   }
 end)
 
+wezterm.on("trigger-neovim-with-scrollback", function(window, pane)
+  -- Retrieve the text from the pane
+  local text = pane:get_lines_as_text(pane:get_dimensions().scrollback_rows)
+
+  -- Create a temporary file to pass to neovim
+  local name = os.tmpname()
+  local f = io.open(name, "w+")
+  f:write(text)
+  f:flush()
+  f:close()
+
+  window:perform_action(
+    act.SpawnCommandInNewTab {
+      args = { "nvim", name },
+      domain = { DomainName = "local" },
+    },
+    pane
+  )
+
+  -- Wait "enough" time for vim to read the file before we remove it.
+  -- The window creation and process spawn are asynchronous wrt. running
+  -- this script and are not awaitable, so we just pick a number.
+  wezterm.sleep_ms(1000)
+  os.remove(name)
+end)
+
 return {
   launch_menu = launch_menu,
   audible_bell = "Disabled",
@@ -42,12 +68,13 @@ return {
     bottom = 0,
   },
   color_scheme = "Catppuccin Frappe",
+  -- debug_key_events = true,
   -- exit_behavior = "Hold",
   -- xim_im_name = "fcitx",
   font = wezterm.font_with_fallback { "Sarasa Term J Nerd Font", "Twemoji Mozilla" },
   harfbuzz_features = { "calt=0", "clig=0", "liga=0" },
   default_prog = is_windows and pwsh.args or zsh.args,
-  leader = { key = "e", mods = "ALT" },
+  leader = { key = "t", mods = "CTRL" },
   keys = {
     { key = "q", mods = "LEADER", action = act.CloseCurrentPane { confirm = false } },
     { key = "0", mods = "LEADER", action = act.QuitApplication },
@@ -64,5 +91,10 @@ return {
     { key = "j", mods = "LEADER", action = act { ActivatePaneDirection = "Down" } },
     { key = "k", mods = "LEADER", action = act { ActivatePaneDirection = "Up" } },
     { key = "l", mods = "LEADER", action = act { ActivatePaneDirection = "Right" } },
+    {
+      key = "e",
+      mods = "LEADER",
+      action = act.EmitEvent "trigger-neovim-with-scrollback",
+    },
   },
 }
