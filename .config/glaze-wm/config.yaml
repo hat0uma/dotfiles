@@ -108,6 +108,10 @@ window_rules:
   - command: "resize borders 0px -7px -7px -7px"
     match_process_name: "steam"
 
+  # 1password
+  - command: "set floating"
+    match_process_name: "1Password"
+
 binding_modes:
   - name: "resize"
     keybindings:
@@ -182,19 +186,6 @@ keybindings:
   - command: "reload config"
     binding: "Alt+Shift+R"
 
-  # Launch CMD terminal (alternatively `exec wt` or `exec %ProgramFiles%/Git/git-bash.exe`
-  # to start Windows Terminal and Git Bash respectively.
-  - command: "exec %USERPROFILE%/scoop/apps/wezterm-nightly/current/wezterm-gui"
-    binding: "Alt+Enter"
-
-  # Launch browser
-  - command: "exec start http://"
-    binding: "Alt+F2"
-
-  # Launch 1password
-  - command: "exec %LOCALAPPDATA%/1Password/app/8/1Password.exe --quick-access"
-    binding: "Alt+O"
-
   # Change focus to a workspace defined in `workspaces` config.
   - command: "focus workspace 1"
     binding: "Alt+1"
@@ -244,3 +235,22 @@ keybindings:
     binding: "Alt+Shift+8"
   - commands: ["move to workspace 9", "focus workspace 9"]
     binding: "Alt+Shift+9"
+
+  # -------------------------
+  # applications
+  # -------------------------
+  # Launch terminal
+  - command: "exec %USERPROFILE%/scoop/apps/wezterm-nightly/current/wezterm-gui"
+    binding: "Alt+Enter"
+
+  # Launch browser
+  - command: "exec start http://"
+    binding: "Alt+F2"
+
+  # Launch 1password
+  - command: "exec %LOCALAPPDATA%/1Password/app/8/1Password.exe --quick-access"
+    binding: "Alt+O"
+
+  # Launch explorer
+  - command: "exec explorer ."
+    binding: "Alt+E"
