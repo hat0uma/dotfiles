@@ -116,7 +116,7 @@ local M = {
                   vim.fn.feedkeys "\b"
                 end
               end,
-              ["<c-t>"] = actions.send_to_qflist + actions.open_qflist,
+              ["<c-q>"] = actions.send_to_qflist + actions.open_qflist,
             },
             n = {
               ["q"] = actions.close,
