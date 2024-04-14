@@ -126,7 +126,7 @@ local M = {
               ["p"] = layout_actions.toggle_preview,
               -- ["<C-d>"] = my_actions.shift_selection_pagedown,
               -- ["<C-u>"] = my_actions.shift_selection_pageup,
-              ["<c-t>"] = actions.send_to_qflist + actions.open_qflist,
+              ["<c-q>"] = actions.send_to_qflist + actions.open_qflist,
               ["<Down>"] = actions.cycle_history_next,
               ["<Up>"] = actions.cycle_history_prev,
             },
