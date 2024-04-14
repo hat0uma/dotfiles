@@ -31,17 +31,7 @@ return {
   {
     "folke/neodev.nvim",
     config = function()
-      require("neodev").setup {
-        library = {
-          enabled = true,
-          runtime = true,
-          types = true,
-          plugins = true,
-        },
-        pathStrict = true,
-        setup_jsonls = false,
-        lspconfig = true,
-      }
+      require("neodev").setup {}
     end,
   },
   {
