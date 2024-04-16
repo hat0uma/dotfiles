@@ -144,5 +144,6 @@ return {
       "conform.nvim",
       "nvim-lint",
     },
+    cond = not vim.g.vscode,
   },
 }

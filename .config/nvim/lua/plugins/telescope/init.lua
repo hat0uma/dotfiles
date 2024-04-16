@@ -168,6 +168,7 @@ local M = {
       }
     end,
     cmd = { "Telescope" },
+    cond = not vim.g.vscode,
   },
 }
 
