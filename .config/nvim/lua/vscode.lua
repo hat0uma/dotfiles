@@ -14,14 +14,25 @@ local M = {}
 --- @field eval_async fun(code:string,opts?:table) evaluate javascript asynchronously in vscode
 local vscode = require "vscode-neovim"
 
-local function bind_action(name)
+---@param ... string
+---@return function
+local function bind_action(...)
+  local names = { ... }
   return function()
-    vscode.action(name)
+    for _, name in ipairs(names) do
+      vscode.action(name)
+    end
   end
 end
-local function bind_call(name)
+
+---@param ... string
+---@return function
+local function bind_call(...)
+  local names = { ... }
   return function()
-    vscode.call(name)
+    for _, name in ipairs(names) do
+      vscode.call(name)
+    end
   end
 end
 
@@ -34,14 +45,16 @@ local function setup_keymaps()
   vim.keymap.set("n", "<C-r>", bind_call "redo", opts)
 
   -- telescope alternative
-  vim.keymap.set("n", "<leader>o", bind_action "workbench.action.quickOpen", opts)
-  vim.keymap.set("n", "<leader>f", bind_action "workbench.action.quickOpen", opts)
+  local quickopen = bind_action("workbench.action.quickOpen", "workbench.action.quickOpenSelectNext")
+  vim.keymap.set("n", "<leader>o", quickopen, opts)
+  vim.keymap.set("n", "<leader>f", quickopen, opts)
 
   -- lsp
   vim.keymap.set("n", "<leader>rn", bind_action "editor.action.rename", opts)
   vim.keymap.set("n", "gd", bind_action "editor.action.revealDefinition", opts)
   vim.keymap.set("n", "gh", bind_action "editor.action.showHover", opts)
   vim.keymap.set("n", "gr", bind_action "editor.action.goToReferences", opts)
+  vim.keymap.set("n", "<leader>a", bind_action "editor.action.quickFix", opts)
 end
 
 local function setup_opts()
