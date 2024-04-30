@@ -244,7 +244,7 @@ keybindings:
     binding: "Alt+Enter"
 
   # Launch browser
-  - command: "exec start http://"
+  - command: "exec explorer http://"
     binding: "Alt+F2"
 
   # Launch 1password
@@ -252,5 +252,5 @@ keybindings:
     binding: "Alt+O"
 
   # Launch explorer
-  - command: "exec explorer ."
+  - command: "exec files"
     binding: "Alt+E"

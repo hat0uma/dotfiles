@@ -31,6 +31,7 @@ $scoopApps = @(
     "unzip"
     "sed"
     "wezterm-nightly"
+    "bottom"
 )
 if(!(get-command scoop -errorAction SilentlyContinue ))
 {

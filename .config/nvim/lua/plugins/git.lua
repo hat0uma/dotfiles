@@ -1,10 +1,3 @@
-local function neogit_log_preview()
-  local CommitViewBufffer = require "neogit.buffers.commit_view"
-  local commit = vim.split(vim.fn.getline ".", " ")[2]
-  CommitViewBufffer.new(commit):open()
-  vim.cmd.wincmd "p"
-end
-
 return {
   {
     "linrongbin16/gitlinker.nvim",
@@ -47,27 +40,6 @@ return {
           "NeogitCommitPopup--allow-empty",
         },
       }
-      -- vim.api.nvim_create_autocmd("FileType", {
-      --   pattern = "NeogitLogView",
-      --   callback = function()
-      --     local preview = true
-      --     vim.api.nvim_create_autocmd("CursorMoved", {
-      --       callback = function()
-      --         if preview then
-      --           neogit_log_preview()
-      --         end
-      --       end,
-      --       buffer = vim.api.nvim_get_current_buf(),
-      --     })
-      --     vim.keymap.set("n", "p", function()
-      --       if not preview then
-      --         neogit_log_preview()
-      --       end
-      --       preview = not preview
-      --     end, { silent = true, noremap = true, buffer = true })
-      --   end,
-      --   group = vim.api.nvim_create_augroup("my-neogit-settings", {}),
-      -- })
     end,
     cmd = { "Neogit" },
     dependencies = {
