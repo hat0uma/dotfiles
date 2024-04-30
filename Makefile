@@ -10,26 +10,19 @@ link:
 	ln -sf ${PWD}/.xprofile ${HOME}
 
 cli:
-	yay -S --noconfirm \
-		expac \
-		unzip \
-		xsel \
-		tmux \
-		github-cli \
-		nodejs \
-		npm \
-		go \
-		ripgrep \
-		fuse \
-		smbclient \
-		cifs-utils \
-		zsh
-	sudo -v ; curl https://rclone.org/install.sh | sudo bash
+	@if type yay > /dev/null 2>&1; then \
+		yay -S --noconfirm expac unzip xsel tmux github-cli nodejs npm go ripgrep zsh; \
+	elif type apt-get > /dev/null 2>&1; then \
+		sudo apt-get install -y xsel ripgrep; \
+	else \
+		echo "unknown package manager."; \
+		exit -1; \
+	fi
 	curl -fsSL https://deno.land/x/install/install.sh | sh
-	curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 	${PWD}/scripts/install_neovim.sh
 	mkdir -p ~/.eskk && curl 'https://skk-dev.github.io/dict/SKK-JISYO.L.gz' | gzip -d | iconv -f EUC-JP -t UTF-8 > ~/.eskk/SKK-JISYO.L
-	curl https://raw.githubusercontent.com/wez/wezterm/master/termwiz/data/wezterm.terminfo | tic -x -
+	# curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+	# curl https://raw.githubusercontent.com/wez/wezterm/master/termwiz/data/wezterm.terminfo | tic -x -
 
 gui:
 	yay -S --noconfirm \
@@ -55,4 +48,13 @@ neovim_server:
 	nvim --headless '+lua require("plugins.lsp.server").install()' +qa
 
 neovim: neovim_plugin neovim_parser neovim_server
+
+setup-wsl-kali:
+	# wslu
+	sudo apt install gnupg2 apt-transport-https
+	wget -O - https://pkg.wslutiliti.es/public.key | sudo gpg -o /usr/share/keyrings/wslu-archive-keyring.pgp --dearmor
+	echo "deb [signed-by=/usr/share/keyrings/wslu-archive-keyring.pgp] https://pkg.wslutiliti.es/kali kali-rolling main" | sudo tee -a /etc/apt/sources.list.d/wslu.list
+	sudo apt update
+	sudo apt install wslu
+
 

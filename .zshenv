@@ -2,7 +2,12 @@ export QT_QPA_PLATFORMTHEME="qt5ct"
 export GTK2_RC_FILES="$HOME/.gtkrc-2.0"
 export MANPAGER=${MANPAGER:="nvim +Man!"}
 export EDITOR=${EDITOR:="nvim"}
-export BROWSER=/usr/bin/firefox
+
+if [[ $(systemd-detect-virt) = "wsl" ]]; then
+    export BROWSER=wslview
+else
+    export BROWSER=/usr/bin/firefox
+fi
 
 # --- xdg ---#
 export XDG_CONFIG_HOME=$HOME/.config
