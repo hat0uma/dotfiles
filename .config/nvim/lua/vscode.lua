@@ -36,11 +36,38 @@ local function bind_call(...)
   end
 end
 
+local AUGID = vim.api.nvim_create_augroup("vscode_augroup", {})
+
+local function next_diagnostics()
+  vscode.call "editor.action.marker.next"
+  vim.defer_fn(function()
+    vim.api.nvim_create_autocmd("CursorMoved", {
+      callback = function()
+        vscode.action "closeMarkersNavigation"
+      end,
+      once = true,
+    })
+  end, 100)
+end
+
+local function prev_diagnostics()
+  vscode.call "editor.action.marker.prev"
+  vim.defer_fn(function()
+    vim.api.nvim_create_autocmd("CursorMoved", {
+      callback = function()
+        vscode.action "closeMarkersNavigation"
+      end,
+      once = true,
+    })
+  end, 100)
+end
+
 local function setup_keymaps()
   local opts = { noremap = true, silent = true }
 
   -- basic commands
   vim.keymap.set("n", "<Leader>w", "<cmd>Write<CR>", opts)
+  vim.keymap.set("n", "<Leader>W", bind_call "workbench.action.files.saveWithoutFormatting")
   vim.keymap.set("n", "u", bind_call "undo", opts)
   vim.keymap.set("n", "<C-r>", bind_call "redo", opts)
 
@@ -55,6 +82,15 @@ local function setup_keymaps()
   vim.keymap.set("n", "gh", bind_action "editor.action.showHover", opts)
   vim.keymap.set("n", "gr", bind_action "editor.action.goToReferences", opts)
   vim.keymap.set("n", "<leader>a", bind_action "editor.action.quickFix", opts)
+  vim.keymap.set("n", "]d", next_diagnostics, opts)
+  vim.keymap.set("n", "[d", prev_diagnostics, opts)
+
+  -- git
+  vim.keymap.set("n", "]c", bind_action "workbench.action.editor.nextChange", opts)
+  vim.keymap.set("n", "[c", bind_action "workbench.action.editor.previousChange", opts)
+  vim.keymap.set("n", "<Leader>hp", bind_action "editor.action.dirtydiff.next", opts)
+  vim.keymap.set({ "n", "v" }, "<Leader>hs", bind_action "git.stageSelectedRanges", opts)
+  vim.keymap.set({ "n", "v" }, "<Leader>hr", bind_action "git.revertSelectedRanges", opts)
 end
 
 local function setup_opts()

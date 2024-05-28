@@ -6,6 +6,7 @@ return {
       "kleber-swf/vscode-unity-code-snippets",
       "qjebbs/vscode-plantuml",
     },
+    cond = not vim.g.vscode,
     config = function()
       local ls = require "luasnip"
       local s = ls.snippet

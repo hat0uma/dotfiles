@@ -1,6 +1,7 @@
 local M = {
   "catppuccin/nvim",
   name = "catppuccin",
+  cond = not vim.g.vscode,
   lazy = false,
   priority = 999,
   config = function()

@@ -1,5 +1,6 @@
 return {
   "folke/noice.nvim",
+  cond = not vim.g.vscode,
   config = function()
     require("noice").setup {
       lsp = {

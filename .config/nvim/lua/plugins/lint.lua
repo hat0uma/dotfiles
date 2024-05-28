@@ -11,7 +11,7 @@ return {
 
     require("lint").linters_by_ft = {
       sh = { "shellcheck" },
-      python = { "mypy", "flake8" },
+      python = { "mypy" },
       markdown = { "markdownlint_cli2" },
       -- lua = { "luacheck" },
     }

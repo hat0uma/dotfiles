@@ -1,6 +1,7 @@
 local M = {
   {
     "hrsh7th/nvim-cmp",
+    cond = not vim.g.vscode,
     event = { "InsertEnter", "CmdlineEnter" },
     dependencies = {
       {

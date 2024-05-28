@@ -1,6 +1,7 @@
 local M = {
   "RRethy/vim-illuminate",
   event = "BufReadPost",
+  cond = not vim.g.vscode,
 }
 
 function M.config()

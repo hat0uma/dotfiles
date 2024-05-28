@@ -9,6 +9,7 @@ return {
   },
   {
     "lukas-reineke/indent-blankline.nvim",
+    cond = not vim.g.vscode,
     config = function()
       require("ibl").setup {
         indent = {
@@ -154,6 +155,7 @@ return {
   {
     "andymass/vim-matchup",
     event = "BufReadPost",
+    cond = not vim.g.vscode,
     config = function()
       vim.g.matchup_matchparen_offscreen = { method = "status_manual" }
       vim.g.matchup_matchpref = {
@@ -261,6 +263,7 @@ return {
       vim.g.mkdp_filetypes = { "markdown" }
     end,
     ft = { "markdown" },
+    cond = not vim.g.vscode,
   },
   {
     "chomosuke/term-edit.nvim",
@@ -325,6 +328,7 @@ return {
       require("guess-indent").setup {}
     end,
     event = "BufReadPre",
+    cond = not vim.g.vscode,
   },
   {
     "folke/todo-comments.nvim",
@@ -405,6 +409,7 @@ return {
   },
   {
     "LunarVim/bigfile.nvim",
+    cond = not vim.g.vscode,
     config = function()
       require("bigfile").setup {
         filesize = 1,

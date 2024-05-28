@@ -91,7 +91,6 @@ M.config = function()
   require("conform").setup {
     formatters_by_ft = {
       lua = { "stylua" },
-      python = { "isort", "black" },
       typescript = formatter_for_ts,
       typescriptreact = formatter_for_ts,
       css = { { "prettierd", "prettier" } },
