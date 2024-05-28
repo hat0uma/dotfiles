@@ -68,8 +68,8 @@ local function setup_keymaps()
   -- basic commands
   vim.keymap.set("n", "<Leader>w", "<cmd>Write<CR>", opts)
   vim.keymap.set("n", "<Leader>W", bind_call "workbench.action.files.saveWithoutFormatting")
-  vim.keymap.set("n", "u", bind_call "undo", opts)
-  vim.keymap.set("n", "<C-r>", bind_call "redo", opts)
+  -- vim.keymap.set("n", "u", bind_call "undo", opts)
+  -- vim.keymap.set("n", "<C-r>", bind_call "redo", opts)
 
   -- telescope alternative
   local quickopen = bind_action("workbench.action.quickOpen", "workbench.action.quickOpenSelectNext")
