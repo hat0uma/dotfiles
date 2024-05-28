@@ -5,6 +5,7 @@ return {
   init = function()
     vim.keymap.set("n", "<leader>e", my_actions.open, { desc = "Open current file directory" })
   end,
+  cond = not vim.g.vscode,
   config = function()
     require("oil").setup {
       columns = {

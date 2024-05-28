@@ -10,6 +10,7 @@ end
 
 local M = {
   "folke/trouble.nvim",
+  cond = not vim.g.vscode,
   dependencies = {
     "kyazdani42/nvim-web-devicons",
     "todo-comments.nvim",
