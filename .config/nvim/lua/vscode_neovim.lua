@@ -12,7 +12,7 @@ local M = {}
 --- @field get_status_item fun(id:string) Gets a vscode statusbar item. Properties can be assigned, which magically updates the statusbar item.
 --- @field eval fun(code:string,opts?:table,timeout?:number):any evaluate javascript synchronously in vscode and return the result
 --- @field eval_async fun(code:string,opts?:table) evaluate javascript asynchronously in vscode
-local vscode = require "vscode-neovim"
+local vscode = require "vscode"
 
 ---@param ... string
 ---@return function

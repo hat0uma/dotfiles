@@ -126,7 +126,7 @@ if not vim.g.vscode then
   -- abbrevs
   vim.cmd.cabbrev("printt", "vim.print()<Left>")
 else
-  require("vscode").setup()
+  require("vscode_neovim").setup()
 end
 
 -------------------------------------------------------------------------
