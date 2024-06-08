@@ -19,7 +19,6 @@ return {
   },
   {
     "NeogitOrg/neogit",
-    branch = "nightly",
     init = function()
       local opts = { silent = true, noremap = true }
       vim.keymap.set("n", "<C-g>", ":<C-u>Neogit<CR>", opts)
