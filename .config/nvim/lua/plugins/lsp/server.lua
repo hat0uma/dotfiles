@@ -1,5 +1,6 @@
 local M = {}
 M.configurations = {
+  jdtls = {},
   lua_ls = {
     settings = {
       Lua = {

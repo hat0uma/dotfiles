@@ -17,4 +17,4 @@ export XDG_DATA_HOME=$HOME/.local/share
 export PATH="$HOME/.local/bin:$HOME/.deno/bin:$HOME/.cargo/bin:$PATH:$HOME/go/bin:$HOME/.dotnet/tools"
 [ -f "$HOME/.ghcup/env" ] && source "$HOME/.ghcup/env"
 [ -f "$HOME/.cargo/env" ] && source "$HOME/.cargo/env"
-
+[ -f "$HOME/.rye/env" ] && source "$HOME/.rye/env"
