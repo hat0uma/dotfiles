@@ -15,7 +15,11 @@
 #      echo '%htb ALL=(root) NOPASSWD: /usr/sbin/openvpn' | sudo EDITOR='tee -a' visudo
 #   4. Provide the path to the OpenVPN configuration file by setting the environment variable OVPN.
 
-set -x
+set -o errexit
+set -o nounset
+set -o pipefail
+
+declare -r ovpn_config="${1}"
 declare -r session_name="htb"
 declare -r nic="tun0"
 
@@ -25,21 +29,18 @@ if tmux has-session -t "${session_name}" &>/dev/null; then
 	exit
 fi
 
-# Check if OpenVPN configuration file is provided
-if [[ -z "$OVPN" ]]; then
-	echo "Error: \$OVPN is not defined."
-	exit 1
-fi
-
 # Start tmux session
 tmux new-session -d -s "${session_name}"
 tmux rename-window -t "${session_name}" "openvpn"
-tmux send-keys -t "${session_name}" "sudo openvpn ${OVPN}" Enter
+tmux send-keys -t "${session_name}" "sudo openvpn ${ovpn_config}" Enter
 
 # Wait for VPN to start
+printf "Waiting for VPN to start"
 while ! ip link show dev "${nic}" &>/dev/null; do
+	printf "."
 	sleep 1
 done
+printf "\n"
 
 # Get local IP address
 MYIP="$(ip --json address show "${nic}" | jq -r '.[].addr_info[] | select(.family == "inet") | .local')"
