@@ -15,6 +15,7 @@ function skkdict
 $scoopApps = @(
     "deno"
     "dotnet-sdk"
+    "vcredist2022"
     "gcc"
     "git"
     # "go"
