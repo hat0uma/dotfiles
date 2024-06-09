@@ -17,6 +17,10 @@ local buffer_name = function()
   return name
 end
 
+local buffer_not_empty = function()
+  return vim.fn.empty(vim.fn.expand "%:t") ~= 1
+end
+
 local modes = {
   n = { color = palette.green, alias = "NORMAL" },
   i = { color = palette.fg, alias = "INSERT" },
@@ -121,11 +125,12 @@ local lualine_config = {
           return name_tbl[ff] or ""
         end,
         color = { fg = palette.fg, bg = palette.bg },
+        cond = buffer_not_empty,
       },
-      {
-        "filetype",
-        color = { fg = palette.fg, bg = palette.bg },
-      },
+      -- {
+      --   "filetype",
+      --   color = { fg = palette.fg, bg = palette.bg },
+      -- },
     },
     lualine_z = {
       {
