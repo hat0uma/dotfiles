@@ -95,6 +95,17 @@ local function config()
           buffer_name,
           color = { fg = palette.fg, bg = palette.bg },
         },
+        {
+          "recording",
+          fmt = function()
+            local reg = vim.fn.reg_recording()
+            return reg ~= "" and string.format("recording @%s", vim.fn.reg_recording()) or ""
+          end,
+          condition = function()
+            return vim.o.cmdheight == 0
+          end,
+          color = { fg = "#ff9e64", bg = palette.bg },
+        },
       },
       lualine_x = { "overseer" },
       lualine_y = {
@@ -153,7 +164,6 @@ end
 return {
   {
     "nvim-lualine/lualine.nvim",
-    requires = { "nvim-tree/nvim-web-devicons", opt = true },
     event = "Colorscheme",
     config = config,
     enabled = true,

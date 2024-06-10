@@ -1,3 +1,4 @@
+local is_windows = vim.loop.os_uname().version:match "Windows"
 local IGNORE_GLOBS = {
   ".git",
   ".svn",
@@ -47,31 +48,21 @@ local M = {
       "nvim-lua/plenary.nvim",
     },
     init = function()
-      local function dropdown_theme(entry_maker)
-        local theme = require("telescope.themes").get_dropdown {
-          border = true,
-          layout_config = {
-            width = math.floor(vim.o.columns * 0.7),
-            height = math.floor(vim.o.lines * 0.7),
-          },
-          preview = { hide_on_startup = true },
-        }
-        if entry_maker then
-          theme.entry_maker = entry_maker
-        end
-        return theme
-      end
+      local dropdown_theme = require("telescope.themes").get_dropdown {
+        border = true,
+        layout_config = {
+          width = math.floor(vim.o.columns * 0.7),
+          height = math.floor(vim.o.lines * 0.7),
+        },
+        preview = { hide_on_startup = true },
+      }
 
       local function telescope_oldfiles()
-        require("telescope.builtin").oldfiles(
-          dropdown_theme(require("plugins.telescope.my_make_entry").gen_from_files_prioritize_basename())
-        )
+        require("telescope.builtin").oldfiles(dropdown_theme)
       end
 
       local function telescope_find_files()
-        require("telescope.builtin").find_files(
-          dropdown_theme(require("plugins.telescope.my_make_entry").gen_from_files_prioritize_basename())
-        )
+        require("telescope.builtin").find_files(dropdown_theme)
       end
 
       local function telescope_live_grep()
@@ -99,6 +90,16 @@ local M = {
       local actions = require "telescope.actions"
       local actions_state = require "telescope.actions.state"
       local layout_actions = require "telescope.actions.layout"
+      local entry_display = require "telescope.pickers.entry_display"
+      local Path = require "plenary.path"
+      local path_displayer = entry_display.create {
+        separator = " ",
+        items = {
+          {}, -- filename
+          {}, -- dirname
+        },
+      }
+
       require("telescope").setup {
         defaults = {
           prompt_prefix = "   ",
@@ -137,8 +138,21 @@ local M = {
             hide_on_startup = false,
           },
           vimgrep_arguments = GREP_COMMAND,
-          path_display = function(_, path)
-            return vim.fn.fnamemodify(path, ":p:~:.")
+          path_display = function(opts, path)
+            if is_windows and Path.new(path):is_absolute() then
+              path = path:gsub("^%l", string.upper) -- drive letter
+            end
+
+            -- local dir_name = vim.fn.fnamemodify(path, ":p:~:.:h")
+            -- local file_name = vim.fn.fnamemodify(path, ":p:t")
+            local fname = vim.fs.basename(path)
+            local cwd = vim.fs.normalize(vim.uv.cwd())
+            local home = vim.fs.normalize(vim.uv.os_homedir())
+            local dirname = vim.fs.dirname(path):gsub(cwd .. "/", ""):gsub(home, "~")
+            return path_displayer {
+              fname,
+              { dirname, "Comment" },
+            }
           end,
         },
         pickers = {
