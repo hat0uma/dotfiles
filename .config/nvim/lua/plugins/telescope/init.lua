@@ -58,6 +58,18 @@ local M = {
       }
 
       local function telescope_oldfiles()
+        -- normalize oldfiles
+        local oldfiles = {}
+        for i = 1, #vim.v.oldfiles do
+          local f = vim.fs.normalize(vim.v.oldfiles[i])
+          if is_windows then
+            -- If we normalize it, it becomes a slash, but if it remains a slash, it will be regarded as a uri in telescope and will not pass through `path_display`.
+            f = f:gsub("/", "\\")
+          end
+          table.insert(oldfiles, f)
+        end
+        vim.v.oldfiles = oldfiles
+
         require("telescope.builtin").oldfiles(dropdown_theme)
       end
 
@@ -142,7 +154,6 @@ local M = {
             if is_windows and Path.new(path):is_absolute() then
               path = path:gsub("^%l", string.upper) -- drive letter
             end
-
             -- local dir_name = vim.fn.fnamemodify(path, ":p:~:.:h")
             -- local file_name = vim.fn.fnamemodify(path, ":p:t")
             local fname = vim.fs.basename(path)
