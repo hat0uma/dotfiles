@@ -125,6 +125,8 @@ function M.install()
     "powershell-editor-services",
     "prettierd",
     "pyright",
+    "ruff-lsp",
+    "mypy",
     "shellcheck",
     "shfmt",
     "stylua",

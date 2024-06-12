@@ -92,6 +92,12 @@ local function config()
       },
       lualine_c = {
         {
+          "buffer",
+          fmt = function()
+            local name = buffer_name()
+            local modified_icon = "*"
+            return vim.bo.modifiable and vim.bo.modified and name .. modified_icon or name
+          end,
           buffer_name,
           color = { fg = palette.fg, bg = palette.bg },
         },

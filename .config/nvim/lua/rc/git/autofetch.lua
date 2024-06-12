@@ -4,7 +4,7 @@ local M = {}
 
 M.options = {
   auto_fetch_duration = 30000,
-  start = true,
+  start = false,
 }
 
 M.timer = nil --- @type uv_timer_t?

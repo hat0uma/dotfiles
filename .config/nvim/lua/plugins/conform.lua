@@ -11,7 +11,7 @@ vim.g.format_on_save_enabled = true
 vim.g.format_on_save_mode = "Buffer" --- @type "Hunks"|"Buffer"
 
 --- lsp filter function
----@param client lsp.Client
+---@param client vim.lsp.Client
 ---@return boolean
 local function filter(client)
   return not vim.tbl_contains(format_disable_clients, client.name)
