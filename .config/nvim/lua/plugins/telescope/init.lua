@@ -48,14 +48,16 @@ local M = {
       "nvim-lua/plenary.nvim",
     },
     init = function()
-      local dropdown_theme = require("telescope.themes").get_dropdown {
-        border = true,
-        layout_config = {
-          width = math.floor(vim.o.columns * 0.7),
-          height = math.floor(vim.o.lines * 0.7),
-        },
-        preview = { hide_on_startup = true },
-      }
+      local get_dropdown = function()
+        return require("telescope.themes").get_dropdown {
+          border = true,
+          layout_config = {
+            width = math.floor(vim.o.columns * 0.7),
+            height = math.floor(vim.o.lines * 0.7),
+          },
+          preview = { hide_on_startup = true },
+        }
+      end
 
       local function telescope_oldfiles()
         -- normalize oldfiles
@@ -70,11 +72,11 @@ local M = {
         end
         vim.v.oldfiles = oldfiles
 
-        require("telescope.builtin").oldfiles(dropdown_theme)
+        require("telescope.builtin").oldfiles(get_dropdown())
       end
 
       local function telescope_find_files()
-        require("telescope.builtin").find_files(dropdown_theme)
+        require("telescope.builtin").find_files(get_dropdown())
       end
 
       local function telescope_live_grep()
