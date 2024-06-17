@@ -112,6 +112,11 @@ window_rules:
   - command: "set floating"
     match_process_name: "1Password"
 
+  # sticky notes
+  - command: "set floating"
+    match_title: "^付箋$"
+    match_class_name: "ApplicationFrameWindow"
+
 binding_modes:
   - name: "resize"
     keybindings:
