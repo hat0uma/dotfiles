@@ -131,6 +131,12 @@ end
 
 -------------------------------------------------------------------------
 -- plugins
+vim.api.nvim_create_user_command("BufInspect", function()
+  local display_ff = { unix = "lf", dos = "crlf", mac = "cr" }
+  local f = string.format("fenc=%s,ff=%s,ft=%s", vim.bo.fileencoding, display_ff[vim.bo.fileformat], vim.bo.filetype)
+  vim.notify(f)
+end, {})
+
 require "config.lazy"
 require("rc.terminal").setup()
 require("rc.winbar").setup()

@@ -126,29 +126,6 @@ local function config()
             hint = { fg = palette.blue },
           },
         },
-        {
-          "encoding",
-          fmt = string.lower,
-          color = { fg = palette.fg, bg = palette.bg },
-        },
-        {
-          "fileformat",
-          fmt = function()
-            local ff = vim.bo.fileformat
-            local name_tbl = {
-              unix = "lf",
-              dos = "crlf",
-              mac = "cr",
-            }
-            return name_tbl[ff] or ""
-          end,
-          color = { fg = palette.fg, bg = palette.bg },
-          cond = buffer_not_empty,
-        },
-        -- {
-        --   "filetype",
-        --   color = { fg = palette.fg, bg = palette.bg },
-        -- },
       },
       lualine_z = {
         {

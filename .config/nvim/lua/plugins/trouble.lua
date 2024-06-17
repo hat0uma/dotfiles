@@ -1,11 +1,36 @@
+--- @type { name:string , opts:trouble.Mode }[]
 local MODE_CYCLE = {
-  "document_diagnostics",
-  "workspace_diagnostics",
-  "todo",
+  {
+    name = "document_diagnostics",
+    opts = {
+      mode = "diagnostics",
+      --- @param items trouble.Item[]
+      --- @return trouble.Item[]
+      filter = function(items)
+        local buf = vim.api.nvim_get_current_buf()
+        return vim.tbl_filter(function(item)
+          return item.buf == buf
+        end, items)
+      end,
+    },
+  },
+  {
+    name = "workspace_diagnostics",
+    opts = {
+      mode = "diagnostics",
+    },
+  },
+  {
+    name = "todo",
+    opts = {
+      mode = "todo",
+    },
+  },
 }
-local current_mode = "document_diagnostics"
+local current_mode = MODE_CYCLE[1]
+
 local function toggle()
-  require("trouble").toggle { mode = current_mode }
+  require("trouble").toggle(current_mode.opts)
 end
 
 local M = {
@@ -28,37 +53,47 @@ local function cycle_mode()
       break
     end
   end
-  require("trouble").open { mode = current_mode }
+  if require("trouble").is_open() then
+    require("trouble").close()
+  end
+  require("trouble").open(current_mode.opts)
 end
 
+--- @param item WinbarItem
+--- @return string
 local function winbar_item(item)
-  return "%#" .. item.hl .. "#" .. item.text .. "%#Normal#"
+  return "%#" .. item.hlgroup .. "#" .. item.text .. "%#Normal#"
 end
 
-function _G.trouble_winbar()
+function M.winbar()
   local items = {}
   for _, mode in ipairs(MODE_CYCLE) do
     local hl = mode == current_mode and "TroubleWinBarActiveMode" or "TroubleWinBarInactiveMode"
-    table.insert(items, winbar_item { hl = hl, text = mode })
+    table.insert(items, winbar_item { hlgroup = hl, text = mode.name })
   end
   return " " .. table.concat(items, " ")
 end
 
 function M.config()
   vim.api.nvim_create_autocmd("FileType", {
-    pattern = "Trouble",
+    pattern = "trouble",
     callback = function()
       local opts = { noremap = true, buffer = true }
       vim.keymap.set("n", "<leader><leader>", cycle_mode, opts)
-      vim.wo.winbar = "%!v:lua.trouble_winbar()"
     end,
   })
 
   require("trouble").setup {
     padding = false,
     auto_preview = false,
-    -- workspace_diagnostics_severity = { min = vim.diagnostic.severity.HINT },
-    -- document_diagnostics_severity = { min = vim.diagnostic.severity.HINT },
+    warn_no_results = false,
+    open_no_results = true,
+    focus = true,
+    modes = {
+      diagnostics = {
+        groups = { { "filename", format = "{file_icon} {basename} {hl:Conceal}{dirname}{hl} {count}" } },
+      },
+    },
   }
 end
 return M

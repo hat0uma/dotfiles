@@ -16,7 +16,7 @@ local function oil_location()
   }
 end
 
-local config = {
+M.config = {
   default = function()
     local success, navic = pcall(require, "nvim-navic")
     if success then
@@ -27,15 +27,16 @@ local config = {
   end,
   ft = {
     oil = oil_location,
+    trouble = require("plugins.trouble").winbar,
   },
 }
 
 function M.provider()
   local ft = vim.bo.ft
-  if config.ft[ft] then
-    return config.ft[ft]()
+  if M.config.ft[ft] then
+    return M.config.ft[ft]()
   else
-    return config.default()
+    return M.config.default()
   end
 end
 
