@@ -117,6 +117,10 @@ window_rules:
     match_title: "^付箋$"
     match_class_name: "ApplicationFrameWindow"
 
+  # explorer
+  - commands: ["set floating", "set height 90%", "set width 90%"]
+    match_process_name: "/explorer|Files/"
+
 binding_modes:
   - name: "resize"
     keybindings:
