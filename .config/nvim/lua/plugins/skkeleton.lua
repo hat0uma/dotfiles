@@ -29,5 +29,5 @@ return {
   end,
   dependencies = { "denops.vim" },
   keys = { { "<C-j>", mode = { "i", "c" } } },
-  build = require("plugins.denops").cache "skkeleton",
+  -- build = require("plugins.denops").cache "skkeleton",
 }
