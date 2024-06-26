@@ -51,7 +51,7 @@ local function format_hunks(bufnr, callback)
   do_format(next(hunks))
 end
 
-local function save_handle()
+function M.save_handle()
   local bufnr = vim.api.nvim_get_current_buf()
   if not vim.g.format_on_save_enabled then
     return
@@ -138,5 +138,4 @@ M.config = function()
   end, {})
 end
 
-setmetatable(M, { __index = { save_handle = save_handle } })
 return M

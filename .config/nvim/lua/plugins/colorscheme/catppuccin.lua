@@ -1,4 +1,4 @@
-local M = {
+return {
   "catppuccin/nvim",
   name = "catppuccin",
   cond = not vim.g.vscode,
@@ -62,40 +62,34 @@ local M = {
     vim.cmd.colorscheme "catppuccin"
     require("plugins.colorscheme.highlights").setup()
   end,
+  --- @return MyStatuslinePalette
+  get_statusline_palette = function()
+    local frappe = require("catppuccin.palettes").get_palette "frappe"
+    --- @type table <string,string>
+    local palette = {
+      bg = frappe.base,
+      bg2 = frappe.mantle,
+      fg = frappe.text,
+      -- other colors
+      yellow = frappe.yellow,
+      cyan = frappe.sapphire,
+      darkblue = frappe.lavender,
+      green = frappe.green,
+      orange = frappe.peach,
+      purple = frappe.mauve,
+      magenta = frappe.pink,
+      grey = frappe.overlay1,
+      blue = frappe.blue,
+      red = frappe.red,
+    }
+    palette.separator_highlight = { palette.fg, palette.bg }
+    palette.vimode_fg = frappe.base
+    palette.vimode_override = {
+      n = { color = palette.blue },
+      v = { color = palette.green },
+      [""] = { color = palette.green },
+      V = { color = palette.green },
+    }
+    return palette
+  end,
 }
-
-setmetatable(M, {
-  __index = {
-    --- @return MyStatuslinePalette
-    get_statusline_palette = function()
-      local frappe = require("catppuccin.palettes").get_palette "frappe"
-      --- @type table <string,string>
-      local palette = {
-        bg = frappe.base,
-        bg2 = frappe.mantle,
-        fg = frappe.text,
-        -- other colors
-        yellow = frappe.yellow,
-        cyan = frappe.sapphire,
-        darkblue = frappe.lavender,
-        green = frappe.green,
-        orange = frappe.peach,
-        purple = frappe.mauve,
-        magenta = frappe.pink,
-        grey = frappe.overlay1,
-        blue = frappe.blue,
-        red = frappe.red,
-      }
-      palette.separator_highlight = { palette.fg, palette.bg }
-      palette.vimode_fg = frappe.base
-      palette.vimode_override = {
-        n = { color = palette.blue },
-        v = { color = palette.green },
-        [""] = { color = palette.green },
-        V = { color = palette.green },
-      }
-      return palette
-    end,
-  },
-})
-return M

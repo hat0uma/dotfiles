@@ -71,8 +71,20 @@ end
 function M.global_map()
   local default_opts = { noremap = true, silent = true }
   local keymaps = {
-    { "n", "[d", vim.diagnostic.goto_prev },
-    { "n", "]d", vim.diagnostic.goto_next },
+    {
+      "n",
+      "[d",
+      function()
+        vim.diagnostic.jump { count = -1 }
+      end,
+    },
+    {
+      "n",
+      "]d",
+      function()
+        vim.diagnostic.jump { count = 1 }
+      end,
+    },
     { { "n", "v" }, "<leader>a", vim.lsp.buf.code_action },
     { "n", "<leader>w", require("plugins.conform").save_handle },
     { "n", "<leader>W", vim.cmd.write },

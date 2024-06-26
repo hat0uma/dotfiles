@@ -1,17 +1,17 @@
 local M = {}
 
 local function define_reversed_hl(name, newname)
-  local hl = vim.api.nvim_get_hl_by_name(name, true)
-  local bg = hl.foreground and string.format("#%x", hl.foreground) or nil
-  local fg = hl.background and string.format("#%x", hl.background) or nil
+  local hl = vim.api.nvim_get_hl(0, { name = name })
+  local bg = hl.fg and string.format("#%x", hl.fg) or nil
+  local fg = hl.bg and string.format("#%x", hl.bg) or nil
   vim.api.nvim_set_hl(0, newname, { bg = bg, fg = fg })
 end
 
 local function define_linenr_bg(name, newname)
-  local hl = vim.api.nvim_get_hl_by_name(name, true)
-  local nr = vim.api.nvim_get_hl_by_name("LineNr", true)
-  local bg = hl.background and string.format("#%x", hl.background) or nil
-  local fg = nr.foreground and string.format("#%x", nr.foreground) or nil
+  local hl = vim.api.nvim_get_hl(0, { name = name })
+  local nr = vim.api.nvim_get_hl(0, { name = "LineNr" })
+  local bg = hl.bg and string.format("#%x", hl.bg) or nil
+  local fg = nr.fg and string.format("#%x", nr.fg) or nil
   vim.api.nvim_set_hl(0, newname, { bg = bg, fg = fg })
 end
 
@@ -21,10 +21,10 @@ end
 
 local function setup_trouble_winbar_hl()
   local function get_hl(hl_name)
-    local hl = vim.api.nvim_get_hl_by_name(hl_name, true)
+    local hl = vim.api.nvim_get_hl(0, { name = hl_name })
     return {
-      bg = hl.background and string.format("#%x", hl.background) or nil,
-      fg = hl.foreground and string.format("#%x", hl.foreground) or nil,
+      bg = hl.bg and string.format("#%x", hl.bg) or nil,
+      fg = hl.fg and string.format("#%x", hl.fg) or nil,
     }
   end
 
@@ -85,6 +85,18 @@ function M.setup()
   define_linenr_bg("DiffAdd", "GitSignsAddNr")
   define_linenr_bg("DiffChange", "GitSignsChangeNr")
   define_linenr_bg("DiffDelete", "GitSignsDeleteNr")
+
+  set_hl("GitSignsTopDelete", { link = "GitSignsDelete" })
+  set_hl("GitSignsTopDeleteNr", { link = "GitSignsDeleteNr" })
+  set_hl("GitSignsTopDeleteLn", { link = "GitSignsDeleteLn" })
+
+  set_hl("GitSignsChangeDelete", { link = "GitSignsChange" })
+  set_hl("GitSignsChangeDeleteNr", { link = "GitSignsChangeNr" })
+  set_hl("GitSignsChangeDeleteLn", { link = "GitSignsChangeLn" })
+
+  set_hl("GitSignsUntracked", { link = "GitSignsAdd" })
+  set_hl("GitSignsUntrackedNr", { link = "GitSignsAddNr" })
+  set_hl("GitSignsUntrackedLn", { link = "GitSignsAddLn" })
 
   -- virtual text
   -- set_hl("VirtualTextError", { default = true, link = "CocErrorSign" })
