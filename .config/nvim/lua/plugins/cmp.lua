@@ -95,6 +95,7 @@ local M = {
           { name = "buffer" },
           { name = "path" },
           { name = "orgmode" },
+          { name = "lazydev", group_index = 0 },
         },
         formatting = {
           fields = { "kind", "abbr", "menu" },
