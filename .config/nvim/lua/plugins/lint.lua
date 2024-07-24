@@ -13,7 +13,7 @@ return {
       sh = { "shellcheck" },
       python = { "mypy" },
       markdown = { "markdownlint_cli2" },
-      -- lua = { "luacheck" },
+      -- lua = { "selene" },
     }
     local actionlint = require("lint").linters.actionlint
     -- actionlint.args = { "-format", "{{json .}}", "-" }
