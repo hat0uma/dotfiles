@@ -46,6 +46,7 @@ return {
             any = {
               { event = "msg_show", kind = "", find = "書込み" },
               { event = "msg_show", kind = "", find = "written" },
+              { event = "notify", find = "No information available" },
             },
           },
           opts = { skip = true },

@@ -4,5 +4,21 @@
     "body": [
       "vim.api.nvim_create_autocmd( \"$2\",{ callback=function() $3 end ,group=vim.api.nvim_create_augroup(\"$1\", {}) })"
     ]
+  },
+  "class": {
+    "prefix": "class",
+    "body": [
+      "---@class $2$1",
+      "local $1 = {}",
+      "",
+      "--- Create a new $2$1.",
+      "---@return $2$1",
+      "function $1:new()",
+      "  local obj = {}",
+      "  setmetatable(obj, self)",
+      "  self.__index = self",
+      "  return obj",
+      "end"
+    ]
   }
 }
