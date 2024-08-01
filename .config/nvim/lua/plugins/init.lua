@@ -136,7 +136,18 @@ return {
       },
     },
   },
-  { "kevinhwang91/nvim-bqf", ft = "qf" },
+  {
+    "kevinhwang91/nvim-bqf",
+    ft = "qf",
+    config = function()
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = "qf",
+        callback = function()
+          vim.keymap.set("n", "q", "<Cmd>quit<CR>", { buffer = true })
+        end,
+      })
+    end,
+  },
   {
     "numToStr/Comment.nvim",
     config = function()
