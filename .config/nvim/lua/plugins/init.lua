@@ -478,6 +478,19 @@ return {
     lazy = false,
   },
   {
+    "hat0uma/prelive.nvim",
+    config = function()
+      require("prelive").setup { server = { port = 0 } }
+    end,
+    cmd = {
+      "PreLiveGo",
+      "PreLiveStatus",
+      "PreLiveClose",
+      "PreLiveCloseAll",
+      "PreLiveLog",
+    },
+  },
+  {
     "mattn/vim-maketable",
     cmd = {
       "MakeTable",

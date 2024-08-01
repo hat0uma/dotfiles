@@ -86,6 +86,12 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.bo.keywordprg = ":abo help"
   end,
 })
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "help",
+  callback = function()
+    vim.keymap.set("n", "q", "<Cmd>quit<CR>", { noremap = true, silent = true, buffer = true })
+  end,
+})
 
 -- highlightedyank
 vim.api.nvim_create_autocmd("TextYankPost", {
