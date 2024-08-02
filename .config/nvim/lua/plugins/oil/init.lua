@@ -36,6 +36,7 @@ return {
         ["gy"] = require("oil.actions").copy_entry_path,
         ["q"] = my_actions.close,
         ["~"] = my_actions.home,
+        ["<CR>"] = require("plugins.oil.contextmenu").open,
       },
       float = {
         padding = 2,
