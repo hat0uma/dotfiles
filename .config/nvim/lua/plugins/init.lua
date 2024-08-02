@@ -359,7 +359,7 @@ return {
         group = vim.api.nvim_create_augroup("my-doxygen", {}),
       })
     end,
-    ft = { "c", "cpp" },
+    ft = { "c", "cpp", "cs" },
   },
   {
     "luukvbaal/statuscol.nvim",
@@ -452,7 +452,7 @@ return {
           },
         },
         filetypes = {
-          gitcommit = true,
+          ["*"] = true,
         },
       }
     end,
