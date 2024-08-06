@@ -340,28 +340,6 @@ return {
     },
   },
   {
-    "hat0uma/doxygen-previewer.nvim",
-    build = "npm install live-server",
-    config = function(plugin)
-      require("doxygen-previewer").setup {
-        viewer = "live-server",
-        viewers = {
-          ["live-server"] = {
-            open = { cmd = plugin.dir .. "/node_modules/.bin/live-server" },
-          },
-        },
-      }
-      vim.api.nvim_create_autocmd("FileType", {
-        pattern = "DoxygenLog",
-        callback = function()
-          vim.keymap.set("n", "q", "<Cmd>close<CR>", { buffer = true, silent = true, noremap = true })
-        end,
-        group = vim.api.nvim_create_augroup("my-doxygen", {}),
-      })
-    end,
-    ft = { "c", "cpp", "cs" },
-  },
-  {
     "luukvbaal/statuscol.nvim",
     config = function()
       local builtin = require "statuscol.builtin"
@@ -488,6 +466,17 @@ return {
       "PreLiveClose",
       "PreLiveCloseAll",
       "PreLiveLog",
+    },
+  },
+  {
+    "hat0uma/doxygen-previewer.nvim",
+    opts = {},
+    dependencies = { "hat0uma/prelive.nvim" },
+    cmd = {
+      "DoxygenOpen",
+      "DoxygenUpdate",
+      "DoxygenStop",
+      "DoxygenLog",
     },
   },
   {

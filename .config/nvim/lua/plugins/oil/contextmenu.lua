@@ -1,3 +1,5 @@
+local Menu = require "nui.menu"
+
 local M = {}
 
 ---@alias rc.OilContextMenuAction fun(entry:string,dir:string)
@@ -8,7 +10,7 @@ local M = {}
 ---@field action rc.OilContextMenuAction
 
 ---@type rc.OilContextMenuItem[]
-local menus = {}
+local menu_registry = {}
 
 --- Add context menu
 ---@param ext string|nil see `lua-patterns`
@@ -16,13 +18,13 @@ local menus = {}
 ---@param action rc.OilContextMenuAction
 local function add_action(ext, name, action)
   local pattern = not ext and ".*" or ("%." .. ext .. "$")
-  table.insert(menus, { pattern = pattern, name = name, action = action })
+  table.insert(menu_registry, { pattern = pattern, name = name, action = action })
 end
 
---- Add context menu to a system command
+--- Add context menu for system command
 ---@param ext string|nil see `lua-patterns`
----@param name string
----@param cmd string[]
+---@param name string action name
+---@param cmd string[] command {file} and {dir} will be replaced
 local function add_system(ext, name, cmd)
   add_action(ext, name, function(entry, dir)
     local args = {}
@@ -37,7 +39,7 @@ local function add_system(ext, name, cmd)
       dir = dir,
       direction = "float",
       cmd = table.concat(args, " "),
-      on_exit = function(t, job, exit_code, name)
+      on_exit = function(t, job, exit_code, _name)
         if exit_code == 0 then
           t:close()
         end
@@ -50,6 +52,26 @@ local function add_system(ext, name, cmd)
   end)
 end
 
+---@type nui_popup_options
+local popup_options = {
+  relative = "cursor",
+  position = { row = 1 + 1, col = 5 },
+  size = {
+    width = 14,
+    height = 5,
+  },
+  border = {
+    style = "rounded",
+    text = {
+      top = "[Action]",
+      top_align = "center",
+    },
+  },
+  win_options = {
+    winhighlight = "Normal:Normal,FloatBorder:Normal",
+  },
+}
+
 function M.open()
   local entry = require("oil").get_cursor_entry()
   if not entry then
@@ -60,31 +82,32 @@ function M.open()
     return
   end
 
-  ---@type rc.OilContextMenuItem[]
-  local target_actions = {}
-  for _, menu in ipairs(menus) do
+  ---@type NuiTree.Node[]
+  local target_menus = {}
+  for _, menu in ipairs(menu_registry) do
     if string.match(entry.name, menu.pattern) then
-      table.insert(target_actions, menu)
+      table.insert(target_menus, Menu.item(menu.name, menu))
     end
   end
 
-  if vim.tbl_isempty(target_actions) then
+  if vim.tbl_isempty(target_menus) then
     print("no actins for:" .. entry.name)
     return
   end
 
-  vim.ui.select(target_actions, {
-    prompt = "Select file actions",
-    format_item = function(item)
-      return item.name
+  local menu = Menu(popup_options, {
+    lines = target_menus,
+    max_width = 14,
+    keymap = {
+      close = { "<Esc>", "q" },
+      submit = { "<CR>" },
+    },
+    on_close = function() end,
+    on_submit = function(item)
+      item.action(entry.name, dir)
     end,
-  }, function(choice) --- @param choice rc.OilContextMenuItem
-    if not choice then
-      return
-    end
-
-    choice.action(entry.name, dir)
-  end)
+  })
+  menu:mount()
 end
 
 add_system(nil, "Open", { "explorer", "{file}" })

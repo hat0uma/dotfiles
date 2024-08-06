@@ -64,7 +64,7 @@ function M.save_handle()
       filter = filter,
     }, function(err)
       if err then
-        vim.notify(err)
+        -- vim.notify(err)
       end
       vim.cmd.write()
     end)
