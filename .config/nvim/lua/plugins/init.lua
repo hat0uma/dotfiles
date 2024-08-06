@@ -77,7 +77,7 @@ return {
   },
 
   {
-    "ahmedkhalf/project.nvim",
+    "hat0uma/project.nvim",
     config = function()
       require("project_nvim").setup {
         patterns = {
