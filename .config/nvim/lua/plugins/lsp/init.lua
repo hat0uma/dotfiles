@@ -146,6 +146,7 @@ return {
       "clangd_extensions.nvim",
       "go.nvim",
       "typescript-tools.nvim",
+      "ionide/Ionide-vim",
       "conform.nvim",
       "nvim-lint",
     },

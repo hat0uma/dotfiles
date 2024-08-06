@@ -2,6 +2,7 @@ local M = {
   {
     "nvim-treesitter/nvim-treesitter",
     config = function()
+      require("plugins.treesitter.parser").setup()
       require("nvim-treesitter.configs").setup {
         highlight = {
           enable = true,

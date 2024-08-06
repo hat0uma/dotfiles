@@ -1,4 +1,7 @@
 local M = {}
+--- handle attach server
+---@param client vim.lsp.Client
+---@param bufnr integer
 function M.on_attach(client, bufnr)
   local document_symbols = function()
     require("telescope.builtin").lsp_document_symbols()
