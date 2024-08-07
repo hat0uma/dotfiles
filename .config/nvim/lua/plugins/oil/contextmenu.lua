@@ -110,6 +110,22 @@ function M.open()
   menu:mount()
 end
 
+--- Copy entry absolute path
+---@param entry string
+---@param dir string
+local function copy_absolute_path(entry, dir)
+  local p = vim.fs.joinpath(dir, entry)
+  local abspath, err = vim.uv.fs_realpath(p)
+  if not abspath then
+    error(string.format("Failed to get absolute path: %s", err))
+  end
+
+  -- yank and copy
+  vim.fn.setreg('"0', abspath)
+  vim.fn.setreg("+", abspath)
+end
+
+add_action(nil, "Copy path", copy_absolute_path)
 add_system(nil, "Open", { "explorer", "{file}" })
 add_system("zip", "Extract", { "unzip", "{file}" })
 add_system("tar", "Extract", { "tar", "xvf", "{file}" })
