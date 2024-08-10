@@ -142,6 +142,18 @@ local function config()
     extensions = {},
   }
   require("lualine").setup(lualine_config)
+
+  -- autocmds for recording macros.
+  vim.api.nvim_create_autocmd("RecordingEnter", {
+    callback = function()
+      require("lualine").refresh { place = { "statusline" } }
+    end,
+  })
+  vim.api.nvim_create_autocmd("RecordingLeave", {
+    callback = vim.schedule_wrap(function()
+      require("lualine").refresh { place = { "statusline" } }
+    end),
+  })
 end
 
 return {
