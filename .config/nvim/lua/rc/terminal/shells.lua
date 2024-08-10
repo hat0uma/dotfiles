@@ -5,16 +5,16 @@ local function shell(opts)
 end
 
 return {
-  pwsh = shell {
+  pwsh = shell({
     cmd = "pwsh -NoLogo",
     env = {
-      PATH = string.format("%s;%s", vim.fn.expand "~/.config/nvim/lua/rc/terminal/bin.pwsh", vim.env.PATH),
+      PATH = string.format("%s;%s", vim.fn.expand("~/.config/nvim/lua/rc/terminal/bin.pwsh"), vim.env.PATH),
     },
-  },
-  zsh = shell {
+  }),
+  zsh = shell({
     cmd = "zsh -l",
     env = {
-      PATH = string.format("%s:%s", vim.fn.expand "~/.config/nvim/lua/rc/terminal/bin", vim.env.PATH),
+      PATH = string.format("%s:%s", vim.fn.expand("~/.config/nvim/lua/rc/terminal/bin"), vim.env.PATH),
     },
-  },
+  }),
 }

@@ -1,21 +1,21 @@
 return {
   "vim-skk/denops-skkeleton.vim",
   config = function()
-    require("plugins.denops").register "skkeleton"
+    require("plugins.denops").register("skkeleton")
 
     vim.keymap.set("i", "<C-j>", "<Plug>(skkeleton-toggle)", {})
     vim.keymap.set("c", "<C-j>", "<Plug>(skkeleton-toggle)", {})
 
     local function my_skkeleton_init()
-      vim.fn["skkeleton#config"] {
+      vim.fn["skkeleton#config"]({
         eggLikeNewline = true,
         registerConvertResult = true,
-        userJisyo = vim.fn.expand "~/.skk-jisyo",
-        globalJisyo = vim.fn.expand "~/.eskk/SKK-JISYO.L",
+        userJisyo = vim.fn.expand("~/.skk-jisyo"),
+        globalJisyo = vim.fn.expand("~/.eskk/SKK-JISYO.L"),
         globalJisyoEncoding = "utf-8",
         markerHenkan = "<>",
         markerHenkanSelect = ">>",
-      }
+      })
       vim.fn["skkeleton#register_kanatable"]("rom", {
         jj = "escape",
       })

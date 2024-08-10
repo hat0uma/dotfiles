@@ -1,6 +1,6 @@
-local action_set = require "telescope.actions.set"
-local state = require "telescope.state"
-local action_state = require "telescope.actions.state"
+local action_set = require("telescope.actions.set")
+local action_state = require("telescope.actions.state")
+local state = require("telescope.state")
 
 local M = {}
 

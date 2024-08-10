@@ -7,16 +7,16 @@ end
 
 local function toggle()
   if #get_winids() == 1 then
-    require("aerial").toggle { direction = "left" }
+    require("aerial").toggle({ direction = "left" })
   else
-    require("aerial").toggle { direction = "float" }
+    require("aerial").toggle({ direction = "float" })
   end
 end
 
 return {
   "stevearc/aerial.nvim",
   config = function()
-    require("aerial").setup {
+    require("aerial").setup({
       backends = {
         "lsp",
         "treesitter",
@@ -68,7 +68,7 @@ return {
           return conf
         end,
       },
-    }
+    })
   end,
   keys = {
     { "<leader>s", toggle, mode = { "n" } },

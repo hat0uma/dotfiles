@@ -10,10 +10,10 @@ local function winbar_item(item)
 end
 
 local function oil_location()
-  return winbar_item {
+  return winbar_item({
     text = require("oil").get_current_dir() or "",
     hlgroup = "Conceal",
-  }
+  })
 end
 
 M.config = {

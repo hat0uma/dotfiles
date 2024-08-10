@@ -42,20 +42,20 @@ return {
   {
     "folke/neoconf.nvim",
     config = function()
-      require("neoconf").setup {
+      require("neoconf").setup({
         import = {
           vscode = false,
           coc = false,
           nlsp = false,
         },
-      }
+      })
     end,
   },
   {
     "Fildo7525/pretty_hover",
     event = "LspAttach",
     config = function()
-      require("pretty_hover").setup { max_width = nil }
+      require("pretty_hover").setup({ max_width = nil })
     end,
   },
   {
@@ -82,7 +82,7 @@ return {
     "neovim/nvim-lspconfig",
     event = "BufReadPre",
     config = function()
-      require "mason-lspconfig"
+      require("mason-lspconfig")
       require("plugins.lsp.handlers").setup()
 
       --- create capabilities
@@ -115,12 +115,12 @@ return {
       local servers = require("plugins.lsp.server").configurations
       for name, _opts in pairs(servers) do
         local opts = vim.tbl_deep_extend("force", { capabilities = capabilities }, _opts or {})
-        if name == "gopls" and vim.fn.executable "gopls" == 1 then
-          require("go").setup {
+        if name == "gopls" and vim.fn.executable("gopls") == 1 then
+          require("go").setup({
             lsp_cfg = opts,
             lsp_keymaps = false,
             diagnostic_hdlr = false,
-          }
+          })
         else
           require("lspconfig")[name].setup(opts)
         end
@@ -130,11 +130,11 @@ return {
       require("plugins.lsp.keymap").global_map()
       require("plugins.lsp.diagnostic").setup()
       -- require("plugins.null-ls").setup_sources { on_attach = on_attach }
-      require("typescript-tools").setup {
+      require("typescript-tools").setup({
         single_file_support = false,
-        root_dir = require("lspconfig").util.root_pattern "tsconfig.json",
-      }
-      require("clangd_extensions").setup {}
+        root_dir = require("lspconfig").util.root_pattern("tsconfig.json"),
+      })
+      require("clangd_extensions").setup({})
     end,
     dependencies = {
       "hrsh7th/cmp-nvim-lsp",

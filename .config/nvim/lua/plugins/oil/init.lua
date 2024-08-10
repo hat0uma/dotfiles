@@ -1,4 +1,4 @@
-local my_actions = require "plugins.oil.my_actions"
+local my_actions = require("plugins.oil.my_actions")
 
 return {
   "stevearc/oil.nvim",
@@ -7,7 +7,7 @@ return {
   end,
   cond = not vim.g.vscode,
   config = function()
-    require("oil").setup {
+    require("oil").setup({
       columns = {
         "icon",
         -- "permissions",
@@ -50,7 +50,7 @@ return {
       view_options = {
         show_hidden = true,
       },
-    }
+    })
   end,
   cmd = { "Oil" },
 }

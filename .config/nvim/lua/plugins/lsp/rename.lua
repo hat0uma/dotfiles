@@ -1,10 +1,10 @@
 local function accept(win)
-  local new_name = vim.trim(vim.fn.getline ".")
+  local new_name = vim.trim(vim.fn.getline("."))
   vim.api.nvim_win_close(win, true)
   vim.lsp.buf.rename(new_name)
 
   if vim.fn.mode() == "i" then
-    vim.cmd [[stopinsert]]
+    vim.cmd([[stopinsert]])
   end
 end
 
@@ -22,7 +22,7 @@ local function rename()
     style = "minimal",
     border = "single",
   }
-  local cword = vim.fn.expand "<cword>"
+  local cword = vim.fn.expand("<cword>")
   local buf = vim.api.nvim_create_buf(false, true)
   local win = vim.api.nvim_open_win(buf, true, opts)
   local accept_fmt = '<cmd>lua require("rc.lsp.rename").accept(%d)<CR>'

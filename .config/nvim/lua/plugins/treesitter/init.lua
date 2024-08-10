@@ -3,14 +3,14 @@ local M = {
     "nvim-treesitter/nvim-treesitter",
     config = function()
       require("plugins.treesitter.parser").setup()
-      require("nvim-treesitter.configs").setup {
+      require("nvim-treesitter.configs").setup({
         highlight = {
           enable = true,
           disable = {
             -- 'toml',
           },
         },
-      }
+      })
     end,
     event = "BufReadPost",
   },
@@ -18,7 +18,7 @@ local M = {
     "nvim-treesitter/nvim-treesitter-textobjects",
     dependencies = { "nvim-treesitter" },
     config = function()
-      require("nvim-treesitter.configs").setup {
+      require("nvim-treesitter.configs").setup({
         textobjects = {
           select = {
             enable = true,
@@ -60,7 +60,7 @@ local M = {
             },
           },
         },
-      }
+      })
     end,
     event = "BufReadPost",
   },
@@ -68,11 +68,11 @@ local M = {
     "windwp/nvim-ts-autotag",
     dependencies = { "nvim-treesitter" },
     config = function()
-      require("nvim-treesitter.configs").setup {
+      require("nvim-treesitter.configs").setup({
         autotag = {
           enable = true,
         },
-      }
+      })
     end,
     ft = { "typescript", "typescriptreact", "javascript", "javascript" },
   },
@@ -85,10 +85,10 @@ local M = {
     "Badhi/nvim-treesitter-cpp-tools",
     dependencies = { "nvim-treesitter" },
     config = function()
-      require("nt-cpp-tools").setup {
+      require("nt-cpp-tools").setup({
         header_extension = "h",
         source_extension = "cpp",
-      }
+      })
     end,
     cmd = { "TSCppDefineClassFunc", "TSCppMakeConcreteClass", "TSCppRuleOf3", "TSCppRuleOf5" },
   },
@@ -97,9 +97,9 @@ local M = {
     dependencies = { "nvim-treesitter" },
     config = function()
       vim.g.skip_ts_context_commentstring_module = true
-      require("ts_context_commentstring").setup {
+      require("ts_context_commentstring").setup({
         enable_autocmd = false,
-      }
+      })
     end,
     ft = { "typescript", "typescriptreact", "javascript", "javascript" },
   },

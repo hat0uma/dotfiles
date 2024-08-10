@@ -1,13 +1,13 @@
 local M = {}
 
-local SESSION_DIR = vim.fn.stdpath "cache" .. "/sessions"
+local SESSION_DIR = vim.fn.stdpath("cache") .. "/sessions"
 local SESSION_PATH = SESSION_DIR .. "/last.vim"
 
 local function save_current_session()
   if vim.fn.isdirectory(SESSION_DIR) ~= 1 then
     vim.loop.fs_mkdir(SESSION_DIR, 493) -- 755
   end
-  vim.cmd.mksession { SESSION_PATH, bang = true }
+  vim.cmd.mksession({ SESSION_PATH, bang = true })
 end
 
 local function restart()

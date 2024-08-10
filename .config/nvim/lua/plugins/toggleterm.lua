@@ -50,9 +50,9 @@ M.init = function()
 end
 
 M.config = function()
-  local util = require "rc.utils"
-  local shells = require "rc.terminal.shells"
-  local shell = vim.fn.has "win64" == 1 and shells.pwsh or shells.zsh
+  local util = require("rc.utils")
+  local shells = require("rc.terminal.shells")
+  local shell = vim.fn.has("win64") == 1 and shells.pwsh or shells.zsh
   local KeyCode = {
     Up = "\x1b[A",
     Down = "\x1b[B",
@@ -68,7 +68,7 @@ M.config = function()
       local winid = vim.api.nvim_get_current_win()
       if used_by_term(winid) and not is_term(bufname) then
         -- back to terminal buffer and reopen another window
-        vim.cmd.buffer "#"
+        vim.cmd.buffer("#")
         vim.api.nvim_win_close(winid, false)
         vim.cmd.edit(bufname)
         vim.wo.number = true
@@ -78,7 +78,7 @@ M.config = function()
     group = group,
   })
 
-  require("toggleterm").setup {
+  require("toggleterm").setup({
     size = function(term)
       if term.direction == "horizontal" then
         return vim.o.lines * 0.4
@@ -106,11 +106,11 @@ M.config = function()
       vim.keymap.set("n", "q", "<Cmd>close<CR>", opts)
       vim.keymap.set("n", "K", send_key_action(KeyCode.Up), opts)
       vim.keymap.set("n", "J", send_key_action(KeyCode.Down), opts)
-      vim.keymap.set("n", "<CR>", send_key_action "\r", opts)
+      vim.keymap.set("n", "<CR>", send_key_action("\r"), opts)
 
       -- gf
       vim.keymap.set("n", "gf", function()
-        local cfile = vim.fn.expand "<cfile>"
+        local cfile = vim.fn.expand("<cfile>")
         local path = util.rel_or_abs(vim.b.terminal_cwd, cfile)
         if util.accessable(path) then
           vim.cmd("close | e " .. path)
@@ -148,7 +148,7 @@ M.config = function()
       end,
     },
     shade_terminals = false,
-  }
+  })
 end
 
 return M

@@ -31,7 +31,7 @@ local M = {
   {
     "kylechui/nvim-surround",
     config = function()
-      require("nvim-surround").setup {
+      require("nvim-surround").setup({
         keymaps = {
           insert = "<C-g>s",
           insert_line = "<C-g>S",
@@ -47,7 +47,7 @@ local M = {
         aliases = {
           ["b"] = { "}", "]", ")", ">", '"', "'", "`" },
         },
-      }
+      })
       vim.keymap.set("n", "sdd", "<Plug>(nvim-surround-delete)b", { silent = true })
       vim.keymap.set("n", "srr", "<Plug>(nvim-surround-change)b", { silent = true })
     end,

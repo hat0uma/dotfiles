@@ -5,7 +5,7 @@ local M = {
 }
 
 function M.config()
-  require("gitsigns").setup {
+  require("gitsigns").setup({
     trouble = false,
     signcolumn = true,
     numhl = false,
@@ -33,10 +33,10 @@ function M.config()
       end
 
       local blame = function()
-        gs.blame_line { full = true }
+        gs.blame_line({ full = true })
       end
       local diff = function()
-        gs.diffthis "~"
+        gs.diffthis("~")
       end
 
       -- Navigation
@@ -74,7 +74,7 @@ function M.config()
       -- Text object
       map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>")
     end,
-  }
+  })
 end
 
 return M

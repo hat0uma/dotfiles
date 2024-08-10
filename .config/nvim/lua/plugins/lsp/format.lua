@@ -61,13 +61,13 @@ end
 ---@param opts { range:table,on_end:function }
 M.format_async_all_client = function(bufnr, opts)
   local method = opts.range and "textDocument/rangeFormatting" or "textDocument/formatting"
-  local clients = vim.lsp.get_active_clients { id = nil, bufnr = bufnr, name = nil }
+  local clients = vim.lsp.get_active_clients({ id = nil, bufnr = bufnr, name = nil })
   clients = vim.tbl_filter(function(client)
     return client.supports_method(method) and not vim.tbl_contains(format_disable_clients, client.name)
   end, clients)
 
   if #clients == 0 then
-    vim.notify "[LSP] Format request failed, no matching language servers."
+    vim.notify("[LSP] Format request failed, no matching language servers.")
   end
 
   local do_format ---@type function
@@ -104,7 +104,7 @@ M.format_hunks = function(bufnr, opts)
     local end_line = hunk.added.start + hunk.added.count - 1
     local range = {
       ["start"] = { start_line, 0 },
-      ["end"] = { end_line, vim.fn.col { end_line, "$" } - 2 },
+      ["end"] = { end_line, vim.fn.col({ end_line, "$" }) - 2 },
     }
     M.format_async_all_client(bufnr, {
       range = range,

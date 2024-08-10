@@ -1,4 +1,4 @@
-local util = require "rc.git.util"
+local util = require("rc.git.util")
 local M = {}
 
 --- @class GitStatus
@@ -115,7 +115,7 @@ end
 local ENTRY_PATTERNS = {
   ordinary_changed = {
     n = 8,
-    pattern = escape_entry "1 (<XY>) (<sub>) (<mH>) (<mI>) (<mW>) (<hH>) (<hI>) (<path>)",
+    pattern = escape_entry("1 (<XY>) (<sub>) (<mH>) (<mI>) (<mW>) (<hH>) (<hI>) (<path>)"),
     transform = function(matches)
       return {
         status = {
@@ -138,7 +138,7 @@ local ENTRY_PATTERNS = {
   },
   renamed_or_copied = {
     n = 10,
-    pattern = escape_entry "2 (<XY>) (<sub>) (<mH>) (<mI>) (<mW>) (<hH>) (<hI>) (<X><score>) (<path>)<sep>(<origPath>)",
+    pattern = escape_entry("2 (<XY>) (<sub>) (<mH>) (<mI>) (<mW>) (<hH>) (<hI>) (<X><score>) (<path>)<sep>(<origPath>)"),
     transform = function(matches)
       return {
         status = {
@@ -163,7 +163,7 @@ local ENTRY_PATTERNS = {
   },
   unmerged = {
     n = 10,
-    pattern = escape_entry "u (<XY>) (<sub>) (<m1>) (<m2>) (<m3>) (<mW>) (<h1>) (<h2>) (<h3>) (<path>)",
+    pattern = escape_entry("u (<XY>) (<sub>) (<m1>) (<m2>) (<m3>) (<mW>) (<h1>) (<h2>) (<h3>) (<path>)"),
     transform = function(matches)
       return {
         status = {
@@ -188,14 +188,14 @@ local ENTRY_PATTERNS = {
   },
   untracked = {
     n = 1,
-    pattern = escape_entry "? (<path>)",
+    pattern = escape_entry("? (<path>)"),
     transform = function(matches)
       return { path = unpack(matches) }
     end,
   },
   ignored = {
     n = 1,
-    pattern = escape_entry "! (<path>)",
+    pattern = escape_entry("! (<path>)"),
     transform = function(matches)
       return { path = unpack(matches) }
     end,

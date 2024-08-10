@@ -4,7 +4,7 @@ local M = {
   {
     "mfussenegger/nvim-dap",
     config = function()
-      local dap = require "dap"
+      local dap = require("dap")
       local uv = vim.loop
 
       local function read_file_sync(path)
@@ -22,11 +22,11 @@ local M = {
       end
 
       local function extend_path(path)
-        local sep = vim.fn.has "win64" == 1 and ";" or ":"
+        local sep = vim.fn.has("win64") == 1 and ";" or ":"
         return string.format("%s%s%s", path, sep, vim.env.PATH)
       end
 
-      local mason_bin = vim.fn.stdpath "data" .. "/mason/bin"
+      local mason_bin = vim.fn.stdpath("data") .. "/mason/bin"
       dap.adapters.coreclr = {
         type = "executable",
         command = "netcoredbg",

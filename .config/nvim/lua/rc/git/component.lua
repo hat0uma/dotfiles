@@ -1,4 +1,4 @@
-local status = require "rc.git.ops.status"
+local status = require("rc.git.ops.status")
 local GitStatus = status.GitStatus
 
 local M = {
@@ -25,7 +25,7 @@ function M.get_status_cached()
   if (now - M.last_update) < M.config.cache_duration then
     -- on cache time
   elseif M.job and not M.job:is_closing() then
-    print "git status is running"
+    print("git status is running")
   else
     M.last_update = now
     M.job = status.run({}, update_cache)

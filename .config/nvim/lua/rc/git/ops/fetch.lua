@@ -1,4 +1,4 @@
-local util = require "rc.git.util"
+local util = require("rc.git.util")
 local M = {}
 
 --- run fetch

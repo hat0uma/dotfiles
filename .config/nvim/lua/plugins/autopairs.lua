@@ -7,10 +7,10 @@ local M = {
 
 function M.config()
   -- _G.__is_log = true
-  local npairs = require "nvim-autopairs"
-  local Rule = require "nvim-autopairs.rule"
-  local cond = require "nvim-autopairs.conds"
-  local ts_conds = require "nvim-autopairs.ts-conds"
+  local npairs = require("nvim-autopairs")
+  local Rule = require("nvim-autopairs.rule")
+  local cond = require("nvim-autopairs.conds")
+  local ts_conds = require("nvim-autopairs.ts-conds")
 
   local syntax_filetypes = { "cs", "vim", "toml", "lua", "python" }
   local ts_config = {}
@@ -18,11 +18,11 @@ function M.config()
     ts_config[value] = {}
   end
 
-  npairs.setup {
+  npairs.setup({
     check_ts = true,
     ts_config = ts_config,
     fast_wrap = {},
-  }
+  })
 
   -- cmp settings
   -- local cmp_autopairs = require('nvim-autopairs.completion.cmp')
@@ -36,7 +36,7 @@ function M.config()
   --- insert white space operator's side.
   local function operator_settings(operator)
     return Rule(operator, "", syntax_filetypes)
-      :with_pair(ts_conds.is_not_ts_node { "string", "comment", "string_literal", "source" })
+      :with_pair(ts_conds.is_not_ts_node({ "string", "comment", "string_literal", "source" }))
       :replace_endpair(function(opts)
         local prev_2char = string.sub(opts.line, opts.col - 2, opts.col - 1)
         -- single operator
@@ -57,12 +57,12 @@ function M.config()
   npairs.add_rules(vim.tbl_map(operator_settings, operators))
 
   -- insert white space inner bracket
-  npairs.add_rules {
+  npairs.add_rules({
     Rule(" ", " "):with_pair(function(opts)
       local pair = opts.line:sub(opts.col - 1, opts.col)
       return vim.tbl_contains({ "()", "[]", "{}" }, pair)
     end),
-  }
+  })
 end
 
 return M

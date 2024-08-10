@@ -1,14 +1,14 @@
 return {
   "stevearc/overseer.nvim",
   config = function()
-    require("overseer").setup {
+    require("overseer").setup({
       strategy = "toggleterm",
       use_shell = false,
       direction = "float",
       auto_scroll = nil,
       close_on_exit = false,
       open_on_start = true,
-    }
+    })
     require("plugins.overseer.tasks").setup()
   end,
   init = function()

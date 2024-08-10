@@ -7,10 +7,10 @@ return {
     "alfaix/neotest-gtest",
   },
   config = function()
-    require("neotest").setup {
+    require("neotest").setup({
       adapters = {
-        require "neotest-python",
+        require("neotest-python"),
       },
-    }
+    })
   end,
 }

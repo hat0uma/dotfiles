@@ -1,5 +1,5 @@
-local util = require "rc.git.util"
-local fetch = require "rc.git.ops.fetch"
+local fetch = require("rc.git.ops.fetch")
+local util = require("rc.git.util")
 local M = {}
 
 M.options = {
@@ -39,9 +39,9 @@ end
 
 function M.auto_fetch_status()
   if M.is_starting() then
-    vim.notify "auto fetch starting."
+    vim.notify("auto fetch starting.")
   else
-    vim.notify "auto fetch stopped."
+    vim.notify("auto fetch stopped.")
   end
 end
 

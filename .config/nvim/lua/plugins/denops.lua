@@ -1,4 +1,4 @@
-local deno_executable = vim.fn.executable "deno" == 1 and "deno" or vim.fn.expand "~/.deno/bin/deno"
+local deno_executable = vim.fn.executable("deno") == 1 and "deno" or vim.fn.expand("~/.deno/bin/deno")
 return {
   "vim-denops/denops.vim",
   register = function(name)
@@ -26,7 +26,7 @@ return {
   config = function()
     vim.g["denops#deno"] = deno_executable
 
-    if vim.fn.has "vim_starting" == 1 then
+    if vim.fn.has("vim_starting") == 1 then
       vim.fn["denops#server#start"]()
     end
   end,

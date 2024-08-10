@@ -11,7 +11,7 @@ return {
     "lukas-reineke/indent-blankline.nvim",
     cond = not vim.g.vscode,
     config = function()
-      require("ibl").setup {
+      require("ibl").setup({
         indent = {
           char = "│",
         },
@@ -25,7 +25,7 @@ return {
             "translator",
           },
         },
-      }
+      })
     end,
     event = "BufReadPre",
   },
@@ -33,7 +33,7 @@ return {
   {
     "Wansmer/treesj",
     config = function()
-      require("treesj").setup { use_default_keymaps = false }
+      require("treesj").setup({ use_default_keymaps = false })
     end,
     keys = {
       { "<leader>j", "<cmd>TSJToggle<cr>" },
@@ -46,7 +46,7 @@ return {
       "nvim-treesitter/nvim-treesitter",
     },
     config = function()
-      require("refactoring").setup {}
+      require("refactoring").setup({})
     end,
   },
   {
@@ -72,20 +72,20 @@ return {
   {
     "kyazdani42/nvim-web-devicons",
     config = function()
-      require("nvim-web-devicons").setup { default = true }
+      require("nvim-web-devicons").setup({ default = true })
     end,
   },
 
   {
     "hat0uma/project.nvim",
     config = function()
-      require("project_nvim").setup {
+      require("project_nvim").setup({
         patterns = {
           ".git",
           ".svn",
         },
         detection_methods = { "pattern", "lsp" },
-      }
+      })
     end,
     event = "BufReadPost",
   },
@@ -95,27 +95,27 @@ return {
       {
         "<Leader>d",
         function()
-          require("neogen").generate {}
+          require("neogen").generate({})
         end,
         "n",
       },
     },
     config = function()
-      require("neogen").setup {
+      require("neogen").setup({
         enabled = true,
         languages = {
           cs = { template = { annotation_convention = "xmldoc" } },
           typescript = { template = { annotation_convention = "tsdoc" } },
           typescriptreact = { template = { annotation_convention = "tsdoc" } },
         },
-      }
+      })
     end,
     dependencies = { "nvim-treesitter/nvim-treesitter" },
   },
   {
     "nvim-pack/nvim-spectre",
     config = function()
-      require("spectre").setup {
+      require("spectre").setup({
         default = {
           find = {
             cmd = "rg",
@@ -123,7 +123,7 @@ return {
           },
           replace = { cmd = "sed" },
         },
-      }
+      })
     end,
     keys = {
       {
@@ -151,9 +151,9 @@ return {
   {
     "numToStr/Comment.nvim",
     config = function()
-      require("Comment").setup {
+      require("Comment").setup({
         pre_hook = require("ts_context_commentstring.integrations.comment_nvim").create_pre_hook(),
-      }
+      })
     end,
     keys = {
       { "gcc", mode = "n" },
@@ -186,12 +186,12 @@ return {
       vim.keymap.set("n", "<leader>te", "viw:Translate EN -output=replace<CR>", opts)
     end,
     config = function()
-      require("translate").setup {
+      require("translate").setup({
         default = {
           command = "google",
           output = "floating",
         },
-      }
+      })
     end,
     cmd = { "Translate" },
   },
@@ -200,12 +200,12 @@ return {
     init = function()
       ---@diagnostic disable-next-line: duplicate-set-field
       vim.ui.select = function(...)
-        require("lazy").load { plugins = { "dressing.nvim" } }
+        require("lazy").load({ plugins = { "dressing.nvim" } })
         return vim.ui.select(...)
       end
       ---@diagnostic disable-next-line: duplicate-set-field
       vim.ui.input = function(...)
-        require("lazy").load { plugins = { "dressing.nvim" } }
+        require("lazy").load({ plugins = { "dressing.nvim" } })
         return vim.ui.input(...)
       end
     end,
@@ -222,8 +222,8 @@ return {
   {
     "simplenote-vim/simplenote.vim",
     config = function()
-      if vim.fn.filereadable(vim.fn.expand "~/.simplenote-credentials") then
-        vim.cmd [[ source ~/.simplenote-credentials ]]
+      if vim.fn.filereadable(vim.fn.expand("~/.simplenote-credentials")) then
+        vim.cmd([[ source ~/.simplenote-credentials ]])
       end
       vim.g.SimplenoteFiletype = "simplenote-text"
       vim.g.SimplenoteListSize = 20
@@ -281,16 +281,16 @@ return {
     ft = "toggleterm",
     version = "1.*",
     config = function()
-      require("term-edit").setup {
+      require("term-edit").setup({
         prompt_end = "❯ ",
-      }
+      })
     end,
     enabled = false,
   },
   {
     "NvChad/nvim-colorizer.lua",
     config = function()
-      require("colorizer").setup {
+      require("colorizer").setup({
         filetypes = {
           "css",
           "scss",
@@ -299,7 +299,7 @@ return {
           "javascript",
           "javascriptreact",
         },
-      }
+      })
     end,
     event = "BufReadPost",
   },
@@ -310,7 +310,7 @@ return {
   {
     "nmac427/guess-indent.nvim",
     config = function()
-      require("guess-indent").setup {}
+      require("guess-indent").setup({})
     end,
     event = "BufReadPre",
     cond = not vim.g.vscode,
@@ -322,7 +322,7 @@ return {
       "trouble.nvim",
     },
     config = function()
-      require("todo-comments").setup {}
+      require("todo-comments").setup({})
     end,
   },
   {
@@ -342,8 +342,8 @@ return {
   {
     "luukvbaal/statuscol.nvim",
     config = function()
-      local builtin = require "statuscol.builtin"
-      require("statuscol").setup {
+      local builtin = require("statuscol.builtin")
+      require("statuscol").setup({
         relculright = true,
         segments = {
           { sign = { namespace = { "diagnostic" }, maxwidth = 1, colwidth = 2 } },
@@ -365,7 +365,7 @@ return {
             click = "v:lua.ScFa",
           },
         },
-      }
+      })
     end,
     event = "VeryLazy",
     branch = "0.10",
@@ -374,7 +374,7 @@ return {
     "LunarVim/bigfile.nvim",
     cond = not vim.g.vscode,
     config = function()
-      require("bigfile").setup {
+      require("bigfile").setup({
         filesize = 1,
         pattern = { "*" },
         features = {
@@ -387,7 +387,7 @@ return {
           -- "vimopts",
           "filetype",
         },
-      }
+      })
     end,
     lazy = false,
   },
@@ -407,7 +407,7 @@ return {
       { "nvim-lua/plenary.nvim" },
     },
     config = function()
-      require("CopilotChat").setup {}
+      require("CopilotChat").setup({})
     end,
     cmd = { "CopilotChat" },
     cond = function()
@@ -419,7 +419,7 @@ return {
     cmd = "Copilot",
     event = "InsertEnter",
     config = function()
-      require("copilot").setup {
+      require("copilot").setup({
         suggestion = {
           auto_trigger = true,
           keymap = {
@@ -432,7 +432,7 @@ return {
         filetypes = {
           ["*"] = true,
         },
-      }
+      })
     end,
     cond = function()
       return vim.env.ENABLE_NVIM_AI_PLUGINS == "1"
@@ -442,7 +442,7 @@ return {
     "chipsenkbeil/distant.nvim",
     branch = "v0.3",
     config = function()
-      require("distant"):setup {}
+      require("distant"):setup({})
     end,
     cmd = {
       "DistantInstall",
@@ -458,7 +458,7 @@ return {
   {
     "hat0uma/prelive.nvim",
     config = function()
-      require("prelive").setup { server = { port = 0 } }
+      require("prelive").setup({ server = { port = 0 } })
     end,
     cmd = {
       "PreLiveGo",
@@ -484,6 +484,18 @@ return {
     cmd = {
       "MakeTable",
       "UnmakeTable",
+    },
+  },
+  {
+    "RaafatTurki/hex.nvim",
+    config = function()
+      require("hex").setup()
+    end,
+
+    cmd = {
+      "HexDump",
+      "HexAssemble",
+      "HexToggle",
     },
   },
 }

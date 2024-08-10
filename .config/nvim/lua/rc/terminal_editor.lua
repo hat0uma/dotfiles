@@ -85,7 +85,7 @@ M.man = remote_edit(function(lines)
   local buf = vim.api.nvim_get_current_buf()
   vim.api.nvim_buf_set_lines(buf, 0, -1, true, lines)
   vim.bo.readonly = true
-  vim.cmd [[ Man! ]]
+  vim.cmd([[ Man! ]])
 end)
 
 return M

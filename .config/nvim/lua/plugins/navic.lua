@@ -3,7 +3,7 @@ local M = {
 }
 
 function M.config()
-  require("nvim-navic").setup {
+  require("nvim-navic").setup({
     highlight = true,
     icons = {
       File = " ",
@@ -33,7 +33,7 @@ function M.config()
       Operator = " ",
       TypeParameter = " ",
     },
-  }
+  })
 end
 
 return M

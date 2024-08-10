@@ -11,8 +11,8 @@ local function calc_ab(cb, hash1, hash2)
     },
     { text = true },
     vim.schedule_wrap(function(obj)
-      local ahead, behind = obj.stdout:match "(%d+)\t(%d+)"
-      cb { ahead = ahead, behind = behind }
+      local ahead, behind = obj.stdout:match("(%d+)\t(%d+)")
+      cb({ ahead = ahead, behind = behind })
     end)
   )
 end
@@ -31,10 +31,10 @@ local function get_head()
   -- Read current branch
   local head_path = ".git/HEAD"
   local head_file = read_file(head_path)
-  local current_branch = head_file:match "ref: refs/heads/(%w+)"
+  local current_branch = head_file:match("ref: refs/heads/(%w+)")
 
   -- Get commit hash of current branch
-  local head = read_file(".git/refs/heads/" .. current_branch):match "[^\r\n]+"
+  local head = read_file(".git/refs/heads/" .. current_branch):match("[^\r\n]+")
   return { branch = current_branch, commit = head }
 end
 
@@ -43,9 +43,9 @@ local function parse_git_config(data)
   local config = {}
   local section, sub_section
 
-  for line in data:gmatch "[^\r\n]+" do
+  for line in data:gmatch("[^\r\n]+") do
     -- Match subsection
-    local new_sub_section = { line:match '^%[([^%]]+) "([^"]+)"%]$' }
+    local new_sub_section = { line:match('^%[([^%]]+) "([^"]+)"%]$') }
     if #new_sub_section == 2 then
       section, sub_section = unpack(new_sub_section)
       config[section] = config[section] or {}
@@ -54,7 +54,7 @@ local function parse_git_config(data)
     end
 
     -- Match section
-    local new_section = line:match "^%[([^%]]+)%]$"
+    local new_section = line:match("^%[([^%]]+)%]$")
     if new_section then
       section = new_section
       sub_section = nil
@@ -63,7 +63,7 @@ local function parse_git_config(data)
     end
 
     -- Match key-value pairs
-    local key, value = line:match "^%s*([^=%s]+)%s*=%s*(.-)%s*$"
+    local key, value = line:match("^%s*([^=%s]+)%s*=%s*(.-)%s*$")
     if key and value and section then
       if sub_section then
         config[section][sub_section][key] = value
@@ -78,13 +78,13 @@ local function parse_git_config(data)
   return config
 end
 
-local git_config = read_file ".git/config"
+local git_config = read_file(".git/config")
 local parsed_config = parse_git_config(git_config)
 
 local head = get_head()
 local remote_name = parsed_config.branch[head.branch].remote
-local remote_branch = parsed_config.branch[head.branch].merge:match "refs/heads/(%w+)"
-local remote_hash = read_file(".git/refs/remotes/" .. remote_name .. "/" .. remote_branch):match "[^\r\n]+"
+local remote_branch = parsed_config.branch[head.branch].merge:match("refs/heads/(%w+)")
+local remote_hash = read_file(".git/refs/remotes/" .. remote_name .. "/" .. remote_branch):match("[^\r\n]+")
 
 -- vim.print(parsed_config)
 vim.print("current branch : " .. head.branch)

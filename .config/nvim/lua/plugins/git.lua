@@ -13,7 +13,7 @@ return {
       vim.keymap.set({ "n", "x" }, ",X", "<cmd>GitLink! blame<CR>", opts)
     end,
     config = function()
-      require("gitlinker").setup {}
+      require("gitlinker").setup({})
     end,
     cmd = { "GitLink" },
   },
@@ -27,8 +27,8 @@ return {
       -- vim.keymap.set("n", ",,", ":<C-u>Neogit<CR>", opts)
     end,
     config = function()
-      local neogit = require "neogit"
-      neogit.setup {
+      local neogit = require("neogit")
+      neogit.setup({
         disable_commit_confirmation = true,
         integrations = {
           diffview = true,
@@ -38,7 +38,7 @@ return {
           "NeogitPushPopup--force",
           "NeogitCommitPopup--allow-empty",
         },
-      }
+      })
     end,
     cmd = { "Neogit" },
     dependencies = {
@@ -51,7 +51,7 @@ return {
       -- vim.keymap.set("n", ",l", "<Cmd>DiffviewFileHistory<CR>", { silent = true, noremap = true })
     end,
     config = function()
-      require("diffview").setup {
+      require("diffview").setup({
         hooks = {
           diff_buf_read = function(bufnr)
             vim.opt_local.relativenumber = false
@@ -62,7 +62,7 @@ return {
             { "n", "q", "<Cmd>DiffviewClose<CR>" },
           },
         },
-      }
+      })
     end,
     cmd = { "DiffviewFileHistory" },
   },

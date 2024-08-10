@@ -5,7 +5,7 @@ local M = {
 }
 
 function M.config()
-  require("illuminate").configure {
+  require("illuminate").configure({
     providers = {
       "lsp",
       "treesitter",
@@ -21,7 +21,7 @@ function M.config()
       "lir",
       "Trouble",
     },
-  }
+  })
 end
 
 return M

@@ -1,6 +1,6 @@
 local M = {}
 
-local is_windows = vim.loop.os_uname().version:match "Windows"
+local is_windows = vim.loop.os_uname().version:match("Windows")
 
 function M.setup()
   vim.lsp.handlers["textDocument/definition"] = function(err, result, ctx, config)
@@ -28,7 +28,7 @@ function M.setup()
       vim.lsp.util.jump_to_location(loclist[1].user_data, offset_encoding, true)
     else
       vim.fn.setloclist(0, loclist, " ")
-      vim.cmd "lopen"
+      vim.cmd("lopen")
     end
   end
 end

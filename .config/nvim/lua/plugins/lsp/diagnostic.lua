@@ -1,6 +1,6 @@
 return {
   setup = function()
-    vim.diagnostic.config {
+    vim.diagnostic.config({
       underline = {
         severity = { min = vim.diagnostic.severity.HINT },
       },
@@ -20,6 +20,6 @@ return {
       jump = {
         float = true,
       },
-    }
+    })
   end,
 }

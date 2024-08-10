@@ -1,4 +1,4 @@
-local Menu = require "nui.menu"
+local Menu = require("nui.menu")
 
 local M = {}
 
@@ -33,7 +33,7 @@ local function add_system(ext, name, cmd)
     end
 
     local Terminal = require("toggleterm.terminal").Terminal
-    local term = Terminal:new {
+    local term = Terminal:new({
       hidden = true,
       close_on_exit = false,
       dir = dir,
@@ -47,7 +47,7 @@ local function add_system(ext, name, cmd)
       on_close = vim.schedule_wrap(function()
         vim.cmd.edit()
       end),
-    }
+    })
     term:toggle()
   end)
 end

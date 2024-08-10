@@ -5,7 +5,7 @@ return {
   lazy = false,
   priority = 999,
   config = function()
-    require("catppuccin").setup {
+    require("catppuccin").setup({
       flavour = "frappe",
       integrations = {
         aerial = true,
@@ -54,17 +54,17 @@ return {
       dim_inactive = {
         enabled = false,
       },
-    }
+    })
 
     vim.api.nvim_set_hl(0, "Blue", { fg = "#7FBBB3" })
     vim.api.nvim_set_hl(0, "CurrentWord", { bg = "#3d484d" })
 
-    vim.cmd.colorscheme "catppuccin"
+    vim.cmd.colorscheme("catppuccin")
     require("plugins.colorscheme.highlights").setup()
   end,
   --- @return MyStatuslinePalette
   get_statusline_palette = function()
-    local frappe = require("catppuccin.palettes").get_palette "frappe"
+    local frappe = require("catppuccin.palettes").get_palette("frappe")
     --- @type table <string,string>
     local palette = {
       bg = frappe.base,

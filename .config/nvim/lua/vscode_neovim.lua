@@ -12,7 +12,7 @@ local M = {}
 --- @field get_status_item fun(id:string) Gets a vscode statusbar item. Properties can be assigned, which magically updates the statusbar item.
 --- @field eval fun(code:string,opts?:table,timeout?:number):any evaluate javascript synchronously in vscode and return the result
 --- @field eval_async fun(code:string,opts?:table) evaluate javascript asynchronously in vscode
-local vscode = require "vscode"
+local vscode = require("vscode")
 
 ---@param ... string
 ---@return function
@@ -38,11 +38,11 @@ end
 
 local function next_diagnostics()
   local aug = vim.api.nvim_create_augroup("vscode_diagnostics", { clear = true })
-  vscode.call "editor.action.marker.next"
+  vscode.call("editor.action.marker.next")
   vim.defer_fn(function()
     vim.api.nvim_create_autocmd("CursorMoved", {
       callback = function()
-        vscode.action "closeMarkersNavigation"
+        vscode.action("closeMarkersNavigation")
       end,
       once = true,
       group = aug,
@@ -52,11 +52,11 @@ end
 
 local function prev_diagnostics()
   local aug = vim.api.nvim_create_augroup("vscode_diagnostics", { clear = true })
-  vscode.call "editor.action.marker.prev"
+  vscode.call("editor.action.marker.prev")
   vim.defer_fn(function()
     vim.api.nvim_create_autocmd("CursorMoved", {
       callback = function()
-        vscode.action "closeMarkersNavigation"
+        vscode.action("closeMarkersNavigation")
       end,
       once = true,
       group = aug,
@@ -69,8 +69,8 @@ local function setup_keymaps()
 
   -- basic commands
   vim.keymap.set("n", "<Leader>w", "<cmd>Write<CR>", opts)
-  vim.keymap.set("n", "<Leader>W", bind_call "workbench.action.files.saveWithoutFormatting", opts)
-  vim.keymap.set("n", "<Leader>e", bind_call "workbench.view.explorer", opts)
+  vim.keymap.set("n", "<Leader>W", bind_call("workbench.action.files.saveWithoutFormatting"), opts)
+  vim.keymap.set("n", "<Leader>e", bind_call("workbench.view.explorer"), opts)
 
   -- telescope alternative
   local quickopen = bind_action("workbench.action.quickOpen", "workbench.action.quickOpenSelectNext")
@@ -78,22 +78,22 @@ local function setup_keymaps()
   vim.keymap.set("n", "<leader>f", quickopen, opts)
 
   -- lsp
-  vim.keymap.set("n", "<leader>rn", bind_action "editor.action.rename", opts)
-  vim.keymap.set("n", "gd", bind_action "editor.action.revealDefinition", opts)
-  vim.keymap.set("n", "gh", bind_action "editor.action.showHover", opts)
-  vim.keymap.set("n", "gr", bind_action "editor.action.goToReferences", opts)
-  vim.keymap.set("n", "<leader>a", bind_action "editor.action.quickFix", opts)
+  vim.keymap.set("n", "<leader>rn", bind_action("editor.action.rename"), opts)
+  vim.keymap.set("n", "gd", bind_action("editor.action.revealDefinition"), opts)
+  vim.keymap.set("n", "gh", bind_action("editor.action.showHover"), opts)
+  vim.keymap.set("n", "gr", bind_action("editor.action.goToReferences"), opts)
+  vim.keymap.set("n", "<leader>a", bind_action("editor.action.quickFix"), opts)
   vim.keymap.set("n", "]d", next_diagnostics, opts)
   vim.keymap.set("n", "[d", prev_diagnostics, opts)
-  vim.keymap.set("n", "<leader>q", bind_action "workbench.panel.markers.view.focus", opts)
+  vim.keymap.set("n", "<leader>q", bind_action("workbench.panel.markers.view.focus"), opts)
 
   -- git
-  vim.keymap.set("n", "]c", bind_action "workbench.action.editor.nextChange", opts)
-  vim.keymap.set("n", "[c", bind_action "workbench.action.editor.previousChange", opts)
-  vim.keymap.set("n", "<Leader>hp", bind_action "editor.action.dirtydiff.next", opts)
-  vim.keymap.set({ "n", "v" }, "<Leader>hs", bind_action "git.stageSelectedRanges", opts)
-  vim.keymap.set({ "n", "v" }, "<Leader>hr", bind_action "git.revertSelectedRanges", opts)
-  vim.keymap.set({ "n", "v" }, "<Leader>hb", bind_action "gitlens.diffLineWithWorking", opts)
+  vim.keymap.set("n", "]c", bind_action("workbench.action.editor.nextChange"), opts)
+  vim.keymap.set("n", "[c", bind_action("workbench.action.editor.previousChange"), opts)
+  vim.keymap.set("n", "<Leader>hp", bind_action("editor.action.dirtydiff.next"), opts)
+  vim.keymap.set({ "n", "v" }, "<Leader>hs", bind_action("git.stageSelectedRanges"), opts)
+  vim.keymap.set({ "n", "v" }, "<Leader>hr", bind_action("git.revertSelectedRanges"), opts)
+  vim.keymap.set({ "n", "v" }, "<Leader>hb", bind_action("gitlens.diffLineWithWorking"), opts)
 end
 
 local function setup_opts()

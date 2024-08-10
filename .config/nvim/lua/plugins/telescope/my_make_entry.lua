@@ -1,8 +1,8 @@
 local M = {}
 
-local Path = require "plenary.path"
-local devicons = require "nvim-web-devicons"
-local entry_display = require "telescope.pickers.entry_display"
+local Path = require("plenary.path")
+local devicons = require("nvim-web-devicons")
+local entry_display = require("telescope.pickers.entry_display")
 
 local lookup_keys = {
   ordinal = 1,
@@ -17,25 +17,25 @@ function M.gen_from_files_prioritize_basename(opts)
   local mt_file_entry = {}
   mt_file_entry.cwd = cwd
 
-  local displayer = entry_display.create {
+  local displayer = entry_display.create({
     separator = " ",
     items = {
       {}, -- devicon
       {}, -- filename
       {}, -- dirname
     },
-  }
+  })
 
   mt_file_entry.display = function(entry)
     local icon, highlight = devicons.get_icon(entry.value, string.match(entry.value, "%a+$"), { default = true })
     entry.value = vim.fs.normalize(entry.value)
     local dir_name = vim.fn.fnamemodify(entry.value, ":p:~:.:h")
     local file_name = vim.fn.fnamemodify(entry.value, ":p:t")
-    return displayer {
+    return displayer({
       { icon, highlight },
       file_name,
       { dir_name, "Comment" },
-    }
+    })
   end
 
   mt_file_entry.__index = function(t, k)

@@ -25,7 +25,7 @@ return {
           return
         end
 
-        if vim.tbl_contains(ignore_buffers, vim.fn.expand "%:p:t") then
+        if vim.tbl_contains(ignore_buffers, vim.fn.expand("%:p:t")) then
           return
         end
 

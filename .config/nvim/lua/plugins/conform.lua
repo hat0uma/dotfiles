@@ -36,7 +36,7 @@ local function format_hunks(bufnr, callback)
     local end_line = hunk.added.start + hunk.added.count - 1
     local range = {
       ["start"] = { start_line, 0 },
-      ["end"] = { end_line, vim.fn.col { end_line, "$" } - 2 },
+      ["end"] = { end_line, vim.fn.col({ end_line, "$" }) - 2 },
     }
     require("conform").format({
       bufnr = bufnr,
@@ -79,7 +79,7 @@ function M.save_handle()
 end
 
 local formatter_for_ts = function(bufnr)
-  local deno = vim.lsp.get_clients { bufnr = bufnr, name = "denols" }
+  local deno = vim.lsp.get_clients({ bufnr = bufnr, name = "denols" })
   if #deno > 0 then
     return {} -- deno lsp has its own formatter
   else
@@ -88,7 +88,7 @@ local formatter_for_ts = function(bufnr)
 end
 
 M.config = function()
-  require("conform").setup {
+  require("conform").setup({
     formatters_by_ft = {
       lua = { "stylua" },
       typescript = formatter_for_ts,
@@ -102,7 +102,7 @@ M.config = function()
       markdown = { "markdownlint-cli2" },
       sh = { "shfmt" },
     },
-  }
+  })
 
   vim.api.nvim_create_user_command("FormatOnSaveMode", function(opts)
     if #opts.fargs == 0 then
@@ -129,12 +129,12 @@ M.config = function()
   end, {})
   vim.api.nvim_create_user_command("Format", function()
     local bufnr = vim.api.nvim_get_current_buf()
-    require("conform").format {
+    require("conform").format({
       bufnr = bufnr,
       async = true,
       lsp_fallback = "always",
       filter = filter,
-    }
+    })
   end, {})
 end
 

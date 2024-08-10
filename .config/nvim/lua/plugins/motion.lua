@@ -1,5 +1,5 @@
 local function flash_2char_jump()
-  local flash = require "flash"
+  local flash = require("flash")
   ---@param opts Flash.Format
   local function format(opts)
     -- always show first and second label
@@ -9,13 +9,13 @@ local function flash_2char_jump()
     }
   end
 
-  flash.jump {
+  flash.jump({
     search = { mode = "search" },
     label = { after = false, before = { 0, 0 }, uppercase = false, format = format },
     pattern = [[\<]],
     action = function(match, state)
       state:hide()
-      flash.jump {
+      flash.jump({
         search = { max_length = 0 },
         highlight = { matches = false },
         label = { format = format },
@@ -30,7 +30,7 @@ local function flash_2char_jump()
             m.label = m.label2 -- use the second label
           end
         end,
-      }
+      })
     end,
     labeler = function(matches, state)
       local labels = state:labels()
@@ -40,14 +40,14 @@ local function flash_2char_jump()
         match.label = match.label1
       end
     end,
-  }
+  })
 end
 
 return {
   {
     "folke/flash.nvim",
     config = function()
-      require("flash").setup {
+      require("flash").setup({
         jump = {
           nohlsearch = true,
           autojump = true,
@@ -65,7 +65,7 @@ return {
         highlight = {
           groups = { label = "HopNextKey" },
         },
-      }
+      })
     end,
     keys = {
       {

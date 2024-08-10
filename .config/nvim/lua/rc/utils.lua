@@ -7,7 +7,7 @@ end
 ---@param cwd string
 ---@param file string
 function M.rel_or_abs(cwd, file)
-  local Path = require "plenary.path"
+  local Path = require("plenary.path")
 
   --- @type string
   if cwd == nil then

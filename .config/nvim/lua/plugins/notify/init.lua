@@ -4,8 +4,8 @@ local M = {
 }
 
 function M.config()
-  local notify = require "notify"
-  local stages = require "plugins.notify.fade_in_slide_out_bottom_up"
+  local notify = require("notify")
+  local stages = require("plugins.notify.fade_in_slide_out_bottom_up")
   vim.notify = notify
 
   local function lsp_setup()
@@ -107,12 +107,12 @@ function M.config()
   end
 
   -- api.nvim_echo({ { string.format('Hunk %d of %d', index, #hunks), 'None' } }, false, {})
-  notify.setup {
+  notify.setup({
     -- render = "minimal",
     minimum_width = 15,
     max_width = 50,
     -- stages = stages,
-  }
+  })
   -- lsp_setup()
 end
 

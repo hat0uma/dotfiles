@@ -29,8 +29,8 @@ local function setup_trouble_winbar_hl()
   end
 
   local palette = {
-    Blue = get_hl "Blue",
-    Grey = get_hl "Grey",
+    Blue = get_hl("Blue"),
+    Grey = get_hl("Grey"),
   }
   local highlights = {
     TroubleWinBarActiveMode = {

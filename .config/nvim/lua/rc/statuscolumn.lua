@@ -23,7 +23,7 @@ end
 function M.column()
   local sign, git_sign
   for _, s in ipairs(M.get_signs()) do
-    if s.name:find "GitSign" then
+    if s.name:find("GitSign") then
       git_sign = s
     else
       sign = s

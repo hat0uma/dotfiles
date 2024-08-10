@@ -1,9 +1,9 @@
 local function setup_statusline()
   local fn = vim.fn
-  local gl = require "galaxyline"
-  local fileinfo = require "galaxyline.provider_fileinfo"
-  local buffer = require "galaxyline.provider_buffer"
-  local condition = require "galaxyline.condition"
+  local gl = require("galaxyline")
+  local fileinfo = require("galaxyline.provider_fileinfo")
+  local buffer = require("galaxyline.provider_buffer")
+  local condition = require("galaxyline.condition")
   local section = gl.section
 
   gl.short_line_list = {
@@ -36,7 +36,7 @@ local function setup_statusline()
   end
 
   local buffer_not_empty = function()
-    return fn.empty(fn.expand "%:t") ~= 1
+    return fn.empty(fn.expand("%:t")) ~= 1
   end
 
   local checkwidth = function()
@@ -73,7 +73,7 @@ local function setup_statusline()
       local mode = modes[fn.mode()]
       local alias = mode.alias
       local skkeleton_mode = ""
-      if fn.exists "skkeleton#mode" ~= 0 then
+      if fn.exists("skkeleton#mode") ~= 0 then
         skkeleton_mode = fn["skkeleton#mode"]()
       end
       if skkeleton_mode ~= "" then
@@ -135,8 +135,8 @@ local function setup_statusline()
   --
   local LineInfo = {
     provider = function()
-      local line = vim.fn.line "."
-      local column = vim.fn.col "."
+      local line = vim.fn.line(".")
+      local column = vim.fn.col(".")
       return string.format(" %3d:%-2d ", line, column)
     end,
     separator = " ",

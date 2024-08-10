@@ -1,6 +1,6 @@
 local M = {}
-local config = require "rc.terminal.config"
-local util = require "rc.utils"
+local config = require("rc.terminal.config")
+local util = require("rc.utils")
 
 local function is_floating(winid)
   local cfg = vim.api.nvim_win_get_config(winid)

@@ -46,7 +46,7 @@ M.configurations = {
   powershell_es = {},
   denols = {
     -- single_file_support = true,
-    root_dir = require("lspconfig").util.root_pattern "deno.json",
+    root_dir = require("lspconfig").util.root_pattern("deno.json"),
     init_options = {
       enable = true,
       lint = true,
@@ -132,7 +132,7 @@ function M.install()
     "stylua",
     "typescript-language-server",
   }
-  require "mason"
+  require("mason")
   vim.cmd("MasonInstall " .. table.concat(auto_install, " "))
 end
 

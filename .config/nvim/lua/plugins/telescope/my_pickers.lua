@@ -1,10 +1,10 @@
 local M = {}
 
-local pickers = require "telescope.pickers"
-local finders = require "telescope.finders"
+local finders = require("telescope.finders")
+local pickers = require("telescope.pickers")
 local conf = require("telescope.config").values
-local actions = require "telescope.actions"
-local action_state = require "telescope.actions.state"
+local action_state = require("telescope.actions.state")
+local actions = require("telescope.actions")
 
 ---@class EditAction
 ---@field name string
@@ -12,10 +12,10 @@ local action_state = require "telescope.actions.state"
 
 ---@type Action[]
 local EDIT_ACTIONS = {
-  { name = 'stdpath("cache")', target = vim.fn.stdpath "cache" },
-  { name = 'stdpath("config")', target = vim.fn.stdpath "config" },
-  { name = 'stdpath("data")', target = vim.fn.stdpath "data" },
-  { name = 'stdpath("state")', target = vim.fn.stdpath "state" },
+  { name = 'stdpath("cache")', target = vim.fn.stdpath("cache") },
+  { name = 'stdpath("config")', target = vim.fn.stdpath("config") },
+  { name = 'stdpath("data")', target = vim.fn.stdpath("data") },
+  { name = 'stdpath("state")', target = vim.fn.stdpath("state") },
 }
 
 -- git subcommands
@@ -24,7 +24,7 @@ M.show_paths = function(opts)
   pickers
     .new(opts, {
       prompt_title = "paths",
-      finder = finders.new_table {
+      finder = finders.new_table({
         results = EDIT_ACTIONS,
         ---@param entry EditAction
         entry_maker = function(entry)
@@ -34,7 +34,7 @@ M.show_paths = function(opts)
             ordinal = entry.name,
           }
         end,
-      },
+      }),
       sorter = conf.generic_sorter(opts),
       attach_mappings = function(prompt_bufnr, map)
         actions.select_default:replace(function()

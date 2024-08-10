@@ -5,7 +5,7 @@ return {
     vim.keymap.set("n", "zM", require("ufo").closeAllFolds)
   end,
   config = function()
-    require("ufo").setup {
+    require("ufo").setup({
       enable_get_fold_virt_text = true,
       provider_selector = function(bufnr, filetype, buftype)
         return { "treesitter", "indent" }
@@ -40,7 +40,7 @@ return {
         table.insert(result, { suffix, "TSPunctBracket" })
         return result
       end,
-    }
+    })
   end,
   dependencies = { "kevinhwang91/promise-async" },
 }

@@ -2,7 +2,7 @@ return {
   "folke/noice.nvim",
   cond = not vim.g.vscode,
   config = function()
-    require("noice").setup {
+    require("noice").setup({
       lsp = {
         progress = { enabled = true },
         override = {
@@ -52,7 +52,7 @@ return {
           opts = { skip = true },
         },
       },
-    }
+    })
     vim.keymap.set("n", "<leader>n", "<Cmd>Noice telescope<CR>", { silent = true, noremap = true })
     vim.keymap.set({ "n", "i", "s" }, "<c-f>", function()
       if not require("noice.lsp").scroll(4) then

@@ -118,9 +118,9 @@ vim.api.nvim_create_autocmd("FileType", {
 -- disable newline comment
 vim.api.nvim_create_autocmd("FileType", {
   callback = function()
-    vim.opt.formatoptions:remove "c"
-    vim.opt.formatoptions:remove "r"
-    vim.opt.formatoptions:remove "o"
+    vim.opt.formatoptions:remove("c")
+    vim.opt.formatoptions:remove("r")
+    vim.opt.formatoptions:remove("o")
   end,
   group = vim.api.nvim_create_augroup("disable_newline_comments", {}),
 })
@@ -143,7 +143,7 @@ vim.api.nvim_create_user_command("BufInspect", function()
   vim.notify(f)
 end, {})
 
-require "config.lazy"
+require("config.lazy")
 require("rc.terminal").setup()
 require("rc.winbar").setup()
 require("rc.restart").setup()

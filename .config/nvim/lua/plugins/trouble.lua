@@ -69,7 +69,7 @@ function M.winbar()
   local items = {}
   for _, mode in ipairs(MODE_CYCLE) do
     local hl = mode == current_mode and "TroubleWinBarActiveMode" or "TroubleWinBarInactiveMode"
-    table.insert(items, winbar_item { hlgroup = hl, text = mode.name })
+    table.insert(items, winbar_item({ hlgroup = hl, text = mode.name }))
   end
   return " " .. table.concat(items, " ")
 end
@@ -83,7 +83,7 @@ function M.config()
     end,
   })
 
-  require("trouble").setup {
+  require("trouble").setup({
     padding = false,
     auto_preview = false,
     warn_no_results = false,
@@ -94,6 +94,6 @@ function M.config()
         groups = { { "filename", format = "{file_icon} {basename} {hl:Conceal}{dirname}{hl} {count}" } },
       },
     },
-  }
+  })
 end
 return M

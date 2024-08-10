@@ -7,7 +7,7 @@ local M = {
       {
         "onsails/lspkind-nvim",
         config = function()
-          require("lspkind").init { preset = "codicons" }
+          require("lspkind").init({ preset = "codicons" })
         end,
       },
       "hrsh7th/cmp-nvim-lsp",
@@ -19,11 +19,11 @@ local M = {
     config = function()
       local BORDER_CHARS = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" }
       vim.go.completeopt = "menu,menuone,noselect"
-      local cmp = require "cmp"
+      local cmp = require("cmp")
 
       local has_words_before = function()
         local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-        return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match "%s" == nil
+        return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
       end
 
       local t = function(str)
@@ -33,14 +33,14 @@ local M = {
       -- #nnnnnn
       local REGEX_RGBHEX = "#([0-9a-fA-F]+)"
       local function rgb3_to_6(rgb3)
-        return table.concat {
+        return table.concat({
           rgb3:sub(1, 1):rep(2),
           rgb3:sub(2, 2):rep(2),
           rgb3:sub(3, 3):rep(2),
-        }
+        })
       end
 
-      cmp.setup {
+      cmp.setup({
         snippet = {
           expand = function(args)
             require("luasnip").lsp_expand(args.body)
@@ -48,15 +48,15 @@ local M = {
         },
         mapping = {
           ["<Tab>"] = cmp.mapping(function(fallback)
-            local luasnip = require "luasnip"
-            local neogen = require "neogen"
+            local luasnip = require("luasnip")
+            local neogen = require("neogen")
 
             if cmp.visible() then
               cmp.select_next_item()
             elseif luasnip.expand_or_jumpable() then
               luasnip.expand_or_jump()
             elseif neogen.jumpable() then
-              vim.fn.feedkeys(t "<cmd>lua require('neogen').jump_next()<CR>", "")
+              vim.fn.feedkeys(t("<cmd>lua require('neogen').jump_next()<CR>"), "")
             elseif has_words_before() then
               cmp.complete()
             else
@@ -64,29 +64,29 @@ local M = {
             end
           end, { "i", "s" }),
           ["<S-Tab>"] = cmp.mapping(function(fallback)
-            local luasnip = require "luasnip"
-            local neogen = require "neogen"
+            local luasnip = require("luasnip")
+            local neogen = require("neogen")
 
             if cmp.visible() then
               cmp.select_prev_item()
             elseif luasnip.jumpable(-1) then
               luasnip.jump(-1)
             elseif neogen.jumpable(-1) then
-              vim.fn.feedkeys(t "<cmd>lua require('neogen').jump_prev()<CR>", "")
+              vim.fn.feedkeys(t("<cmd>lua require('neogen').jump_prev()<CR>"), "")
             else
               fallback()
             end
           end, { "i", "s" }),
           -- ["<C-b>"] = cmp.mapping.scroll_docs(-4),
           -- ["<C-f>"] = cmp.mapping.scroll_docs(4),
-          ["<C-space>"] = cmp.mapping.complete {},
+          ["<C-space>"] = cmp.mapping.complete({}),
           ["<C-n>"] = cmp.mapping(cmp.mapping.select_next_item(), { "i", "c" }),
           ["<C-p>"] = cmp.mapping(cmp.mapping.select_prev_item(), { "i", "c" }),
-          ["<C-e>"] = cmp.mapping {
+          ["<C-e>"] = cmp.mapping({
             i = cmp.mapping.abort(),
             c = cmp.mapping.close(),
-          },
-          ["<CR>"] = cmp.mapping.confirm { select = true },
+          }),
+          ["<CR>"] = cmp.mapping.confirm({ select = true }),
         },
 
         sources = {
@@ -101,7 +101,7 @@ local M = {
           fields = { "kind", "abbr", "menu" },
           format = function(entry, vim_item)
             local orig_kind = vim_item.kind
-            local kind = require("lspkind").cmp_format { mode = "symbol_text", maxwidth = 50 }(entry, vim_item)
+            local kind = require("lspkind").cmp_format({ mode = "symbol_text", maxwidth = 50 })(entry, vim_item)
             local strings = vim.split(kind.kind, "%s", { trimempty = true })
             kind.kind = " " .. (strings[1] or "") .. " "
             kind.menu = "    " .. (strings[2] or "")
@@ -151,7 +151,7 @@ local M = {
             winhighlight = "Normal:Normal,FloatBorder:Grey,CursorLine:PmenuSel,Search:None",
           },
         },
-      }
+      })
       cmp.setup.cmdline({ "/", "?" }, {
         mapping = cmp.mapping.preset.cmdline(),
         sources = {
@@ -171,7 +171,7 @@ local M = {
       vim.api.nvim_create_autocmd("FileType", {
         pattern = { "denite-filter", "TelescopePrompt", "LspRenamePrompt" },
         callback = function()
-          cmp.setup.buffer { enabled = false }
+          cmp.setup.buffer({ enabled = false })
         end,
         group = group,
       })
@@ -180,7 +180,7 @@ local M = {
   {
     "rinx/cmp-skkeleton",
     config = function()
-      local cmp = require "cmp"
+      local cmp = require("cmp")
       -- add source only when skkeleton is enabled
       local sources = {}
       local group = vim.api.nvim_create_augroup("cmp-skkeleton-rc", {})
@@ -188,14 +188,14 @@ local M = {
         pattern = "skkeleton-enable-pre",
         callback = function()
           sources = cmp.get_config().sources
-          cmp.setup.buffer { sources = { { name = "skkeleton" } } }
+          cmp.setup.buffer({ sources = { { name = "skkeleton" } } })
         end,
         group = group,
       })
       vim.api.nvim_create_autocmd("User", {
         pattern = "skkeleton-disable-post",
         callback = function()
-          cmp.setup.buffer { sources = sources }
+          cmp.setup.buffer({ sources = sources })
         end,
         group = group,
       })

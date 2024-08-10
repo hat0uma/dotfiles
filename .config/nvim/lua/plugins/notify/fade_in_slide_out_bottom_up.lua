@@ -1,4 +1,4 @@
-local stages_util = require "notify.stages.util"
+local stages_util = require("notify.stages.util")
 return {
   function(state)
     local next_height = state.message.height + 2

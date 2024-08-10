@@ -16,7 +16,7 @@ function M.on_attach(client, bufnr)
   end
 
   local go_to_definition = function()
-    local clients = vim.lsp.get_clients { bufnr = 0 }
+    local clients = vim.lsp.get_clients({ bufnr = 0 })
     local client_names = vim.tbl_map(function(c)
       return c.name
     end, clients)
@@ -34,8 +34,8 @@ function M.on_attach(client, bufnr)
   end
 
   local rename = function()
-    require "inc_rename"
-    return ":IncRename " .. vim.fn.expand "<cword>"
+    require("inc_rename")
+    return ":IncRename " .. vim.fn.expand("<cword>")
   end
 
   local hover = function()
@@ -78,14 +78,14 @@ function M.global_map()
       "n",
       "[d",
       function()
-        vim.diagnostic.jump { count = -1 }
+        vim.diagnostic.jump({ count = -1 })
       end,
     },
     {
       "n",
       "]d",
       function()
-        vim.diagnostic.jump { count = 1 }
+        vim.diagnostic.jump({ count = 1 })
       end,
     },
     { { "n", "v" }, "<leader>a", vim.lsp.buf.code_action },

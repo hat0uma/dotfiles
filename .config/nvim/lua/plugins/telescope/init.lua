@@ -1,4 +1,4 @@
-local is_windows = vim.loop.os_uname().version:match "Windows"
+local is_windows = vim.loop.os_uname().version:match("Windows")
 local IGNORE_GLOBS = {
   ".git",
   ".svn",
@@ -49,14 +49,14 @@ local M = {
     },
     init = function()
       local get_dropdown = function()
-        return require("telescope.themes").get_dropdown {
+        return require("telescope.themes").get_dropdown({
           border = true,
           layout_config = {
             width = math.floor(vim.o.columns * 0.7),
             height = math.floor(vim.o.lines * 0.7),
           },
           preview = { hide_on_startup = true },
-        }
+        })
       end
 
       local function telescope_oldfiles()
@@ -80,7 +80,7 @@ local M = {
       end
 
       local function telescope_live_grep()
-        require("telescope").extensions.live_grep_args.live_grep_args { preview = { hide_on_startup = true } }
+        require("telescope").extensions.live_grep_args.live_grep_args({ preview = { hide_on_startup = true } })
       end
 
       local function telescope_buffers()
@@ -97,38 +97,38 @@ local M = {
       vim.keymap.set("n", "<leader>b", telescope_buffers, opt)
       vim.keymap.set("n", "<leader>r", "<Cmd>Telescope resume<CR>", opt)
       vim.keymap.set("n", "<leader>P", function()
-        require("telescope").extensions.projects.projects {}
+        require("telescope").extensions.projects.projects({})
       end, opt)
     end,
     config = function()
-      local actions = require "telescope.actions"
-      local actions_state = require "telescope.actions.state"
-      local layout_actions = require "telescope.actions.layout"
-      local entry_display = require "telescope.pickers.entry_display"
-      local Path = require "plenary.path"
-      local path_displayer = entry_display.create {
+      local actions = require("telescope.actions")
+      local actions_state = require("telescope.actions.state")
+      local layout_actions = require("telescope.actions.layout")
+      local entry_display = require("telescope.pickers.entry_display")
+      local Path = require("plenary.path")
+      local path_displayer = entry_display.create({
         separator = " ",
         items = {
           {}, -- filename
           {}, -- dirname
         },
-      }
+      })
 
-      require("telescope").setup {
+      require("telescope").setup({
         defaults = {
           prompt_prefix = "   ",
           mappings = {
             i = {
               ["<cr>"] = function()
-                vim.cmd [[stopinsert]]
+                vim.cmd([[stopinsert]])
               end,
               ["<BS>"] = function()
                 -- prompt + separator
-                local col = vim.fn.col "." - 6
+                local col = vim.fn.col(".") - 6
                 if col <= 1 then
-                  vim.cmd [[stopinsert]]
+                  vim.cmd([[stopinsert]])
                 else
-                  vim.fn.feedkeys "\b"
+                  vim.fn.feedkeys("\b")
                 end
               end,
               ["<c-q>"] = actions.send_to_qflist + actions.open_qflist,
@@ -162,10 +162,10 @@ local M = {
             local cwd = vim.fs.normalize(vim.uv.cwd())
             local home = vim.fs.normalize(vim.uv.os_homedir())
             local dirname = vim.fs.dirname(path):gsub(cwd .. "/", ""):gsub(home, "~")
-            return path_displayer {
+            return path_displayer({
               fname,
               { dirname, "Comment" },
-            }
+            })
           end,
         },
         pickers = {
@@ -192,7 +192,7 @@ local M = {
             end,
           },
         },
-      }
+      })
     end,
     cmd = { "Telescope" },
     cond = not vim.g.vscode,

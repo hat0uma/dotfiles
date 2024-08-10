@@ -19,7 +19,7 @@ local function config()
   end
 
   local buffer_not_empty = function()
-    return vim.fn.empty(vim.fn.expand "%:t") ~= 1
+    return vim.fn.empty(vim.fn.expand("%:t")) ~= 1
   end
 
   local modes = {
@@ -70,7 +70,7 @@ local function config()
         {
           "mode",
           fmt = function(alias)
-            if vim.fn.exists "skkeleton#mode" ~= 0 then
+            if vim.fn.exists("skkeleton#mode") ~= 0 then
               --- @type string
               local skkeleton_mode = vim.fn["skkeleton#mode"]()
               alias = skkeleton_mode ~= "" and alias .. "-" .. skkeleton_mode or alias
@@ -146,12 +146,12 @@ local function config()
   -- autocmds for recording macros.
   vim.api.nvim_create_autocmd("RecordingEnter", {
     callback = function()
-      require("lualine").refresh { place = { "statusline" } }
+      require("lualine").refresh({ place = { "statusline" } })
     end,
   })
   vim.api.nvim_create_autocmd("RecordingLeave", {
     callback = vim.schedule_wrap(function()
-      require("lualine").refresh { place = { "statusline" } }
+      require("lualine").refresh({ place = { "statusline" } })
     end),
   })
 end
