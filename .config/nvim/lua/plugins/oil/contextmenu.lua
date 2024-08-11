@@ -29,7 +29,7 @@ local function add_system_action(ext, name, cmd)
     local args = {}
     for i, v in ipairs(cmd) do
       local arg = v:gsub("{file}", entry):gsub("{dir}", dir)
-      table.insert(args, vim.fn.shellescape(arg))
+      table.insert(args, arg)
     end
 
     local Terminal = require("toggleterm.terminal").Terminal

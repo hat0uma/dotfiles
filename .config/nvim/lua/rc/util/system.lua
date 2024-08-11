@@ -42,10 +42,10 @@ function M.get_open_command(args)
     error("Unsupported system")
   end
   local commands = {
-    windows = { "explorer" },
+    windows = { "rundll32", "url.dll,FileProtocolHandler" },
     mac = { "open" },
     unix = { "xdg-open" },
-    wsl = { "/mnt/c/Windows/explorer.exe" },
+    wsl = { "/mnt/c/Windows/System32/rundll32.exe", "url.dll,FileProtocolHandler" },
   }
 
   local cmd = commands[sysname]
