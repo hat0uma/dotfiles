@@ -108,11 +108,13 @@ local function copy_absolute_path(entry, dir)
 end
 
 function M.setup()
-  local open_cmd = util.system.is_windows() and "explorer" or "xdg-open"
-
-  add_action(nil, "Copy path", copy_absolute_path)
-  add_system_action(nil, "Open File", { open_cmd, "{file}" })
-  add_system_action(nil, "Open Folder", { open_cmd, "{dir}" })
+  add_action(nil, "Copy Path", copy_absolute_path)
+  add_action(nil, "Open File", function(entry, dir)
+    vim.ui.open(vim.fs.joinpath(dir, entry))
+  end)
+  add_action(nil, "Open Folder", function(entry, dir)
+    vim.ui.open(dir)
+  end)
   add_system_action("zip", "Extract", { "unzip", "{file}" })
   add_system_action("tar", "Extract", { "tar", "xvf", "{file}" })
   add_system_action("tgz", "Extract", { "tar", "xvf", "{file}" })

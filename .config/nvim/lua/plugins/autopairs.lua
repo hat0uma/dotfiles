@@ -12,8 +12,8 @@ function M.config()
   local cond = require("nvim-autopairs.conds")
   local ts_conds = require("nvim-autopairs.ts-conds")
 
-  local syntax_filetypes = { "cs", "vim", "toml", "lua", "python" }
-  local ts_config = {}
+  local syntax_filetypes = { "cs", "vim", "toml", "lua", "python", "c", "cpp" }
+  local ts_config = {} --- @type table<string, table>
   for _, value in ipairs(syntax_filetypes) do
     ts_config[value] = {}
   end
@@ -34,13 +34,40 @@ function M.config()
   -- operator with filetypes
   local operators = { ">", "<", "+", "-", "=", "*", "/", "~", "!" }
   local escaped_brackets = { "%(", "%)", "%{", "%}", "%[", "%]" }
+  local not_string_or_comment = ts_conds.is_not_ts_node({
+    "string",
+    "string_content",
+    "string_literal",
+    "comment",
+    "comment_content",
+    "source",
+  })
+  local comment = ts_conds.is_ts_node({
+    "comment",
+    "comment_content",
+    "source",
+  })
 
-  --- insert white space operator's side.
+  --- Insert white space operator's side.
+  ---@param operator string
+  ---@return Rule
   local function operator_settings(operator)
     return Rule(operator, "", syntax_filetypes)
-      :with_pair(ts_conds.is_not_ts_node({ "string", "comment", "string_literal", "source", "string_content" }))
+      ---@param opts CondOpts
+      ---@return boolean | nil
+      :with_pair(function(opts)
+        -- This setting is for allowing --- comments in lua.
+        -- Without this comment, -- after -- will become -- -
+        local prev_3char = opts.line:sub(opts.col - 3, opts.col - 1)
+        if comment(opts) and prev_3char == operator .. operator .. " " then
+          return true
+        end
+        return not_string_or_comment(opts)
+      end)
+      ---@param opts CondOpts
+      ---@return string
       :replace_endpair(function(opts)
-        local prev_2char = string.sub(opts.line, opts.col - 2, opts.col - 1)
+        local prev_2char = opts.line:sub(opts.col - 2, opts.col - 1)
         -- single operator
         if string.match(prev_2char, "[%w_" .. table.concat(escaped_brackets) .. "]$") then
           return ("<bs> %s "):format(operator)
@@ -60,10 +87,13 @@ function M.config()
 
   -- insert white space inner bracket
   npairs.add_rules({
-    Rule(" ", " "):with_pair(function(opts)
-      local pair = opts.line:sub(opts.col - 1, opts.col)
-      return vim.tbl_contains({ "()", "[]", "{}" }, pair)
-    end),
+    Rule(" ", " ")
+      ---@param opts CondOpts
+      ---@return boolean | nil
+      :with_pair(function(opts)
+        local pair = opts.line:sub(opts.col - 1, opts.col)
+        return vim.tbl_contains({ "()", "[]", "{}" }, pair)
+      end),
   })
 end
 
