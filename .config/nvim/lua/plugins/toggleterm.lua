@@ -31,7 +31,7 @@ end
 --- toggle terminal
 ---@param count number
 local function toggle(count)
-  local cwd = vim.uv.cwd()
+  local cwd = assert(vim.uv.cwd())
   local buf = vim.api.nvim_buf_get_name(0)
   local dir = buf:find(cwd) ~= nil and cwd or vim.fn.fnamemodify(buf, ":p:h")
   local size = nil
@@ -93,6 +93,7 @@ M.config = function()
     float_opts = {
       winblend = 10,
     },
+    ---@param term Terminal
     on_open = function(term)
       local function send_key_action(key)
         return function()
