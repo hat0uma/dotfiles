@@ -113,30 +113,6 @@ return {
     dependencies = { "nvim-treesitter/nvim-treesitter" },
   },
   {
-    "nvim-pack/nvim-spectre",
-    config = function()
-      require("spectre").setup({
-        default = {
-          find = {
-            cmd = "rg",
-            options = { "ignore-case", "hidden" },
-          },
-          replace = { cmd = "sed" },
-        },
-      })
-    end,
-    keys = {
-      {
-        "<leader>c",
-        function()
-          require("spectre").open()
-        end,
-        mode = { "n" },
-        desc = "Open Spectre",
-      },
-    },
-  },
-  {
     "kevinhwang91/nvim-bqf",
     ft = "qf",
     config = function()
@@ -500,5 +476,16 @@ return {
       "HexAssemble",
       "HexToggle",
     },
+  },
+  {
+    "MagicDuck/grug-far.nvim",
+    config = function()
+      require("grug-far").setup({
+        engines = {
+          ripgrep = { extraArgs = "--hidden" },
+        },
+      })
+    end,
+    cmd = { "GrugFar" },
   },
 }
