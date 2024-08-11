@@ -1,5 +1,4 @@
-local Menu = require("nui.menu")
-
+local util = require("rc.util")
 local M = {}
 
 ---@alias rc.OilContextMenuAction fun(entry:string,dir:string)
@@ -109,8 +108,7 @@ local function copy_absolute_path(entry, dir)
 end
 
 function M.setup()
-  local is_windows = vim.uv.os_uname().sysname:find("Windows") ~= nil
-  local open_cmd = is_windows and "explorer" or "xdg-open"
+  local open_cmd = util.system.is_windows() and "explorer" or "xdg-open"
 
   add_action(nil, "Copy path", copy_absolute_path)
   add_system_action(nil, "Open File", { open_cmd, "{file}" })
