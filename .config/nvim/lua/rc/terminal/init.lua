@@ -1,5 +1,4 @@
 local M = {}
-local config = require("rc.terminal.config")
 local util = require("rc.util")
 
 local function is_floating(winid)
