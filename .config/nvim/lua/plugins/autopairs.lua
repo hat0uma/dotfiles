@@ -21,7 +21,9 @@ function M.config()
   npairs.setup({
     check_ts = true,
     ts_config = ts_config,
-    fast_wrap = {},
+    fast_wrap = {
+      map = "<C-j>",
+    },
   })
 
   -- cmp settings
@@ -36,7 +38,7 @@ function M.config()
   --- insert white space operator's side.
   local function operator_settings(operator)
     return Rule(operator, "", syntax_filetypes)
-      :with_pair(ts_conds.is_not_ts_node({ "string", "comment", "string_literal", "source" }))
+      :with_pair(ts_conds.is_not_ts_node({ "string", "comment", "string_literal", "source", "string_content" }))
       :replace_endpair(function(opts)
         local prev_2char = string.sub(opts.line, opts.col - 2, opts.col - 1)
         -- single operator
