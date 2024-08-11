@@ -1,3 +1,4 @@
+local contextmenu = require("plugins.oil.contextmenu")
 local my_actions = require("plugins.oil.my_actions")
 
 return {
@@ -36,7 +37,7 @@ return {
         ["gy"] = require("oil.actions").copy_entry_path,
         ["q"] = my_actions.close,
         ["~"] = my_actions.home,
-        ["<CR>"] = require("plugins.oil.contextmenu").open,
+        ["<CR>"] = contextmenu.open,
       },
       float = {
         padding = 2,
@@ -51,6 +52,7 @@ return {
         show_hidden = true,
       },
     })
+    contextmenu.setup()
   end,
   cmd = { "Oil" },
 }

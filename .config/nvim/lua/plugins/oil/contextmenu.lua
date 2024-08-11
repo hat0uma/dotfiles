@@ -25,7 +25,7 @@ end
 ---@param ext string|nil see `lua-patterns`
 ---@param name string action name
 ---@param cmd string[] command {file} and {dir} will be replaced
-local function add_system(ext, name, cmd)
+local function add_system_action(ext, name, cmd)
   add_action(ext, name, function(entry, dir)
     local args = {}
     for i, v in ipairs(cmd) do
@@ -45,6 +45,7 @@ local function add_system(ext, name, cmd)
         end
       end,
       on_close = vim.schedule_wrap(function()
+        -- refresh
         vim.cmd.edit()
       end),
     })
@@ -52,25 +53,7 @@ local function add_system(ext, name, cmd)
   end)
 end
 
----@type nui_popup_options
-local popup_options = {
-  relative = "cursor",
-  position = { row = 1 + 1, col = 5 },
-  size = {
-    width = 14,
-    height = 5,
-  },
-  border = {
-    style = "rounded",
-    text = {
-      top = "[Action]",
-      top_align = "center",
-    },
-  },
-  win_options = {
-    winhighlight = "Normal:Normal,FloatBorder:Normal",
-  },
-}
+--- Open context menu
 function M.open()
   local entry = require("oil").get_cursor_entry()
   if not entry then
@@ -125,11 +108,13 @@ local function copy_absolute_path(entry, dir)
   vim.fn.setreg("+", abspath)
 end
 
-add_action(nil, "Copy path", copy_absolute_path)
-add_system(nil, "Open", { "explorer", "{file}" })
-add_system("zip", "Extract", { "unzip", "{file}" })
-add_system("tar", "Extract", { "tar", "xvf", "{file}" })
-add_system("tgz", "Extract", { "tar", "xvf", "{file}" })
-add_system("tar%.gz", "Extract", { "tar", "xvf", "{file}" })
+function M.setup()
+  add_action(nil, "Copy path", copy_absolute_path)
+  add_system_action(nil, "Open", { "explorer", "{file}" })
+  add_system_action("zip", "Extract", { "unzip", "{file}" })
+  add_system_action("tar", "Extract", { "tar", "xvf", "{file}" })
+  add_system_action("tgz", "Extract", { "tar", "xvf", "{file}" })
+  add_system_action("tar%.gz", "Extract", { "tar", "xvf", "{file}" })
+end
 
 return M
