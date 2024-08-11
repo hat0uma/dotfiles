@@ -1,6 +1,6 @@
 local M = {}
 local config = require("rc.terminal.config")
-local util = require("rc.utils")
+local util = require("rc.util")
 
 local function is_floating(winid)
   local cfg = vim.api.nvim_win_get_config(winid)
@@ -18,7 +18,7 @@ local function _edit_files(opts)
     vim.cmd.close()
   end
   for _, file in pairs(files) do
-    local path = util.rel_or_abs(wd, file)
+    local path = util.path.make_absolute(wd, file)
     vim.cmd.edit(path)
   end
 end
