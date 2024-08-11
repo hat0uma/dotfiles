@@ -21,9 +21,6 @@ function M.config()
   npairs.setup({
     check_ts = true,
     ts_config = ts_config,
-    fast_wrap = {
-      map = "<C-j>",
-    },
   })
 
   -- cmp settings

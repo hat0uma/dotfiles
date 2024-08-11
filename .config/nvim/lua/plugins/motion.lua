@@ -88,6 +88,15 @@ return {
           require("flash").treesitter()
         end,
       },
+      {
+        "<C-s>",
+        mode = { "i" },
+        function()
+          require("flash").jump({
+            jump = { offset = 1 },
+          })
+        end,
+      },
     },
   },
 }
