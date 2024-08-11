@@ -40,9 +40,9 @@ local function add_system_action(ext, name, cmd)
       direction = "float",
       cmd = table.concat(args, " "),
       on_exit = function(t, job, exit_code, _name)
-        -- if exit_code == 0 then
-        t:close()
-        -- end
+        if exit_code == 0 then
+          t:close()
+        end
       end,
       on_close = vim.schedule_wrap(function()
         -- refresh
