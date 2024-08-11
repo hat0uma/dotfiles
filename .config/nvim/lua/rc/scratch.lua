@@ -6,6 +6,19 @@ function M.setup()
   end, {})
 end
 
+---@type number?
+local notification = nil
+
+--- Notify message
+---@param msg string
+---@param level number?
+local function notify(msg, level)
+  notification = vim.notify(msg, level or vim.log.levels.INFO, {
+    replace = notification,
+    title = "Scratch",
+  })
+end
+
 function M.open()
   local bufname = vim.fn.tempname() .. ".lua"
 
@@ -17,16 +30,18 @@ function M.open()
   -- load lazydev
   local ok, _ = pcall(require, "lazydev")
   if not ok then
-    vim.notify("lazydev is not installed", vim.log.levels.WARN)
+    notify("lazydev is not installed", vim.log.levels.WARN)
   end
 
   -- open
   vim.cmd("split")
   local win = vim.api.nvim_get_current_win()
   vim.api.nvim_win_set_buf(win, buf)
+  vim.api.nvim_set_option_value("winfixbuf", true, {})
 
   -- launch language servers
   local matches = require("lspconfig.util").get_config_by_ft(vim.bo.filetype)
+  ---@diagnostic disable-next-line: no-unknown
   for _, config in ipairs(matches) do
     config.launch(buf)
   end
@@ -41,7 +56,27 @@ end
 ---@param code string
 ---@return any
 local function eval(code)
-  return assert(loadstring(code))()
+  return assert(load(code))()
+end
+
+--- Format result
+---@param ... any
+---@return string?
+local function format_result(...)
+  local result = { ... }
+  if #result == 0 then
+    return nil
+  end
+
+  local msg = {}
+  if #result == 1 then
+    table.insert(msg, vim.inspect(result[1]))
+  else
+    for i, v in ipairs(result) do
+      table.insert(msg, string.format("%d: %s", i, vim.inspect(v)))
+    end
+  end
+  return table.concat(msg, "\n")
 end
 
 --- Run code in the current buffer
@@ -49,11 +84,12 @@ function M.run()
   local buf = vim.api.nvim_get_current_buf()
   local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
   local code = table.concat(lines, "\n")
-
-  local result = eval(code)
-  if result then
-    vim.print(result)
+  local result = format_result(eval(code))
+  if not result then
+    return
   end
+
+  notify(result)
 end
 
 return M
