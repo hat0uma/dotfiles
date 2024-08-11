@@ -71,7 +71,6 @@ local popup_options = {
     winhighlight = "Normal:Normal,FloatBorder:Normal",
   },
 }
-
 function M.open()
   local entry = require("oil").get_cursor_entry()
   if not entry then
@@ -82,11 +81,11 @@ function M.open()
     return
   end
 
-  ---@type NuiTree.Node[]
+  ---@type rc.OilContextMenuItem[]
   local target_menus = {}
   for _, menu in ipairs(menu_registry) do
     if string.match(entry.name, menu.pattern) then
-      table.insert(target_menus, Menu.item(menu.name, menu))
+      table.insert(target_menus, menu)
     end
   end
 
@@ -95,19 +94,20 @@ function M.open()
     return
   end
 
-  local menu = Menu(popup_options, {
-    lines = target_menus,
-    max_width = 14,
-    keymap = {
-      close = { "<Esc>", "q" },
-      submit = { "<CR>" },
-    },
-    on_close = function() end,
-    on_submit = function(item)
-      item.action(entry.name, dir)
+  vim.ui.select(target_menus, {
+    prompt = "Select action",
+    --- Format item
+    ---@param item rc.OilContextMenuItem
+    ---@return string
+    format_item = function(item)
+      return item.name
     end,
-  })
-  menu:mount()
+  }, function(choice) --- @param choice rc.OilContextMenuItem?
+    if not choice then
+      return
+    end
+    choice.action(entry.name, dir)
+  end)
 end
 
 --- Copy entry absolute path
