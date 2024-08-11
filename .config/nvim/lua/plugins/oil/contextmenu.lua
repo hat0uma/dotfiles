@@ -1,4 +1,3 @@
-local util = require("rc.util")
 local M = {}
 
 ---@alias rc.OilContextMenuAction fun(entry:string,dir:string)
@@ -107,14 +106,37 @@ local function copy_absolute_path(entry, dir)
   vim.fn.setreg("+", abspath)
 end
 
+--- Open file
+---@param entry string
+---@param dir string
+local function open_file(entry, dir)
+  vim.ui.open(vim.fs.joinpath(dir, entry))
+end
+
+--- Open folder
+---@param entry string
+---@param dir string
+local function open_folder(entry, dir)
+  vim.ui.open(dir)
+end
+
+--- Open terminal
+---@param entry string
+---@param dir string
+local function open_terminal(entry, dir)
+  local Terminal = require("toggleterm.terminal").Terminal
+  local term = Terminal:new({
+    dir = dir,
+    direction = "float",
+  })
+  term:toggle()
+end
+
 function M.setup()
   add_action(nil, "Copy Path", copy_absolute_path)
-  add_action(nil, "Open File", function(entry, dir)
-    vim.ui.open(vim.fs.joinpath(dir, entry))
-  end)
-  add_action(nil, "Open Folder", function(entry, dir)
-    vim.ui.open(dir)
-  end)
+  add_action(nil, "Open File", open_file)
+  add_action(nil, "Open Folder", open_folder)
+  add_action(nil, "Open Terminal Here", open_terminal)
   add_system_action("zip", "Extract", { "unzip", "{file}" })
   add_system_action("tar", "Extract", { "tar", "xvf", "{file}" })
   add_system_action("tgz", "Extract", { "tar", "xvf", "{file}" })
