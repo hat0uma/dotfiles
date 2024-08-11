@@ -1,4 +1,5 @@
 local M = {}
+local util = require("rc.util")
 
 ---@alias rc.OilContextMenuAction fun(entry:string,dir:string)
 
@@ -27,7 +28,8 @@ local function add_system_action(ext, name, cmd)
   add_action(ext, name, function(entry, dir)
     local args = {}
     for i, v in ipairs(cmd) do
-      table.insert(args, vim.fn.shellescape((v:gsub("{file}", entry):gsub("{dir}", dir))))
+      local arg = v:gsub("{file}", entry):gsub("{dir}", dir)
+      table.insert(args, vim.fn.shellescape(arg))
     end
 
     local Terminal = require("toggleterm.terminal").Terminal
@@ -38,9 +40,9 @@ local function add_system_action(ext, name, cmd)
       direction = "float",
       cmd = table.concat(args, " "),
       on_exit = function(t, job, exit_code, _name)
-        if exit_code == 0 then
-          t:close()
-        end
+        -- if exit_code == 0 then
+        t:close()
+        -- end
       end,
       on_close = vim.schedule_wrap(function()
         -- refresh
@@ -110,14 +112,14 @@ end
 ---@param entry string
 ---@param dir string
 local function open_file(entry, dir)
-  vim.ui.open(vim.fs.joinpath(dir, entry))
+  vim.ui.open(vim.fs.normalize(vim.fs.joinpath(dir, entry)))
 end
 
 --- Open folder
 ---@param entry string
 ---@param dir string
 local function open_folder(entry, dir)
-  vim.ui.open(dir)
+  vim.ui.open(vim.fs.normalize(dir))
 end
 
 --- Open terminal
@@ -134,8 +136,10 @@ end
 
 function M.setup()
   add_action(nil, "Copy Path", copy_absolute_path)
-  add_action(nil, "Open File", open_file)
-  add_action(nil, "Open Folder", open_folder)
+  -- add_action(nil, "Open File", open_file)
+  -- add_action(nil, "Open Folder", open_folder)
+  add_system_action(nil, "Open File", util.system.get_open_command("{file}"))
+  add_system_action(nil, "Open Folder", util.system.get_open_command("{dir}"))
   add_action(nil, "Open Terminal Here", open_terminal)
   add_system_action("zip", "Extract", { "unzip", "{file}" })
   add_system_action("tar", "Extract", { "tar", "xvf", "{file}" })

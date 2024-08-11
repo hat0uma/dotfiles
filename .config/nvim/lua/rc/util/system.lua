@@ -33,4 +33,32 @@ function M.is_windows()
   return M.get_sysname() == "windows"
 end
 
+---Open the file or directory with the default application.
+---@param args string[] | string | nil
+---@return string[]
+function M.get_open_command(args)
+  local sysname = M.get_sysname()
+  if not sysname then
+    error("Unsupported system")
+  end
+  local commands = {
+    windows = { "explorer" },
+    mac = { "open" },
+    unix = { "xdg-open" },
+    wsl = { "/mnt/c/Windows/explorer.exe" },
+  }
+
+  local cmd = commands[sysname]
+  if not cmd then
+    error("Unsupported system")
+  end
+
+  if type(args) == "table" then
+    vim.list_extend(cmd, args)
+  elseif type(args) == "string" then
+    table.insert(cmd, args)
+  end
+  return cmd
+end
+
 return M
