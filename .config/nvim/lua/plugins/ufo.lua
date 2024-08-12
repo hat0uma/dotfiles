@@ -1,8 +1,13 @@
 return {
   "kevinhwang91/nvim-ufo",
+  lazy = false,
   init = function()
-    vim.keymap.set("n", "zR", require("ufo").openAllFolds)
-    vim.keymap.set("n", "zM", require("ufo").closeAllFolds)
+    vim.keymap.set("n", "zR", function()
+      require("ufo").openAllFolds()
+    end)
+    vim.keymap.set("n", "zM", function()
+      require("ufo").closeAllFolds()
+    end)
   end,
   config = function()
     require("ufo").setup({
