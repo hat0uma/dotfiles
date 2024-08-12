@@ -195,19 +195,6 @@ return {
       { "gx", mode = { "n", "v" } },
     },
   },
-  {
-    "simplenote-vim/simplenote.vim",
-    config = function()
-      if vim.fn.filereadable(vim.fn.expand("~/.simplenote-credentials")) then
-        vim.cmd([[ source ~/.simplenote-credentials ]])
-      end
-      vim.g.SimplenoteFiletype = "simplenote-text"
-      vim.g.SimplenoteListSize = 20
-      vim.api.nvim_create_autocmd("FileType", { pattern = "simplenote-text", command = "setl cursorline" })
-    end,
-    cmd = { "SimplenoteList" },
-  },
-
   { "gpanders/nvim-parinfer", ft = { "lisp", "yuck" } },
   -- { "/elkowar/yuck.vim", ft = { "yuck" } },
   { "PProvost/vim-ps1", ft = { "ps1" } },
@@ -253,17 +240,6 @@ return {
     cond = not vim.g.vscode,
   },
   {
-    "chomosuke/term-edit.nvim",
-    ft = "toggleterm",
-    version = "1.*",
-    config = function()
-      require("term-edit").setup({
-        prompt_end = "❯ ",
-      })
-    end,
-    enabled = false,
-  },
-  {
     "NvChad/nvim-colorizer.lua",
     config = function()
       require("colorizer").setup({
@@ -300,20 +276,6 @@ return {
     config = function()
       require("todo-comments").setup({})
     end,
-  },
-  {
-    "smoka7/multicursors.nvim",
-    dependencies = { "smoka7/hydra.nvim" },
-    opts = {},
-    cmd = { "MCstart", "MCvisual", "MCclear", "MCpattern", "MCvisualPattern", "MCunderCursor" },
-    keys = {
-      {
-        mode = { "v", "n" },
-        "<Leader>m",
-        "<cmd>MCstart<cr>",
-        desc = "Create a selection for selected text or word under the cursor",
-      },
-    },
   },
   {
     "luukvbaal/statuscol.nvim",
@@ -429,7 +391,7 @@ return {
   },
   {
     "lbrayner/vim-rzip",
-    lazy = false,
+    ft = { "zip" },
   },
   {
     "hat0uma/prelive.nvim",
@@ -470,7 +432,6 @@ return {
     config = function()
       require("hex").setup()
     end,
-
     cmd = {
       "HexDump",
       "HexAssemble",

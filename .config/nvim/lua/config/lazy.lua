@@ -30,4 +30,8 @@ require("lazy").setup("plugins", {
       },
     },
   },
+  -- profiling = {
+  --   loader = true,
+  --   require = true,
+  -- },
 })

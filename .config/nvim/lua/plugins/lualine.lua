@@ -7,9 +7,7 @@ local function config()
     local bufname = vim.fn.bufname()
 
     local name = ""
-    if filetype == "simplenote-text" then
-      name = vim.fn.getline(1)
-    elseif bufname == "" then
+    if bufname == "" then
       name = "[NONAME]"
     else
       name = vim.fn.simplify(bufname)
@@ -83,18 +81,17 @@ local function config()
       },
       lualine_c = {
         {
-          "buffer",
-          fmt = function()
+          -- buffer
+          function()
             local name = buffer_name()
             local modified_icon = "*"
             return vim.bo.modifiable and vim.bo.modified and name .. modified_icon or name
           end,
-          buffer_name,
           color = { fg = palette.fg, bg = palette.bg },
         },
         {
-          "recording",
-          fmt = function()
+          -- recording,
+          function()
             local reg = vim.fn.reg_recording()
             return reg ~= "" and string.format("recording @%s", vim.fn.reg_recording()) or ""
           end,
@@ -104,7 +101,7 @@ local function config()
           color = { fg = "#ff9e64", bg = palette.bg },
         },
       },
-      lualine_x = { "overseer" },
+      lualine_x = {},
       lualine_y = {
         {
           "diagnostics",
@@ -134,7 +131,7 @@ local function config()
   }
   require("lualine").setup(lualine_config)
 
-  -- autocmds for recording macros.
+  -- autocmds
   vim.api.nvim_create_autocmd("RecordingEnter", {
     callback = function()
       require("lualine").refresh({ place = { "statusline" } })
@@ -144,6 +141,16 @@ local function config()
     callback = vim.schedule_wrap(function()
       require("lualine").refresh({ place = { "statusline" } })
     end),
+  })
+
+  -- lazy load overseer
+  vim.api.nvim_create_autocmd("User", {
+    pattern = "LazyLoad",
+    callback = function(ev)
+      if ev.data == "overseer.nvim" then
+        require("lualine").setup({ sections = { lualine_x = { "overseer" } } })
+      end
+    end,
   })
 end
 

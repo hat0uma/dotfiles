@@ -1,6 +1,6 @@
 return {
   "kevinhwang91/nvim-ufo",
-  lazy = false,
+  event = "VeryLazy",
   init = function()
     vim.keymap.set("n", "zR", function()
       require("ufo").openAllFolds()
