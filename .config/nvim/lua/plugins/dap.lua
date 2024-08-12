@@ -5,7 +5,7 @@ local M = {
     "mfussenegger/nvim-dap",
     config = function()
       local dap = require("dap")
-      local uv = vim.loop
+      local uv = vim.uv
 
       local function read_file_sync(path)
         local fd = assert(uv.fs_open(path, "r", 438))
