@@ -59,11 +59,10 @@ local M = {
       end
 
       local function telescope_oldfiles()
-        local uv = vim.uv
         local oldfiles = {} ---@type string[]
         local pending = #vim.v.oldfiles
         for i = 1, #vim.v.oldfiles do
-          uv.fs_realpath(vim.v.oldfiles[i], function(err, path)
+          vim.uv.fs_realpath(vim.v.oldfiles[i], function(err, path)
             if path then
               table.insert(oldfiles, path)
             end
@@ -156,11 +155,10 @@ local M = {
           },
           vimgrep_arguments = GREP_COMMAND,
           path_display = function(opts, path)
+            path = vim.fs.normalize(path)
             if util.system.is_windows() and util.path.is_absolute_path(path) then
-              path = path:gsub("^%l", string.upper) -- drive letter
+              path = path:gsub("^%l", string.upper) -- normalize drive letter
             end
-            -- local dir_name = vim.fn.fnamemodify(path, ":p:~:.:h")
-            -- local file_name = vim.fn.fnamemodify(path, ":p:t")
             local fname = vim.fs.basename(path)
             local cwd = vim.fs.normalize(assert(vim.uv.cwd()))
             local home = vim.fs.normalize(assert(vim.uv.os_homedir()))
@@ -188,7 +186,7 @@ local M = {
               local vsplit_readme = function()
                 local selection = actions_state.get_selected_entry()
                 actions.close(prompt_bufnr)
-                vim.cmd.vsplit(selection.readme)
+                vim.cmd.vsplit(selection.value.readme)
               end
               map("n", "v", vsplit_readme)
               return true
