@@ -1,4 +1,4 @@
---- @class MyStatuslinePalette
+--- @class rc.StatuslinePalette
 --- @field bg string
 --- @field bg2 string
 --- @field fg string

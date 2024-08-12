@@ -3,6 +3,7 @@ vim.o.splitbelow = true
 vim.o.termguicolors = true
 vim.o.updatetime = 100
 vim.g.mapleader = " "
+vim.g.maplocalleader = " "
 vim.o.signcolumn = "yes"
 vim.o.helplang = "ja,en"
 vim.o.number = true

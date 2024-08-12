@@ -62,7 +62,7 @@ return {
     vim.cmd.colorscheme("catppuccin")
     require("plugins.colorscheme.highlights").setup()
   end,
-  --- @return MyStatuslinePalette
+  --- @return rc.StatuslinePalette
   get_statusline_palette = function()
     local frappe = require("catppuccin.palettes").get_palette("frappe")
     --- @type table <string,string>

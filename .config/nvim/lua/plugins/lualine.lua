@@ -1,5 +1,5 @@
 local function config()
-  --- @type MyStatuslinePalette
+  --- @type rc.StatuslinePalette
   local palette = require("plugins.colorscheme").get_statusline_palette()
 
   local buffer_name = function()

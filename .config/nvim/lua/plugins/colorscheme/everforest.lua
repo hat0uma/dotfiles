@@ -7,7 +7,7 @@ return {
     vim.g.everforest_better_performance = 1
   end,
   config = function() end,
-  --- @return MyStatuslinePalette
+  --- @return rc.StatuslinePalette
   ---@diagnostic disable: no-unknown
   get_statusline_palette = function()
     local configuration = vim.fn["everforest#get_configuration"]()
