@@ -69,15 +69,6 @@ local function config()
       lualine_a = {
         {
           "mode",
-          fmt = function(alias)
-            if vim.fn.exists("skkeleton#mode") ~= 0 then
-              --- @type string
-              local skkeleton_mode = vim.fn["skkeleton#mode"]()
-              alias = skkeleton_mode ~= "" and alias .. "-" .. skkeleton_mode or alias
-            end
-            vim.cmd("hi GalaxyViMode guibg=" .. modes[vim.fn.mode()].color)
-            return alias
-          end,
           color = function()
             return { fg = palette.vimode_fg, bg = modes[vim.fn.mode()].color, gui = "bold" }
           end,

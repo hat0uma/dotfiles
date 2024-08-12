@@ -177,32 +177,6 @@ local M = {
       })
     end,
   },
-  {
-    "rinx/cmp-skkeleton",
-    config = function()
-      local cmp = require("cmp")
-      -- add source only when skkeleton is enabled
-      local sources = {}
-      local group = vim.api.nvim_create_augroup("cmp-skkeleton-rc", {})
-      vim.api.nvim_create_autocmd("User", {
-        pattern = "skkeleton-enable-pre",
-        callback = function()
-          sources = cmp.get_config().sources
-          cmp.setup.buffer({ sources = { { name = "skkeleton" } } })
-        end,
-        group = group,
-      })
-      vim.api.nvim_create_autocmd("User", {
-        pattern = "skkeleton-disable-post",
-        callback = function()
-          cmp.setup.buffer({ sources = sources })
-        end,
-        group = group,
-      })
-    end,
-    event = { "User skkeleton-initialize-pre" },
-    dependencies = { "nvim-cmp" },
-  },
 }
 
 return M
