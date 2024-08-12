@@ -22,8 +22,6 @@ return {
         ["<Tab>"] = my_actions.toggle_tab,
         ["<leader>e"] = require("oil.actions").close,
         ["<leader>s"] = my_actions.find,
-        ["<leader>t"] = my_actions.open_terminal,
-        ["<leader>x"] = my_actions.open_explorer,
         ["H"] = require("oil.actions").parent,
         ["L"] = require("oil.actions").select,
         ["g."] = require("oil.actions").toggle_hidden,

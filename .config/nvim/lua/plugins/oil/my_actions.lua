@@ -19,31 +19,6 @@ local function find(name)
   end
 end
 
-M.open_explorer = {
-  desc = "open current directory by explorer.",
-  callback = function()
-    local is_windows = vim.loop.os_uname().version:match("Windows")
-    local opener = is_windows and "explorer.exe" or "xdg-open"
-    local oil = require("oil")
-    local dir = oil.get_current_dir()
-    vim.cmd(string.format("!%s %s", opener, dir))
-  end,
-}
-
-M.open_terminal = {
-  desc = "open terminal in current directory.",
-  callback = function()
-    local Terminal = require("toggleterm.terminal").Terminal
-    local oil = require("oil")
-    local dir = oil.get_current_dir()
-    local term = Terminal:new({
-      dir = dir,
-      direction = "float",
-    })
-    term:toggle()
-  end,
-}
-
 local function float_select(base)
   local oil = require("oil")
   local entry = oil.get_cursor_entry()
