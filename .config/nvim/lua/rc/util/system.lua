@@ -27,10 +27,15 @@ function M.get_sysname()
   return nil
 end
 
+M._is_windows_cache = nil
+
 --- Check the system is windows.
 ---@return boolean
 function M.is_windows()
-  return M.get_sysname() == "windows"
+  if M._is_windows_cache == nil then
+    M._is_windows_cache = M.get_sysname() == "windows"
+  end
+  return M._is_windows_cache
 end
 
 ---Open the file or directory with the default application.

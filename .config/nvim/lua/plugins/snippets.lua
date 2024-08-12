@@ -25,7 +25,6 @@ return {
 
       ls.add_snippets("lua", {
         -- for vim
-        s("printf", { t('print(string.format("'), i(1, "format"), t('",'), i(2, "va_args"), t("))"), i(0) }),
         s(
           "tbl_filter",
           { t("vim.tbl_filter( function() return "), i(2, "expr"), t(" end,"), i(1, "tbl"), t(")"), i(0) }

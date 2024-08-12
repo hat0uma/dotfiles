@@ -1,4 +1,3 @@
-local is_windows = vim.loop.os_uname().version:match("Windows")
 local IGNORE_GLOBS = {
   ".git",
   ".svn",
@@ -60,19 +59,23 @@ local M = {
       end
 
       local function telescope_oldfiles()
-        -- normalize oldfiles
-        local oldfiles = {}
+        local uv = vim.uv
+        local oldfiles = {} ---@type string[]
+        local pending = #vim.v.oldfiles
         for i = 1, #vim.v.oldfiles do
-          local f = vim.fs.normalize(vim.v.oldfiles[i])
-          if is_windows then
-            -- If we normalize it, it becomes a slash, but if it remains a slash, it will be regarded as a uri in telescope and will not pass through `path_display`.
-            f = f:gsub("/", "\\")
-          end
-          table.insert(oldfiles, f)
+          uv.fs_realpath(vim.v.oldfiles[i], function(err, path)
+            if path then
+              table.insert(oldfiles, path)
+            end
+            pending = pending - 1
+            if pending == 0 then
+              vim.v.oldfiles = oldfiles
+              vim.schedule(function()
+                require("telescope.builtin").oldfiles(get_dropdown())
+              end)
+            end
+          end)
         end
-        vim.v.oldfiles = oldfiles
-
-        require("telescope.builtin").oldfiles(get_dropdown())
       end
 
       local function telescope_find_files()
@@ -105,7 +108,7 @@ local M = {
       local actions_state = require("telescope.actions.state")
       local layout_actions = require("telescope.actions.layout")
       local entry_display = require("telescope.pickers.entry_display")
-      local Path = require("plenary.path")
+      local util = require("rc.util")
       local path_displayer = entry_display.create({
         separator = " ",
         items = {
@@ -153,14 +156,14 @@ local M = {
           },
           vimgrep_arguments = GREP_COMMAND,
           path_display = function(opts, path)
-            if is_windows and Path.new(path):is_absolute() then
+            if util.system.is_windows() and util.path.is_absolute_path(path) then
               path = path:gsub("^%l", string.upper) -- drive letter
             end
             -- local dir_name = vim.fn.fnamemodify(path, ":p:~:.:h")
             -- local file_name = vim.fn.fnamemodify(path, ":p:t")
             local fname = vim.fs.basename(path)
-            local cwd = vim.fs.normalize(vim.uv.cwd())
-            local home = vim.fs.normalize(vim.uv.os_homedir())
+            local cwd = vim.fs.normalize(assert(vim.uv.cwd()))
+            local home = vim.fs.normalize(assert(vim.uv.os_homedir()))
             local dirname = vim.fs.dirname(path):gsub(cwd .. "/", ""):gsub(home, "~")
             return path_displayer({
               fname,
