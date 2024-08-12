@@ -3,48 +3,48 @@ local M = {}
 local finders = require("telescope.finders")
 local pickers = require("telescope.pickers")
 local conf = require("telescope.config").values
-local action_state = require("telescope.actions.state")
-local actions = require("telescope.actions")
+local make_entry = require("telescope.make_entry")
 
----@class EditAction
----@field name string
----@field target function
+M.oldfiles = function(opts)
+  local current_buffer = vim.api.nvim_get_current_buf()
+  local current_file = vim.api.nvim_buf_get_name(current_buffer)
+  local results = {}
 
----@type Action[]
-local EDIT_ACTIONS = {
-  { name = 'stdpath("cache")', target = vim.fn.stdpath("cache") },
-  { name = 'stdpath("config")', target = vim.fn.stdpath("config") },
-  { name = 'stdpath("data")', target = vim.fn.stdpath("data") },
-  { name = 'stdpath("state")', target = vim.fn.stdpath("state") },
-}
+  -- get all buffers
+  local bufnrs = vim.api.nvim_list_bufs()
+  table.sort(bufnrs, function(a, b)
+    return vim.fn.getbufinfo(a)[1].lastused > vim.fn.getbufinfo(b)[1].lastused
+  end)
+  for _, bufnr in ipairs(bufnrs) do
+    local bufname = vim.api.nvim_buf_get_name(bufnr)
+    local buf_stats = vim.api.nvim__buf_stats(bufnr)
+    local open_by_lsp = buf_stats.current_lnum == 0
+    local file = vim.uv.fs_realpath(bufname)
+    if not open_by_lsp and file and bufnr ~= current_buffer then
+      table.insert(results, file)
+    end
+  end
 
--- git subcommands
-M.show_paths = function(opts)
-  opts = opts or {}
+  -- get all oldfiles
+  for _, file in ipairs(vim.v.oldfiles) do
+    local path = vim.uv.fs_realpath(file)
+    if path and not vim.tbl_contains(results, path) and path ~= current_file then
+      table.insert(results, path)
+    end
+  end
+
   pickers
     .new(opts, {
-      prompt_title = "paths",
+      prompt_title = "Oldfiles",
+      __locations_input = true,
       finder = finders.new_table({
-        results = EDIT_ACTIONS,
-        ---@param entry EditAction
-        entry_maker = function(entry)
-          return {
-            value = entry,
-            display = entry.name,
-            ordinal = entry.name,
-          }
-        end,
+        results = results,
+        entry_maker = opts.entry_maker or make_entry.gen_from_file(opts),
       }),
-      sorter = conf.generic_sorter(opts),
-      attach_mappings = function(prompt_bufnr, map)
-        actions.select_default:replace(function()
-          actions.close(prompt_bufnr)
-          local selection = action_state.get_selected_entry()
-          -- print(":" .. selection.value.cmd)
-          vim.cmd.edit(selection.value.target)
-        end)
-        return true
-      end,
+      ---@diagnostic disable-next-line: no-unknown
+      sorter = conf.file_sorter(opts),
+      ---@diagnostic disable-next-line: no-unknown
+      previewer = conf.grep_previewer(opts),
     })
     :find()
 end

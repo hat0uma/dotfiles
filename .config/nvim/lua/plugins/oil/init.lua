@@ -27,7 +27,7 @@ return {
         ["g."] = require("oil.actions").toggle_hidden,
         ["g?"] = require("oil.actions").show_help,
         ["g@"] = function()
-          require("plugins.telescope.my_pickers").show_paths(require("telescope.themes").get_cursor())
+          require("plugins.oil.my_actions").select_open_stdpaths()
         end,
         ["gp"] = require("oil.actions").preview,
         ["gs"] = my_actions.float_select_split,

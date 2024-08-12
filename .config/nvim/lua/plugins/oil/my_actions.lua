@@ -100,4 +100,24 @@ function M.open()
   end
 end
 
+function M.select_open_stdpaths()
+  local stdpaths = {
+    { name = 'stdpath("cache")', target = vim.fn.stdpath("cache") },
+    { name = 'stdpath("config")', target = vim.fn.stdpath("config") },
+    { name = 'stdpath("data")', target = vim.fn.stdpath("data") },
+    { name = 'stdpath("state")', target = vim.fn.stdpath("state") },
+  }
+  vim.ui.select(stdpaths, {
+    prompt = "Select action",
+    format_item = function(item)
+      return item.name
+    end,
+  }, function(choice)
+    if not choice then
+      return
+    end
+    vim.cmd.edit(choice.target)
+  end)
+end
+
 return M

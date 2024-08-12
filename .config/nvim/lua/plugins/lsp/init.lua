@@ -141,7 +141,6 @@ return {
       -- "jose-elias-alvarez/null-ls.nvim",
       "SmiteshP/nvim-navic",
       "mason-lspconfig.nvim",
-      "neodev.nvim",
       "neoconf.nvim",
       "clangd_extensions.nvim",
       "go.nvim",

@@ -59,22 +59,7 @@ local M = {
       end
 
       local function telescope_oldfiles()
-        local oldfiles = {} ---@type string[]
-        local pending = #vim.v.oldfiles
-        for i = 1, #vim.v.oldfiles do
-          vim.uv.fs_realpath(vim.v.oldfiles[i], function(err, path)
-            if path then
-              table.insert(oldfiles, path)
-            end
-            pending = pending - 1
-            if pending == 0 then
-              vim.v.oldfiles = oldfiles
-              vim.schedule(function()
-                require("telescope.builtin").oldfiles(get_dropdown())
-              end)
-            end
-          end)
-        end
+        require("plugins.telescope.my_pickers").oldfiles(get_dropdown())
       end
 
       local function telescope_find_files()
