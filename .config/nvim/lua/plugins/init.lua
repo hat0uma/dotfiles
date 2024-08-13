@@ -8,28 +8,16 @@ return {
     cmd = "StartupTime",
   },
   {
-    "lukas-reineke/indent-blankline.nvim",
-    cond = not vim.g.vscode,
+    "shellRaining/hlchunk.nvim",
+    event = { "BufReadPre", "BufNewFile" },
     config = function()
-      require("ibl").setup({
-        indent = {
-          char = "│",
-        },
-        exclude = {
-          filetypes = {
-            "help",
-            "toggleterm",
-            "terminal",
-            "TelescopePrompt",
-            "packer",
-            "translator",
-          },
+      require("hlchunk").setup({
+        chunk = {
+          enable = true,
         },
       })
     end,
-    event = "BufReadPre",
   },
-
   {
     "Wansmer/treesj",
     config = function()
