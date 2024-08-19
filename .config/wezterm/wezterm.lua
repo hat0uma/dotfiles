@@ -18,20 +18,19 @@ local launch_menu = {
 }
 
 wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_width)
-  local bg
+  local item = {}
   if tab.is_active then
-    bg = "#8caaee"
+    table.insert(item, { Background = { Color = "#8caaee" } })
+    table.insert(item, { Attribute = { Intensity = "Bold" } })
   elseif hover then
-    bg = "#414559"
+    table.insert(item, { Background = { Color = "#414559" } })
   else
-    bg = "#292c3c"
+    table.insert(item, { Background = { Color = "#292c3c" } })
   end
 
   local title = string.format(" %d ", tab.tab_index + 1)
-  return {
-    { Background = { Color = bg } },
-    { Text = title },
-  }
+  table.insert(item, { Text = title })
+  return item
 end)
 
 wezterm.on("trigger-neovim-with-scrollback", function(window, pane)
@@ -65,9 +64,10 @@ return {
   audible_bell = "Disabled",
   use_ime = true,
   enable_tab_bar = true,
-  use_fancy_tab_bar = false,
+  -- use_fancy_tab_bar = false,
   hide_tab_bar_if_only_one_tab = false,
   tab_bar_at_bottom = false,
+  show_close_tab_button_in_tabs = false,
   window_decorations = "RESIZE",
   window_padding = {
     left = 0,
