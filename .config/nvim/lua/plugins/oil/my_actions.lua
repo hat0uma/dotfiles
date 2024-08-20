@@ -119,5 +119,29 @@ function M.select_open_stdpaths()
     vim.cmd.edit(choice.target)
   end)
 end
+M.preview_image = {
+  desc = "preview image",
+  callback = function()
+    local entry = assert(require("oil").get_cursor_entry())
+    local dir = assert(require("oil").get_current_dir())
+    local image_exts = {
+      "png",
+      "jpg",
+      "jpeg",
+    }
+
+    local ext = vim.fn.fnamemodify(entry.name, ":e"):lower()
+    if entry.type ~= "file" or not vim.tbl_contains(image_exts, ext) then
+      print("cursor entry is not image.")
+      return
+    end
+
+    require("rc.image").open(entry.name, {
+      cwd = dir,
+      direction = "bottom",
+      keep_focus = true,
+    })
+  end,
+}
 
 return M

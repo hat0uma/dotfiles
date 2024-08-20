@@ -30,6 +30,7 @@ return {
           require("plugins.oil.my_actions").select_open_stdpaths()
         end,
         ["gp"] = require("oil.actions").preview,
+        ["gi"] = require("plugins.oil.my_actions").preview_image,
         ["gs"] = my_actions.float_select_split,
         ["gv"] = my_actions.float_select_vsplit,
         ["gy"] = require("oil.actions").copy_entry_path,

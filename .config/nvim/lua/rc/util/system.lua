@@ -47,7 +47,8 @@ function M.get_open_command(args)
     error("Unsupported system")
   end
   local commands = {
-    windows = { "rundll32", "url.dll,FileProtocolHandler" },
+    -- windows = { "rundll32", "url.dll,FileProtocolHandler" },
+    windows = { "explorer.exe" }, -- rundll32 is not working for multibyte file names
     mac = { "open" },
     unix = { "xdg-open" },
     wsl = { "/mnt/c/Windows/System32/rundll32.exe", "url.dll,FileProtocolHandler" },
@@ -58,11 +59,16 @@ function M.get_open_command(args)
     error("Unsupported system")
   end
 
-  if type(args) == "table" then
-    vim.list_extend(cmd, args)
-  elseif type(args) == "string" then
-    table.insert(cmd, args)
+  if type(args) == "string" then
+    args = { args }
+  elseif type(args) ~= "table" then
+    args = {}
   end
+
+  args = vim.tbl_map(function(v)
+    return vim.fn.shellescape(v)
+  end, args)
+  vim.list_extend(cmd, args)
   return cmd
 end
 

@@ -12,16 +12,26 @@ local util = require("rc.util")
 local menu_registry = {}
 
 --- Add context menu
----@param ext string|nil see `lua-patterns`
+---@param ext string[]|string|nil see `lua-patterns`
 ---@param name string
 ---@param action rc.OilContextMenuAction
 local function add_action(ext, name, action)
-  local pattern = not ext and ".*" or ("%." .. ext .. "$")
-  table.insert(menu_registry, { pattern = pattern, name = name, action = action })
+  if ext == nil then
+    local pattern = ".*"
+    table.insert(menu_registry, { pattern = pattern, name = name, action = action })
+  else
+    if type(ext) == "string" then
+      ext = { ext }
+    end
+    for _, e in ipairs(ext) do
+      local pattern = ("%." .. e .. "$")
+      table.insert(menu_registry, { pattern = pattern, name = name, action = action })
+    end
+  end
 end
 
 --- Add context menu for system command
----@param ext string|nil see `lua-patterns`
+---@param ext string[]|string|nil see `lua-patterns`
 ---@param name string action name
 ---@param cmd string[] command {file} and {dir} will be replaced
 local function add_system_action(ext, name, cmd)
@@ -134,6 +144,16 @@ local function open_terminal(entry, dir)
   term:toggle()
 end
 
+--- Open image
+---@param entry string
+---@param dir string
+local function open_image(entry, dir)
+  require("rc.image").open(entry, {
+    cwd = dir,
+    keep_focus = true,
+  })
+end
+
 function M.setup()
   add_action(nil, "Copy Path", copy_absolute_path)
   -- add_action(nil, "Open File", open_file)
@@ -142,9 +162,8 @@ function M.setup()
   add_system_action(nil, "Open Folder", util.system.get_open_command("."))
   add_action(nil, "Open Terminal Here", open_terminal)
   add_system_action("zip", "Extract", { "unzip", "{file}" })
-  add_system_action("tar", "Extract", { "tar", "xvf", "{file}" })
-  add_system_action("tgz", "Extract", { "tar", "xvf", "{file}" })
-  add_system_action("tar%.gz", "Extract", { "tar", "xvf", "{file}" })
+  add_system_action({ "tar", "tgz", "tar%.gz" }, "Extract", { "tar", "xvf", "{file}" })
+  add_action({ "jpg", "jpeg", "png" }, "Open Image in terminal", open_image)
 end
 
 return M
