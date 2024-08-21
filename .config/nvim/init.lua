@@ -145,11 +145,14 @@ vim.api.nvim_create_user_command("BufInspect", function()
 end, {})
 
 _G.rc = require("rc")
+
 require("config.lazy")
-require("rc.terminal").setup()
-require("rc.winbar").setup()
-require("rc.restart").setup()
-require("rc.scratch").setup()
-require("rc.terminal_editor").setup()
+
+rc.terminal.setup()
+rc.winbar.setup()
+rc.scratch.setup()
+rc.restart.setup()
+rc.git.autofetch.enable()
+-- rc.projectrc.setup()
+
 -- require("rc.git.autofetch").setup()
--- require("rc.projectrc").setup()

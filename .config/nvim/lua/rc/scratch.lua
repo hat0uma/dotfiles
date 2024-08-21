@@ -39,6 +39,33 @@ function M.open()
   vim.api.nvim_win_set_buf(win, buf)
   vim.api.nvim_set_option_value("winfixbuf", true, {})
 
+  -- local library = {}
+  -- table.insert(library, vim.env.VIMRUNTIME .. "/lua")
+  -- vim.api.nvim_create_autocmd("LspAttach", {
+  --   group = vim.api.nvim_create_augroup("scratch-lsp-setup", {}),
+  --   callback = function(ev)
+  --     local client = vim.lsp.get_client_by_id(ev.data.client_id)
+  --     if client and client.name == "lua_ls" then
+  --       print("scratch-lsp-setup")
+  --       ---@type table
+  --       client.config.settings.Lua = vim.tbl_deep_extend("force", client.config.settings.Lua or {}, {
+  --         runtime = {
+  --           version = "LuaJIT",
+  --           path = { "?.lua", "?/init.lua" },
+  --           pathStrict = true,
+  --         },
+  --         workspace = {
+  --           checkThirdParty = false,
+  --           library = library,
+  --           ignoreDir = { "/lua" },
+  --         },
+  --       })
+  --       client.notify("workspace/didChangeConfiguration", { settings = client.config.settings })
+  --     end
+  --   end,
+  --   buffer = buf,
+  -- })
+
   -- launch language servers
   local matches = require("lspconfig.util").get_config_by_ft(vim.bo.filetype)
   ---@diagnostic disable-next-line: no-unknown

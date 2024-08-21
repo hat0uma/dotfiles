@@ -21,10 +21,34 @@ local function screen_to_string(winid)
   return table.concat(screen, "\n")
 end
 
+local function region_to_text(region)
+  local text = ""
+  local maxcol = vim.v.maxcol
+  for line, cols in vim.spairs(region) do
+    local endcol = cols[2] == maxcol and -1 or cols[2]
+    local chunk = vim.api.nvim_buf_get_text(0, line, cols[1], line, endcol, {})[1]
+    text = ("%s%s\n"):format(text, chunk)
+  end
+  return text
+end
+
+local function get_visual_selection()
+  local r = vim.region(0, "'<", "'>", vim.fn.visualmode(), true)
+  return region_to_text(r)
+end
+
 return {
+  toys = require("rc.toys.init"),
+  git = require("rc.git"),
   img = require("rc.img"),
-  path = require("rc.util.path"),
-  sys = require("rc.util.sys"),
-  region = require("rc.util.region"),
+  path = require("rc.path"),
+  projectrc = require("rc.projectrc"),
+  restart = require("rc.restart"),
+  scratch = require("rc.scratch"),
+  sys = require("rc.sys"),
+  terminal = require("rc.terminal"),
+  winbar = require("rc.winbar"),
   screen_to_string = screen_to_string,
+  region_to_text = region_to_text,
+  get_visual_selection = get_visual_selection,
 }

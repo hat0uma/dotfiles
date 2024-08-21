@@ -16,7 +16,7 @@ local function oil_location()
   })
 end
 
-M.config = {
+local config = {
   default = function()
     local success, navic = pcall(require, "nvim-navic")
     if success then
@@ -33,15 +33,15 @@ M.config = {
 
 function M.provider()
   local ft = vim.bo.ft
-  if M.config.ft[ft] then
-    return M.config.ft[ft]()
+  if config.ft[ft] then
+    return config.ft[ft]()
   else
-    return M.config.default()
+    return config.default()
   end
 end
 
 function M.setup()
-  vim.go.winbar = "%{%v:lua.require'rc.winbar'.provider()%}"
+  vim.go.winbar = "%{%v:lua.rc.winbar.provider()%}"
 end
 
 return M

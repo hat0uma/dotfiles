@@ -1,3 +1,4 @@
+--- This module provides terminal related functions.
 local M = {}
 
 local function is_floating(winid)
@@ -37,12 +38,15 @@ end
 
 function M.setup()
   require("rc.terminal.dir").setup()
+  require("rc.terminal.editor").setup()
 
-  -- commands
-  local cmdopts = { nargs = "*", complete = "file", bar = true }
-  vim.api.nvim_create_user_command("TEdit", edit_files, cmdopts)
-  vim.api.nvim_create_user_command("TVsplit", vsplit_files, cmdopts)
-  vim.api.nvim_create_user_command("TSplit", split_files, cmdopts)
+  -- commands for script
+  -- This command is intended to be called via RPC from shell scripts in the terminal.
+  -- See bin/, bin.pwsh/ for more information.
+  local opts = { nargs = "*", complete = "file", bar = true }
+  vim.api.nvim_create_user_command("TEdit", edit_files, opts)
+  vim.api.nvim_create_user_command("TVsplit", vsplit_files, opts)
+  vim.api.nvim_create_user_command("TSplit", split_files, opts)
 end
 
 return M

@@ -1,11 +1,13 @@
+--- This module is intended to prevent neovim from nesting when `git commit` or `man` is executed in :terminal.
+
 local M = {}
 
 --- call from parent
 function M.setup()
-  local editor = [[nvim -u NONE --headless -n -c "lua require'rc.terminal_editor'.edit_on_parent()" -c qa!]]
+  local editor = [[nvim -u NONE --headless -n -c "lua require'rc.terminal.editor'.edit_on_parent()" -c qa!]]
   vim.env.EDITOR = editor
   vim.env.VISUAL = editor
-  vim.env.MANPAGER = [[nvim -u NONE --headless -n -c "lua require'rc.terminal_editor'.man_on_parent()" -c qa! -]]
+  vim.env.MANPAGER = [[nvim -u NONE --headless -n -c "lua require'rc.terminal.editor'.man_on_parent()" -c qa! -]]
   vim.env.RC_TERMINAL_EDITOR_PARENT_ADDRESS = vim.v.servername
 end
 
@@ -38,21 +40,21 @@ function M.edit_on_parent()
   local files = vim.tbl_map(function(file)
     return vim.fn.fnamemodify(file, ":p")
   end, vim.fn.argv())
-  exec_remote_wait("require'rc.terminal_editor'.edit(...)", files)
+  exec_remote_wait("require'rc.terminal.editor'.handle_edit_request(...)", files)
 end
 
 function M.man_on_parent()
   local lines = vim.api.nvim_buf_get_lines(0, 0, -1, true)
-  exec_remote_wait("return require'rc.terminal_editor'.man(...)", { lines })
+  exec_remote_wait("return require'rc.terminal.editor'.handle_man_request(...)", { lines })
 end
 
 --------------------------------------------------------------------
--- functions called from parent nvim
+-- Functions executed on parent by RPC request from child
 --------------------------------------------------------------------
 
 ---@param open_action function
 ---@return fun(child_server_name: string, ...)
-local function remote_edit(open_action)
+local function create_handle_request(open_action)
   return function(child_server_name, ...)
     local toggle_number = vim.b.toggle_number
 
@@ -74,13 +76,13 @@ local function remote_edit(open_action)
   end
 end
 
---- open files on parent nvim
-M.edit = remote_edit(function(files)
+--- handle edit request
+M.handle_edit_request = create_handle_request(function(files)
   vim.cmd.tabnew(files)
 end)
 
---- man on parent nvim
-M.man = remote_edit(function(lines)
+--- handle man request
+M.handle_man_request = create_handle_request(function(lines)
   vim.cmd.tabnew()
   local buf = vim.api.nvim_get_current_buf()
   vim.api.nvim_buf_set_lines(buf, 0, -1, true, lines)

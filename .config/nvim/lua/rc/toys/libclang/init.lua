@@ -1,9 +1,11 @@
-function _G.libClangTest()
+local M = {}
+
+function M.test()
   local lib = "~/scoop/apps/llvm/current/bin/libclang.dll"
 
   local ffi = require("ffi")
   local libclang = ffi.load(vim.fs.normalize(lib))
-  require("rc.ctoys.libclang.defs").setup()
+  require("rc.toys.libclang.defs.init").setup()
 
   -- define the visitor function
   local function visitor(cursor, parent, client_data)
@@ -31,3 +33,5 @@ function _G.libClangTest()
   libclang.clang_disposeIndex(index)
   visitor_c:free()
 end
+
+return M

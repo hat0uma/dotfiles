@@ -80,7 +80,7 @@ local function get_struct_fields(target)
   return fields
 end
 
-function M.get_structs()
+function M.list_structs()
   local parser = vim.treesitter.get_parser(0, "c")
   local tree = parser:parse()[1]
   local root = tree:root()
