@@ -1,5 +1,4 @@
 local M = {}
-local util = require("rc.util")
 
 ---@alias rc.OilContextMenuAction fun(entry:string,dir:string)
 
@@ -148,7 +147,7 @@ end
 ---@param entry string
 ---@param dir string
 local function open_image(entry, dir)
-  require("rc.image").open(entry, {
+  require("rc.img").open(entry, {
     cwd = dir,
     keep_focus = true,
   })
@@ -158,8 +157,8 @@ function M.setup()
   add_action(nil, "Copy Path", copy_absolute_path)
   -- add_action(nil, "Open File", open_file)
   -- add_action(nil, "Open Folder", open_folder)
-  add_system_action(nil, "Open File", util.system.get_open_command("{file}"))
-  add_system_action(nil, "Open Folder", util.system.get_open_command("."))
+  add_system_action(nil, "Open File", rc.sys.get_open_command("{file}"))
+  add_system_action(nil, "Open Folder", rc.sys.get_open_command("."))
   add_action(nil, "Open Terminal Here", open_terminal)
   add_system_action("zip", "Extract", { "unzip", "{file}" })
   add_system_action({ "tar", "tgz", "tar%.gz" }, "Extract", { "tar", "xvf", "{file}" })

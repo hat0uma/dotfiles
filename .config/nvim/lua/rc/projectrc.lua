@@ -17,13 +17,13 @@ local loader = {
   end,
 }
 
-local old_cwd = vim.loop.cwd()
+local old_cwd = vim.uv.cwd()
 local loaded_hash = {}
 
 local function find_projectrc(dir)
   for _, projectrc in ipairs(projectrc_files) do
     local f = vim.fs.joinpath(dir, projectrc.file)
-    if vim.loop.fs_stat(f) then
+    if vim.uv.fs_stat(f) then
       return projectrc
     end
   end
@@ -31,7 +31,7 @@ local function find_projectrc(dir)
 end
 
 local function load()
-  local cwd = vim.loop.cwd()
+  local cwd = vim.uv.cwd()
   local projectrc = find_projectrc(cwd)
   if not projectrc then
     return
@@ -55,7 +55,7 @@ local function load()
 end
 
 local on_dirchanged = function()
-  local cwd = vim.loop.cwd()
+  local cwd = vim.uv.cwd()
   if cwd ~= old_cwd then
     old_cwd = cwd
     load()

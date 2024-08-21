@@ -50,7 +50,6 @@ M.init = function()
 end
 
 M.config = function()
-  local util = require("rc.util")
   local shells = require("rc.terminal.shells")
   local shell = vim.fn.has("win64") == 1 and shells.pwsh or shells.zsh
   local KeyCode = {
@@ -112,8 +111,8 @@ M.config = function()
       -- gf
       vim.keymap.set("n", "gf", function()
         local cfile = vim.fn.expand("<cfile>")
-        local path = util.path.make_absolute(vim.b.terminal_cwd, cfile)
-        if util.path.accessable(path) then
+        local path = rc.path.make_absolute(vim.b.terminal_cwd, cfile)
+        if rc.path.accessable(path) then
           vim.cmd("close | e " .. path)
         else
           vim.notify(string.format("%s is not found on path", path), vim.log.levels.ERROR)

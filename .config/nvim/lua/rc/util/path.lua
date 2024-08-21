@@ -1,11 +1,10 @@
 local M = {}
-local system = require("rc.util.system")
 
 --- Check the path is absolute.
 ---@param path string
 ---@return boolean
 function M.is_absolute_path(path)
-  if system.is_windows() then
+  if rc.sys.is_windows then
     return path:match("^%a:[/\\]") ~= nil or path:match("^[/\\][/\\]") ~= nil
   else
     return path:match("^/") ~= nil

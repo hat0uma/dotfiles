@@ -1,3 +1,5 @@
+---@class rc.sys
+---@field is_windows boolean Check the system is windows
 local M = {}
 
 --- Get the system name.
@@ -25,17 +27,6 @@ function M.get_sysname()
   end
 
   return nil
-end
-
-M._is_windows_cache = nil
-
---- Check the system is windows.
----@return boolean
-function M.is_windows()
-  if M._is_windows_cache == nil then
-    M._is_windows_cache = M.get_sysname() == "windows"
-  end
-  return M._is_windows_cache
 end
 
 ---Open the file or directory with the default application.
@@ -72,4 +63,17 @@ function M.get_open_command(args)
   return cmd
 end
 
-return M
+return setmetatable(M, {
+  __index = function(_, k)
+    if k == "is_windows" then
+      local v = rawget(M, k)
+      if not v then
+        v = rawget(M, "get_sysname")() == "windows"
+        rawset(M, k, v)
+      end
+      return v
+    else
+      return rawget(M, k)
+    end
+  end,
+})

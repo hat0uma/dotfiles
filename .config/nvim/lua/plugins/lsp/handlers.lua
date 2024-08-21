@@ -1,7 +1,5 @@
 local M = {}
 
-local is_windows = vim.loop.os_uname().version:match("Windows")
-
 function M.setup()
   vim.lsp.handlers["textDocument/definition"] = function(err, result, ctx, config)
     if err then
@@ -18,7 +16,7 @@ function M.setup()
     -- fix zipfile:/// -> zipfile:// on windows
     -- for yarn pnp
     for _, r in ipairs(result) do
-      if is_windows and r.targetUri and vim.startswith(r.targetUri, "zipfile:///") then
+      if rc.sys.is_windows and r.targetUri and vim.startswith(r.targetUri, "zipfile:///") then
         r.targetUri = string.gsub(r.targetUri, "zipfile:///", "zipfile://")
       end
     end

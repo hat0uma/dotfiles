@@ -37,14 +37,18 @@ end
 
 ---Open Image
 ---@param file string
----@param opts { cwd?:string, direction?: "bottom"| "right"| "left"| "top", keep_focus?:boolean}
+---@param opts? { cwd?:string, direction?: "bottom"| "right"| "left"| "top", keep_focus?:boolean}
 function M.open(file, opts)
   -- options
-  local direction = opts.direction or "bottom"
-  local cwd = opts.cwd or assert(vim.uv.cwd())
-  local keep_focus = opts.keep_focus or true
-  if not vim.tbl_contains(VALID_PANE_DIRECTIONS, direction) then
-    error(string.format("invalid direction for open image: %s", direction))
+  file = vim.fs.normalize(file)
+  opts = vim.tbl_deep_extend("force", {
+    cwd = assert(vim.uv.cwd()),
+    direction = "bottom",
+    keep_focus = true,
+  }, opts or {})
+
+  if not vim.tbl_contains(VALID_PANE_DIRECTIONS, opts.direction) then
+    error(string.format("invalid direction for open image: %s", opts.direction))
   end
 
   -- get current pane
@@ -62,8 +66,8 @@ function M.open(file, opts)
     "cli",
     "split-pane",
     "--cwd",
-    cwd,
-    "--" .. direction,
+    opts.cwd,
+    "--" .. opts.direction,
     "wezterm",
     "imgcat",
     "--hold",
@@ -79,7 +83,7 @@ function M.open(file, opts)
     last_opened_pane = tonumber(obj.stdout)
 
     -- restore focus
-    if keep_focus then
+    if opts.keep_focus then
       activate_pane(current_pane)
     end
   end)

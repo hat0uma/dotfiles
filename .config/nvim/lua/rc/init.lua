@@ -1,4 +1,4 @@
---- scrren to string
+-- scrren to string
 ---@param winid integer
 ---@return string
 local function screen_to_string(winid)
@@ -22,8 +22,9 @@ local function screen_to_string(winid)
 end
 
 return {
+  img = require("rc.img"),
   path = require("rc.util.path"),
-  system = require("rc.util.system"),
+  sys = require("rc.util.sys"),
   region = require("rc.util.region"),
   screen_to_string = screen_to_string,
 }

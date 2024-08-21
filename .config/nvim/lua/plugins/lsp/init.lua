@@ -35,6 +35,7 @@ return {
       library = {
         { path = "luvit-meta/library", words = { "vim%.uv" } },
         "plenary.nvim",
+        { path = vim.fn.stdpath("config") .. "/lua/rc", words = { "rc" } },
       },
     },
   },

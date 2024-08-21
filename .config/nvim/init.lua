@@ -144,6 +144,7 @@ vim.api.nvim_create_user_command("BufInspect", function()
   vim.notify(f)
 end, {})
 
+_G.rc = require("rc")
 require("config.lazy")
 require("rc.terminal").setup()
 require("rc.winbar").setup()

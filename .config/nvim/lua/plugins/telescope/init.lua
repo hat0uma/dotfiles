@@ -92,7 +92,6 @@ local M = {
       local actions_state = require("telescope.actions.state")
       local layout_actions = require("telescope.actions.layout")
       local entry_display = require("telescope.pickers.entry_display")
-      local util = require("rc.util")
       local path_displayer = entry_display.create({
         separator = " ",
         items = {
@@ -141,7 +140,7 @@ local M = {
           vimgrep_arguments = GREP_COMMAND,
           path_display = function(opts, path)
             path = vim.fs.normalize(path)
-            if util.system.is_windows() and util.path.is_absolute_path(path) then
+            if rc.sys.is_windows and rc.path.is_absolute_path(path) then
               path = path:gsub("^%l", string.upper) -- normalize drive letter
             end
             local fname = vim.fs.basename(path)

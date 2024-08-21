@@ -136,7 +136,7 @@ M.preview_image = {
       return
     end
 
-    require("rc.image").open(entry.name, {
+    require("rc.img").open(entry.name, {
       cwd = dir,
       direction = "bottom",
       keep_focus = true,
