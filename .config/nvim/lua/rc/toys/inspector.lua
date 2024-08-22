@@ -58,9 +58,9 @@ local function get_struct_fields(target)
     for id, nodes in pairs(match) do
       local capture_name = query_obj.captures[id]
       for _, node in ipairs(nodes) do
-        print(node:type())
         local node_text = vim.treesitter.get_node_text(node, 0)
         if capture_name == "field_name" then
+          -- print(node:type())
           field_name = node_text
         elseif capture_name == "field_type" then
           field_type = node_text

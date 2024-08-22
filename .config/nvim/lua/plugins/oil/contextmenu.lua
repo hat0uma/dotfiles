@@ -147,7 +147,7 @@ end
 ---@param entry string
 ---@param dir string
 local function open_image(entry, dir)
-  require("rc.img").open(entry, {
+  rc.img.open(entry, {
     cwd = dir,
     keep_focus = true,
   })

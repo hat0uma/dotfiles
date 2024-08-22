@@ -50,8 +50,7 @@ M.init = function()
 end
 
 M.config = function()
-  local shells = require("rc.terminal.shells")
-  local shell = vim.fn.has("win64") == 1 and shells.pwsh or shells.zsh
+  local shell = rc.terminal.shell.get()
   local KeyCode = {
     Up = "\x1b[A",
     Down = "\x1b[B",

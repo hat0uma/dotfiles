@@ -63,6 +63,14 @@ function M.get_open_command(args)
   return cmd
 end
 
+---append PATH
+---@param path string
+---@return string
+function M.append_path(path)
+  local sep = M.is_windows and ";" or ":"
+  return string.format("%s%s%s", path, sep, vim.env.PATH)
+end
+
 return setmetatable(M, {
   __index = function(_, k)
     if k == "is_windows" then

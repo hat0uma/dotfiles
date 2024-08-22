@@ -1,15 +1,23 @@
 local M = {}
 
+---@type table<string,boolean>
+local last_result = {}
+local timer = nil --- @type uv_timer_t?
+local job = nil --- @type vim.SystemObj?
+
 local function fetch()
-  vim.system({ "git", "fetch" }, { text = true }, function(obj)
+  local cwd = assert(vim.uv.cwd())
+  vim.system({ "git", "fetch" }, { text = true, cwd = cwd }, function(obj)
     if obj.code ~= 0 then
-      vim.notify("fetch failed.\n" .. obj.stderr, vim.log.levels.WARN)
+      if last_result[cwd] ~= false then
+        vim.notify("fetch failed.\n" .. obj.stderr, vim.log.levels.WARN)
+      end
+      last_result[cwd] = false
+    else
+      last_result[cwd] = true
     end
   end)
 end
-
-local timer = nil --- @type uv_timer_t?
-local job = nil --- @type vim.SystemObj?
 
 function M.is_enabled()
   return timer and not timer:is_closing()

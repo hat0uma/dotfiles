@@ -22,20 +22,6 @@ local function _edit_files(opts)
   end
 end
 
-local function edit_files(opts)
-  _edit_files(opts)
-end
-
-local function vsplit_files(opts)
-  vim.cmd.vsplit()
-  _edit_files(opts)
-end
-
-local function split_files(opts)
-  vim.cmd.split()
-  _edit_files(opts)
-end
-
 function M.setup()
   require("rc.terminal.dir").setup()
   require("rc.terminal.editor").setup()
@@ -43,10 +29,20 @@ function M.setup()
   -- commands for script
   -- This command is intended to be called via RPC from shell scripts in the terminal.
   -- See bin/, bin.pwsh/ for more information.
-  local opts = { nargs = "*", complete = "file", bar = true }
-  vim.api.nvim_create_user_command("TEdit", edit_files, opts)
-  vim.api.nvim_create_user_command("TVsplit", vsplit_files, opts)
-  vim.api.nvim_create_user_command("TSplit", split_files, opts)
+  local cmd_opts = { nargs = "*", complete = "file", bar = true }
+  vim.api.nvim_create_user_command("TEdit", function(opts)
+    _edit_files(opts)
+  end, cmd_opts)
+  vim.api.nvim_create_user_command("TVsplit", function(opts)
+    vim.cmd.vsplit()
+    _edit_files(opts)
+  end, cmd_opts)
+  vim.api.nvim_create_user_command("TSplit", function(opts)
+    vim.cmd.split()
+    _edit_files(opts)
+  end, cmd_opts)
 end
+
+M.shell = require("rc.terminal.shell")
 
 return M
