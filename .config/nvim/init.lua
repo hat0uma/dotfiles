@@ -152,7 +152,5 @@ rc.terminal.setup()
 rc.winbar.setup()
 rc.scratch.setup()
 rc.restart.setup()
-rc.git.autofetch.enable()
+-- rc.git.autofetch.enable()
 -- rc.projectrc.setup()
-
--- require("rc.git.autofetch").setup()
