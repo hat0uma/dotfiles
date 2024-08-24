@@ -106,6 +106,7 @@ M.config = function()
       vim.keymap.set("n", "K", send_key_action(KeyCode.Up), opts)
       vim.keymap.set("n", "J", send_key_action(KeyCode.Down), opts)
       vim.keymap.set("n", "<CR>", send_key_action("\r"), opts)
+      vim.keymap.set("t", "<C-l>", send_key_action("\x0c"), opts)
 
       -- gf
       vim.keymap.set("n", "gf", function()

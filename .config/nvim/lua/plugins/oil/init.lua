@@ -1,13 +1,14 @@
-local contextmenu = require("plugins.oil.contextmenu")
-local my_actions = require("plugins.oil.my_actions")
-
 return {
   "stevearc/oil.nvim",
   init = function()
-    vim.keymap.set("n", "<leader>e", my_actions.open, { desc = "Open current file directory" })
+    vim.keymap.set("n", "<leader>e", require("plugins.oil.actions").open, { desc = "Open current file directory" })
   end,
   cond = not vim.g.vscode,
   config = function()
+    local contextmenu = require("plugins.oil.contextmenu")
+    local history = require("plugins.oil.history")
+    local my_actions = require("plugins.oil.actions")
+
     require("oil").setup({
       columns = {
         "icon",
@@ -19,24 +20,24 @@ return {
       delete_to_trash = true,
       use_default_keymaps = false,
       keymaps = {
-        ["<Tab>"] = my_actions.toggle_tab,
         ["<leader>e"] = require("oil.actions").close,
-        ["<leader>s"] = my_actions.find,
+        ["<leader>s"] = my_actions.back_first_opened,
         ["H"] = require("oil.actions").parent,
         ["L"] = require("oil.actions").select,
         ["g."] = require("oil.actions").toggle_hidden,
         ["g?"] = require("oil.actions").show_help,
-        ["g@"] = function()
-          require("plugins.oil.my_actions").select_open_stdpaths()
-        end,
+        ["g@"] = my_actions.select_open_stdpaths,
         ["gp"] = require("oil.actions").preview,
-        ["gi"] = require("plugins.oil.my_actions").preview_image,
+        ["gi"] = my_actions.preview_image,
         ["gs"] = my_actions.float_select_split,
         ["gv"] = my_actions.float_select_vsplit,
         ["gy"] = require("oil.actions").copy_entry_path,
         ["q"] = my_actions.close,
         ["~"] = my_actions.home,
+        ["<C-o>"] = history.back,
+        ["<C-i>"] = history.forward,
         ["<CR>"] = contextmenu.open,
+        ["g<Tab>"] = my_actions.toggle_tab,
       },
       float = {
         padding = 2,
@@ -52,6 +53,7 @@ return {
       },
     })
     contextmenu.setup()
+    history.setup()
   end,
   cmd = { "Oil" },
 }

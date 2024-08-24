@@ -63,44 +63,47 @@ local function add_system_action(ext, name, cmd)
 end
 
 --- Open context menu
-function M.open()
-  local entry = require("oil").get_cursor_entry()
-  if not entry then
-    return
-  end
-  local dir = require("oil").get_current_dir()
-  if not dir then
-    return
-  end
-
-  ---@type rc.OilContextMenuItem[]
-  local target_menus = {}
-  for _, menu in ipairs(menu_registry) do
-    if string.match(entry.name, menu.pattern) then
-      table.insert(target_menus, menu)
-    end
-  end
-
-  if vim.tbl_isempty(target_menus) then
-    print("no actins for:" .. entry.name)
-    return
-  end
-
-  vim.ui.select(target_menus, {
-    prompt = "Select action",
-    --- Format item
-    ---@param item rc.OilContextMenuItem
-    ---@return string
-    format_item = function(item)
-      return item.name
-    end,
-  }, function(choice) --- @param choice rc.OilContextMenuItem?
-    if not choice then
+M.open = {
+  desc = "Open context menu",
+  callback = function()
+    local entry = require("oil").get_cursor_entry()
+    if not entry then
       return
     end
-    choice.action(entry.name, dir)
-  end)
-end
+    local dir = require("oil").get_current_dir()
+    if not dir then
+      return
+    end
+
+    ---@type rc.OilContextMenuItem[]
+    local target_menus = {}
+    for _, menu in ipairs(menu_registry) do
+      if string.match(entry.name, menu.pattern) then
+        table.insert(target_menus, menu)
+      end
+    end
+
+    if vim.tbl_isempty(target_menus) then
+      print("no actins for:" .. entry.name)
+      return
+    end
+
+    vim.ui.select(target_menus, {
+      prompt = "Select action",
+      --- Format item
+      ---@param item rc.OilContextMenuItem
+      ---@return string
+      format_item = function(item)
+        return item.name
+      end,
+    }, function(choice) --- @param choice rc.OilContextMenuItem?
+      if not choice then
+        return
+      end
+      choice.action(entry.name, dir)
+    end)
+  end,
+}
 
 --- Copy entry absolute path
 ---@param entry string
