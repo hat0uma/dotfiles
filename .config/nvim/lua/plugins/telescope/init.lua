@@ -27,6 +27,18 @@ local GREP_COMMAND = {
   "--smart-case",
 }
 
+local function get_dropdown(opts)
+  opts = vim.tbl_deep_extend("force", {
+    border = true,
+    layout_config = {
+      width = math.floor(vim.o.columns * 0.7),
+      height = math.floor(vim.o.lines * 0.7),
+    },
+    preview = { hide_on_startup = true },
+  }, opts or {})
+  return require("telescope.themes").get_dropdown(opts)
+end
+
 local M = {
   {
     "nvim-telescope/telescope-fzf-native.nvim",
@@ -47,23 +59,12 @@ local M = {
       "nvim-lua/plenary.nvim",
     },
     init = function()
-      local get_dropdown = function()
-        return require("telescope.themes").get_dropdown({
-          border = true,
-          layout_config = {
-            width = math.floor(vim.o.columns * 0.7),
-            height = math.floor(vim.o.lines * 0.7),
-          },
-          preview = { hide_on_startup = true },
-        })
-      end
-
       local function telescope_oldfiles()
         require("plugins.telescope.my_pickers").oldfiles(get_dropdown())
       end
 
       local function telescope_find_files()
-        require("telescope.builtin").find_files(get_dropdown())
+        require("telescope.builtin").find_files()
       end
 
       local function telescope_live_grep()
@@ -154,9 +155,9 @@ local M = {
           end,
         },
         pickers = {
-          find_files = {
+          find_files = get_dropdown({
             find_command = FIND_COMMAND,
-          },
+          }),
         },
         extensions = {
           fzf = {
