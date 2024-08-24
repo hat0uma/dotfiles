@@ -172,7 +172,13 @@ local M = {
                 actions.close(prompt_bufnr)
                 vim.cmd.vsplit(selection.value.readme)
               end
-              map("n", "v", vsplit_readme)
+              local split_readme = function()
+                local selection = actions_state.get_selected_entry()
+                actions.close(prompt_bufnr)
+                vim.cmd.split(selection.value.readme)
+              end
+              map("n", "gv", vsplit_readme)
+              map("n", "gs", split_readme)
               return true
             end,
           },

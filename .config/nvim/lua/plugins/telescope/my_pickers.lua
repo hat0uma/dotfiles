@@ -1,11 +1,11 @@
 local M = {}
 
-local finders = require("telescope.finders")
-local pickers = require("telescope.pickers")
-local conf = require("telescope.config").values
-local make_entry = require("telescope.make_entry")
-
 M.oldfiles = function(opts)
+  local finders = require("telescope.finders")
+  local pickers = require("telescope.pickers")
+  local conf = require("telescope.config").values
+  local make_entry = require("telescope.make_entry")
+
   local current_buffer = vim.api.nvim_get_current_buf()
   local current_file = vim.api.nvim_buf_get_name(current_buffer)
   local results = {}
