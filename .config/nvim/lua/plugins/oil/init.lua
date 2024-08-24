@@ -1,7 +1,7 @@
 return {
   "stevearc/oil.nvim",
   init = function()
-    vim.keymap.set("n", "<leader>e", require("plugins.oil.actions").open, { desc = "Open current file directory" })
+    vim.keymap.set("n", "<leader>e", require("plugins.oil.util").open, { desc = "Open current file directory" })
   end,
   cond = not vim.g.vscode,
   config = function()

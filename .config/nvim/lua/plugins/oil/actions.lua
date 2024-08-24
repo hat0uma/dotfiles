@@ -84,39 +84,6 @@ M.back_first_opened = {
   end,
 }
 
-function M.open()
-  local state = require("plugins.oil.state")
-  require("plugins.oil.history").clear()
-
-  local buf = vim.api.nvim_buf_get_name(0)
-  if vim.fn.filereadable(buf) ~= 0 then
-    state.filename = vim.fs.basename(buf)
-    state.dir = vim.fs.dirname(buf)
-  else
-    state.filename = ""
-    state.dir = vim.uv.cwd()
-  end
-
-  -- move cursor
-  vim.api.nvim_create_autocmd("User", {
-    pattern = "OilEnter",
-    callback = vim.schedule_wrap(function()
-      find(state.filename)
-    end),
-    group = vim.api.nvim_create_augroup("my-oil-settings", {}),
-    once = true,
-  })
-
-  if state.direction == "float" then
-    require("oil").open_float(state.dir)
-  elseif state.direction == "tab" then
-    vim.cmd.tabedit(state.dir)
-  else
-    require("oil").open_float(state.dir)
-    state.direction = "float"
-  end
-end
-
 M.select_open_stdpaths = {
   desc = "Select and open stdpaths",
   callback = function()
