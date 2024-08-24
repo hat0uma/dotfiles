@@ -60,7 +60,7 @@ local M = {
     },
     init = function()
       local function telescope_oldfiles()
-        require("plugins.telescope.my_pickers").oldfiles(get_dropdown())
+        require("plugins.telescope.pickers").oldfiles(get_dropdown())
       end
 
       local function telescope_find_files()
