@@ -16,7 +16,7 @@ M.max_history = 100
 
 local notification = nil
 local function notify(msg)
-  notification = vim.notify(msg, vim.log.levels.INFO, { replace = notification })
+  notification = vim.notify(msg, vim.log.levels.INFO, { replace = notification, title = "OilHistory" })
 end
 
 --- Clear history.
