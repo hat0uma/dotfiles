@@ -2,8 +2,8 @@
 
 local ffi = require("ffi")
 
-require("rc.ctoys.libclang.defs.cx_error_code")
-require("rc.ctoys.libclang.defs.cx_string")
+require("rc.toys.libclang.defs.cx_error_code")
+require("rc.toys.libclang.defs.cx_string")
 
 ffi.cdef([[
 unsigned long long clang_getBuildSessionTimestamp(void);

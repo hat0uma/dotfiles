@@ -1,7 +1,7 @@
 local ffi = require("ffi")
 
-require("rc.ctoys.libclang.defs.cx_file")
-require("rc.ctoys.libclang.defs.cx_string")
+require("rc.toys.libclang.defs.cx_file")
+require("rc.toys.libclang.defs.cx_string")
 
 ffi.cdef([[
 typedef struct {

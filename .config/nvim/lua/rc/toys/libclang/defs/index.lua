@@ -3,12 +3,12 @@ local ffi = require("ffi")
 -- note:
 -- remove comment: %s/\/\*\_.\{-}\*\//
 
-require("rc.ctoys.libclang.defs.build_system")
-require("rc.ctoys.libclang.defs.cx_diagnostic")
-require("rc.ctoys.libclang.defs.cx_error_code")
-require("rc.ctoys.libclang.defs.cx_file")
-require("rc.ctoys.libclang.defs.cx_source_location")
-require("rc.ctoys.libclang.defs.cx_string")
+require("rc.toys.libclang.defs.build_system")
+require("rc.toys.libclang.defs.cx_diagnostic")
+require("rc.toys.libclang.defs.cx_error_code")
+require("rc.toys.libclang.defs.cx_file")
+require("rc.toys.libclang.defs.cx_source_location")
+require("rc.toys.libclang.defs.cx_string")
 
 ffi.cdef([[
 typedef void *CXIndex;

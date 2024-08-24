@@ -1,7 +1,7 @@
 local ffi = require("ffi")
 
-require("rc.ctoys.libclang.defs.cx_source_location")
-require("rc.ctoys.libclang.defs.cx_string")
+require("rc.toys.libclang.defs.cx_source_location")
+require("rc.toys.libclang.defs.cx_string")
 
 ffi.cdef([[
 enum CXDiagnosticSeverity {

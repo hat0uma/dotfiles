@@ -1,7 +1,7 @@
 local ffi = require("ffi")
 
-require("rc.ctoys.libclang.defs.time")
-require("rc.ctoys.libclang.defs.cx_string")
+require("rc.toys.libclang.defs.time")
+require("rc.toys.libclang.defs.cx_string")
 
 ffi.cdef([[
 typedef void *CXFile;

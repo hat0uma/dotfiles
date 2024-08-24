@@ -1,7 +1,7 @@
 local ffi = require("ffi")
 
-require("rc.ctoys.libclang.defs.cx_string")
-require("rc.ctoys.libclang.defs.index")
+require("rc.toys.libclang.defs.cx_string")
+require("rc.toys.libclang.defs.index")
 
 ffi.cdef([[
 
