@@ -16,7 +16,7 @@ end
 --- Open Oil
 function M.open()
   local state = require("plugins.oil.state")
-  require("plugins.oil.history").clear()
+  -- require("plugins.oil.history").clear()
 
   local buf = vim.api.nvim_buf_get_name(0)
   if vim.fn.filereadable(buf) ~= 0 then
