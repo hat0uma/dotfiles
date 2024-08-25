@@ -34,6 +34,7 @@ return {
         ["gy"] = require("oil.actions").copy_entry_path,
         ["q"] = my_actions.close,
         ["~"] = my_actions.home,
+        ["-"] = history.select,
         ["<C-o>"] = history.back,
         ["<C-i>"] = history.forward,
         ["<CR>"] = contextmenu.open,

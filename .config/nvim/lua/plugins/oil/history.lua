@@ -4,14 +4,17 @@ local M = {}
 --- History stack for navigating directories.
 --- The history stack is a stack of directories that the user has navigated to.
 --- The end is the current directory, and the previous directories are stacked in order.
+--- @type string[]
 M.history_stack = {}
 
 --- Forward stack for navigating directories.
 --- The forward stack is a stack of directories that the user has navigated to after navigating back.
+--- @type string[]
 M.forward_stack = {}
 
 --- Maximum number of directories to keep in the history.
 --- When the history stack exceeds this number, the oldest directory is removed.
+--- @type number
 M.max_history = 100
 
 local notification = nil
@@ -102,6 +105,41 @@ M.forward = {
     -- current = "c"
     table.insert(M.history_stack, table.remove(M.forward_stack))
     vim.cmd.edit(M.history_stack[#M.history_stack])
+  end,
+}
+
+--- Select directory from history.
+M.select = {
+  desc = "Select directory from history",
+  callback = function()
+    -- Create a list of directories to select from
+    local current = M.history_stack[#M.history_stack]
+    local dir = {} ---@type table<string, boolean>
+    for _, v in ipairs(M.history_stack) do
+      if v ~= current then
+        dir[v] = true
+      end
+    end
+    for _, v in ipairs(M.forward_stack) do
+      if v ~= current then
+        dir[v] = true
+      end
+    end
+
+    if vim.tbl_isempty(dir) then
+      notify("No history to select from")
+      return
+    end
+
+    -- Select a directory from the list
+    vim.ui.select(vim.tbl_keys(dir), {
+      prompt = "Select History",
+    }, function(choice)
+      if not choice then
+        return
+      end
+      vim.cmd.edit(choice)
+    end)
   end,
 }
 
