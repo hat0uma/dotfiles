@@ -157,6 +157,7 @@ local function open_image(entry, dir)
 end
 
 local function grep(entry, dir)
+  require("oil").close()
   require("telescope").extensions.live_grep_args.live_grep_args({
     cwd = dir,
     preview = { hide_on_startup = true },
@@ -164,6 +165,7 @@ local function grep(entry, dir)
 end
 
 local function find_files(entry, dir)
+  require("oil").close()
   require("telescope.builtin").find_files({
     cwd = dir,
   })
