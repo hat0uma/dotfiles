@@ -424,4 +424,9 @@ return {
     end,
     cmd = { "GrugFar" },
   },
+  {
+    "hat0uma/UnityEditor.nvim",
+    opts = {},
+    ft = { "cs" },
+  },
 }
