@@ -133,7 +133,7 @@ return {
       -- require("plugins.null-ls").setup_sources { on_attach = on_attach }
       require("typescript-tools").setup({
         single_file_support = false,
-        root_dir = require("lspconfig").util.root_pattern("tsconfig.json"),
+        root_dir = require("lspconfig").util.root_pattern({ "tsconfig.json", "package.json" }),
       })
       require("clangd_extensions").setup({})
     end,
