@@ -100,7 +100,27 @@ M.configurations = {
   },
   hls = {},
   cssls = {},
-  omnisharp = {},
+  omnisharp = {
+    settings = {
+      RoslynExtensionsOptions = {
+        EnableImportCompletion = true,
+        InlayHintsOptions = {
+          enableForParameters = true,
+          forLiteralParameters = true,
+          forIndexerParameters = true,
+          forObjectCreationParameters = true,
+          forOtherParameters = true,
+          suppressForParametersThatDifferOnlyBySuffix = false,
+          suppressForParametersThatMatchMethodIntent = false,
+          suppressForParametersThatMatchArgumentName = false,
+          enableForTypes = true,
+          forImplicitVariableTypes = true,
+          forLambdaParameterTypes = true,
+          forImplicitObjectCreation = true,
+        },
+      },
+    },
+  },
   -- tsserver = {
   --   root_dir = require("lspconfig").util.root_pattern "package.json",
   --   single_file_support = false,
