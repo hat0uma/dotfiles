@@ -136,6 +136,14 @@ return {
         root_dir = require("lspconfig").util.root_pattern({ "tsconfig.json", "package.json" }),
       })
       require("clangd_extensions").setup({})
+
+      -- enable inlay hints
+      vim.lsp.inlay_hint.enable(true)
+      vim.api.nvim_create_user_command(
+        "InlayHintsToggle",
+        [[lua vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())]],
+        {}
+      )
     end,
     dependencies = {
       "hrsh7th/cmp-nvim-lsp",
