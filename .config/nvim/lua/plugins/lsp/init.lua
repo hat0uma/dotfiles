@@ -102,11 +102,24 @@ return {
           local bufnr = ev.buf
           local client = vim.lsp.get_client_by_id(ev.data.client_id)
           assert(client, "client not found")
-
           -- vim.notify(string.format("  %s", client.name))
+
+          -- attach nvim-navic
           if client.server_capabilities.documentSymbolProvider then
             require("nvim-navic").attach(client, bufnr)
           end
+
+          -- attach codelens
+          if client.server_capabilities.codeLensProvider then
+            vim.cmd([[autocmd BufEnter,TextChanged,InsertLeave <buffer> lua vim.lsp.codelens.refresh({ bufnr = 0 })]])
+            vim.lsp.codelens.refresh({ bufnr = bufnr })
+          end
+
+          -- attach inlay hints
+          if client.server_capabilities.inlayHintProvider ~= false then
+            vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+          end
+
           require("plugins.lsp.format").on_attach(client, bufnr)
           require("plugins.lsp.keymap").on_attach(client, bufnr)
         end,
@@ -138,7 +151,6 @@ return {
       require("clangd_extensions").setup({})
 
       -- enable inlay hints
-      vim.lsp.inlay_hint.enable(true)
       vim.api.nvim_create_user_command(
         "InlayHintsToggle",
         [[lua vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())]],
