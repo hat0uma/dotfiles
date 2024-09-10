@@ -12,7 +12,7 @@ function M.on_attach(client, bufnr)
   end
 
   local references = function()
-    require("telescope.builtin").lsp_references()
+    require("telescope.builtin").lsp_references({ include_declaration = false })
   end
 
   local go_to_definition = function()

@@ -427,19 +427,7 @@ return {
   {
     "hat0uma/UnityEditor.nvim",
     config = function()
-      local api = require("unity-editor.api")
-      vim.api.nvim_create_autocmd("BufWritePost", {
-        callback = function()
-          if not vim.fn.expand("%:e") == "cs" then
-            return
-          end
-
-          if api.find_editor_instance(0) then
-            api.refresh()
-          end
-        end,
-        group = vim.api.nvim_create_augroup("unity-editor-nvim-recompile", {}),
-      })
+      require("unity-editor").setup()
     end,
     ft = { "cs" },
   },

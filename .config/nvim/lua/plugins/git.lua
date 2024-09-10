@@ -31,6 +31,7 @@ return {
       neogit.setup({
         disable_commit_confirmation = true,
         integrations = {
+          telescope = true,
           diffview = true,
         },
         ignored_settings = {
