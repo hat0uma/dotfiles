@@ -108,7 +108,7 @@ M.configurations = {
           -- https://github.com/OmniSharp/omnisharp-roslyn/blob/master/src/OmniSharp.Shared/Options/InlayHintsOptions.cs
           EnableForParameters = true,
           ForLiteralParameters = true,
-          ForIndexerParameters = true,
+          ForIndexerParameters = false,
           ForObjectCreationParameters = true,
           ForOtherParameters = true,
           SuppressForParametersThatDifferOnlyBySuffix = true,
