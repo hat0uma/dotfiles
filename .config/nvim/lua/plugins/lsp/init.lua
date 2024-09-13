@@ -146,6 +146,7 @@ return {
       require("clangd_extensions").setup({})
 
       -- enable inlay hints
+      vim.lsp.inlay_hint.enable()
       vim.api.nvim_create_user_command(
         "InlayHintsToggle",
         [[lua vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())]],
