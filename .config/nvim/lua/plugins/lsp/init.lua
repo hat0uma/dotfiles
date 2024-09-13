@@ -115,11 +115,6 @@ return {
             vim.lsp.codelens.refresh({ bufnr = bufnr })
           end
 
-          -- attach inlay hints
-          if client.server_capabilities.inlayHintProvider ~= false then
-            vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
-          end
-
           require("plugins.lsp.format").on_attach(client, bufnr)
           require("plugins.lsp.keymap").on_attach(client, bufnr)
         end,
