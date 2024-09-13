@@ -1,6 +1,8 @@
 return {
   {
     "folke/noice.nvim",
+    -- https://github.com/folke/noice.nvim/issues/921
+    commit = "d9328ef903168b6f52385a751eb384ae7e906c6f",
     cond = not vim.g.vscode,
     config = function()
       require("noice").setup({
