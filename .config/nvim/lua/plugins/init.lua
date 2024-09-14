@@ -428,6 +428,12 @@ return {
     "hat0uma/UnityEditor.nvim",
     config = function()
       require("unity-editor").setup()
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = "cs",
+        callback = function()
+          vim.keymap.set("n", "<C-p>", "<Cmd>UnityPlaymodeToggle<CR>", { buffer = true })
+        end,
+      })
     end,
     ft = { "cs" },
   },
