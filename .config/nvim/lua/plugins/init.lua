@@ -316,6 +316,7 @@ return {
     dependencies = {
       { "zbirenbaum/copilot.lua" },
       { "nvim-lua/plenary.nvim" },
+      { "nvim-telescope/telescope.nvim" },
     },
     config = function()
       require("CopilotChat").setup({
@@ -330,6 +331,20 @@ return {
       })
     end,
     cmd = { "CopilotChat", "CopilotChatCommitStaged" },
+    keys = {
+      {
+        "<leader>c",
+        function()
+          local actions = require("CopilotChat.actions")
+          local help_actions = actions.help_actions() or {}
+          local prompt_actions = actions.prompt_actions() or {}
+          local act = vim.tbl_deep_extend("force", help_actions, prompt_actions)
+          require("CopilotChat.integrations.telescope").pick(act)
+        end,
+        mode = { "n", "v" },
+        desc = "CopilotChat - actions",
+      },
+    },
     cond = function()
       return vim.env.ENABLE_NVIM_AI_PLUGINS == "1"
     end,
