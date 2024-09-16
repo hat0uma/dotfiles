@@ -40,6 +40,25 @@ return {
           "NeogitCommitPopup--allow-empty",
         },
       })
+
+      if vim.env.ENABLE_NVIM_AI_PLUGINS == "1" then
+        local group = vim.api.nvim_create_augroup("rc.neogit_with_copilot", {})
+        vim.api.nvim_create_autocmd("FileType", {
+          pattern = "NeogitCommitMessage",
+          callback = function()
+            vim.cmd.CopilotChatCommitStaged()
+          end,
+          group = group,
+        })
+
+        vim.api.nvim_create_autocmd("User", {
+          pattern = "NeogitCommitComplete",
+          callback = function()
+            vim.cmd.CopilotChatClose()
+          end,
+          group = group,
+        })
+      end
     end,
     cmd = { "Neogit" },
     dependencies = {

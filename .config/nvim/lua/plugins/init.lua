@@ -318,9 +318,18 @@ return {
       { "nvim-lua/plenary.nvim" },
     },
     config = function()
-      require("CopilotChat").setup({})
+      require("CopilotChat").setup({
+        prompts = {
+          CommitStaged = {
+            prompt = "Write commit message for the change with commitizen convention. Make sure the title has maximum 50 characters and message is wrapped at 72 characters. Wrap the whole message in code block with language gitcommit. Output the result in two versions: one in English and one in Japanese, with the title prefix (e.g., feat, fix) in English for both versions.",
+            selection = function(source)
+              return require("CopilotChat.select").gitdiff(source, true)
+            end,
+          },
+        },
+      })
     end,
-    cmd = { "CopilotChat" },
+    cmd = { "CopilotChat", "CopilotChatCommitStaged" },
     cond = function()
       return vim.env.ENABLE_NVIM_AI_PLUGINS == "1"
     end,
