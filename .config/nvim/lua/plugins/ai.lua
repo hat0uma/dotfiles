@@ -33,7 +33,7 @@ return {
     cmd = { "CopilotChat", "CopilotChatCommitStaged" },
     keys = {
       {
-        "<leader>c",
+        "<leader>ca",
         function()
           local actions = require("CopilotChat.actions")
           local help_actions = actions.help_actions() or {}
@@ -43,6 +43,14 @@ return {
         end,
         mode = { "n", "v" },
         desc = "CopilotChat - actions",
+      },
+      {
+        "<leader>cc",
+        function()
+          require("CopilotChat").open()
+        end,
+        mode = { "n", "v" },
+        desc = "CopilotChat - open chat",
       },
     },
     cond = function()

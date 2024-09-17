@@ -390,7 +390,7 @@ return {
       vim.api.nvim_create_autocmd("FileType", {
         pattern = "cs",
         callback = function()
-          vim.keymap.set("n", "<C-p>", "<Cmd>UnityPlaymodeToggle<CR>", { buffer = true })
+          vim.keymap.set("n", "<C-p>", "<Cmd>Unity playmode toggle<CR>", { buffer = true })
         end,
       })
     end,
