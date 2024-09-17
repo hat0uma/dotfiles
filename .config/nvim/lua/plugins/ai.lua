@@ -8,38 +8,26 @@ return {
       { "nvim-telescope/telescope.nvim" },
     },
     config = function()
-      local prompts = require("CopilotChat.prompts")
       local config = require("CopilotChat.config")
-      local additional_prompt = "For explanations, output in Japanese, but for code and examples, output in English."
+      local additional_prompts = {
+        Docs = "",
+        Review = "Output in Japanese.",
+        CommitStaged = "Output the result in two versions: one in English and one in Japanese, with the title prefix (e.g., feat, fix) in English for both versions.",
+        Explain = "For explanations, output in Japanese, but for code and examples, output in English.",
+        Fix = "For explanations, output in Japanese, but for code and examples, output in English.",
+        Optimize = "For explanations, output in Japanese, but for code and examples, output in English.",
+        Tests = "For explanations, output in Japanese, but for code and examples, output in English.",
+        FixDiagnostic = "For explanations, output in Japanese, but for code and examples, output in English.",
+      }
+
+      local prompts = {}
+      for key, value in pairs(config.prompts) do
+        prompts[key] = { prompt = value.prompt .. (additional_prompts[key] or "") }
+      end
+
       require("CopilotChat").setup({
-        system_prompt = prompts.COPILOT_INSTRUCTIONS .. "\nOutput should be in Japanese.\n",
-        prompts = {
-          CommitStaged = {
-            prompt = config.prompts.CommitStaged.prompt
-              .. "Output the result in two versions: one in English and one in Japanese, with the title prefix (e.g., feat, fix) in English for both versions.",
-          },
-          Explain = {
-            prompt = config.prompts.Explain.prompt .. additional_prompt,
-          },
-          Review = {
-            prompt = config.prompts.Review.prompt .. "Output in Japanese.",
-          },
-          Fix = {
-            prompt = config.prompts.Fix.prompt .. additional_prompt,
-          },
-          Optimize = {
-            prompt = config.prompts.Optimize.prompt .. additional_prompt,
-          },
-          Docs = {
-            prompt = config.prompts.Docs.prompt,
-          },
-          Tests = {
-            prompt = config.prompts.Tests.prompt .. additional_prompt,
-          },
-          FixDiagnostic = {
-            prompt = config.prompts.FixDiagnostic.prompt .. additional_prompt,
-          },
-        },
+        system_prompt = require("CopilotChat.prompts").COPILOT_INSTRUCTIONS .. "\nOutput should be in Japanese.\n",
+        prompts = prompts,
       })
     end,
     cmd = { "CopilotChat", "CopilotChatCommitStaged" },
