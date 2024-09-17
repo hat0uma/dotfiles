@@ -11,8 +11,6 @@ local function save_current_session()
 end
 
 local function restart()
-  local group = vim.api.nvim_create_augroup("my_restart_settings", {})
-  vim.api.nvim_create_autocmd("VimLeave", { callback = save_current_session, group = group })
   vim.cmd.cquit()
 end
 
@@ -48,6 +46,11 @@ function M.setup()
   vim.o.sessionoptions = table.concat(sessionoptions, ",")
   vim.api.nvim_create_user_command("Restart", restart, { desc = "Restart neovim." })
   vim.api.nvim_create_user_command("RestoreSession", restore_session, { desc = "Restore Session." })
+
+  vim.api.nvim_create_autocmd("VimLeave", {
+    callback = save_current_session,
+    group = vim.api.nvim_create_augroup("my_restart_settings", {}),
+  })
 end
 
 return M

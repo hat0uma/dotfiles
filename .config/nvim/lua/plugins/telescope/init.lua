@@ -87,6 +87,7 @@ local M = {
       vim.keymap.set("n", "<leader>P", function()
         require("telescope").extensions.projects.projects({})
       end, opt)
+      vim.keymap.set("n", "<leader>:", "<Cmd>Telescope command_history<CR>", opt)
     end,
     config = function()
       local actions = require("telescope.actions")
