@@ -386,11 +386,12 @@ return {
   {
     "hat0uma/UnityEditor.nvim",
     config = function()
-      require("unity-editor").setup()
+      require("unity-editor").setup({ autorefresh = true })
       vim.api.nvim_create_autocmd("FileType", {
         pattern = "cs",
         callback = function()
-          vim.keymap.set("n", "<C-p>", "<Cmd>Unity playmode toggle<CR>", { buffer = true })
+          vim.keymap.set("n", "<leader>up", "<Cmd>Unity playmode toggle<CR>", { buffer = true })
+          vim.keymap.set("n", "<leader>ur", "<Cmd>Unity refresh<CR>", { buffer = true })
         end,
       })
     end,
