@@ -138,7 +138,6 @@ return {
       -- others
       require("plugins.lsp.keymap").global_map()
       require("plugins.lsp.diagnostic").setup()
-      -- require("plugins.null-ls").setup_sources { on_attach = on_attach }
       require("typescript-tools").setup({
         single_file_support = false,
         root_dir = require("lspconfig").util.root_pattern({ "tsconfig.json", "package.json" }),
@@ -155,7 +154,7 @@ return {
     end,
     dependencies = {
       "hrsh7th/cmp-nvim-lsp",
-      -- "jose-elias-alvarez/null-ls.nvim",
+      "none-ls.nvim",
       "SmiteshP/nvim-navic",
       "mason-lspconfig.nvim",
       "neoconf.nvim",
