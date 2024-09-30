@@ -47,9 +47,18 @@ function M.setup()
   vim.api.nvim_create_user_command("Restart", restart, { desc = "Restart neovim." })
   vim.api.nvim_create_user_command("RestoreSession", restore_session, { desc = "Restore Session." })
 
+  local aug = vim.api.nvim_create_augroup("my_restart_settings", {})
   vim.api.nvim_create_autocmd("VimLeave", {
     callback = save_current_session,
-    group = vim.api.nvim_create_augroup("my_restart_settings", {}),
+    group = aug,
+  })
+  vim.api.nvim_create_autocmd("VimEnter", {
+    callback = function()
+      if vim.api.nvim_buf_get_name(0) == "" then
+        vim.keymap.set("n", "<Enter>", "<Cmd>RestoreSession<CR>", { buffer = true })
+      end
+    end,
+    group = aug,
   })
 end
 

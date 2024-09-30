@@ -163,7 +163,6 @@ return {
       "typescript-tools.nvim",
       "ionide/Ionide-vim",
       "conform.nvim",
-      "nvim-lint",
     },
     cond = not vim.g.vscode,
   },
