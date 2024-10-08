@@ -48,6 +48,7 @@ return {
   sys = require("rc.sys"),
   terminal = require("rc.terminal"),
   winbar = require("rc.winbar"),
+  ambiwidth = require("rc.ambiwidth"),
   screen_to_string = screen_to_string,
   region_to_text = region_to_text,
   get_visual_selection = get_visual_selection,

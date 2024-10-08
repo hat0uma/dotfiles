@@ -279,7 +279,6 @@ return {
       })
     end,
     event = "VeryLazy",
-    branch = "0.10",
   },
   {
     "LunarVim/bigfile.nvim",
