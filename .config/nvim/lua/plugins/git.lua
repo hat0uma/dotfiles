@@ -44,7 +44,7 @@ return {
       if vim.env.ENABLE_NVIM_AI_PLUGINS == "1" then
         local group = vim.api.nvim_create_augroup("rc.neogit_with_copilot", {})
         vim.api.nvim_create_autocmd("FileType", {
-          pattern = "NeogitCommitMessage",
+          pattern = "gitcommit",
           callback = function()
             vim.cmd.CopilotChatCommitStaged()
           end,

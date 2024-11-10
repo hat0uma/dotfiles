@@ -62,7 +62,7 @@ M.configurations = {
       },
     },
   },
-  ruff_lsp = {},
+  ruff = {},
   gopls = {
     -- cmd = { vim.fn.expand "~/go/bin/gopls" },
     settings = {

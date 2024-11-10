@@ -39,7 +39,9 @@ function M.on_attach(client, bufnr)
   end
 
   local hover = function()
-    vim.lsp.buf.hover()
+    vim.lsp.buf.hover({
+      border = "single",
+    })
     -- require("pretty_hover").hover()
   end
 
