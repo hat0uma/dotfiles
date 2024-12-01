@@ -46,7 +46,7 @@ return {
         vim.api.nvim_create_autocmd("FileType", {
           pattern = "gitcommit",
           callback = function()
-            vim.cmd.CopilotChatCommitStaged()
+            vim.cmd.CopilotChatCommit()
           end,
           group = group,
         })

@@ -12,7 +12,7 @@ return {
       local additional_prompts = {
         Docs = "",
         Review = "Output in Japanese.",
-        CommitStaged = "Output the result in two versions: one in English and one in Japanese, with the title prefix (e.g., feat, fix) in English for both versions.",
+        Commit = "Output the result in two versions: one in English and one in Japanese, with the title prefix (e.g., feat, fix) in English for both versions.",
         Explain = "For explanations, output in Japanese, but for code and examples, output in English.",
         Fix = "For explanations, output in Japanese, but for code and examples, output in English.",
         Optimize = "For explanations, output in Japanese, but for code and examples, output in English.",
@@ -30,7 +30,7 @@ return {
         prompts = prompts,
       })
     end,
-    cmd = { "CopilotChat", "CopilotChatCommitStaged" },
+    cmd = { "CopilotChat", "CopilotChatCommit" },
     keys = {
       {
         "<leader>ca",
