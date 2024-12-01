@@ -154,10 +154,10 @@ local M = {
             winhighlight = "Normal:Normal,FloatBorder:Grey,CursorLine:PmenuSel,Search:None",
           },
         },
-        performance = {
-          debounce = 0,
-          throttle = 0,
-        },
+        -- performance = {
+        --   debounce = 0,
+        --   throttle = 0,
+        -- },
       })
       cmp.setup.cmdline({ "/", "?" }, {
         mapping = cmp.mapping.preset.cmdline(),
