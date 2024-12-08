@@ -18,3 +18,5 @@ globals:
   after_each:
     args:
       - type: function
+  Snacks:
+    any: true
