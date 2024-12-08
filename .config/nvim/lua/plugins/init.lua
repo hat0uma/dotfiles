@@ -283,10 +283,14 @@ return {
   { "stevearc/profile.nvim" },
   {
     "hat0uma/csvview.nvim",
-    ft = { "csv", "tsv" },
     config = function()
       require("csvview").setup()
     end,
+    cmd = {
+      "CsvViewEnable",
+      "CsvViewDisable",
+      "CsvViewToggle",
+    },
   },
   {
     "chipsenkbeil/distant.nvim",
