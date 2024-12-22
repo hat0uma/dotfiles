@@ -24,7 +24,15 @@ return {
       nls.builtins.diagnostics.golangci_lint.with(find_cwd({ "go.mod" })),
       nls.builtins.diagnostics.selene.with(has({ ".selene.toml", "selene.toml" })),
       nls.builtins.code_actions.refactoring.with({
-        filetypes = { "go", "javascript", "lua", "python", "typescript", "c", "cpp" },
+        filetypes = {
+          "go",
+          "javascript",
+          -- "lua",
+          "python",
+          "typescript",
+          "c",
+          "cpp",
+        },
       }),
 
       -- nls.builtins.diagnostics.eslint_d.with(find_cwd({ ".eslintrc.json" })),
