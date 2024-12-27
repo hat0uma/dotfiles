@@ -99,6 +99,7 @@ M.configurations = {
     -- end,
   },
   hls = {},
+  html = {},
   cssls = {},
   omnisharp = {
     settings = {
@@ -127,10 +128,16 @@ M.configurations = {
   --   single_file_support = false,
   -- },
   jsonls = {
+    single_file_support = true,
+    root_dir = nil,
     settings = {
       json = {
         schemas = require("schemastore").json.schemas(),
         validate = { enable = true },
+        format = {
+          enable = true,
+          keepLines = true,
+        },
       },
     },
   },

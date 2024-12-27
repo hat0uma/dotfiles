@@ -139,7 +139,7 @@ return {
       require("plugins.lsp.keymap").global_map()
       require("plugins.lsp.diagnostic").setup()
       require("typescript-tools").setup({
-        single_file_support = false,
+        single_file_support = true,
         root_dir = require("lspconfig").util.root_pattern({ "tsconfig.json", "package.json" }),
       })
       require("clangd_extensions").setup({})

@@ -68,13 +68,21 @@ local M = {
     "windwp/nvim-ts-autotag",
     dependencies = { "nvim-treesitter" },
     config = function()
-      require("nvim-treesitter.configs").setup({
-        autotag = {
-          enable = true,
+      require("nvim-ts-autotag").setup({
+        opts = {
+          enable_close = true,
+          enable_rename = true,
+          enable_close_on_slash = true,
         },
       })
     end,
-    ft = { "typescript", "typescriptreact", "javascript", "javascript" },
+    ft = {
+      "typescript",
+      "typescriptreact",
+      "javascript",
+      "javascript",
+      "html",
+    },
   },
   {
     "nvim-treesitter/playground",
