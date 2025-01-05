@@ -20,3 +20,5 @@ globals:
       - type: function
   Snacks:
     any: true
+  rc:
+    any: true
