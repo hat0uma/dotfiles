@@ -21,7 +21,10 @@ return {
   {
     "Wansmer/treesj",
     config = function()
-      require("treesj").setup({ use_default_keymaps = false })
+      require("treesj").setup({
+        use_default_keymaps = false,
+        max_join_length = 999,
+      })
     end,
     keys = {
       { "<leader>j", "<cmd>TSJToggle<cr>" },
@@ -330,7 +333,7 @@ return {
       bigfile = {
         enabled = true,
         notify = true,
-        size = 1.5 * 1024 * 1024, -- 1.5MB
+        size = 1 * 1024 * 1024,
         -- Enable or disable features when big file detected
         ---@param ctx {buf: number, ft:string}
         setup = function(ctx)
