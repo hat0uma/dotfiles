@@ -329,28 +329,30 @@ return {
     "folke/snacks.nvim",
     priority = 1000,
     lazy = false,
-    opts = {
-      bigfile = {
-        enabled = true,
-        notify = true,
-        size = 1 * 1024 * 1024,
-        -- Enable or disable features when big file detected
-        ---@param ctx {buf: number, ft:string}
-        setup = function(ctx)
-          vim.cmd([[NoMatchParen]])
-          Snacks.util.wo(0, { foldmethod = "manual", statuscolumn = "", conceallevel = 0 })
-          vim.schedule(function()
-            vim.bo[ctx.buf].syntax = ctx.ft
-          end)
-          require("illuminate.engine").stop_buf(ctx.buf)
-          require("indent_blankline.commands").disable()
-        end,
-      },
-      notifier = { enabled = true },
-      -- quickfile = { enabled = true },
-      -- statuscolumn = { enabled = true },
-      -- words = { enabled = true },
-    },
+    config = function()
+      require("snacks").setup({
+        bigfile = {
+          enabled = true,
+          notify = true,
+          size = 1 * 1024 * 1024,
+          -- Enable or disable features when big file detected
+          ---@param ctx {buf: number, ft:string}
+          setup = function(ctx)
+            vim.cmd([[NoMatchParen]])
+            Snacks.util.wo(0, { foldmethod = "manual", statuscolumn = "", conceallevel = 0 })
+            vim.schedule(function()
+              vim.bo[ctx.buf].syntax = ctx.ft
+            end)
+            require("illuminate.engine").stop_buf(ctx.buf)
+            require("indent_blankline.commands").disable()
+          end,
+        },
+        notifier = { enabled = true },
+        -- quickfile = { enabled = true },
+        -- statuscolumn = { enabled = true },
+        -- words = { enabled = true },
+      })
+    end,
   },
   {
     "hat0uma/doxygen-previewer.nvim",

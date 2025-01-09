@@ -27,8 +27,8 @@ local M = {
               ["if"] = "@function.inner",
               ["ac"] = "@class.outer",
               ["ic"] = "@class.inner",
-              ["ia"] = "@parameter.outer",
-              ["aa"] = "@parameter.inner",
+              ["aa"] = "@parameter.outer",
+              ["ia"] = "@parameter.inner",
             },
           },
           swap = {
