@@ -1,6 +1,6 @@
 local M = {}
 
----@alias rc.OilContextMenuAction fun(entry:string,dir:string)
+---@alias rc.OilContextMenuAction async fun(entry:string,dir:string):nil
 
 ---@class rc.OilContextMenuItem
 ---@field entry_type oil.EntryType | "all"
@@ -12,11 +12,11 @@ local M = {}
 local menu_registry = {}
 
 --- Add context menu
+---@param name string
 ---@param entry_type oil.EntryType | "all"
 ---@param ext string[]|string|nil see `lua-patterns`
----@param name string
 ---@param action rc.OilContextMenuAction
-local function add_action(entry_type, ext, name, action)
+local function add_action(name, entry_type, ext, action)
   if ext == nil then
     local pattern = ".*"
     table.insert(menu_registry, { entry_type = entry_type, pattern = pattern, name = name, action = action })
@@ -31,37 +31,45 @@ local function add_action(entry_type, ext, name, action)
   end
 end
 
+--- Run Commands in terminal
+---@param dir string
+---@param cmd string[]
+local function run_in_terminal(dir, cmd)
+  local Terminal = require("toggleterm.terminal").Terminal
+  local term = Terminal:new({
+    hidden = true,
+    close_on_exit = false,
+    dir = dir,
+    direction = "float",
+    cmd = table.concat(cmd, " "),
+    on_exit = function(t, job, exit_code, _name)
+      if exit_code == 0 then
+        t:close()
+      end
+    end,
+    on_close = vim.schedule_wrap(function()
+      -- refresh
+      vim.cmd.edit()
+    end),
+  })
+  term:toggle()
+end
+
 --- Add context menu for system command
+---@param name string action name
 ---@param entry_type oil.EntryType | "all"
 ---@param ext string[]|string|nil see `lua-patterns`
----@param name string action name
 ---@param cmd string[] command {entry} and {dir} will be replaced
-local function add_system_action(entry_type, ext, name, cmd)
-  add_action(entry_type, ext, name, function(entry, dir)
+local function add_system_action(name, entry_type, ext, cmd)
+  add_action(name, entry_type, ext, function(entry, dir)
     local args = {}
-    for i, v in ipairs(cmd) do
+    for _, v in ipairs(cmd) do
       local arg = v:gsub("{entry}", entry):gsub("{dir}", dir)
       table.insert(args, arg)
     end
 
-    local Terminal = require("toggleterm.terminal").Terminal
-    local term = Terminal:new({
-      hidden = true,
-      close_on_exit = false,
-      dir = dir,
-      direction = "float",
-      cmd = table.concat(args, " "),
-      on_exit = function(t, job, exit_code, _name)
-        if exit_code == 0 then
-          t:close()
-        end
-      end,
-      on_close = vim.schedule_wrap(function()
-        -- refresh
-        vim.cmd.edit()
-      end),
-    })
-    term:toggle()
+    -- run command in terminal
+    run_in_terminal(dir, args)
   end)
 end
 
@@ -105,7 +113,20 @@ M.open = {
       if not choice then
         return
       end
-      choice.action(entry.name, dir)
+
+      -- create action coroutine
+      local thread = coroutine.create(function() --- @async
+        local _, err = xpcall(choice.action, debug.traceback, entry.name, dir)
+        if err then
+          vim.notify(err, vim.log.levels.ERROR)
+        end
+      end)
+
+      -- resume
+      local co_ok, co_err = coroutine.resume(thread)
+      if not co_ok then
+        vim.notify("failed to start connection coroutine: %s", co_err or "")
+      end
     end)
   end,
 }
@@ -176,31 +197,59 @@ local function find_files(entry, dir)
   })
 end
 
+---@async
+---@param entry string
+---@param dir string
+local function archive_folder(entry, dir)
+  local thread = coroutine.running()
+  vim.ui.select({ "zip", "tgz", "7zip" }, { prompt = "Archive Type" }, function(choice)
+    coroutine.resume(thread, choice)
+  end)
+
+  local choice = coroutine.yield(thread) --- @type string?
+  if not choice then
+    return
+  end
+
+  local cmd = {
+    zip = { "zip", "-r", entry .. ".zip", entry },
+    tgz = { "tar", "czvf", entry .. ".tgz", entry },
+    ["7zip"] = { "7zG", "-ad", "a", entry, entry }, -- open GUI dialog
+  }
+
+  run_in_terminal(dir, cmd[choice])
+end
+
 function M.setup()
   -------------------------------------
   -- general menu
   -------------------------------------
-  add_action("all", nil, "Copy Path", copy_absolute_path)
-  -- add_action("all", nil, "Open File", open_file)
-  -- add_action("all", nil, "Open Explorer Here", open_folder)
-  add_system_action("all", nil, "Open File", rc.sys.get_open_command("{entry}"))
-  add_system_action("all", nil, "Open Explorer Here", rc.sys.get_open_command("."))
-  add_action("all", nil, "Open Terminal Here", open_terminal)
-  add_action("all", nil, "(Telescope)Grep Here", grep)
-  add_action("all", nil, "(Telescope)Find Files Here", find_files)
+  add_system_action("Open", "all", nil, rc.sys.get_open_command("{entry}"))
+  add_action("Copy Path", "all", nil, copy_absolute_path)
+  -- add_action("Open File", "all", nil, open_file)
+  -- add_action("Explorer Here", "all", nil, open_folder)
+  add_system_action("Explorer Here", "all", nil, rc.sys.get_open_command("."))
+  add_action("Terminal Here", "all", nil, open_terminal)
+  add_action("(Telescope)Grep Here", "all", nil, grep)
+  add_action("(Telescope)Find Files Here", "all", nil, find_files)
+  add_action("(System)Archive", "all", nil, archive_folder)
 
   -------------------------------------
   -- file specific menu
   -------------------------------------
-  add_action("file", { "jpg", "jpeg", "png" }, "Open Image in terminal", open_image)
-  add_system_action("file", "zip", "(System)Extract", { "unzip", "{entry}" })
-  add_system_action("file", { "tar", "tgz", "tar%.gz" }, "(System)Extract", { "tar", "xvf", "{entry}" })
+  -- images
+  add_action("Open Image in terminal", "file", { "jpg", "jpeg", "png" }, open_image)
+
+  -- archive files
+  add_system_action("(System)Extract", "file", "7z", { "7z", "x", "{entry}" })
+  add_system_action("(System)Extract", "file", "zip", { "unzip", "{entry}" })
+  add_system_action("(System)Extract", "file", { "tar", "tgz", "tar%.gz" }, { "tar", "xvf", "{entry}" })
+  add_system_action("(System)7zFM", "file", { "tar", "tgz", "tar%.gz", "zip", "7z" }, { "7zfm", "{entry}" })
 
   -------------------------------------
   -- folder specific menu
   -------------------------------------
-  add_system_action("directory", nil, "Archive Folder .tgz", { "tar", "czvf", "{entry}.tgz", "{entry}" })
-  add_system_action("directory", nil, "Archive Folder .zip", { "zip", "-r", "{entry}.zip", "{entry}" })
+  -- none
 end
 
 return M

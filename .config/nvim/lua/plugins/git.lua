@@ -31,7 +31,7 @@ return {
       neogit.setup({
         disable_commit_confirmation = true,
         integrations = {
-          telescope = false,
+          telescope = false, -- If turned on, neogit uses Telescope with the `ivy` theme, which I don't like.
           diffview = true,
         },
         ignored_settings = {
