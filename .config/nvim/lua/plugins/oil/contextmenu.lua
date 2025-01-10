@@ -221,30 +221,45 @@ local function archive_folder(entry, dir)
 end
 
 function M.setup()
+  ---format menu name
+  ---@overload fun(name:string):string
+  ---@overload fun(category: string, name:string):string
+  local function fmt(...)
+    local args = { ... } --- @type string[]
+    if #args == 1 then
+      return args[1]
+    elseif #args == 2 then
+      local category, name = unpack(args)
+      return string.format("%-12s - %s", "(" .. category .. ")", name)
+    else
+      error(string.format("invalid argument: %s", vim.inspect(args)))
+    end
+  end
+
   -------------------------------------
   -- general menu
   -------------------------------------
-  add_system_action("Open", "all", nil, rc.sys.get_open_command("{entry}"))
-  add_action("Copy Path", "all", nil, copy_absolute_path)
-  -- add_action("Open File", "all", nil, open_file)
-  -- add_action("Explorer Here", "all", nil, open_folder)
-  add_system_action("Explorer Here", "all", nil, rc.sys.get_open_command("."))
-  add_action("Terminal Here", "all", nil, open_terminal)
-  add_action("(Telescope)Grep Here", "all", nil, grep)
-  add_action("(Telescope)Find Files Here", "all", nil, find_files)
-  add_action("(System)Archive", "all", nil, archive_folder)
+  add_system_action(fmt("Open"), "all", nil, rc.sys.get_open_command("{entry}"))
+  add_action(fmt("Copy Path"), "all", nil, copy_absolute_path)
+  -- add_action(fmt("Open File"), "all", nil, open_file)
+  -- add_action(fmt("Explorer Here"), "all", nil, open_folder)
+  add_system_action(fmt("Explorer Here"), "all", nil, rc.sys.get_open_command("."))
+  add_action(fmt("Terminal Here"), "all", nil, open_terminal)
+  add_action(fmt("Telescope", "Grep Here"), "all", nil, grep)
+  add_action(fmt("Telescope", "Find Files Here"), "all", nil, find_files)
+  add_action(fmt("System", "Archive"), "all", nil, archive_folder)
 
   -------------------------------------
   -- file specific menu
   -------------------------------------
   -- images
-  add_action("Open Image in terminal", "file", { "jpg", "jpeg", "png" }, open_image)
+  add_action(fmt("Open Image in terminal"), "file", { "jpg", "jpeg", "png" }, open_image)
 
   -- archive files
-  add_system_action("(System)Extract", "file", "7z", { "7z", "x", "{entry}" })
-  add_system_action("(System)Extract", "file", "zip", { "unzip", "{entry}" })
-  add_system_action("(System)Extract", "file", { "tar", "tgz", "tar%.gz" }, { "tar", "xvf", "{entry}" })
-  add_system_action("(System)7zFM", "file", { "tar", "tgz", "tar%.gz", "zip", "7z" }, { "7zfm", "{entry}" })
+  add_system_action(fmt("System", "Extract"), "file", "7z", { "7z", "x", "{entry}" })
+  add_system_action(fmt("System", "Extract"), "file", "zip", { "unzip", "{entry}" })
+  add_system_action(fmt("System", "Extract"), "file", { "tar", "tgz", "tar%.gz" }, { "tar", "xvf", "{entry}" })
+  add_system_action(fmt("System", "7zFM"), "file", { "tar", "tgz", "tar%.gz", "zip", "7z" }, { "7zfm", "{entry}" })
 
   -------------------------------------
   -- folder specific menu
