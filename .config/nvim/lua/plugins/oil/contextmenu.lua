@@ -3,6 +3,7 @@ local M = {}
 ---@alias rc.OilContextMenuAction fun(entry:string,dir:string)
 
 ---@class rc.OilContextMenuItem
+---@field entry_type oil.EntryType | "all"
 ---@field pattern string
 ---@field name string
 ---@field action rc.OilContextMenuAction
@@ -11,33 +12,35 @@ local M = {}
 local menu_registry = {}
 
 --- Add context menu
+---@param entry_type oil.EntryType | "all"
 ---@param ext string[]|string|nil see `lua-patterns`
 ---@param name string
 ---@param action rc.OilContextMenuAction
-local function add_action(ext, name, action)
+local function add_action(entry_type, ext, name, action)
   if ext == nil then
     local pattern = ".*"
-    table.insert(menu_registry, { pattern = pattern, name = name, action = action })
+    table.insert(menu_registry, { entry_type = entry_type, pattern = pattern, name = name, action = action })
   else
     if type(ext) == "string" then
       ext = { ext }
     end
     for _, e in ipairs(ext) do
       local pattern = ("%." .. e .. "$")
-      table.insert(menu_registry, { pattern = pattern, name = name, action = action })
+      table.insert(menu_registry, { entry_type = entry_type, pattern = pattern, name = name, action = action })
     end
   end
 end
 
 --- Add context menu for system command
+---@param entry_type oil.EntryType | "all"
 ---@param ext string[]|string|nil see `lua-patterns`
 ---@param name string action name
----@param cmd string[] command {file} and {dir} will be replaced
-local function add_system_action(ext, name, cmd)
-  add_action(ext, name, function(entry, dir)
+---@param cmd string[] command {entry} and {dir} will be replaced
+local function add_system_action(entry_type, ext, name, cmd)
+  add_action(entry_type, ext, name, function(entry, dir)
     local args = {}
     for i, v in ipairs(cmd) do
-      local arg = v:gsub("{file}", entry):gsub("{dir}", dir)
+      local arg = v:gsub("{entry}", entry):gsub("{dir}", dir)
       table.insert(args, arg)
     end
 
@@ -78,8 +81,10 @@ M.open = {
     ---@type rc.OilContextMenuItem[]
     local target_menus = {}
     for _, menu in ipairs(menu_registry) do
-      if string.match(entry.name, menu.pattern) then
-        table.insert(target_menus, menu)
+      if menu.entry_type == "all" or menu.entry_type == entry.type then
+        if string.match(entry.name, menu.pattern) then
+          table.insert(target_menus, menu)
+        end
       end
     end
 
@@ -172,17 +177,30 @@ local function find_files(entry, dir)
 end
 
 function M.setup()
-  add_action(nil, "Copy Path", copy_absolute_path)
-  -- add_action(nil, "Open File", open_file)
-  -- add_action(nil, "Open Folder", open_folder)
-  add_system_action(nil, "Open File", rc.sys.get_open_command("{file}"))
-  add_system_action(nil, "Open Folder", rc.sys.get_open_command("."))
-  add_action(nil, "Open Terminal Here", open_terminal)
-  add_action(nil, "(Telescope)Grep Here", grep)
-  add_action(nil, "(Telescope)Find Files Here", find_files)
-  add_action({ "jpg", "jpeg", "png" }, "Open Image in terminal", open_image)
-  add_system_action("zip", "(System)Extract", { "unzip", "{file}" })
-  add_system_action({ "tar", "tgz", "tar%.gz" }, "(System)Extract", { "tar", "xvf", "{file}" })
+  -------------------------------------
+  -- general menu
+  -------------------------------------
+  add_action("all", nil, "Copy Path", copy_absolute_path)
+  -- add_action("all", nil, "Open File", open_file)
+  -- add_action("all", nil, "Open Explorer Here", open_folder)
+  add_system_action("all", nil, "Open File", rc.sys.get_open_command("{entry}"))
+  add_system_action("all", nil, "Open Explorer Here", rc.sys.get_open_command("."))
+  add_action("all", nil, "Open Terminal Here", open_terminal)
+  add_action("all", nil, "(Telescope)Grep Here", grep)
+  add_action("all", nil, "(Telescope)Find Files Here", find_files)
+
+  -------------------------------------
+  -- file specific menu
+  -------------------------------------
+  add_action("file", { "jpg", "jpeg", "png" }, "Open Image in terminal", open_image)
+  add_system_action("file", "zip", "(System)Extract", { "unzip", "{entry}" })
+  add_system_action("file", { "tar", "tgz", "tar%.gz" }, "(System)Extract", { "tar", "xvf", "{entry}" })
+
+  -------------------------------------
+  -- folder specific menu
+  -------------------------------------
+  add_system_action("directory", nil, "Archive Folder .tgz", { "tar", "czvf", "{entry}.tgz", "{entry}" })
+  add_system_action("directory", nil, "Archive Folder .zip", { "zip", "-r", "{entry}.zip", "{entry}" })
 end
 
 return M
