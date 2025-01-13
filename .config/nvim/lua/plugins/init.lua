@@ -287,7 +287,11 @@ return {
   {
     "hat0uma/csvview.nvim",
     config = function()
-      require("csvview").setup()
+      require("csvview").setup({
+        parser = {
+          comments = { "#", "//" },
+        },
+      })
     end,
     cmd = {
       "CsvViewEnable",
