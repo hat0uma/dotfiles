@@ -1,9 +1,9 @@
 local M = {}
 
+local d = require("rc.toys.odbc.defer")
 local odbc = require("rc.toys.odbc")
-local defer_scope = require("rc.toys.odbc.defer").scope
 
-defer_scope(function(defer)
+d.scope(function(defer)
   -- https://stackoverflow.com/questions/49506048/odbc-xlsx-driver-connectionstring-without-header/49555650#49555650
   local driver = "Microsoft Excel Driver (*.xls, *.xlsx, *.xlsm, *.xlsb)"
   local excel_file = vim.fs.normalize("~/work/test.xlsx")
