@@ -3,9 +3,9 @@ local M = {}
 ---@alias Deferred fun(...:any)...
 ---@alias Defer fun( f: Deferred, ...:any)
 
----Call in deferrable context
+---Call with defer
 ---@param target_fn fun( defer:Defer )
-function M.run(target_fn)
+function M.scope(target_fn)
   local deferred_list = {}
 
   ---@type Defer
