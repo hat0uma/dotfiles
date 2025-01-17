@@ -76,7 +76,7 @@ vim.o.guicursor = "n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50"
   .. ",sm:block-blinkwait175-blinkoff250-blinkon400P"
 vim.o.ambiwidth = "single"
 vim.o.mouse = ""
-vim.o.mousemodel = ""
+-- vim.o.mousemodel = ""
 vim.o.mousefocus = false
 -- vim.go.mousehide = false
 
