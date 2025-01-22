@@ -12,6 +12,7 @@ local M = {
         },
       })
     end,
+    dependencies = require("plugins.treesitter.parser").local_parser_packages(),
     event = "BufReadPost",
   },
   {

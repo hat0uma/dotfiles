@@ -1,3 +1,4 @@
+local _action = require("telescope.actions")
 local action_set = require("telescope.actions.set")
 local action_state = require("telescope.actions.state")
 local state = require("telescope.state")
@@ -36,6 +37,19 @@ function M.disable_preview(bufnr)
     picker.previewer = nil
   end
   picker:full_layout_update()
+end
+
+function M.open_in_qflist_smart(bufnr)
+  local picker = action_state.get_current_picker(bufnr) --- @type Picker
+
+  local selections = picker:get_multi_selection()
+  if #selections > 0 then
+    _action.send_selected_to_qflist(bufnr)
+  else
+    _action.send_to_qflist(bufnr)
+  end
+
+  _action.open_qflist(bufnr)
 end
 
 return M

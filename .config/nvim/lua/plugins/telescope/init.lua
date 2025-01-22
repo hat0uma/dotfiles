@@ -129,7 +129,7 @@ local M = {
               ["p"] = layout_actions.toggle_preview,
               -- ["<C-d>"] = my_actions.shift_selection_pagedown,
               -- ["<C-u>"] = my_actions.shift_selection_pageup,
-              ["<c-q>"] = actions.send_to_qflist + actions.open_qflist,
+              ["<c-q>"] = require("plugins.telescope.actions").open_in_qflist_smart,
               ["<Down>"] = actions.cycle_history_next,
               ["<Up>"] = actions.cycle_history_prev,
             },
