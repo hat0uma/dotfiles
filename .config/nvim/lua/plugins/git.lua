@@ -46,7 +46,9 @@ return {
         vim.api.nvim_create_autocmd("FileType", {
           pattern = "gitcommit",
           callback = function()
-            vim.cmd.CopilotChatCommit()
+            if pcall(require, "CopilotChat") then
+              vim.cmd.CopilotChatCommit()
+            end
           end,
           group = group,
         })
@@ -54,7 +56,9 @@ return {
         vim.api.nvim_create_autocmd("User", {
           pattern = "NeogitCommitComplete",
           callback = function()
-            vim.cmd.CopilotChatClose()
+            if pcall(require, "CopilotChat") then
+              vim.cmd.CopilotChatClose()
+            end
           end,
           group = group,
         })
