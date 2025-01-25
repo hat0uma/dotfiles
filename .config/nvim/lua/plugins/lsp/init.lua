@@ -88,7 +88,8 @@ return {
 
       --- create capabilities
       --- @type table
-      local capabilities = require("cmp_nvim_lsp").default_capabilities()
+      -- local capabilities = require("cmp_nvim_lsp").default_capabilities()
+      local capabilities = require("blink.cmp").get_lsp_capabilities()
       capabilities.textDocument.completion.completionItem.snippetSupport = true
       capabilities.textDocument.foldingRange = {
         dynamicRegistration = false,
@@ -153,7 +154,8 @@ return {
       )
     end,
     dependencies = {
-      "hrsh7th/cmp-nvim-lsp",
+      -- "hrsh7th/cmp-nvim-lsp",
+      "saghen/blink.cmp",
       "none-ls.nvim",
       "SmiteshP/nvim-navic",
       "mason-lspconfig.nvim",

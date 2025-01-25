@@ -1,6 +1,6 @@
 local M = {
   "windwp/nvim-autopairs",
-  dependencies = { "nvim-cmp" },
+  -- dependencies = { "nvim-cmp" },
   event = { "InsertEnter" },
   cond = not vim.g.vscode,
 }
