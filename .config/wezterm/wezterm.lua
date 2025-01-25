@@ -88,6 +88,9 @@ return {
     mods = "CTRL",
     timeout_milliseconds = 5000,
   },
+  allow_win32_input_mode = false,
+  enable_kitty_keyboard = false,
+  enable_csi_u_key_encoding = true,
   keys = {
     { key = "q", mods = "LEADER", action = act.CloseCurrentPane({ confirm = false }) },
     { key = "0", mods = "LEADER", action = act.QuitApplication },
