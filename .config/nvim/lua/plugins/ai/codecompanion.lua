@@ -1,12 +1,12 @@
 local COMMIT_MESSAGE_PROMPT = [[
-Write a commit message following the Commitizen convention. Ensure that:
+Write a commit message following the conventional-commit format:
 
 - The title is at most 50 characters.
 - The message body is wrapped at 72 characters per line.
 
 Provide two versions:
-1. **English** with the title prefix (e.g., feat, fix) in English.
-2. **Japanese** with the title prefix in English.
+1. English.
+2. <type> and <scope> are in English and other parts are in Japanese.
 ]]
 
 --- Inspect the commit buffer to determine if it has a commit message and diff
