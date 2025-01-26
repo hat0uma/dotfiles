@@ -1,5 +1,40 @@
+local COMMIT_MESSAGE_PROMPT = [[
+Write a commit message following the Commitizen convention. Ensure that:
+
+- The title is at most 50 characters.
+- The message body is wrapped at 72 characters per line.
+
+Provide two versions:
+1. **English** with the title prefix (e.g., feat, fix) in English.
+2. **Japanese** with the title prefix in English.
+]]
+
+local function inspect_commit_buf(bufnr)
+  local info = { has_commit_message = false, has_commit_diff = false }
+  local count = vim.api.nvim_buf_line_count(bufnr)
+  for i = 1, count do
+    local line = vim.api.nvim_buf_get_lines(bufnr, i - 1, i, false)[1]
+    if #line ~= 0 and not vim.startswith(line, "#") then
+      info.has_commit_message = true
+    end
+    if vim.startswith(line, "# ------------------------ >8 ------------------------") then
+      info.has_commit_diff = true
+      return info
+    end
+  end
+
+  return info
+end
+
 local function write_commit_message()
   local bufnr = vim.api.nvim_get_current_buf()
+  local buf = inspect_commit_buf(bufnr)
+  vim.print(buf)
+  if buf.has_commit_message then
+    vim.notify("Commit message already exists")
+    return
+  end
+
   local config = require("codecompanion.config")
   local context_utils = require("codecompanion.utils.context")
   local context = context_utils.get(bufnr, {})
@@ -12,23 +47,13 @@ local function write_commit_message()
         {
           role = config.constants.USER_ROLE,
           content = function()
-            return string.format(
-              [[
-Write a commit message following the Commitizen convention. Ensure that:
+            if buf.has_commit_diff then
+              local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+              return COMMIT_MESSAGE_PROMPT .. "\n" .. table.concat(lines, "\n")
+            end
 
-- The title is at most 50 characters.
-- The message body is wrapped at 72 characters per line.
-
-Provide two versions:
-1. **English** with the title prefix (e.g., feat, fix) in English.
-2. **Japanese** with the title prefix in English.
-
-```diff
-%s
-```
-]],
-              vim.fn.system("git diff --no-ext-diff --staged")
-            )
+            local diff = vim.fn.system("git diff --no-ext-diff --staged")
+            return string.format("%s\n```diff\n%s\n```", COMMIT_MESSAGE_PROMPT, diff)
           end,
           opts = {
             contains_code = true,
@@ -285,7 +310,10 @@ return {
     local group = vim.api.nvim_create_augroup("rc.auto_commit_message", {})
     vim.api.nvim_create_autocmd("FileType", {
       pattern = "gitcommit",
-      callback = write_commit_message,
+      callback = function()
+        write_commit_message()
+        vim.api.nvim_buf_create_user_command(0, "CodeCompanionCommit", write_commit_message, {})
+      end,
       group = group,
     })
   end,
