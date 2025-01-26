@@ -40,12 +40,6 @@ return {
           "NeogitCommitPopup--allow-empty",
         },
       })
-      local group = vim.api.nvim_create_augroup("rc.auto_commit_message", {})
-      vim.api.nvim_create_autocmd("FileType", {
-        pattern = "gitcommit",
-        callback = require("plugins.ai.codecompanion").write_commit_message,
-        group = group,
-      })
     end,
     cmd = { "Neogit" },
     dependencies = {

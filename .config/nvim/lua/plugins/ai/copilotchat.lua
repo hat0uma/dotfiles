@@ -1,7 +1,6 @@
 return {
   "CopilotC-Nvim/CopilotChat.nvim",
   branch = "main",
-  enabled = false,
   dependencies = {
     { "zbirenbaum/copilot.lua" },
     { "nvim-lua/plenary.nvim" },
@@ -31,26 +30,26 @@ return {
     })
   end,
   cmd = { "CopilotChat", "CopilotChatCommit" },
-  keys = {
-    {
-      "<leader>ca",
-      function()
-        local actions = require("CopilotChat.actions")
-        local help_actions = actions.help_actions() or {}
-        local prompt_actions = actions.prompt_actions() or {}
-        local act = vim.tbl_deep_extend("force", help_actions, prompt_actions)
-        require("CopilotChat.integrations.telescope").pick(act)
-      end,
-      mode = { "n", "v" },
-      desc = "CopilotChat - actions",
-    },
-    {
-      "<leader>cc",
-      function()
-        require("CopilotChat").open()
-      end,
-      mode = { "n", "v" },
-      desc = "CopilotChat - open chat",
-    },
-  },
+  -- keys = {
+  --   {
+  --     "<leader>ca",
+  --     function()
+  --       local actions = require("CopilotChat.actions")
+  --       local help_actions = actions.help_actions() or {}
+  --       local prompt_actions = actions.prompt_actions() or {}
+  --       local act = vim.tbl_deep_extend("force", help_actions, prompt_actions)
+  --       require("CopilotChat.integrations.telescope").pick(act)
+  --     end,
+  --     mode = { "n", "v" },
+  --     desc = "CopilotChat - actions",
+  --   },
+  --   {
+  --     "<leader>cc",
+  --     function()
+  --       require("CopilotChat").open()
+  --     end,
+  --     mode = { "n", "v" },
+  --     desc = "CopilotChat - open chat",
+  --   },
+  -- },
 }

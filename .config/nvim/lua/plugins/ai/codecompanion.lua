@@ -7,14 +7,40 @@ local function write_commit_message()
     .new({
       opts = { placement = "before|false" },
       context = context,
-      prompts = config.prompt_library["Generate a Commit Message"].prompts,
+      -- prompts = config.prompt_library["Generate a Commit Message"].prompts,
+      prompts = {
+        {
+          role = config.constants.USER_ROLE,
+          content = function()
+            return string.format(
+              [[
+Write a commit message following the Commitizen convention. Ensure that:
+
+- The title is at most 50 characters.
+- The message body is wrapped at 72 characters per line.
+
+Provide two versions:
+1. **English** with the title prefix (e.g., feat, fix) in English.
+2. **Japanese** with the title prefix in English.
+
+```diff
+%s
+```
+]],
+              vim.fn.system("git diff --no-ext-diff --staged")
+            )
+          end,
+          opts = {
+            contains_code = true,
+          },
+        },
+      },
     })
     :start({})
 end
 
 return {
   "olimorris/codecompanion.nvim",
-  write_commit_message = write_commit_message,
   config = function()
     require("codecompanion").setup({
       strategies = {
@@ -242,6 +268,14 @@ return {
         },
       },
     })
+
+    -- Write commit message for git commit
+    local group = vim.api.nvim_create_augroup("rc.auto_commit_message", {})
+    vim.api.nvim_create_autocmd("FileType", {
+      pattern = "gitcommit",
+      callback = write_commit_message,
+      group = group,
+    })
   end,
   dependencies = {
     "nvim-lua/plenary.nvim",
@@ -261,6 +295,7 @@ return {
     "CodeCompanionChat",
     "CodeCompanionCmd",
   },
+  ft = { "gitcommit" },
   keys = {
     {
       "<leader>ca",
