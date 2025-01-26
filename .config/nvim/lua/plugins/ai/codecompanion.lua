@@ -9,6 +9,9 @@ Provide two versions:
 2. **Japanese** with the title prefix in English.
 ]]
 
+--- Inspect the commit buffer to determine if it has a commit message and diff
+---@param bufnr number
+---@return { has_commit_message: boolean, has_commit_diff: boolean }
 local function inspect_commit_buf(bufnr)
   local info = { has_commit_message = false, has_commit_diff = false }
   local count = vim.api.nvim_buf_line_count(bufnr)

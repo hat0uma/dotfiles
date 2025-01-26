@@ -1,3 +1,7 @@
+local t = function(str)
+  return vim.api.nvim_replace_termcodes(str, true, true, true)
+end
+
 return {
   "saghen/blink.cmp",
   version = "*",
@@ -33,8 +37,12 @@ return {
         ["<C-f>"] = { "scroll_documentation_down", "fallback" },
         ["<Tab>"] = {
           function(cmp)
+            local _, neogen = pcall(require, "neogen")
             if cmp.snippet_active() then
               return cmp.accept()
+            elseif neogen and neogen.jumpable() then
+              vim.fn.feedkeys(t("<cmd>lua require('neogen').jump_next()<CR>"), "")
+              return true
             else
               return cmp.select_next()
             end
@@ -44,8 +52,12 @@ return {
         },
         ["<S-Tab>"] = {
           function(cmp)
+            local _, neogen = pcall(require, "neogen")
             if cmp.snippet_active() then
               return cmp.cancel()
+            elseif neogen and neogen.jumpable(-1) then
+              vim.fn.feedkeys(t("<cmd>lua require('neogen').jump_prev()<CR>"), "")
+              return true
             else
               return cmp.select_prev()
             end
