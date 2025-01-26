@@ -26,6 +26,7 @@ return {
         semantic_tokens = true,
         telescope = true,
         treesitter = true,
+        mini = { enabled = true },
         native_lsp = {
           enabled = true,
           virtual_text = {

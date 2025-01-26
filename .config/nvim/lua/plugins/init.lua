@@ -67,12 +67,6 @@ return {
     end,
   },
   {
-    "echasnovski/mini.diff",
-    config0 = function()
-      require("mini.diff").setup()
-    end,
-  },
-  {
     "hat0uma/project.nvim",
     config = function()
       require("project_nvim").setup({
