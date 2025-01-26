@@ -47,7 +47,7 @@ local function write_commit_message()
         {
           role = config.constants.USER_ROLE,
           content = function()
-            if buf.has_commit_diff then
+            if buf.has_commit_diff then -- this is useful for commit --amend
               local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
               return COMMIT_MESSAGE_PROMPT .. "\n" .. table.concat(lines, "\n")
             end
