@@ -69,6 +69,18 @@ return {
         chat = {
           -- adapter = "deepseek",
           adapter = "copilot",
+          slash_commands = {
+            ["buffer"] = {
+              opts = {
+                provider = "telescope", ---@type "default"|"telescope"|"mini_pick"|"fzf_lua"
+              },
+            },
+            ["file"] = {
+              opts = {
+                provider = "telescope", ---@type "default"|"telescope"|"mini_pick"|"fzf_lua"
+              },
+            },
+          },
           keymaps = {
             options = {
               modes = {
