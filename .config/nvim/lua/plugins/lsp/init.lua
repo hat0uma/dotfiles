@@ -1,15 +1,3 @@
---- make client capabilies
----@return table
-local function make_client_capabilies()
-  local capabilities = require("cmp_nvim_lsp").default_capabilities()
-  capabilities.textDocument.completion.completionItem.snippetSupport = true
-  capabilities.textDocument.foldingRange = {
-    dynamicRegistration = false,
-    lineFoldingOnly = true,
-  }
-  return capabilities
-end
-
 return {
   "p00f/clangd_extensions.nvim",
   "Hoffs/omnisharp-extended-lsp.nvim",
@@ -88,8 +76,7 @@ return {
 
       --- create capabilities
       --- @type table
-      -- local capabilities = require("cmp_nvim_lsp").default_capabilities()
-      local capabilities = require("blink.cmp").get_lsp_capabilities()
+      local capabilities = require("plugins.completion").get_lsp_capabilities()
       capabilities.textDocument.completion.completionItem.snippetSupport = true
       capabilities.textDocument.foldingRange = {
         dynamicRegistration = false,
@@ -154,8 +141,6 @@ return {
       )
     end,
     dependencies = {
-      -- "hrsh7th/cmp-nvim-lsp",
-      "saghen/blink.cmp",
       "none-ls.nvim",
       "SmiteshP/nvim-navic",
       "mason-lspconfig.nvim",

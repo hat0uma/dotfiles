@@ -29,7 +29,7 @@ M.format_on_save.disable = function()
 end
 
 --- format async
----@param client lsp.Client
+---@param client vim.lsp.Client
 ---@param bufnr integer
 ---@param opts { range:table,on_end:function }
 M.format_async = function(client, bufnr, opts)

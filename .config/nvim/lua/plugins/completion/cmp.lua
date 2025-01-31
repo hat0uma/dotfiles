@@ -1,7 +1,6 @@
-local M = {
+local spec = {
   {
     "hrsh7th/nvim-cmp",
-    enabled = false,
     cond = not vim.g.vscode,
     event = { "InsertEnter", "CmdlineEnter" },
     dependencies = {
@@ -199,4 +198,9 @@ local M = {
   },
 }
 
-return M
+return {
+  spec = spec,
+  get_lsp_capabilities = function(...)
+    return require("cmp_nvim_lsp").default_capabilities(...)
+  end,
+}

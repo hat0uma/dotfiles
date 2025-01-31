@@ -2,7 +2,7 @@ local t = function(str)
   return vim.api.nvim_replace_termcodes(str, true, true, true)
 end
 
-return {
+local spec = {
   "saghen/blink.cmp",
   version = "*",
   config = function()
@@ -91,5 +91,13 @@ return {
         },
       },
     })
+  end,
+
+}
+
+return {
+  spec = spec,
+  get_lsp_capabilities = function(...)
+    return require("blink-cmp").get_lsp_capabilities(...)
   end,
 }

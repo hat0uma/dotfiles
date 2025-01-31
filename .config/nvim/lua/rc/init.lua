@@ -46,6 +46,7 @@ return {
   restart = require("rc.restart"),
   scratch = require("rc.scratch"),
   sys = require("rc.sys"),
+  gui = require("rc.gui"),
   terminal = require("rc.terminal"),
   winbar = require("rc.winbar"),
   ambiwidth = require("rc.ambiwidth"),
