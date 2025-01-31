@@ -332,6 +332,32 @@ return {
     "folke/snacks.nvim",
     priority = 1000,
     lazy = false,
+    init = function()
+      local opt = { silent = true, noremap = true }
+      vim.keymap.set("n", "<leader>o", function()
+        Snacks.picker.recent()
+      end, opt)
+      vim.keymap.set("n", "<leader>f", function()
+        Snacks.picker.files()
+      end, opt)
+      vim.keymap.set("n", "<leader>p", function()
+        -- require("telescope").extensions.lazy.lazy()
+      end, opt)
+      vim.keymap.set("n", "<leader>g", function()
+        Snacks.picker.grep()
+      end, opt)
+
+      vim.keymap.set("n", "<leader>b", function()
+        Snacks.picker.buffers()
+      end, opt)
+      vim.keymap.set("n", "<leader>r", "<Cmd>Telescope resume<CR>", opt)
+      vim.keymap.set("n", "<leader>P", function()
+        require("telescope").extensions.projects.projects({})
+      end, opt)
+      vim.keymap.set("n", "<leader>:", function()
+        Snacks.picker.command_history()
+      end, opt)
+    end,
     config = function()
       require("snacks").setup({
         bigfile = {
@@ -351,6 +377,39 @@ return {
           end,
         },
         notifier = { enabled = true },
+        picker = {
+          ui_select = true,
+          on_show = function(picker)
+            vim.cmd.stopinsert()
+            picker:toggle_preview(false)
+          end,
+          actions = {
+            enter = function(picker, item)
+              if vim.api.nvim_get_mode().mode == "i" then
+                vim.cmd.stopinsert()
+              else
+                picker:action("confirm")
+              end
+            end,
+            backspace = function(picker, item)
+              local col = vim.fn.col(".")
+              if col <= 1 then
+                vim.cmd.stopinsert()
+              else
+                vim.fn.feedkeys("\b")
+              end
+            end,
+          },
+          win = {
+            input = {
+              keys = {
+                ["<CR>"] = { "enter", mode = { "n", "i" } },
+                ["<BS>"] = { "backspace", mode = { "i" } },
+                ["p"] = { "toggle_preview", mode = { "n" } },
+              },
+            },
+          },
+        },
         -- quickfile = { enabled = true },
         -- statuscolumn = { enabled = true },
         -- words = { enabled = true },
