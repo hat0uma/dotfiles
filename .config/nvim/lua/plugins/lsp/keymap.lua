@@ -4,15 +4,16 @@ local M = {}
 ---@param bufnr integer
 function M.on_attach(client, bufnr)
   local document_symbols = function()
-    require("telescope.builtin").lsp_document_symbols()
+    require("snacks").picker.lsp_symbols({ workspace = false })
   end
 
   local lsp_workspace_symbol = function()
-    require("telescope.builtin").lsp_dynamic_workspace_symbols()
+    vim.lsp.buf.workspace_symbol()
+    require("snacks").picker.lsp_symbols({ workspace = true })
   end
 
   local references = function()
-    require("telescope.builtin").lsp_references({ include_declaration = false })
+    require("snacks").picker.lsp_references({ include_declaration = false })
   end
 
   local go_to_definition = function()
@@ -22,7 +23,7 @@ function M.on_attach(client, bufnr)
     end, clients)
 
     if vim.tbl_contains(client_names, "omnisharp") then
-      require("omnisharp_extended").telescope_lsp_definitions()
+      require("omnisharp_extended").lsp_definitions()
     else
       vim.lsp.buf.definition()
     end

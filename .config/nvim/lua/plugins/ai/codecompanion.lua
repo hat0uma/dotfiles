@@ -100,12 +100,12 @@ return {
           slash_commands = {
             ["buffer"] = {
               opts = {
-                provider = "telescope", ---@type "default"|"telescope"|"mini_pick"|"fzf_lua"
+                provider = "default", ---@type "default"|"telescope"|"mini_pick"|"fzf_lua"
               },
             },
             ["file"] = {
               opts = {
-                provider = "telescope", ---@type "default"|"telescope"|"mini_pick"|"fzf_lua"
+                provider = "default", ---@type "default"|"telescope"|"mini_pick"|"fzf_lua"
               },
             },
           },
