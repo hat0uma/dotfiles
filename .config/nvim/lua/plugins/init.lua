@@ -285,13 +285,25 @@ return {
   { "stevearc/profile.nvim" },
   {
     "hat0uma/csvview.nvim",
-    config = function()
-      require("csvview").setup({
-        parser = {
-          comments = { "#", "//" },
-        },
-      })
-    end,
+    ---@module "csvview"
+    ---@type CsvView.Options
+    opts = {
+      parser = { comments = { "#", "//" } },
+      keymaps = {
+        -- Text objects for selecting fields
+        textobject_field_inner = { "if", mode = { "o", "x" } },
+        textobject_field_outer = { "af", mode = { "o", "x" } },
+
+        -- Excel-like navigation:
+        -- Use <Tab> and <S-Tab> to move horizontally between fields.
+        -- Use <Enter> and <S-Enter> to move vertically between rows.
+        -- Note: In terminals, you may need to enable CSI-u mode to use <S-Tab> and <S-Enter>.
+        jump_next_field_end = { "<Tab>", mode = { "n", "v" } },
+        jump_prev_field_end = { "<S-Tab>", mode = { "n", "v" } },
+        jump_next_row = { "<Enter>", mode = { "n", "v" } },
+        jump_prev_row = { "<S-Enter>", mode = { "n", "v" } },
+      },
+    },
     cmd = {
       "CsvViewEnable",
       "CsvViewDisable",
@@ -327,94 +339,6 @@ return {
       "PreLiveCloseAll",
       "PreLiveLog",
     },
-  },
-  {
-    "folke/snacks.nvim",
-    priority = 1000,
-    lazy = false,
-    init = function()
-      local opt = { silent = true, noremap = true }
-      vim.keymap.set("n", "<leader>o", function()
-        Snacks.picker.recent()
-      end, opt)
-      vim.keymap.set("n", "<leader>f", function()
-        Snacks.picker.files()
-      end, opt)
-      vim.keymap.set("n", "<leader>p", function()
-        -- require("telescope").extensions.lazy.lazy()
-      end, opt)
-      vim.keymap.set("n", "<leader>g", function()
-        Snacks.picker.grep()
-      end, opt)
-
-      vim.keymap.set("n", "<leader>b", function()
-        Snacks.picker.buffers()
-      end, opt)
-      vim.keymap.set("n", "<leader>r", "<Cmd>Telescope resume<CR>", opt)
-      vim.keymap.set("n", "<leader>P", function()
-        require("telescope").extensions.projects.projects({})
-      end, opt)
-      vim.keymap.set("n", "<leader>:", function()
-        Snacks.picker.command_history()
-      end, opt)
-    end,
-    config = function()
-      require("snacks").setup({
-        bigfile = {
-          enabled = true,
-          notify = true,
-          size = 1 * 1024 * 1024,
-          -- Enable or disable features when big file detected
-          ---@param ctx {buf: number, ft:string}
-          setup = function(ctx)
-            vim.cmd([[NoMatchParen]])
-            Snacks.util.wo(0, { foldmethod = "manual", statuscolumn = "", conceallevel = 0 })
-            vim.schedule(function()
-              vim.bo[ctx.buf].syntax = ctx.ft
-            end)
-            require("illuminate.engine").stop_buf(ctx.buf)
-            require("indent_blankline.commands").disable()
-          end,
-        },
-        notifier = { enabled = true },
-        picker = {
-          ui_select = true,
-          on_show = function(picker)
-            vim.cmd.stopinsert()
-            picker:toggle_preview(false)
-          end,
-          actions = {
-            enter = function(picker, item)
-              if vim.api.nvim_get_mode().mode == "i" then
-                vim.cmd.stopinsert()
-              else
-                picker:action("confirm")
-              end
-            end,
-            backspace = function(picker, item)
-              local col = vim.fn.col(".")
-              if col <= 1 then
-                vim.cmd.stopinsert()
-              else
-                vim.fn.feedkeys("\b")
-              end
-            end,
-          },
-          win = {
-            input = {
-              keys = {
-                ["<CR>"] = { "enter", mode = { "n", "i" } },
-                ["<BS>"] = { "backspace", mode = { "i" } },
-                ["p"] = { "toggle_preview", mode = { "n" } },
-              },
-            },
-          },
-        },
-        -- quickfile = { enabled = true },
-        -- statuscolumn = { enabled = true },
-        -- words = { enabled = true },
-      })
-    end,
   },
   {
     "hat0uma/doxygen-previewer.nvim",

@@ -14,21 +14,31 @@ function M.on_startup()
   vim.cmd.source(SESSION_PATH)
 end
 
-local function can_quit()
+local function get_first_modified_buf()
   local bufs = vim.api.nvim_list_bufs()
   for _, bufnr in ipairs(bufs) do
     if vim.api.nvim_get_option_value("modified", { buf = bufnr }) then
-      return false
+      return bufnr
     end
   end
-  return true
+  return nil
+end
+
+local function confirm_restart()
+  local modified_buf = get_first_modified_buf()
+  if not modified_buf then
+    return true
+  end
+
+  vim.api.nvim_win_set_buf(0, modified_buf)
+  return vim.fn.confirm("Unsaved changes exists. Restart anyway?", "&Yes\n&No", 2) == 1
 end
 
 function M.restart(start_cmd)
-  if not can_quit() then
-    vim.notify("Unsaved changes exists.", vim.log.levels.WARN)
+  if not confirm_restart() then
     return
   end
+
   -- create session
   vim.cmd.mksession({ SESSION_PATH, bang = true })
 
@@ -56,6 +66,11 @@ function M.restart(start_cmd)
     handle:kill(9)
   end
 end
+
+local default = {
+  ---@type "builtin" | "resession" | { save: fun(), restore: fun() }
+  session = "builtin",
+}
 
 function M.setup()
   local gui_cmd = nil
