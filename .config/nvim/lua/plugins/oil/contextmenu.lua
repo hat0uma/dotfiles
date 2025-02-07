@@ -184,15 +184,14 @@ end
 
 local function grep(entry, dir)
   require("oil").close()
-  require("telescope").extensions.live_grep_args.live_grep_args({
+  require("snacks").picker.grep({
     cwd = dir,
-    preview = { hide_on_startup = true },
   })
 end
 
 local function find_files(entry, dir)
   require("oil").close()
-  require("telescope.builtin").find_files({
+  require("snacks").picker.files({
     cwd = dir,
   })
 end
@@ -245,8 +244,8 @@ function M.setup()
   -- add_action(fmt("Explorer Here"), "all", nil, open_folder)
   add_system_action(fmt("Explorer Here"), "all", nil, rc.sys.get_open_command("."))
   add_action(fmt("Terminal Here"), "all", nil, open_terminal)
-  add_action(fmt("Telescope", "Grep Here"), "all", nil, grep)
-  add_action(fmt("Telescope", "Find Files Here"), "all", nil, find_files)
+  add_action(fmt("Picker", "Grep Here"), "all", nil, grep)
+  add_action(fmt("Picker", "Find Files Here"), "all", nil, find_files)
   add_action(fmt("System", "Archive"), "all", nil, archive_folder)
 
   -------------------------------------
