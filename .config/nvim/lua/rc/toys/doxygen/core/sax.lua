@@ -127,19 +127,21 @@ local function register_callbacks(sax_handle_ptr, callbacks, eg)
         callbacks.start_element_ns(ffi.string(localname), str(prefix), str(URI), AttributeSet:new(raw_attrs))
       end
     )
+
+    ---@diagnostic disable-next-line: assign-type-mismatch
     sax_handle_ptr[0].startElementNs = ffi.cast("startElementNsSAX2Func", startElementNs)
   end
 
   if callbacks.end_element_ns then
-    local endElementNs = safe_call_wrap(
-      ---@param ctx ffi.cdata*
-      ---@param localname ffi.cdata*
-      ---@param prefix ffi.cdata*
-      ---@param URI ffi.cdata*
-      function(ctx, localname, prefix, URI)
-        callbacks.end_element_ns(ffi.string(localname), str(prefix), str(URI))
-      end
-    )
+    ---@param ctx ffi.cdata*
+    ---@param localname ffi.cdata*
+    ---@param prefix ffi.cdata*
+    ---@param URI ffi.cdata*
+    local endElementNs = safe_call_wrap(function(ctx, localname, prefix, URI)
+      callbacks.end_element_ns(ffi.string(localname), str(prefix), str(URI))
+    end)
+
+    ---@diagnostic disable-next-line: assign-type-mismatch
     sax_handle_ptr[0].endElementNs = ffi.cast("endElementNsSAX2Func", endElementNs)
   end
 
@@ -152,6 +154,8 @@ local function register_callbacks(sax_handle_ptr, callbacks, eg)
         callbacks.characters(ffi.string(ch, len))
       end
     )
+
+    ---@diagnostic disable-next-line: assign-type-mismatch
     sax_handle_ptr[0].characters = ffi.cast("charactersSAXFunc", characters)
   end
 
@@ -160,6 +164,8 @@ local function register_callbacks(sax_handle_ptr, callbacks, eg)
   local serror = function(user_data, err)
     eg.add(ffi.string(err[0].message))
   end
+
+  ---@diagnostic disable-next-line: assign-type-mismatch
   sax_handle_ptr[0].serror = ffi.cast("xmlStructuredErrorFunc", serror)
 end
 

@@ -1,3 +1,5 @@
+---@meta
+
 ------------------------------------------------------------
 -- Simple types (aliases)
 ------------------------------------------------------------
@@ -297,10 +299,10 @@ local DoxygenType = {}
 --- @field kind Doxygen.Compound.DoxCompoundKind     -- (attribute "kind")
 --- @field language Doxygen.Compound.DoxLanguage?     -- (optional attribute "language")
 --- @field prot Doxygen.Compound.DoxProtectionKind?   -- (attribute "prot")
---- @field final Doxygen.Compound.DoxBool?            -- (optional attribute)
---- @field inline Doxygen.Compound.DoxBool?           -- (optional attribute)
---- @field sealed Doxygen.Compound.DoxBool?           -- (optional attribute)
---- @field abstract Doxygen.Compound.DoxBool?         -- (optional attribute)
+--- @field final boolean?            -- (optional attribute)
+--- @field inline boolean?           -- (optional attribute)
+--- @field sealed boolean?           -- (optional attribute)
+--- @field abstract boolean?         -- (optional attribute)
 local compounddefType = {}
 
 --- @class Doxygen.Compound.listofallmembersType
@@ -336,7 +338,7 @@ local reimplementType = {}
 --- @class Doxygen.Compound.incType
 --- @field value string
 --- @field refid string?          -- (optional attribute "refid")
---- @field local Doxygen.Compound.DoxBool          -- (attribute "local")
+--- @field local boolean          -- (attribute "local")
 local incType = {}
 
 --- @class Doxygen.Compound.exportsType
@@ -404,51 +406,51 @@ local sectiondefType = {}
 --- @field kind Doxygen.Compound.DoxMemberKind            -- (attribute "kind")
 --- @field id string                     -- (attribute "id")
 --- @field prot Doxygen.Compound.DoxProtectionKind         -- (attribute "prot")
---- @field static Doxygen.Compound.DoxBool                -- (attribute "static")
---- @field extern Doxygen.Compound.DoxBool?                -- (optional attribute "extern")
---- @field strong Doxygen.Compound.DoxBool?                -- (optional attribute "strong")
---- @field const Doxygen.Compound.DoxBool?                 -- (optional attribute "const")
---- @field explicit Doxygen.Compound.DoxBool?              -- (optional attribute "explicit")
---- @field inline Doxygen.Compound.DoxBool?                -- (optional attribute "inline")
+--- @field static boolean                -- (attribute "static")
+--- @field extern boolean?                -- (optional attribute "extern")
+--- @field strong boolean?                -- (optional attribute "strong")
+--- @field const boolean?                 -- (optional attribute "const")
+--- @field explicit boolean?              -- (optional attribute "explicit")
+--- @field inline boolean?                -- (optional attribute "inline")
 --- @field refqual Doxygen.Compound.DoxRefQualifierKind?   -- (optional attribute "refqual")
 --- @field virt Doxygen.Compound.DoxVirtualKind?           -- (optional attribute "virt")
---- @field volatile Doxygen.Compound.DoxBool?              -- (optional attribute "volatile")
---- @field mutable Doxygen.Compound.DoxBool?               -- (optional attribute "mutable")
---- @field noexcept Doxygen.Compound.DoxBool?              -- (optional attribute "noexcept")
+--- @field volatile boolean?              -- (optional attribute "volatile")
+--- @field mutable boolean?               -- (optional attribute "mutable")
+--- @field noexcept boolean?              -- (optional attribute "noexcept")
 --- @field noexceptexpression string?     -- (optional attribute "noexceptexpression")
---- @field nodiscard Doxygen.Compound.DoxBool?             -- (optional attribute "nodiscard")
---- @field constexpr Doxygen.Compound.DoxBool?             -- (optional attribute "constexpr")
---- @field consteval Doxygen.Compound.DoxBool?             -- (optional attribute "consteval")
---- @field constinit Doxygen.Compound.DoxBool?             -- (optional attribute "constinit")
+--- @field nodiscard boolean?             -- (optional attribute "nodiscard")
+--- @field constexpr boolean?             -- (optional attribute "constexpr")
+--- @field consteval boolean?             -- (optional attribute "consteval")
+--- @field constinit boolean?             -- (optional attribute "constinit")
 --- -- Additional platform/language specific attributes:
---- @field readable Doxygen.Compound.DoxBool?
---- @field writable Doxygen.Compound.DoxBool?
---- @field initonly Doxygen.Compound.DoxBool?
---- @field settable Doxygen.Compound.DoxBool?
---- @field privatesettable Doxygen.Compound.DoxBool?
---- @field protectedsettable Doxygen.Compound.DoxBool?
---- @field gettable Doxygen.Compound.DoxBool?
---- @field privategettable Doxygen.Compound.DoxBool?
---- @field protectedgettable Doxygen.Compound.DoxBool?
---- @field final Doxygen.Compound.DoxBool?
---- @field sealed Doxygen.Compound.DoxBool?
---- @field new Doxygen.Compound.DoxBool?
---- @field add Doxygen.Compound.DoxBool?
---- @field remove Doxygen.Compound.DoxBool?
---- @field raise Doxygen.Compound.DoxBool?
---- @field optional Doxygen.Compound.DoxBool?
---- @field required Doxygen.Compound.DoxBool?
+--- @field readable boolean?
+--- @field writable boolean?
+--- @field initonly boolean?
+--- @field settable boolean?
+--- @field privatesettable boolean?
+--- @field protectedsettable boolean?
+--- @field gettable boolean?
+--- @field privategettable boolean?
+--- @field protectedgettable boolean?
+--- @field final boolean?
+--- @field sealed boolean?
+--- @field new boolean?
+--- @field add boolean?
+--- @field remove boolean?
+--- @field raise boolean?
+--- @field optional boolean?
+--- @field required boolean?
 --- @field accessor Doxygen.Compound.DoxAccessor?
---- @field attribute Doxygen.Compound.DoxBool?
---- @field property Doxygen.Compound.DoxBool?
---- @field readonly Doxygen.Compound.DoxBool?
---- @field bound Doxygen.Compound.DoxBool?
---- @field removable Doxygen.Compound.DoxBool?
---- @field constrained Doxygen.Compound.DoxBool?
---- @field transient Doxygen.Compound.DoxBool?
---- @field maybevoid Doxygen.Compound.DoxBool?
---- @field maybedefault Doxygen.Compound.DoxBool?
---- @field maybeambiguous Doxygen.Compound.DoxBool?
+--- @field attribute boolean?
+--- @field property boolean?
+--- @field readonly boolean?
+--- @field bound boolean?
+--- @field removable boolean?
+--- @field constrained boolean?
+--- @field transient boolean?
+--- @field maybevoid boolean?
+--- @field maybedefault boolean?
+--- @field maybeambiguous boolean?
 local memberdefType = {}
 
 --- @class Doxygen.Compound.descriptionType
@@ -538,8 +540,8 @@ local spType = {}
 --- @field value string?         -- (mixed content, if any)
 --- @field refid string          -- (attribute "refid")
 --- @field compoundref string?   -- (optional attribute "compoundref")
---- @field startline number      -- (attribute "startline", integer)
---- @field endline number        -- (attribute "endline", integer)
+--- @field startline number?      -- (attribute "startline", integer)
+--- @field endline number?        -- (attribute "endline", integer)
 local referenceType = {}
 
 --- @class Doxygen.Compound.locationType

@@ -20,7 +20,9 @@ return {
             vim.bo[ctx.buf].syntax = ctx.ft
           end)
           require("illuminate.engine").stop_buf(ctx.buf)
-          require("indent_blankline.commands").disable()
+          if pcall(require, "ibl") then
+            require("indent_blankline.commands").disable()
+          end
         end,
       },
       notifier = { enabled = true },

@@ -16,17 +16,34 @@ function M.build(filename, on_completed)
   sax.xml_sax_parse(filename, {
     start_element_ns = function(localname, prefix, uri, attrs)
       table.insert(stack, {
-        name = localname,
+        name = prefix and string.format("%s:%s", prefix, localname) or localname,
         attrs = attrs:to_kvp(),
-        children = {},
+        content = {},
       })
     end,
     end_element_ns = function(localname, prefix, uri)
-      local element = table.remove(stack)
-      if #stack > 0 then
-        table.insert(stack[#stack].content, element)
+      ---@type XmlElement
+      local current = table.remove(stack)
+
+      -- normalize text content
+      for i = #current.content, 1, -1 do
+        local v = current.content[i]
+        if type(v) == "string" then
+          local normalized = v:gsub("^%s+", "")
+          if #normalized == 0 then
+            table.remove(current.content, i)
+          else
+            current.content[i] = normalized
+          end
+        end
       end
-      root = element
+
+      -- pop the stack and append to parent
+      local parent = stack[#stack]
+      if #stack > 0 then
+        table.insert(parent.content, current)
+      end
+      root = current
     end,
 
     characters = function(value)

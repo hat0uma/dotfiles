@@ -24,18 +24,53 @@ local function get_first_modified_buf()
   return nil
 end
 
-local function confirm_restart()
+--- Get command to start new instance.
+---@return string[]|nil
+local function get_restart_cmd()
+  local gui_cmd = nil
+  if vim.g.neovide then
+    gui_cmd = { "neovide", "--" }
+  end
+
+  if not gui_cmd then
+    return nil
+  end
+
+  local start_cmd = vim.list_extend(gui_cmd, {
+    "--cmd",
+    "autocmd VimEnter * ++once lua require('rc.gui').on_startup()",
+  })
+
+  return start_cmd
+end
+
+local function can_restart()
   local modified_buf = get_first_modified_buf()
   if not modified_buf then
     return true
   end
 
   vim.api.nvim_win_set_buf(0, modified_buf)
-  return vim.fn.confirm("Unsaved changes exists. Restart anyway?", "&Yes\n&No", 2) == 1
+  if vim.fn.confirm("Unsaved changes exists. Restart anyway?", "&Yes\n&No", 2) == 1 then
+    vim.fn.quit({ bang = true })
+    return can_restart()
+  end
+
+  return false
 end
 
-function M.restart(start_cmd)
-  if not confirm_restart() then
+--- Restart neovim GUI.
+---@param opts { force: boolean }
+function M.restart(opts)
+  -- get restart command
+  local restart_cmd = get_restart_cmd()
+  if not restart_cmd then
+    vim.notify("Unsupported GUI.")
+    return
+  end
+
+  -- check can restart
+  if not opts.force and not can_restart() then
     return
   end
 
@@ -44,27 +79,25 @@ function M.restart(start_cmd)
 
   -- start new instance
   vim.g.restart_completed = false
-  local handle = vim.system(start_cmd, { detach = true })
+  local handle = vim.system(restart_cmd, { detach = true })
 
   -- wait startup completion
   local ok, kind = vim.wait(5000, function()
     return vim.g.restart_completed
   end)
 
-  if ok then
-    vim.cmd.quitall()
+  -- Check if the GUI startup was successful.
+  if not ok then
+    local msg = kind == -1 and "GUI startup timeout." or "GUI startup interrupted."
+    vim.notify(msg, vim.log.levels.WARN)
+
+    if not handle:is_closing() then
+      handle:kill(9)
+    end
     return
   end
 
-  if kind == -1 then
-    vim.notify("timeout.")
-  elseif kind == -2 then
-    vim.notify("interrupted.")
-  end
-
-  if not handle:is_closing() then
-    handle:kill(9)
-  end
+  vim.cmd.quitall({ bang = true })
 end
 
 local default = {
@@ -73,22 +106,11 @@ local default = {
 }
 
 function M.setup()
-  local gui_cmd = nil
-  if vim.g.neovide then
-    gui_cmd = { "neovide", "--" }
-  end
-
-  if not gui_cmd then
-    return
-  end
-
-  local start_cmd = vim.list_extend(gui_cmd, {
-    "--cmd",
-    "autocmd VimEnter * ++once lua require('rc.gui').on_startup()",
+  vim.api.nvim_create_user_command("Restart", function(opts)
+    M.restart({ force = opts.bang })
+  end, {
+    desc = "Restart neovim.",
+    bang = true,
   })
-
-  vim.api.nvim_create_user_command("Restart", function()
-    M.restart(start_cmd)
-  end, { desc = "Restart neovim." })
 end
 return M

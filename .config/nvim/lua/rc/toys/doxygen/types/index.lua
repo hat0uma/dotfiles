@@ -1,3 +1,5 @@
+---@meta
+
 ---@class Doxygen.Index.DoxygenType
 ---@field compound Doxygen.Index.CompoundType[]
 ---@field version string

@@ -503,10 +503,10 @@ void xmlCleanupParser(void);
 
 ---@class XmlSaxHandlerPtr: ffi.cdata*
 ---@field [0] {
----    startElementNs: ffi.cdata*,
----    endElementNs: ffi.cdata*,
----    characters: ffi.cdata*,
----    serror: ffi.cdata*,
+---    startElementNs: ffi.cb*,
+---    endElementNs: ffi.cb*,
+---    characters: ffi.cb*,
+---    serror: ffi.cb*,
 ---    initialized: integer,
 --- }
 
