@@ -26,7 +26,7 @@ vim.opt.listchars = {
 
 vim.opt.backspace = { "indent", "eol", "start" }
 vim.o.whichwrap = "b,s,h,l,<,>,[,]"
-vim.o.scrolloff = 999
+-- vim.o.scrolloff = 999
 vim.o.splitkeep = "screen"
 vim.o.sidescrolloff = 16
 vim.o.sidescroll = 1
@@ -176,6 +176,7 @@ rc.winbar.setup()
 rc.scratch.setup()
 rc.restart.setup()
 rc.ambiwidth.setup()
+rc.curcenter.setup()
 rc.gui.setup()
 -- rc.git.autofetch.enable()
 -- rc.projectrc.setup()

@@ -343,12 +343,12 @@ return {
     {
       "<leader>ca",
       "<cmd>CodeCompanionActions<CR>",
-      mode = { "n" },
+      mode = { "n", "v" },
     },
     {
       "<leader>cc",
       "<cmd>CodeCompanionChat<CR>",
-      mode = { "n" },
+      mode = { "n", "v" },
     },
     {
       "<leader>ce",
@@ -358,7 +358,7 @@ return {
     {
       "<leader>ct",
       "<cmd>CodeCompanionCmd<CR>",
-      mode = { "n" },
+      mode = { "n", "v" },
     },
   },
 }

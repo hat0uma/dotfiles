@@ -47,6 +47,7 @@ return {
   scratch = require("rc.scratch"),
   sys = require("rc.sys"),
   gui = require("rc.gui"),
+  curcenter = require("rc.curcenter"),
   terminal = require("rc.terminal"),
   winbar = require("rc.winbar"),
   ambiwidth = require("rc.ambiwidth"),

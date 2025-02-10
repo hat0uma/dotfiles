@@ -40,7 +40,7 @@ local function dump_xsd(dir)
   end
   local compound = build_element_tree(vim.fs.joinpath(dir, "compound.xsd"))
   if compound then
-    util.dump_json(compound, "index.xsd", false)
+    util.dump_json(compound, "compound.xsd", false)
   end
 end
 
