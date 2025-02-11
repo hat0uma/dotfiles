@@ -9,7 +9,7 @@ function M.dump_json(tbl, name, open)
   local dir = vim.fn.stdpath("cache")
   local file = string.format("doxygen-%s.json", name)
   local path = vim.fs.joinpath(dir, file) ---@diagnostic disable-line
-  local cmd = { "jq", "--indent", "2", "--sort-keys", "." }
+  local cmd = { "jq", "--indent", "2", "." }
   vim.system(cmd, { stdin = json }, function(obj)
     if obj.code ~= 0 then
       vim.notify(obj.stderr, vim.log.levels.ERROR)

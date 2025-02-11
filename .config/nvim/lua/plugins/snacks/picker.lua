@@ -125,10 +125,12 @@ return {
 
   ---@type snacks.picker.Config?|{}
   opts = {
+    layout = {
+      preview = false,
+    },
     ui_select = true,
     on_show = function(picker)
       vim.cmd.stopinsert()
-      picker:toggle_preview(false)
       picker:action("toggle_hidden")
     end,
     formatters = {
@@ -173,6 +175,14 @@ return {
           ["<CR>"] = { "enter", mode = { "n", "i" } },
           ["<BS>"] = { "backspace", mode = { "i" } },
           ["p"] = { "toggle_preview", mode = { "n" } },
+          ["gv"] = function(win)
+            vim.cmd.vsplit()
+            win:execute("edit")
+          end,
+          ["gs"] = function(win)
+            vim.cmd.split()
+            win:execute("edit")
+          end,
         },
       },
     },
