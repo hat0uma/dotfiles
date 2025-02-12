@@ -65,7 +65,9 @@ local function test()
     if compound_root then
       local compound_index = compound_factory.DoxygenType(Builder:new(compound_root))
       util.dump_json(compound_index, compound_element.refid, false)
-      vim.list_extend(compounddefs, compound_index.compounddef)
+      if compound_index.compounddef then
+        table.insert(compounddefs, compound_index.compounddef)
+      end
     end
   end
   util.dump_json(compounddefs, "compounddefs", true)

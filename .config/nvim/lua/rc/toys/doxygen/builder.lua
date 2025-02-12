@@ -35,9 +35,27 @@ function Builder:new(element)
   return obj
 end
 
+--- Get the name of the current element.
+---@param name string
+---@param occurence "optional" | "required"
+---@param type "string" | "boolean" | "number"
+---@return (string | boolean | number)?
+function Builder:from_attr(name, occurence, type)
+  local optional = occurence == "optional"
+  if type == "string" then
+    return self:_from_attr_string(name, optional)
+  elseif type == "boolean" then
+    return self:_from_attr_bool(name, optional)
+  elseif type == "number" then
+    return self:_from_attr_number(name, optional)
+  else
+    error(string.format("invalid type: %s", type))
+  end
+end
+
 ---@overload fun(self, name: string): string
 ---@overload fun(self, name: string, optional: boolean): string?
-function Builder:from_attr(name, optional)
+function Builder:_from_attr_string(name, optional)
   local element = self._element
   local value = element.attrs[name]
   if not optional then
@@ -49,8 +67,8 @@ end
 
 ---@overload fun(self, name: string): boolean
 ---@overload fun(self, name: string, optional: boolean): boolean?
-function Builder:from_attr_bool(name, optional)
-  local value = self:from_attr(name, optional)
+function Builder:_from_attr_bool(name, optional)
+  local value = self:_from_attr_string(name, optional)
   if not value then
     return nil
   end
@@ -64,8 +82,8 @@ end
 
 ---@overload fun(self, name: string): number
 ---@overload fun(self, name: string, optional: boolean): number?
-function Builder:from_attr_number(name, optional)
-  local value = self:from_attr(name, optional)
+function Builder:_from_attr_number(name, optional)
+  local value = self:_from_attr_string(name, optional)
   if not value then
     return nil
   end
@@ -75,6 +93,61 @@ function Builder:from_attr_number(name, optional)
     error(string.format("invalid number value: <%s> in %s", value, self._element.name))
   end
   return number
+end
+
+---@generic T
+---@param name string
+---@param occurence "optional" | "required" | "array"
+---@param factory Factory<T>
+---@return T?
+function Builder:from_element(name, occurence, factory)
+  if occurence == "array" then
+    return self:_from_element_array(name, factory)
+  end
+
+  local optional = occurence == "optional"
+  for i = self._next_index, #self._element.content do
+    local child = self._element.content[i]
+    if type(child) == "string" then
+      break
+    end
+
+    if child.name ~= name then
+      break
+    end
+
+    self._next_index = i + 1
+    local child_builder = Builder:new(child)
+    return assert(factory(child_builder), string.format("factory failed for %s", name))
+  end
+
+  if not optional then
+    error(string.format("required element <%s> is missing in %s", name, self._element.name))
+  end
+
+  return nil
+end
+
+---@generic T
+---@param name string
+---@param factory Factory<T>
+---@return T[]
+function Builder:_from_element_array(name, factory)
+  local result = {}
+  for i = self._next_index, #self._element.content do
+    local child = self._element.content[i]
+    assert(type(child) ~= "string", string.format("unexpected text content in %s", self._element.name))
+
+    if child.name ~= name then
+      break
+    end
+
+    self._next_index = i + 1
+    local child_builder = Builder:new(child)
+    table.insert(result, factory(child_builder))
+  end
+
+  return result
 end
 
 ---@generic T
@@ -112,7 +185,7 @@ local function get_text_content(element)
 end
 
 ---@return string
-function Builder:from_text_content()
+function Builder:from_text()
   return assert(
     get_text_content(self._element),
     string.format("required text content in %s is missing", self._element.name)
@@ -120,14 +193,24 @@ function Builder:from_text_content()
 end
 
 ---@param name string
----@return string
-function Builder:from_text_content_in_child(name)
-  return assert(self:from_text_content_in_child_optional(name), string.format("required element %s is missing", name))
+---@param occurence "required" | "optional" | "array"
+---@return string | string[] | nil
+function Builder:from_text_only_element(name, occurence)
+  if occurence == "array" then
+    return self:from_text_only_element_array(name)
+  end
+
+  local value = self:from_text_only_element_optional(name)
+  if not value and occurence == "required" then
+    error(string.format("required element %s is missing", name))
+  end
+
+  return value
 end
 
 ---@param name string
 ---@return string?
-function Builder:from_text_content_in_child_optional(name)
+function Builder:from_text_only_element_optional(name)
   for i = self._next_index, #self._element.content do
     local child = self._element.content[i]
     if type(child) == "string" then
@@ -145,9 +228,83 @@ function Builder:from_text_content_in_child_optional(name)
   return nil
 end
 
+---@return (string | { name: string, value: string })[]
+function Builder:from_element_mixed()
+  return self:from_folded_text_content()
+  -- TODO: should handle mixed content with child factories
+  -- local result = {}
+  -- for i = self._next_index, #self._element.content do
+  --   local child = self._element.content[i]
+  --   if type(child) == "string" then
+  --     table.insert(result, child)
+  --   else
+  --     table.insert(result, { name = child.name })
+  --   end
+  -- end
+  -- return result
+end
+
+---@param choices { name: string, factory: Factory<any> }[]
+---@param occurence "required"
+---@return { name: string, value: any }
+---@overload fun(choices: { name: string, factory: Factory<any> }[], occurence: "optional"): { name: string, value: any }?
+---@overload fun(choices: { name: string, factory: Factory<any> }[], occurence: "array"): { name: string, value: any }[]
+function Builder:choice(choices, occurence)
+  if occurence == "array" then
+    return self:choice_array(choices)
+  end
+
+  local optional = occurence == "optional"
+  local result = self:choice_optional(choices)
+  if not result and not optional then
+    error(string.format("required choice is missing in %s", self._element.name))
+  end
+
+  return result
+end
+
+---@param choices { name: string, factory: Factory<any> }[]
+---@return { name: string, value: any }[]
+function Builder:choice_array(choices)
+  local result = {}
+  for i = self._next_index, #self._element.content do
+    local child = self._element.content[i]
+    assert(type(child) ~= "string", string.format("unexpected text content in %s", self._element.name))
+
+    for _, choice in ipairs(choices) do
+      if child.name == choice.name then
+        self._next_index = i + 1
+        local child_builder = Builder:new(child)
+        table.insert(result, { name = child.name, value = choice.factory(child_builder) })
+        break
+      end
+    end
+  end
+  return result
+end
+
+---
+---@param choices { name: string, factory: Factory<any> }[]
+---@return { name: string, value: any }?
+function Builder:choice_optional(choices)
+  for i = self._next_index, #self._element.content do
+    local child = self._element.content[i]
+    assert(type(child) ~= "string", string.format("unexpected text content in %s", self._element.name))
+
+    for _, choice in ipairs(choices) do
+      if child.name == choice.name then
+        self._next_index = i + 1
+        local child_builder = Builder:new(child)
+        return { name = child.name, value = choice.factory(child_builder) }
+      end
+    end
+  end
+  return nil
+end
+
 ---@param name string
 ---@return string[]
-function Builder:from_text_content_in_child_array(name)
+function Builder:from_text_only_element_array(name)
   local result = {}
   for i = self._next_index, #self._element.content do
     local child = self._element.content[i]
@@ -184,44 +341,6 @@ function Builder:from_folded_text_content()
   end
 
   return vim.split(table.concat(text_buffer, ""), "\n")
-end
-
----@generic T
----@param name string
----@param factory Factory<T>
----@return T
-function Builder:from_child_element(name, factory)
-  local child = self:from_child_element_optional(name, factory)
-  assert(child, string.format("required element %s is missing", name))
-  return child
-end
-
----@generic T
----@param name string
----@param factory Factory<T>
----@return T[]
-function Builder:from_child_element_array(name, factory)
-  local result = {}
-  for i = self._next_index, #self._element.content do
-    local child = self._element.content[i]
-    assert(type(child) ~= "string", string.format("unexpected text content in %s", self._element.name))
-
-    if child.name ~= name then
-      break
-    end
-
-    self._next_index = i + 1
-    local child_builder = Builder:new(child)
-    table.insert(result, factory(child_builder))
-  end
-
-  return result
-end
-
-function Builder:check_no_more_elements()
-  if self._next_index <= #self._element.content then
-    error(string.format("unexpected element %s", self._element.content[self._next_index].name))
-  end
 end
 
 return Builder

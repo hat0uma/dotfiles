@@ -1,889 +1,1509 @@
----@meta
-
-------------------------------------------------------------
--- Simple types (aliases)
-------------------------------------------------------------
-
---- @alias Doxygen.Compound.DoxBool
---- | "yes"
---- | "no"
-
---- @alias Doxygen.Compound.DoxGraphRelation
---- | "include"
---- | "usage"
---- | "template-instance"
---- | "public-inheritance"
---- | "protected-inheritance"
---- | "private-inheritance"
---- | "type-constraint"
-
---- @alias Doxygen.Compound.DoxRefKind
---- | "compound"
---- | "member"
-
---- @alias Doxygen.Compound.MemberKind
---- | "define"
---- | "property"
---- | "event"
---- | "variable"
---- | "typedef"
---- | "enum"
---- | "enumvalue"
---- | "function"
---- | "signal"
---- | "prototype"
---- | "friend"
---- | "dcop"
---- | "slot"
-
---- @alias Doxygen.Compound.DoxMemberKind
---- | "define"
---- | "property"
---- | "event"
---- | "variable"
---- | "typedef"
---- | "enum"
---- | "function"
---- | "signal"
---- | "prototype"
---- | "friend"
---- | "dcop"
---- | "slot"
---- | "interface"
---- | "service"
-
---- @alias Doxygen.Compound.DoxProtectionKind
---- | "public"
---- | "protected"
---- | "private"
---- | "package"
-
---- @alias Doxygen.Compound.DoxRefQualifierKind
---- | "lvalue"
---- | "rvalue"
-
---- @alias Doxygen.Compound.DoxLanguage
---- | "Unknown"
---- | "IDL"
---- | "Java"
---- | "C#"
---- | "D"
---- | "PHP"
---- | "Objective-C"
---- | "C++"
---- | "JavaScript"
---- | "Python"
---- | "Fortran"
---- | "VHDL"
---- | "XML"
---- | "SQL"
---- | "Markdown"
---- | "Slice"
---- | "Lex"
-
---- @alias Doxygen.Compound.DoxVirtualKind
---- | "non-virtual"
---- | "virtual"
---- | "pure-virtual"
-
---- @alias Doxygen.Compound.DoxCompoundKind
---- | "class"
---- | "struct"
---- | "union"
---- | "interface"
---- | "protocol"
---- | "category"
---- | "exception"
---- | "service"
---- | "singleton"
---- | "module"
---- | "type"
---- | "file"
---- | "namespace"
---- | "group"
---- | "page"
---- | "example"
---- | "dir"
---- | "concept"
-
---- @alias Doxygen.Compound.DoxSectionKind
---- | "user-defined"
---- | "public-type"
---- | "public-func"
---- | "public-attrib"
---- | "public-slot"
---- | "signal"
---- | "dcop-func"
---- | "property"
---- | "event"
---- | "public-static-func"
---- | "public-static-attrib"
---- | "protected-type"
---- | "protected-func"
---- | "protected-attrib"
---- | "protected-slot"
---- | "protected-static-func"
---- | "protected-static-attrib"
---- | "package-type"
---- | "package-func"
---- | "package-attrib"
---- | "package-static-func"
---- | "package-static-attrib"
---- | "private-type"
---- | "private-func"
---- | "private-attrib"
---- | "private-slot"
---- | "private-static-func"
---- | "private-static-attrib"
---- | "friend"
---- | "related"
---- | "define"
---- | "prototype"
---- | "typedef"
---- | "enum"
---- | "func"
---- | "var"
-
---- @alias Doxygen.Compound.DoxHighlightClass
---- | "comment"
---- | "normal"
---- | "preprocessor"
---- | "keyword"
---- | "keywordtype"
---- | "keywordflow"
---- | "stringliteral"
---- | "xmlcdata"
---- | "charliteral"
---- | "vhdlkeyword"
---- | "vhdllogic"
---- | "vhdlchar"
---- | "vhdldigit"
-
---- @alias Doxygen.Compound.DoxSimpleSectKind
---- | "see"
---- | "return"
---- | "author"
---- | "authors"
---- | "version"
---- | "since"
---- | "date"
---- | "note"
---- | "warning"
---- | "pre"
---- | "post"
---- | "copyright"
---- | "invariant"
---- | "remark"
---- | "attention"
---- | "important"
---- | "par"
---- | "rcs"
-
---- @alias Doxygen.Compound.DoxCheck
---- | "checked"
---- | "unchecked"
-
---- @alias Doxygen.Compound.DoxVersionNumber string  -- (pattern: \d+\.\d+.*)
-
---- @alias Doxygen.Compound.DoxImageKind
---- | "html"
---- | "latex"
---- | "docbook"
---- | "rtf"
---- | "xml"
-
---- @alias Doxygen.Compound.DoxPlantumlEngine
---- | "uml"
---- | "bpm"
---- | "wire"
---- | "dot"
---- | "ditaa"
---- | "salt"
---- | "math"
---- | "latex"
---- | "gantt"
---- | "mindmap"
---- | "wbs"
---- | "yaml"
---- | "creole"
---- | "json"
---- | "flow"
---- | "board"
---- | "git"
---- | "hcl"
---- | "regex"
---- | "ebnf"
---- | "files"
-
---- @alias Doxygen.Compound.DoxParamListKind
---- | "param"
---- | "retval"
---- | "exception"
---- | "templateparam"
-
---- @alias Doxygen.Compound.DoxCharRange string  -- (pattern: [aeiouncAEIOUNC])
-
---- @alias Doxygen.Compound.DoxParamDir
---- | "in"
---- | "out"
---- | "inout"
-
---- @alias Doxygen.Compound.DoxAccessor
---- | "retain"
---- | "copy"
---- | "assign"
---- | "weak"
---- | "strong"
---- | "unretained"
-
---- @alias Doxygen.Compound.DoxAlign
---- | "left"
---- | "right"
---- | "center"
-
---- @alias Doxygen.Compound.DoxVerticalAlign
---- | "bottom"
---- | "top"
---- | "middle"
-
---- @alias Doxygen.Compound.DoxOlType
---- | "1"
---- | "a"
---- | "A"
---- | "i"
---- | "I"
-
-------------------------------------------------------------
--- Complex types
-------------------------------------------------------------
-
---- DoxygenType represents the root element "doxygen"
---- @class Doxygen.Compound.DoxygenType
---- @field compounddef Doxygen.Compound.compounddefType[]  -- (0..unbounded sequence of compounddef elements)
---- @field version Doxygen.Compound.DoxVersionNumber         -- (required attribute)
---- @field xml_lang string                  -- (xml:lang attribute, required)
-local DoxygenType = {}
-
---- @class Doxygen.Compound.compounddefType
---- @field compoundname string
---- @field title string?
---- @field basecompoundref Doxygen.Compound.compoundRefType[]      -- (minOccurs=0, maxOccurs=unbounded)
---- @field derivedcompoundref Doxygen.Compound.compoundRefType[]
---- @field includes Doxygen.Compound.incType[]
---- @field includedby Doxygen.Compound.incType[]
---- @field incdepgraph Doxygen.Compound.graphType?
---- @field invincdepgraph Doxygen.Compound.graphType?
---- @field innermodule Doxygen.Compound.refType[]
---- @field innerdir Doxygen.Compound.refType[]
---- @field innerfile Doxygen.Compound.refType[]
---- @field innerclass Doxygen.Compound.refType[]
---- @field innerconcept Doxygen.Compound.refType[]
---- @field innernamespace Doxygen.Compound.refType[]
---- @field innerpage Doxygen.Compound.refType[]
---- @field innergroup Doxygen.Compound.refType[]
---- @field qualifier string[]         -- (multiple occurrences)
---- @field templateparamlist Doxygen.Compound.templateparamlistType?
---- @field sectiondef Doxygen.Compound.sectiondefType[]
---- @field tableofcontents Doxygen.Compound.tableofcontentsType?  -- (maxOccurs=1)
---- @field requiresclause Doxygen.Compound.linkedTextType?
---- @field initializer Doxygen.Compound.linkedTextType?
---- @field briefdescription Doxygen.Compound.descriptionType?
---- @field detaileddescription Doxygen.Compound.descriptionType?
---- @field exports Doxygen.Compound.exportsType?
---- @field inheritancegraph Doxygen.Compound.graphType?
---- @field collaborationgraph Doxygen.Compound.graphType?
---- @field programlisting Doxygen.Compound.listingType?
---- @field location Doxygen.Compound.locationType?
---- @field listofallmembers Doxygen.Compound.listofallmembersType?
---- @field id string                -- (attribute "id")
---- @field kind Doxygen.Compound.DoxCompoundKind     -- (attribute "kind")
---- @field language Doxygen.Compound.DoxLanguage?     -- (optional attribute "language")
---- @field prot Doxygen.Compound.DoxProtectionKind?   -- (attribute "prot")
---- @field final boolean?            -- (optional attribute)
---- @field inline boolean?           -- (optional attribute)
---- @field sealed boolean?           -- (optional attribute)
---- @field abstract boolean?         -- (optional attribute)
-local compounddefType = {}
-
---- @class Doxygen.Compound.listofallmembersType
---- @field member Doxygen.Compound.memberRefType[]
-local listofallmembersType = {}
-
---- @class Doxygen.Compound.memberRefType
---- @field scope string
---- @field name string
---- @field refid string?           -- (attribute)
---- @field prot Doxygen.Compound.DoxProtectionKind? -- (attribute)
---- @field virt Doxygen.Compound.DoxVirtualKind?    -- (attribute)
---- @field ambiguityscope string?  -- (attribute)
-local memberRefType = {}
-
---- @class Doxygen.Compound.docHtmlOnlyType
---- @field value string           -- (simple content)
---- @field block string?          -- (attribute "block")
-local docHtmlOnlyType = {}
-
---- @class Doxygen.Compound.compoundRefType
---- @field value string           -- (simple content)
---- @field refid string?          -- (optional attribute "refid")
---- @field prot Doxygen.Compound.DoxProtectionKind? -- (attribute "prot")
---- @field virt Doxygen.Compound.DoxVirtualKind?   -- (attribute "virt")
-local compoundRefType = {}
-
---- @class Doxygen.Compound.reimplementType
---- @field value string
---- @field refid string           -- (attribute "refid")
-local reimplementType = {}
-
---- @class Doxygen.Compound.incType
---- @field value string
---- @field refid string?          -- (optional attribute "refid")
---- @field local boolean          -- (attribute "local")
-local incType = {}
-
---- @class Doxygen.Compound.exportsType
---- @field export Doxygen.Compound.exportType[]      -- (sequence of export elements)
-local exportsType = {}
-
---- @class Doxygen.Compound.exportType
---- @field value string
---- @field refid string?           -- (optional attribute "refid")
-local exportType = {}
-
---- @class Doxygen.Compound.refType
---- @field value string
---- @field refid string           -- (attribute "refid")
---- @field prot Doxygen.Compound.DoxProtectionKind? -- (optional attribute "prot")
---- @field inline Doxygen.Compound.DoxBool?        -- (optional attribute "inline")
-local refType = {}
-
---- @class Doxygen.Compound.refTextType
---- @field value string
---- @field refid string           -- (attribute "refid")
---- @field kindref Doxygen.Compound.DoxRefKind     -- (attribute "kindref")
---- @field external string?       -- (optional attribute "external")
---- @field tooltip string?        -- (optional attribute "tooltip")
-local refTextType = {}
-
---- @class Doxygen.Compound.MemberType
---- @field name string
---- @field refid string           -- (required attribute)
---- @field kind Doxygen.Compound.MemberKind        -- (required attribute)
-local MemberType = {}
-
---- @class Doxygen.Compound.sectiondefType
---- @field header string?
---- @field description Doxygen.Compound.descriptionType?
---- @field memberdef Doxygen.Compound.memberdefType[]  -- (choice: memberdef elements)
---- @field member Doxygen.Compound.MemberType[]        -- (choice: member elements)
---- @field kind Doxygen.Compound.DoxSectionKind         -- (attribute "kind")
-local sectiondefType = {}
-
---- @class Doxygen.Compound.memberdefType
---- @field templateparamlist Doxygen.Compound.templateparamlistType?
---- @field type Doxygen.Compound.linkedTextType?
---- @field definition string?
---- @field argsstring string?
---- @field name string
---- @field qualifiedname string?
---- @field read string?
---- @field write string?
---- @field bitfield string?
---- @field reimplements Doxygen.Compound.reimplementType[]
---- @field reimplementedby Doxygen.Compound.reimplementType[]
---- @field qualifier string[]
---- @field param Doxygen.Compound.paramType[]
---- @field enumvalue Doxygen.Compound.enumvalueType[]
---- @field requiresclause Doxygen.Compound.linkedTextType?
---- @field initializer Doxygen.Compound.linkedTextType?
---- @field exceptions Doxygen.Compound.linkedTextType?
---- @field briefdescription Doxygen.Compound.descriptionType?
---- @field detaileddescription Doxygen.Compound.descriptionType?
---- @field inbodydescription Doxygen.Compound.descriptionType?
---- @field location Doxygen.Compound.locationType
---- @field references Doxygen.Compound.referenceType[]
---- @field referencedby Doxygen.Compound.referenceType[]
---- @field kind Doxygen.Compound.DoxMemberKind            -- (attribute "kind")
---- @field id string                     -- (attribute "id")
---- @field prot Doxygen.Compound.DoxProtectionKind         -- (attribute "prot")
---- @field static boolean                -- (attribute "static")
---- @field extern boolean?                -- (optional attribute "extern")
---- @field strong boolean?                -- (optional attribute "strong")
---- @field const boolean?                 -- (optional attribute "const")
---- @field explicit boolean?              -- (optional attribute "explicit")
---- @field inline boolean?                -- (optional attribute "inline")
---- @field refqual Doxygen.Compound.DoxRefQualifierKind?   -- (optional attribute "refqual")
---- @field virt Doxygen.Compound.DoxVirtualKind?           -- (optional attribute "virt")
---- @field volatile boolean?              -- (optional attribute "volatile")
---- @field mutable boolean?               -- (optional attribute "mutable")
---- @field noexcept boolean?              -- (optional attribute "noexcept")
---- @field noexceptexpression string?     -- (optional attribute "noexceptexpression")
---- @field nodiscard boolean?             -- (optional attribute "nodiscard")
---- @field constexpr boolean?             -- (optional attribute "constexpr")
---- @field consteval boolean?             -- (optional attribute "consteval")
---- @field constinit boolean?             -- (optional attribute "constinit")
---- -- Additional platform/language specific attributes:
---- @field readable boolean?
---- @field writable boolean?
---- @field initonly boolean?
---- @field settable boolean?
---- @field privatesettable boolean?
---- @field protectedsettable boolean?
---- @field gettable boolean?
---- @field privategettable boolean?
---- @field protectedgettable boolean?
---- @field final boolean?
---- @field sealed boolean?
---- @field new boolean?
---- @field add boolean?
---- @field remove boolean?
---- @field raise boolean?
---- @field optional boolean?
---- @field required boolean?
---- @field accessor Doxygen.Compound.DoxAccessor?
---- @field attribute boolean?
---- @field property boolean?
---- @field readonly boolean?
---- @field bound boolean?
---- @field removable boolean?
---- @field constrained boolean?
---- @field transient boolean?
---- @field maybevoid boolean?
---- @field maybedefault boolean?
---- @field maybeambiguous boolean?
-local memberdefType = {}
-
---- @class Doxygen.Compound.descriptionType
---- @field title string?
---- @field para Doxygen.Compound.docParaType[]
---- @field internal Doxygen.Compound.docInternalType[]
---- @field sect1 Doxygen.Compound.docSect1Type[]
-local descriptionType = {}
-
---- @class Doxygen.Compound.enumvalueType
---- @field name string
---- @field initializer Doxygen.Compound.linkedTextType?
---- @field briefdescription Doxygen.Compound.descriptionType?
---- @field detaileddescription Doxygen.Compound.descriptionType?
---- @field id string           -- (attribute "id")
---- @field prot Doxygen.Compound.DoxProtectionKind -- (attribute "prot")
-local enumvalueType = {}
-
---- @class Doxygen.Compound.templateparamlistType
---- @field param Doxygen.Compound.paramType[]
-local templateparamlistType = {}
-
---- @class Doxygen.Compound.paramType
---- @field attributes string?
---- @field type Doxygen.Compound.linkedTextType?
---- @field declname string?
---- @field defname string?
---- @field array string?
---- @field defval Doxygen.Compound.linkedTextType?
---- @field typeconstraint Doxygen.Compound.linkedTextType?
---- @field briefdescription Doxygen.Compound.descriptionType?
-local paramType = {}
-
---- @class Doxygen.Compound.linkedTextType
---- @field value string?         -- (mixed content text)
---- @field ref Doxygen.Compound.refTextType[]   -- (child ref elements)
-local linkedTextType = {}
-
---- @class Doxygen.Compound.graphType
---- @field node Doxygen.Compound.nodeType[]
-local graphType = {}
-
---- @class Doxygen.Compound.nodeType
---- @field label string
---- @field link Doxygen.Compound.linkType?
---- @field childnode Doxygen.Compound.childnodeType[]
---- @field id string   -- (attribute "id")
-local nodeType = {}
-
---- @class Doxygen.Compound.childnodeType
---- @field edgelabel string[]   -- (multiple child edgelabel elements)
---- @field refid string          -- (attribute "refid")
---- @field relation Doxygen.Compound.DoxGraphRelation -- (attribute "relation")
-local childnodeType = {}
-
---- @class Doxygen.Compound.linkType
---- @field refid string          -- (attribute "refid")
---- @field external string?      -- (optional attribute "external")
-local linkType = {}
-
---- @class Doxygen.Compound.listingType
---- @field codeline Doxygen.Compound.codelineType[]
---- @field filename string?      -- (optional attribute "filename")
-local listingType = {}
-
---- @class Doxygen.Compound.codelineType
---- @field highlight Doxygen.Compound.highlightType[]
---- @field lineno number         -- (attribute "lineno", integer)
---- @field refid string          -- (attribute "refid")
---- @field refkind Doxygen.Compound.DoxRefKind    -- (attribute "refkind")
---- @field external Doxygen.Compound.DoxBool      -- (attribute "external")
-local codelineType = {}
-
---- @class Doxygen.Compound.highlightType
---- @field value string          -- (mixed content)
---- @field sp Doxygen.Compound.spType[]          -- (child sp elements)
---- @field ref Doxygen.Compound.refTextType[]    -- (child ref elements)
---- @field class Doxygen.Compound.DoxHighlightClass? -- (attribute "class")
-local highlightType = {}
-
---- @class Doxygen.Compound.spType
---- @field value string          -- (mixed content text)
---- @field attr_value number?    -- (optional attribute "value")
-local spType = {}
-
---- @class Doxygen.Compound.referenceType
---- @field value string?         -- (mixed content, if any)
---- @field refid string          -- (attribute "refid")
---- @field compoundref string?   -- (optional attribute "compoundref")
---- @field startline number?      -- (attribute "startline", integer)
---- @field endline number?        -- (attribute "endline", integer)
-local referenceType = {}
-
---- @class Doxygen.Compound.locationType
---- @field file string?           -- (attribute "file")
---- @field line number?           -- (attribute "line")
---- @field column number?        -- (optional attribute "column")
---- @field declfile string?      -- (optional attribute "declfile")
---- @field declline number?      -- (optional attribute "declline")
---- @field declcolumn number?    -- (optional attribute "declcolumn")
---- @field bodyfile string?       -- (attribute "bodyfile")
---- @field bodystart number?      -- (attribute "bodystart")
---- @field bodyend number?        -- (attribute "bodyend")
-local locationType = {}
-
---- @class Doxygen.Compound.docSect1Type
---- @field title Doxygen.Compound.docTitleType?
---- @field para Doxygen.Compound.docParaType[]
---- @field internal Doxygen.Compound.docInternalS1Type[]
---- @field sect2 Doxygen.Compound.docSect2Type[]
---- @field id string            -- (attribute "id")
-local docSect1Type = {}
-
---- @class Doxygen.Compound.docSect2Type
---- @field title Doxygen.Compound.docTitleType?
---- @field para Doxygen.Compound.docParaType[]
---- @field sect3 Doxygen.Compound.docSect3Type[]
---- @field internal Doxygen.Compound.docInternalS2Type?
---- @field id string
-local docSect2Type = {}
-
---- @class Doxygen.Compound.docSect3Type
---- @field title Doxygen.Compound.docTitleType?
---- @field para Doxygen.Compound.docParaType[]
---- @field sect4 Doxygen.Compound.docSect4Type[]
---- @field internal Doxygen.Compound.docInternalS3Type?
---- @field id string
-local docSect3Type = {}
-
---- @class Doxygen.Compound.docSect4Type
---- @field title Doxygen.Compound.docTitleType?
---- @field para Doxygen.Compound.docParaType[]
---- @field sect5 Doxygen.Compound.docSect5Type[]
---- @field internal Doxygen.Compound.docInternalS4Type?
---- @field id string
-local docSect4Type = {}
-
---- @class Doxygen.Compound.docSect5Type
---- @field title Doxygen.Compound.docTitleType?
---- @field para Doxygen.Compound.docParaType[]
---- @field sect6 Doxygen.Compound.docSect6Type[]
---- @field internal Doxygen.Compound.docInternalS5Type?
---- @field id string
-local docSect5Type = {}
-
---- @class Doxygen.Compound.docSect6Type
---- @field title Doxygen.Compound.docTitleType?
---- @field para Doxygen.Compound.docParaType[]
---- @field internal Doxygen.Compound.docInternalS6Type?
---- @field id string
-local docSect6Type = {}
-
---- @class Doxygen.Compound.docInternalType
---- @field para Doxygen.Compound.docParaType[]
---- @field sect1 Doxygen.Compound.docSect1Type[]
-local docInternalType = {}
-
---- @class Doxygen.Compound.docInternalS1Type
---- @field para Doxygen.Compound.docParaType[]
---- @field sect2 Doxygen.Compound.docSect2Type[]
-local docInternalS1Type = {}
-
---- @class Doxygen.Compound.docInternalS2Type
---- @field para Doxygen.Compound.docParaType[]
---- @field sect3 Doxygen.Compound.docSect3Type[]
-local docInternalS2Type = {}
-
---- @class Doxygen.Compound.docInternalS3Type
---- @field para Doxygen.Compound.docParaType[]
---- @field sect4 Doxygen.Compound.docSect4Type[]
-local docInternalS3Type = {}
-
---- @class Doxygen.Compound.docInternalS4Type
---- @field para Doxygen.Compound.docParaType[]
---- @field sect5 Doxygen.Compound.docSect5Type[]
-local docInternalS4Type = {}
-
---- @class Doxygen.Compound.docInternalS5Type
---- @field para Doxygen.Compound.docParaType[]
---- @field sect6 Doxygen.Compound.docSect6Type[]
-local docInternalS5Type = {}
-
---- @class Doxygen.Compound.docInternalS6Type
---- @field para Doxygen.Compound.docParaType[]
-local docInternalS6Type = {}
-
---- @class Doxygen.Compound.docTitleType
---- @field value string?    -- (mixed content; may include inline commands)
-local docTitleType = {}
-
---- @class Doxygen.Compound.docSummaryType
---- @field value string?
-local docSummaryType = {}
-
---- @class Doxygen.Compound.docParaType
---- @field value string
---- @field cmds any[]      -- (contents defined by the "docCmdGroup")
-local docParaType = {}
-
---- @class Doxygen.Compound.docMarkupType
---- @field cmds any[]
-local docMarkupType = {}
-
---- @class Doxygen.Compound.docURLLink
---- @field cmds any[]
---- @field url string       -- (attribute "url")
-local docURLLink = {}
-
---- @class Doxygen.Compound.docAnchorType
---- @field id string?       -- (attribute "id")
-local docAnchorType = {}
-
---- @class Doxygen.Compound.docFormulaType
---- @field id string?       -- (attribute "id")
-local docFormulaType = {}
-
---- @class Doxygen.Compound.docIndexEntryType
---- @field primaryie string
---- @field secondaryie string
-local docIndexEntryType = {}
-
---- @class Doxygen.Compound.docListType
---- @field listitem Doxygen.Compound.docListItemType[]
---- @field type Doxygen.Compound.DoxOlType?   -- (attribute "type")
---- @field start number?     -- (attribute "start")
-local docListType = {}
-
---- @class Doxygen.Compound.docListItemType
---- @field para Doxygen.Compound.docParaType[]
---- @field override Doxygen.Compound.DoxCheck? -- (attribute "override")
---- @field value number?     -- (attribute "value")
-local docListItemType = {}
-
---- @class Doxygen.Compound.docSimpleSectType
---- @field title Doxygen.Compound.docTitleType?
---- @field para Doxygen.Compound.docParaType[]   -- (one or more "para" elements)
---- @field kind Doxygen.Compound.DoxSimpleSectKind -- (attribute "kind")
-local docSimpleSectType = {}
-
---- @class Doxygen.Compound.docVarListEntryType
---- @field term Doxygen.Compound.docTitleType
-local docVarListEntryType = {}
-
---- @class Doxygen.Compound.docVariableListEntry
---- @field varlistentry Doxygen.Compound.docVarListEntryType
---- @field listitem Doxygen.Compound.docListItemType
-local docVariableListEntry = {}
-
---- @class Doxygen.Compound.docVariableListType
---- @field entries Doxygen.Compound.docVariableListEntry[]
-local docVariableListType = {}
-
---- @class Doxygen.Compound.docRefTextType
---- @field cmds any[]
---- @field refid string?      -- (attribute "refid")
---- @field kindref Doxygen.Compound.DoxRefKind? -- (attribute "kindref")
---- @field external string?   -- (attribute "external")
-local docRefTextType = {}
-
---- @class Doxygen.Compound.docTableType
---- @field caption Doxygen.Compound.docCaptionType?
---- @field row Doxygen.Compound.docRowType[]
---- @field rows number?       -- (attribute "rows")
---- @field cols number?       -- (attribute "cols")
---- @field width string?      -- (attribute "width")
-local docTableType = {}
-
---- @class Doxygen.Compound.docRowType
---- @field entry Doxygen.Compound.docEntryType[]
-local docRowType = {}
-
---- @class Doxygen.Compound.docEntryType
---- @field para Doxygen.Compound.docParaType[]
---- @field thead Doxygen.Compound.DoxBool?          -- (attribute "thead")
---- @field colspan number?         -- (attribute "colspan")
---- @field rowspan number?         -- (attribute "rowspan")
---- @field align Doxygen.Compound.DoxAlign?         -- (attribute "align")
---- @field valign Doxygen.Compound.DoxVerticalAlign?-- (attribute "valign")
---- @field width string?           -- (attribute "width")
---- @field class string?           -- (attribute "class")
-local docEntryType = {}
-
---- @class Doxygen.Compound.docCaptionType
---- @field cmds any[]
---- @field id string?             -- (attribute "id")
-local docCaptionType = {}
-
---- @alias Doxygen.Compound.range_1_6 number   -- (integer value in the range 1 to 6)
-
---- @class Doxygen.Compound.docHeadingType
---- @field cmds any[]
---- @field level Doxygen.Compound.range_1_6      -- (attribute "level")
-local docHeadingType = {}
-
---- @class Doxygen.Compound.docImageType
---- @field cmds any[]
---- @field type Doxygen.Compound.DoxImageKind?     -- (optional attribute "type")
---- @field name string?           -- (optional attribute "name")
---- @field width string?          -- (optional attribute "width")
---- @field height string?         -- (optional attribute "height")
---- @field alt string?            -- (optional attribute "alt")
---- @field inline Doxygen.Compound.DoxBool?        -- (optional attribute "inline")
---- @field caption string?        -- (optional attribute "caption")
-local docImageType = {}
-
---- @class Doxygen.Compound.docDotMscType
---- @field cmds any[]
---- @field name string?           -- (optional attribute "name")
---- @field width string?          -- (optional attribute "width")
---- @field height string?         -- (optional attribute "height")
---- @field caption string?        -- (optional attribute "caption")
-local docDotMscType = {}
-
---- @class Doxygen.Compound.docImageFileType
---- @field cmds any[]
---- @field name string?           -- (optional attribute "name")
---- @field width string?          -- (optional attribute "width")
---- @field height string?         -- (optional attribute "height")
-local docImageFileType = {}
-
---- @class Doxygen.Compound.docPlantumlType
---- @field cmds any[]
---- @field name string?           -- (optional attribute "name")
---- @field width string?          -- (optional attribute "width")
---- @field height string?         -- (optional attribute "height")
---- @field caption string?        -- (optional attribute "caption")
---- @field engine Doxygen.Compound.DoxPlantumlEngine? -- (optional attribute "engine")
-local docPlantumlType = {}
-
---- @class Doxygen.Compound.docTocItemType
---- @field cmds any[]
---- @field id string?             -- (attribute "id")
-local docTocItemType = {}
-
---- @class Doxygen.Compound.docTocListType
---- @field tocitem Doxygen.Compound.docTocItemType[]
-local docTocListType = {}
-
---- @class Doxygen.Compound.docLanguageType
---- @field para Doxygen.Compound.docParaType[]
---- @field langid string         -- (attribute "langid")
-local docLanguageType = {}
-
---- @class Doxygen.Compound.docParamListType
---- @field parameteritem Doxygen.Compound.docParamListItem[]
---- @field kind Doxygen.Compound.DoxParamListKind   -- (attribute "kind")
-local docParamListType = {}
-
---- @class Doxygen.Compound.docParamListItem
---- @field parameternamelist Doxygen.Compound.docParamNameList[]
---- @field parameterdescription Doxygen.Compound.descriptionType
-local docParamListItem = {}
-
---- @class Doxygen.Compound.docParamNameList
---- @field parametertype Doxygen.Compound.docParamType[]
---- @field parametername Doxygen.Compound.docParamName[]
-local docParamNameList = {}
-
---- @class Doxygen.Compound.docParamType
---- @field cmds any[]
---- @field ref Doxygen.Compound.refTextType?        -- (optional child "ref" element)
-local docParamType = {}
-
---- @class Doxygen.Compound.docParamName
---- @field cmds any[]
---- @field ref Doxygen.Compound.refTextType?        -- (optional child "ref" element)
---- @field direction Doxygen.Compound.DoxParamDir?   -- (optional attribute "direction")
-local docParamName = {}
-
---- @class Doxygen.Compound.docXRefSectType
---- @field xreftitle string[]
---- @field xrefdescription Doxygen.Compound.descriptionType
---- @field id string?             -- (attribute "id")
-local docXRefSectType = {}
-
---- @class Doxygen.Compound.docCopyType
---- @field para Doxygen.Compound.docParaType[]
---- @field sect1 Doxygen.Compound.docSect1Type[]
---- @field internal Doxygen.Compound.docInternalType?
---- @field link string?           -- (attribute "link")
-local docCopyType = {}
-
---- @class Doxygen.Compound.docDetailsType
---- @field summary Doxygen.Compound.docSummaryType?
---- @field para Doxygen.Compound.docParaType[]
-local docDetailsType = {}
-
---- @class Doxygen.Compound.docBlockQuoteType
---- @field para Doxygen.Compound.docParaType[]
-local docBlockQuoteType = {}
-
---- @class Doxygen.Compound.docParBlockType
---- @field para Doxygen.Compound.docParaType[]
-local docParBlockType = {}
-
---- @class Doxygen.Compound.docEmptyType
-local docEmptyType = {}
-
---- @class Doxygen.Compound.tableofcontentsType
---- @field tocsect Doxygen.Compound.tableofcontentsKindType[]         -- (choice: "tocsect" elements)
---- @field tableofcontents Doxygen.Compound.tableofcontentsType[]       -- (nested tableofcontents elements)
-local tableofcontentsType = {}
-
---- @class Doxygen.Compound.tableofcontentsKindType
---- @field name string
---- @field reference string
---- @field tableofcontents Doxygen.Compound.tableofcontentsType[]
-local tableofcontentsKindType = {}
-
---- @class Doxygen.Compound.docEmojiType
---- @field name string?           -- (attribute "name")
---- @field unicode string?        -- (attribute "unicode")
-local docEmojiType = {}
-
-------------------------------------------------------------
--- End of Lua type definitions corresponding to the XSD
-------------------------------------------------------------
-
--- Example usage:
--- A document parsed from a "doxygen" XML element might be represented as follows:
 --
--- local doc = {
---     version = "1.8.17",
---     xml_lang = "en",
---     compounddef = {
---         {
---             compoundname = "MyClass",
---             kind = "class",
---             prot = "public",
---             -- other fields...
---         },
---         -- possibly more compounddef entries...
---     }
--- }
+-- GENERATED BY rc.toys.doxygen.generator.lua
 --
--- These definitions can assist Lua Language Server (luals) with autocompletion and type checking.
+--------------------------------
+-- Simple Types
+--------------------------------
+---@alias doxygen.compound.MemberKind
+---| "define"
+---| "property"
+---| "event"
+---| "variable"
+---| "typedef"
+---| "enum"
+---| "enumvalue"
+---| "function"
+---| "signal"
+---| "prototype"
+---| "friend"
+---| "dcop"
+---| "slot"
+
+---@alias doxygen.compound.range_1_6 number (range: 1<=x<=6)
+
+---@alias doxygen.compound.DoxBool
+---| "yes"
+---| "no"
+
+---@alias doxygen.compound.DoxGraphRelation
+---| "include"
+---| "usage"
+---| "template-instance"
+---| "public-inheritance"
+---| "protected-inheritance"
+---| "private-inheritance"
+---| "type-constraint"
+
+---@alias doxygen.compound.DoxRefKind
+---| "compound"
+---| "member"
+
+---@alias doxygen.compound.DoxMemberKind
+---| "define"
+---| "property"
+---| "event"
+---| "variable"
+---| "typedef"
+---| "enum"
+---| "function"
+---| "signal"
+---| "prototype"
+---| "friend"
+---| "dcop"
+---| "slot"
+---| "interface"
+---| "service"
+
+---@alias doxygen.compound.DoxProtectionKind
+---| "public"
+---| "protected"
+---| "private"
+---| "package"
+
+---@alias doxygen.compound.DoxRefQualifierKind
+---| "lvalue"
+---| "rvalue"
+
+---@alias doxygen.compound.DoxLanguage
+---| "Unknown"
+---| "IDL"
+---| "Java"
+---| "C#"
+---| "D"
+---| "PHP"
+---| "Objective-C"
+---| "C++"
+---| "JavaScript"
+---| "Python"
+---| "Fortran"
+---| "VHDL"
+---| "XML"
+---| "SQL"
+---| "Markdown"
+---| "Slice"
+---| "Lex"
+
+---@alias doxygen.compound.DoxVirtualKind
+---| "non-virtual"
+---| "virtual"
+---| "pure-virtual"
+
+---@alias doxygen.compound.DoxCompoundKind
+---| "class"
+---| "struct"
+---| "union"
+---| "interface"
+---| "protocol"
+---| "category"
+---| "exception"
+---| "service"
+---| "singleton"
+---| "module"
+---| "type"
+---| "file"
+---| "namespace"
+---| "group"
+---| "page"
+---| "example"
+---| "dir"
+---| "concept"
+
+---@alias doxygen.compound.DoxSectionKind
+---| "user-defined"
+---| "public-type"
+---| "public-func"
+---| "public-attrib"
+---| "public-slot"
+---| "signal"
+---| "dcop-func"
+---| "property"
+---| "event"
+---| "public-static-func"
+---| "public-static-attrib"
+---| "protected-type"
+---| "protected-func"
+---| "protected-attrib"
+---| "protected-slot"
+---| "protected-static-func"
+---| "protected-static-attrib"
+---| "package-type"
+---| "package-func"
+---| "package-attrib"
+---| "package-static-func"
+---| "package-static-attrib"
+---| "private-type"
+---| "private-func"
+---| "private-attrib"
+---| "private-slot"
+---| "private-static-func"
+---| "private-static-attrib"
+---| "friend"
+---| "related"
+---| "define"
+---| "prototype"
+---| "typedef"
+---| "enum"
+---| "func"
+---| "var"
+
+---@alias doxygen.compound.DoxHighlightClass
+---| "comment"
+---| "normal"
+---| "preprocessor"
+---| "keyword"
+---| "keywordtype"
+---| "keywordflow"
+---| "stringliteral"
+---| "xmlcdata"
+---| "charliteral"
+---| "vhdlkeyword"
+---| "vhdllogic"
+---| "vhdlchar"
+---| "vhdldigit"
+
+---@alias doxygen.compound.DoxSimpleSectKind
+---| "see"
+---| "return"
+---| "author"
+---| "authors"
+---| "version"
+---| "since"
+---| "date"
+---| "note"
+---| "warning"
+---| "pre"
+---| "post"
+---| "copyright"
+---| "invariant"
+---| "remark"
+---| "attention"
+---| "important"
+---| "par"
+---| "rcs"
+
+---@alias doxygen.compound.DoxCheck
+---| "checked"
+---| "unchecked"
+
+---@alias doxygen.compound.DoxVersionNumber string (pattern: \d+\.\d+.*)
+
+---@alias doxygen.compound.DoxImageKind
+---| "html"
+---| "latex"
+---| "docbook"
+---| "rtf"
+---| "xml"
+
+---@alias doxygen.compound.DoxPlantumlEngine
+---| "uml"
+---| "bpm"
+---| "wire"
+---| "dot"
+---| "ditaa"
+---| "salt"
+---| "math"
+---| "latex"
+---| "gantt"
+---| "mindmap"
+---| "wbs"
+---| "yaml"
+---| "creole"
+---| "json"
+---| "flow"
+---| "board"
+---| "git"
+---| "hcl"
+---| "regex"
+---| "ebnf"
+---| "files"
+
+---@alias doxygen.compound.DoxParamListKind
+---| "param"
+---| "retval"
+---| "exception"
+---| "templateparam"
+
+---@alias doxygen.compound.DoxCharRange string (pattern: [aeiouncAEIOUNC])
+
+---@alias doxygen.compound.DoxParamDir
+---| "in"
+---| "out"
+---| "inout"
+
+---@alias doxygen.compound.DoxAccessor
+---| "retain"
+---| "copy"
+---| "assign"
+---| "weak"
+---| "strong"
+---| "unretained"
+
+---@alias doxygen.compound.DoxAlign
+---| "left"
+---| "right"
+---| "center"
+
+---@alias doxygen.compound.DoxVerticalAlign
+---| "bottom"
+---| "top"
+---| "middle"
+
+---@alias doxygen.compound.DoxOlType
+---| "1"
+---| "a"
+---| "A"
+---| "i"
+---| "I"
+
+--------------------------------
+-- Complex Types
+--------------------------------
+---@class doxygen.compound.DoxygenType
+--- start sequence
+---@field compounddef doxygen.compound.compounddefType? (element)
+--- end sequence
+---@field version doxygen.compound.DoxVersionNumber (attribute)
+---@field xml_lang string (attribute)
+
+---@class doxygen.compound.compounddefType
+--- start sequence
+---@field compoundname string (element)
+---@field title string? (element)
+---@field basecompoundref doxygen.compound.compoundRefType[] (element)
+---@field derivedcompoundref doxygen.compound.compoundRefType[] (element)
+---@field includes doxygen.compound.incType[] (element)
+---@field includedby doxygen.compound.incType[] (element)
+---@field incdepgraph doxygen.compound.graphType? (element)
+---@field invincdepgraph doxygen.compound.graphType? (element)
+---@field innermodule doxygen.compound.refType[] (element)
+---@field innerdir doxygen.compound.refType[] (element)
+---@field innerfile doxygen.compound.refType[] (element)
+---@field innerclass doxygen.compound.refType[] (element)
+---@field innerconcept doxygen.compound.refType[] (element)
+---@field innernamespace doxygen.compound.refType[] (element)
+---@field innerpage doxygen.compound.refType[] (element)
+---@field innergroup doxygen.compound.refType[] (element)
+---@field qualifier string[] (text-only-element)
+---@field templateparamlist doxygen.compound.templateparamlistType? (element)
+---@field sectiondef doxygen.compound.sectiondefType[] (element)
+---@field tableofcontents doxygen.compound.tableofcontentsType? (element)
+---@field requiresclause doxygen.compound.linkedTextType? (element)
+---@field initializer doxygen.compound.linkedTextType? (element)
+---@field briefdescription doxygen.compound.descriptionType? (element)
+---@field detaileddescription doxygen.compound.descriptionType? (element)
+---@field exports doxygen.compound.exportsType? (element)
+---@field inheritancegraph doxygen.compound.graphType? (element)
+---@field collaborationgraph doxygen.compound.graphType? (element)
+---@field programlisting doxygen.compound.listingType? (element)
+---@field location doxygen.compound.locationType? (element)
+---@field listofallmembers doxygen.compound.listofallmembersType? (element)
+--- end sequence
+---@field id string? (attribute)
+---@field kind doxygen.compound.DoxCompoundKind? (attribute)
+---@field language doxygen.compound.DoxLanguage? (attribute)
+---@field prot doxygen.compound.DoxProtectionKind? (attribute)
+---@field final boolean? (attribute)
+---@field inline boolean? (attribute)
+---@field sealed boolean? (attribute)
+---@field abstract boolean? (attribute)
+
+---@class doxygen.compound.listofallmembersType
+--- start sequence
+---@field member doxygen.compound.memberRefType[] (element)
+--- end sequence
+
+---@class doxygen.compound.memberRefType
+--- start sequence
+---@field scope string (text-only-element)
+---@field name string (text-only-element)
+--- end sequence
+---@field refid string? (attribute)
+---@field prot doxygen.compound.DoxProtectionKind? (attribute)
+---@field virt doxygen.compound.DoxVirtualKind? (attribute)
+---@field ambiguityscope string? (attribute)
+
+---@class doxygen.compound.docHtmlOnlyType
+---@field text string (text content)
+---@field block string? (attribute)
+
+---@class doxygen.compound.compoundRefType
+---@field text string (text content)
+---@field refid string? (attribute)
+---@field prot doxygen.compound.DoxProtectionKind? (attribute)
+---@field virt doxygen.compound.DoxVirtualKind? (attribute)
+
+---@class doxygen.compound.reimplementType
+---@field text string (text content)
+---@field refid string? (attribute)
+
+---@class doxygen.compound.incType
+---@field text string (text content)
+---@field refid string? (attribute)
+---@field local boolean? (attribute)
+
+---@class doxygen.compound.exportsType
+--- start sequence
+---@field export doxygen.compound.exportType[] (element)
+--- end sequence
+
+---@class doxygen.compound.exportType
+---@field text string (text content)
+---@field refid string? (attribute)
+
+---@class doxygen.compound.refType
+---@field text string (text content)
+---@field refid string? (attribute)
+---@field prot doxygen.compound.DoxProtectionKind? (attribute)
+---@field inline boolean? (attribute)
+
+---@class doxygen.compound.refTextType
+---@field text string (text content)
+---@field refid string? (attribute)
+---@field kindref doxygen.compound.DoxRefKind? (attribute)
+---@field external string? (attribute)
+---@field tooltip string? (attribute)
+
+---@class doxygen.compound.MemberType
+--- start sequence
+---@field name string (element)
+--- end sequence
+---@field refid string (attribute)
+---@field kind doxygen.compound.MemberKind (attribute)
+
+---@class doxygen.compound.sectiondefType
+--- start sequence
+---@field header string? (element)
+---@field description doxygen.compound.descriptionType? (element)
+---@field memberdef doxygen.compound.memberdefType[] (element)
+---@field member doxygen.compound.MemberType[] (element)
+--- end sequence
+---@field kind doxygen.compound.DoxSectionKind? (attribute)
+
+---@class doxygen.compound.memberdefType
+--- start sequence
+---@field templateparamlist doxygen.compound.templateparamlistType? (element)
+---@field type doxygen.compound.linkedTextType? (element)
+---@field definition string? (text-only-element)
+---@field argsstring string? (text-only-element)
+---@field name string (text-only-element)
+---@field qualifiedname string? (text-only-element)
+---@field read string? (text-only-element)
+---@field write string? (text-only-element)
+---@field bitfield string? (text-only-element)
+---@field reimplements doxygen.compound.reimplementType[] (element)
+---@field reimplementedby doxygen.compound.reimplementType[] (element)
+---@field qualifier string[] (text-only-element)
+---@field param doxygen.compound.paramType[] (element)
+---@field enumvalue doxygen.compound.enumvalueType[] (element)
+---@field requiresclause doxygen.compound.linkedTextType? (element)
+---@field initializer doxygen.compound.linkedTextType? (element)
+---@field exceptions doxygen.compound.linkedTextType? (element)
+---@field briefdescription doxygen.compound.descriptionType? (element)
+---@field detaileddescription doxygen.compound.descriptionType? (element)
+---@field inbodydescription doxygen.compound.descriptionType? (element)
+---@field location doxygen.compound.locationType (element)
+---@field references doxygen.compound.referenceType[] (element)
+---@field referencedby doxygen.compound.referenceType[] (element)
+--- end sequence
+---@field kind doxygen.compound.DoxMemberKind? (attribute)
+---@field id string? (attribute)
+---@field prot doxygen.compound.DoxProtectionKind? (attribute)
+---@field static boolean? (attribute)
+---@field extern boolean? (attribute)
+---@field strong boolean? (attribute)
+---@field const boolean? (attribute)
+---@field explicit boolean? (attribute)
+---@field inline boolean? (attribute)
+---@field refqual doxygen.compound.DoxRefQualifierKind? (attribute)
+---@field virt doxygen.compound.DoxVirtualKind? (attribute)
+---@field volatile boolean? (attribute)
+---@field mutable boolean? (attribute)
+---@field noexcept boolean? (attribute)
+---@field noexceptexpression string? (attribute)
+---@field nodiscard boolean? (attribute)
+---@field constexpr boolean? (attribute)
+---@field consteval boolean? (attribute)
+---@field constinit boolean? (attribute)
+---@field readable boolean? (attribute)
+---@field writable boolean? (attribute)
+---@field initonly boolean? (attribute)
+---@field settable boolean? (attribute)
+---@field privatesettable boolean? (attribute)
+---@field protectedsettable boolean? (attribute)
+---@field gettable boolean? (attribute)
+---@field privategettable boolean? (attribute)
+---@field protectedgettable boolean? (attribute)
+---@field final boolean? (attribute)
+---@field sealed boolean? (attribute)
+---@field new boolean? (attribute)
+---@field add boolean? (attribute)
+---@field remove boolean? (attribute)
+---@field raise boolean? (attribute)
+---@field optional boolean? (attribute)
+---@field required boolean? (attribute)
+---@field accessor doxygen.compound.DoxAccessor? (attribute)
+---@field attribute boolean? (attribute)
+---@field property boolean? (attribute)
+---@field readonly boolean? (attribute)
+---@field bound boolean? (attribute)
+---@field removable boolean? (attribute)
+---@field constrained boolean? (attribute)
+---@field transient boolean? (attribute)
+---@field maybevoid boolean? (attribute)
+---@field maybedefault boolean? (attribute)
+---@field maybeambiguous boolean? (attribute)
+
+---@class doxygen.compound.descriptionType (mixed)
+---@field content descriptionType
+---| string (text content)
+---| { name: "title", value: string? }
+---| { name: "para", value: doxygen.compound.docParaType[] }
+---| { name: "internal", value: doxygen.compound.docInternalType[] }
+---| { name: "sect1", value: doxygen.compound.docSect1Type[] }
+
+---@class doxygen.compound.enumvalueType
+--- start sequence
+---@field name string (text-only-element)
+---@field initializer doxygen.compound.linkedTextType? (element)
+---@field briefdescription doxygen.compound.descriptionType? (element)
+---@field detaileddescription doxygen.compound.descriptionType? (element)
+--- end sequence
+---@field id string? (attribute)
+---@field prot doxygen.compound.DoxProtectionKind? (attribute)
+
+---@class doxygen.compound.templateparamlistType
+--- start sequence
+---@field param doxygen.compound.paramType[] (element)
+--- end sequence
+
+---@class doxygen.compound.paramType
+--- start sequence
+---@field attributes string? (text-only-element)
+---@field type doxygen.compound.linkedTextType? (element)
+---@field declname string? (text-only-element)
+---@field defname string? (text-only-element)
+---@field array string? (text-only-element)
+---@field defval doxygen.compound.linkedTextType? (element)
+---@field typeconstraint doxygen.compound.linkedTextType? (element)
+---@field briefdescription doxygen.compound.descriptionType? (element)
+--- end sequence
+
+---@class doxygen.compound.linkedTextType (mixed)
+---@field content linkedTextType
+---| string (text content)
+---| { name: "ref", value: doxygen.compound.refTextType[] }
+
+---@class doxygen.compound.graphType
+--- start sequence
+---@field node doxygen.compound.nodeType[] (element)
+--- end sequence
+
+---@class doxygen.compound.nodeType
+--- start sequence
+---@field label string (text-only-element)
+---@field link doxygen.compound.linkType? (element)
+---@field childnode doxygen.compound.childnodeType[] (element)
+--- end sequence
+---@field id string? (attribute)
+
+---@class doxygen.compound.childnodeType
+--- start sequence
+---@field edgelabel string[] (text-only-element)
+--- end sequence
+---@field refid string? (attribute)
+---@field relation doxygen.compound.DoxGraphRelation? (attribute)
+
+---@class doxygen.compound.linkType
+---@field refid string? (attribute)
+---@field external string? (attribute)
+
+---@class doxygen.compound.listingType
+--- start sequence
+---@field codeline doxygen.compound.codelineType[] (element)
+--- end sequence
+---@field filename string? (attribute)
+
+---@class doxygen.compound.codelineType
+--- start sequence
+---@field highlight doxygen.compound.highlightType[] (element)
+--- end sequence
+---@field lineno integer? (attribute)
+---@field refid string? (attribute)
+---@field refkind doxygen.compound.DoxRefKind? (attribute)
+---@field external boolean? (attribute)
+
+---@class doxygen.compound.highlightType (mixed)
+---@field class doxygen.compound.DoxHighlightClass? (attribute)
+---@field content highlightType
+---| string (text content)
+---| { name: "sp", value: doxygen.compound.spType }
+---| { name: "ref", value: doxygen.compound.refTextType }
+
+---@class doxygen.compound.spType (mixed)
+---@field value integer? (attribute)
+---@field content spType
+---| string (text content)
+
+---@class doxygen.compound.referenceType (mixed)
+---@field refid string? (attribute)
+---@field compoundref string? (attribute)
+---@field startline integer? (attribute)
+---@field endline integer? (attribute)
+---@field content referenceType
+---| string (text content)
+
+---@class doxygen.compound.locationType
+---@field file string? (attribute)
+---@field line integer? (attribute)
+---@field column integer? (attribute)
+---@field declfile string? (attribute)
+---@field declline integer? (attribute)
+---@field declcolumn integer? (attribute)
+---@field bodyfile string? (attribute)
+---@field bodystart integer? (attribute)
+---@field bodyend integer? (attribute)
+
+---@class doxygen.compound.docSect1Type (mixed)
+---@field id string? (attribute)
+---@field content docSect1Type
+---| string (text content)
+---| { name: "title", value: doxygen.compound.docTitleType? }
+---| { name: "para", value: doxygen.compound.docParaType[] }
+---| { name: "internal", value: doxygen.compound.docInternalS1Type[] }
+---| { name: "sect2", value: doxygen.compound.docSect2Type[] }
+
+---@class doxygen.compound.docSect2Type (mixed)
+---@field id string? (attribute)
+---@field content docSect2Type
+---| string (text content)
+---| { name: "title", value: doxygen.compound.docTitleType }
+---| { name: "para", value: doxygen.compound.docParaType[] }
+---| { name: "sect3", value: doxygen.compound.docSect3Type[] }
+---| { name: "internal", value: doxygen.compound.docInternalS2Type? }
+
+---@class doxygen.compound.docSect3Type (mixed)
+---@field id string? (attribute)
+---@field content docSect3Type
+---| string (text content)
+---| { name: "title", value: doxygen.compound.docTitleType }
+---| { name: "para", value: doxygen.compound.docParaType[] }
+---| { name: "sect4", value: doxygen.compound.docSect4Type[] }
+---| { name: "internal", value: doxygen.compound.docInternalS3Type? }
+
+---@class doxygen.compound.docSect4Type (mixed)
+---@field id string? (attribute)
+---@field content docSect4Type
+---| string (text content)
+---| { name: "title", value: doxygen.compound.docTitleType }
+---| { name: "para", value: doxygen.compound.docParaType[] }
+---| { name: "sect5", value: doxygen.compound.docSect5Type[] }
+---| { name: "internal", value: doxygen.compound.docInternalS4Type? }
+
+---@class doxygen.compound.docSect5Type (mixed)
+---@field id string? (attribute)
+---@field content docSect5Type
+---| string (text content)
+---| { name: "title", value: doxygen.compound.docTitleType }
+---| { name: "para", value: doxygen.compound.docParaType[] }
+---| { name: "sect6", value: doxygen.compound.docSect6Type[] }
+---| { name: "internal", value: doxygen.compound.docInternalS5Type? }
+
+---@class doxygen.compound.docSect6Type (mixed)
+---@field id string? (attribute)
+---@field content docSect6Type
+---| string (text content)
+---| { name: "title", value: doxygen.compound.docTitleType }
+---| { name: "para", value: doxygen.compound.docParaType[] }
+---| { name: "internal", value: doxygen.compound.docInternalS6Type? }
+
+---@class doxygen.compound.docInternalType (mixed)
+---@field content docInternalType
+---| string (text content)
+---| { name: "para", value: doxygen.compound.docParaType[] }
+---| { name: "sect1", value: doxygen.compound.docSect1Type[] }
+
+---@class doxygen.compound.docInternalS1Type (mixed)
+---@field content docInternalS1Type
+---| string (text content)
+---| { name: "para", value: doxygen.compound.docParaType[] }
+---| { name: "sect2", value: doxygen.compound.docSect2Type[] }
+
+---@class doxygen.compound.docInternalS2Type (mixed)
+---@field content docInternalS2Type
+---| string (text content)
+---| { name: "para", value: doxygen.compound.docParaType[] }
+---| { name: "sect3", value: doxygen.compound.docSect3Type[] }
+
+---@class doxygen.compound.docInternalS3Type (mixed)
+---@field content docInternalS3Type
+---| string (text content)
+---| { name: "para", value: doxygen.compound.docParaType[] }
+---| { name: "sect4", value: doxygen.compound.docSect4Type[] }
+
+---@class doxygen.compound.docInternalS4Type (mixed)
+---@field content docInternalS4Type
+---| string (text content)
+---| { name: "para", value: doxygen.compound.docParaType[] }
+---| { name: "sect5", value: doxygen.compound.docSect5Type[] }
+
+---@class doxygen.compound.docInternalS5Type (mixed)
+---@field content docInternalS5Type
+---| string (text content)
+---| { name: "para", value: doxygen.compound.docParaType[] }
+---| { name: "sect5", value: doxygen.compound.docSect6Type[] }
+
+---@class doxygen.compound.docInternalS6Type (mixed)
+---@field content docInternalS6Type
+---| string (text content)
+---| { name: "para", value: doxygen.compound.docParaType[] }
+
+---@class doxygen.compound.docTitleType (mixed)
+---@field content docTitleType
+---| string (text content)
+---| { name: "group", value: doxygen.compound.docTitleCmdGroup[] }
+
+---@class doxygen.compound.docSummaryType (mixed)
+---@field content docSummaryType
+---| string (text content)
+---| { name: "group", value: doxygen.compound.docTitleCmdGroup[] }
+
+---@class doxygen.compound.docParaType (mixed)
+---@field content docParaType
+---| string (text content)
+---| { name: "group", value: doxygen.compound.docCmdGroup[] }
+
+---@class doxygen.compound.docMarkupType (mixed)
+---@field content docMarkupType
+---| string (text content)
+---| { name: "group", value: doxygen.compound.docCmdGroup[] }
+
+---@class doxygen.compound.docURLLink (mixed)
+---@field url string? (attribute)
+---@field content docURLLink
+---| string (text content)
+---| { name: "group", value: doxygen.compound.docTitleCmdGroup[] }
+
+---@class doxygen.compound.docAnchorType (mixed)
+---@field id string? (attribute)
+---@field content docAnchorType
+---| string (text content)
+
+---@class doxygen.compound.docFormulaType (mixed)
+---@field id string? (attribute)
+---@field content docFormulaType
+---| string (text content)
+
+---@class doxygen.compound.docIndexEntryType
+--- start sequence
+---@field primaryie string (element)
+---@field secondaryie string (element)
+--- end sequence
+
+---@class doxygen.compound.docListType
+--- start sequence
+---@field listitem doxygen.compound.docListItemType[] (element)
+--- end sequence
+---@field type doxygen.compound.DoxOlType? (attribute)
+---@field start integer? (attribute)
+
+---@class doxygen.compound.docListItemType
+--- start sequence
+---@field para doxygen.compound.docParaType[] (element)
+--- end sequence
+---@field override doxygen.compound.DoxCheck? (attribute)
+---@field value integer? (attribute)
+
+---@class doxygen.compound.docSimpleSectType
+--- start sequence
+---@field title doxygen.compound.docTitleType? (element)
+--- start sequence
+---@field para doxygen.compound.docParaType[] (element)
+--- end sequence
+--- end sequence
+---@field kind doxygen.compound.DoxSimpleSectKind? (attribute)
+
+---@class doxygen.compound.docVarListEntryType
+--- start sequence
+---@field term doxygen.compound.docTitleType (element)
+--- end sequence
+
+---@class doxygen.compound.docVariableListType
+--- start sequence
+---@field group doxygen.compound.docVariableListGroup
+--- end sequence
+
+---@class doxygen.compound.docRefTextType (mixed)
+---@field refid string? (attribute)
+---@field kindref doxygen.compound.DoxRefKind? (attribute)
+---@field external string? (attribute)
+---@field content docRefTextType
+---| string (text content)
+---| { name: "group", value: doxygen.compound.docTitleCmdGroup[] }
+
+---@class doxygen.compound.docTableType
+--- start sequence
+---@field caption doxygen.compound.docCaptionType? (element)
+---@field row doxygen.compound.docRowType[] (element)
+--- end sequence
+---@field rows integer? (attribute)
+---@field cols integer? (attribute)
+---@field width string? (attribute)
+
+---@class doxygen.compound.docRowType
+--- start sequence
+---@field entry doxygen.compound.docEntryType[] (element)
+--- end sequence
+
+---@class doxygen.compound.docEntryType
+--- start sequence
+---@field para doxygen.compound.docParaType[] (element)
+--- end sequence
+---@field thead boolean? (attribute)
+---@field colspan integer? (attribute)
+---@field rowspan integer? (attribute)
+---@field align doxygen.compound.DoxAlign? (attribute)
+---@field valign doxygen.compound.DoxVerticalAlign? (attribute)
+---@field width string? (attribute)
+---@field class string? (attribute)
+
+---@class doxygen.compound.docCaptionType (mixed)
+---@field id string? (attribute)
+---@field content docCaptionType
+---| string (text content)
+---| { name: "group", value: doxygen.compound.docTitleCmdGroup[] }
+
+---@class doxygen.compound.docHeadingType (mixed)
+---@field level doxygen.compound.range_1_6? (attribute)
+---@field content docHeadingType
+---| string (text content)
+---| { name: "group", value: doxygen.compound.docTitleCmdGroup[] }
+
+---@class doxygen.compound.docImageType (mixed)
+---@field type doxygen.compound.DoxImageKind? (attribute)
+---@field name string? (attribute)
+---@field width string? (attribute)
+---@field height string? (attribute)
+---@field alt string? (attribute)
+---@field inline boolean? (attribute)
+---@field caption string? (attribute)
+---@field content docImageType
+---| string (text content)
+---| { name: "group", value: doxygen.compound.docTitleCmdGroup[] }
+
+---@class doxygen.compound.docDotMscType (mixed)
+---@field name string? (attribute)
+---@field width string? (attribute)
+---@field height string? (attribute)
+---@field caption string? (attribute)
+---@field content docDotMscType
+---| string (text content)
+---| { name: "group", value: doxygen.compound.docTitleCmdGroup[] }
+
+---@class doxygen.compound.docImageFileType (mixed)
+---@field name string? (attribute)
+---@field width string? (attribute)
+---@field height string? (attribute)
+---@field content docImageFileType
+---| string (text content)
+---| { name: "group", value: doxygen.compound.docTitleCmdGroup[] }
+
+---@class doxygen.compound.docPlantumlType (mixed)
+---@field name string? (attribute)
+---@field width string? (attribute)
+---@field height string? (attribute)
+---@field caption string? (attribute)
+---@field engine doxygen.compound.DoxPlantumlEngine? (attribute)
+---@field content docPlantumlType
+---| string (text content)
+---| { name: "group", value: doxygen.compound.docTitleCmdGroup[] }
+
+---@class doxygen.compound.docTocItemType (mixed)
+---@field id string? (attribute)
+---@field content docTocItemType
+---| string (text content)
+---| { name: "group", value: doxygen.compound.docTitleCmdGroup[] }
+
+---@class doxygen.compound.docTocListType
+--- start sequence
+---@field tocitem doxygen.compound.docTocItemType[] (element)
+--- end sequence
+
+---@class doxygen.compound.docLanguageType
+--- start sequence
+---@field para doxygen.compound.docParaType[] (element)
+--- end sequence
+---@field langid string? (attribute)
+
+---@class doxygen.compound.docParamListType
+--- start sequence
+---@field parameteritem doxygen.compound.docParamListItem[] (element)
+--- end sequence
+---@field kind doxygen.compound.DoxParamListKind? (attribute)
+
+---@class doxygen.compound.docParamListItem
+--- start sequence
+---@field parameternamelist doxygen.compound.docParamNameList[] (element)
+---@field parameterdescription doxygen.compound.descriptionType (element)
+--- end sequence
+
+---@class doxygen.compound.docParamNameList
+--- start sequence
+---@field parametertype doxygen.compound.docParamType[] (element)
+---@field parametername doxygen.compound.docParamName[] (element)
+--- end sequence
+
+---@class doxygen.compound.docParamType (mixed)
+---@field content docParamType
+---| string (text content)
+---| { name: "ref", value: doxygen.compound.refTextType? }
+
+---@class doxygen.compound.docParamName (mixed)
+---@field direction doxygen.compound.DoxParamDir? (attribute)
+---@field content docParamName
+---| string (text content)
+---| { name: "ref", value: doxygen.compound.refTextType? }
+
+---@class doxygen.compound.docXRefSectType
+--- start sequence
+---@field xreftitle string[] (element)
+---@field xrefdescription doxygen.compound.descriptionType (element)
+--- end sequence
+---@field id string? (attribute)
+
+---@class doxygen.compound.docCopyType
+--- start sequence
+---@field para doxygen.compound.docParaType[] (element)
+---@field sect1 doxygen.compound.docSect1Type[] (element)
+---@field internal doxygen.compound.docInternalType? (element)
+--- end sequence
+---@field link string? (attribute)
+
+---@class doxygen.compound.docDetailsType
+--- start sequence
+---@field summary doxygen.compound.docSummaryType? (element)
+---@field para doxygen.compound.docParaType[] (element)
+--- end sequence
+
+---@class doxygen.compound.docBlockQuoteType
+--- start sequence
+---@field para doxygen.compound.docParaType[] (element)
+--- end sequence
+
+---@class doxygen.compound.docParBlockType
+--- start sequence
+---@field para doxygen.compound.docParaType[] (element)
+--- end sequence
+
+---@class doxygen.compound.docEmptyType
+
+---@class doxygen.compound.tableofcontentsType
+--- start sequence
+---@field tocsect doxygen.compound.tableofcontentsKindType[] (element)
+--- end sequence
+
+---@class doxygen.compound.tableofcontentsKindType
+--- start sequence
+---@field name string (element)
+---@field reference string (element)
+---@field tableofcontents doxygen.compound.tableofcontentsType[] (element)
+--- end sequence
+
+---@class doxygen.compound.docEmojiType
+---@field name string? (attribute)
+---@field unicode string? (attribute)
+
+--------------------------------
+-- Groups
+--------------------------------
+---@class doxygen.compound.docTitleCmdGroup
+---@field choice
+---| { name: "ulink", value: doxygen.compound.docURLLink }
+---| { name: "bold", value: doxygen.compound.docMarkupType }
+---| { name: "s", value: doxygen.compound.docMarkupType }
+---| { name: "strike", value: doxygen.compound.docMarkupType }
+---| { name: "underline", value: doxygen.compound.docMarkupType }
+---| { name: "emphasis", value: doxygen.compound.docMarkupType }
+---| { name: "computeroutput", value: doxygen.compound.docMarkupType }
+---| { name: "subscript", value: doxygen.compound.docMarkupType }
+---| { name: "superscript", value: doxygen.compound.docMarkupType }
+---| { name: "center", value: doxygen.compound.docMarkupType }
+---| { name: "small", value: doxygen.compound.docMarkupType }
+---| { name: "cite", value: doxygen.compound.docMarkupType }
+---| { name: "del", value: doxygen.compound.docMarkupType }
+---| { name: "ins", value: doxygen.compound.docMarkupType }
+---| { name: "htmlonly", value: doxygen.compound.docHtmlOnlyType }
+---| { name: "manonly", value: string }
+---| { name: "xmlonly", value: string }
+---| { name: "rtfonly", value: string }
+---| { name: "latexonly", value: string }
+---| { name: "docbookonly", value: string }
+---| { name: "image", value: doxygen.compound.docImageType }
+---| { name: "dot", value: doxygen.compound.docDotMscType }
+---| { name: "msc", value: doxygen.compound.docDotMscType }
+---| { name: "plantuml", value: doxygen.compound.docPlantumlType }
+---| { name: "anchor", value: doxygen.compound.docAnchorType }
+---| { name: "formula", value: doxygen.compound.docFormulaType }
+---| { name: "ref", value: doxygen.compound.docRefTextType }
+---| { name: "emoji", value: doxygen.compound.docEmojiType }
+---| { name: "linebreak", value: doxygen.compound.docEmptyType }
+---| { name: "nonbreakablespace", value: doxygen.compound.docEmptyType }
+---| { name: "iexcl", value: doxygen.compound.docEmptyType }
+---| { name: "cent", value: doxygen.compound.docEmptyType }
+---| { name: "pound", value: doxygen.compound.docEmptyType }
+---| { name: "curren", value: doxygen.compound.docEmptyType }
+---| { name: "yen", value: doxygen.compound.docEmptyType }
+---| { name: "brvbar", value: doxygen.compound.docEmptyType }
+---| { name: "sect", value: doxygen.compound.docEmptyType }
+---| { name: "umlaut", value: doxygen.compound.docEmptyType }
+---| { name: "copy", value: doxygen.compound.docEmptyType }
+---| { name: "ordf", value: doxygen.compound.docEmptyType }
+---| { name: "laquo", value: doxygen.compound.docEmptyType }
+---| { name: "not", value: doxygen.compound.docEmptyType }
+---| { name: "shy", value: doxygen.compound.docEmptyType }
+---| { name: "registered", value: doxygen.compound.docEmptyType }
+---| { name: "macr", value: doxygen.compound.docEmptyType }
+---| { name: "deg", value: doxygen.compound.docEmptyType }
+---| { name: "plusmn", value: doxygen.compound.docEmptyType }
+---| { name: "sup2", value: doxygen.compound.docEmptyType }
+---| { name: "sup3", value: doxygen.compound.docEmptyType }
+---| { name: "acute", value: doxygen.compound.docEmptyType }
+---| { name: "micro", value: doxygen.compound.docEmptyType }
+---| { name: "para", value: doxygen.compound.docEmptyType }
+---| { name: "middot", value: doxygen.compound.docEmptyType }
+---| { name: "cedil", value: doxygen.compound.docEmptyType }
+---| { name: "sup1", value: doxygen.compound.docEmptyType }
+---| { name: "ordm", value: doxygen.compound.docEmptyType }
+---| { name: "raquo", value: doxygen.compound.docEmptyType }
+---| { name: "frac14", value: doxygen.compound.docEmptyType }
+---| { name: "frac12", value: doxygen.compound.docEmptyType }
+---| { name: "frac34", value: doxygen.compound.docEmptyType }
+---| { name: "iquest", value: doxygen.compound.docEmptyType }
+---| { name: "Agrave", value: doxygen.compound.docEmptyType }
+---| { name: "Aacute", value: doxygen.compound.docEmptyType }
+---| { name: "Acirc", value: doxygen.compound.docEmptyType }
+---| { name: "Atilde", value: doxygen.compound.docEmptyType }
+---| { name: "Aumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "Aring", value: doxygen.compound.docEmptyType }
+---| { name: "AElig", value: doxygen.compound.docEmptyType }
+---| { name: "Ccedil", value: doxygen.compound.docEmptyType }
+---| { name: "Egrave", value: doxygen.compound.docEmptyType }
+---| { name: "Eacute", value: doxygen.compound.docEmptyType }
+---| { name: "Ecirc", value: doxygen.compound.docEmptyType }
+---| { name: "Eumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "Igrave", value: doxygen.compound.docEmptyType }
+---| { name: "Iacute", value: doxygen.compound.docEmptyType }
+---| { name: "Icirc", value: doxygen.compound.docEmptyType }
+---| { name: "Iumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "ETH", value: doxygen.compound.docEmptyType }
+---| { name: "Ntilde", value: doxygen.compound.docEmptyType }
+---| { name: "Ograve", value: doxygen.compound.docEmptyType }
+---| { name: "Oacute", value: doxygen.compound.docEmptyType }
+---| { name: "Ocirc", value: doxygen.compound.docEmptyType }
+---| { name: "Otilde", value: doxygen.compound.docEmptyType }
+---| { name: "Oumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "times", value: doxygen.compound.docEmptyType }
+---| { name: "Oslash", value: doxygen.compound.docEmptyType }
+---| { name: "Ugrave", value: doxygen.compound.docEmptyType }
+---| { name: "Uacute", value: doxygen.compound.docEmptyType }
+---| { name: "Ucirc", value: doxygen.compound.docEmptyType }
+---| { name: "Uumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "Yacute", value: doxygen.compound.docEmptyType }
+---| { name: "THORN", value: doxygen.compound.docEmptyType }
+---| { name: "szlig", value: doxygen.compound.docEmptyType }
+---| { name: "agrave", value: doxygen.compound.docEmptyType }
+---| { name: "aacute", value: doxygen.compound.docEmptyType }
+---| { name: "acirc", value: doxygen.compound.docEmptyType }
+---| { name: "atilde", value: doxygen.compound.docEmptyType }
+---| { name: "aumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "aring", value: doxygen.compound.docEmptyType }
+---| { name: "aelig", value: doxygen.compound.docEmptyType }
+---| { name: "ccedil", value: doxygen.compound.docEmptyType }
+---| { name: "egrave", value: doxygen.compound.docEmptyType }
+---| { name: "eacute", value: doxygen.compound.docEmptyType }
+---| { name: "ecirc", value: doxygen.compound.docEmptyType }
+---| { name: "eumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "igrave", value: doxygen.compound.docEmptyType }
+---| { name: "iacute", value: doxygen.compound.docEmptyType }
+---| { name: "icirc", value: doxygen.compound.docEmptyType }
+---| { name: "iumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "eth", value: doxygen.compound.docEmptyType }
+---| { name: "ntilde", value: doxygen.compound.docEmptyType }
+---| { name: "ograve", value: doxygen.compound.docEmptyType }
+---| { name: "oacute", value: doxygen.compound.docEmptyType }
+---| { name: "ocirc", value: doxygen.compound.docEmptyType }
+---| { name: "otilde", value: doxygen.compound.docEmptyType }
+---| { name: "oumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "divide", value: doxygen.compound.docEmptyType }
+---| { name: "oslash", value: doxygen.compound.docEmptyType }
+---| { name: "ugrave", value: doxygen.compound.docEmptyType }
+---| { name: "uacute", value: doxygen.compound.docEmptyType }
+---| { name: "ucirc", value: doxygen.compound.docEmptyType }
+---| { name: "uumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "yacute", value: doxygen.compound.docEmptyType }
+---| { name: "thorn", value: doxygen.compound.docEmptyType }
+---| { name: "yumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "fnof", value: doxygen.compound.docEmptyType }
+---| { name: "Alpha", value: doxygen.compound.docEmptyType }
+---| { name: "Beta", value: doxygen.compound.docEmptyType }
+---| { name: "Gamma", value: doxygen.compound.docEmptyType }
+---| { name: "Delta", value: doxygen.compound.docEmptyType }
+---| { name: "Epsilon", value: doxygen.compound.docEmptyType }
+---| { name: "Zeta", value: doxygen.compound.docEmptyType }
+---| { name: "Eta", value: doxygen.compound.docEmptyType }
+---| { name: "Theta", value: doxygen.compound.docEmptyType }
+---| { name: "Iota", value: doxygen.compound.docEmptyType }
+---| { name: "Kappa", value: doxygen.compound.docEmptyType }
+---| { name: "Lambda", value: doxygen.compound.docEmptyType }
+---| { name: "Mu", value: doxygen.compound.docEmptyType }
+---| { name: "Nu", value: doxygen.compound.docEmptyType }
+---| { name: "Xi", value: doxygen.compound.docEmptyType }
+---| { name: "Omicron", value: doxygen.compound.docEmptyType }
+---| { name: "Pi", value: doxygen.compound.docEmptyType }
+---| { name: "Rho", value: doxygen.compound.docEmptyType }
+---| { name: "Sigma", value: doxygen.compound.docEmptyType }
+---| { name: "Tau", value: doxygen.compound.docEmptyType }
+---| { name: "Upsilon", value: doxygen.compound.docEmptyType }
+---| { name: "Phi", value: doxygen.compound.docEmptyType }
+---| { name: "Chi", value: doxygen.compound.docEmptyType }
+---| { name: "Psi", value: doxygen.compound.docEmptyType }
+---| { name: "Omega", value: doxygen.compound.docEmptyType }
+---| { name: "alpha", value: doxygen.compound.docEmptyType }
+---| { name: "beta", value: doxygen.compound.docEmptyType }
+---| { name: "gamma", value: doxygen.compound.docEmptyType }
+---| { name: "delta", value: doxygen.compound.docEmptyType }
+---| { name: "epsilon", value: doxygen.compound.docEmptyType }
+---| { name: "zeta", value: doxygen.compound.docEmptyType }
+---| { name: "eta", value: doxygen.compound.docEmptyType }
+---| { name: "theta", value: doxygen.compound.docEmptyType }
+---| { name: "iota", value: doxygen.compound.docEmptyType }
+---| { name: "kappa", value: doxygen.compound.docEmptyType }
+---| { name: "lambda", value: doxygen.compound.docEmptyType }
+---| { name: "mu", value: doxygen.compound.docEmptyType }
+---| { name: "nu", value: doxygen.compound.docEmptyType }
+---| { name: "xi", value: doxygen.compound.docEmptyType }
+---| { name: "omicron", value: doxygen.compound.docEmptyType }
+---| { name: "pi", value: doxygen.compound.docEmptyType }
+---| { name: "rho", value: doxygen.compound.docEmptyType }
+---| { name: "sigmaf", value: doxygen.compound.docEmptyType }
+---| { name: "sigma", value: doxygen.compound.docEmptyType }
+---| { name: "tau", value: doxygen.compound.docEmptyType }
+---| { name: "upsilon", value: doxygen.compound.docEmptyType }
+---| { name: "phi", value: doxygen.compound.docEmptyType }
+---| { name: "chi", value: doxygen.compound.docEmptyType }
+---| { name: "psi", value: doxygen.compound.docEmptyType }
+---| { name: "omega", value: doxygen.compound.docEmptyType }
+---| { name: "thetasym", value: doxygen.compound.docEmptyType }
+---| { name: "upsih", value: doxygen.compound.docEmptyType }
+---| { name: "piv", value: doxygen.compound.docEmptyType }
+---| { name: "bull", value: doxygen.compound.docEmptyType }
+---| { name: "hellip", value: doxygen.compound.docEmptyType }
+---| { name: "prime", value: doxygen.compound.docEmptyType }
+---| { name: "Prime", value: doxygen.compound.docEmptyType }
+---| { name: "oline", value: doxygen.compound.docEmptyType }
+---| { name: "frasl", value: doxygen.compound.docEmptyType }
+---| { name: "weierp", value: doxygen.compound.docEmptyType }
+---| { name: "imaginary", value: doxygen.compound.docEmptyType }
+---| { name: "real", value: doxygen.compound.docEmptyType }
+---| { name: "trademark", value: doxygen.compound.docEmptyType }
+---| { name: "alefsym", value: doxygen.compound.docEmptyType }
+---| { name: "larr", value: doxygen.compound.docEmptyType }
+---| { name: "uarr", value: doxygen.compound.docEmptyType }
+---| { name: "rarr", value: doxygen.compound.docEmptyType }
+---| { name: "darr", value: doxygen.compound.docEmptyType }
+---| { name: "harr", value: doxygen.compound.docEmptyType }
+---| { name: "crarr", value: doxygen.compound.docEmptyType }
+---| { name: "lArr", value: doxygen.compound.docEmptyType }
+---| { name: "uArr", value: doxygen.compound.docEmptyType }
+---| { name: "rArr", value: doxygen.compound.docEmptyType }
+---| { name: "dArr", value: doxygen.compound.docEmptyType }
+---| { name: "hArr", value: doxygen.compound.docEmptyType }
+---| { name: "forall", value: doxygen.compound.docEmptyType }
+---| { name: "part", value: doxygen.compound.docEmptyType }
+---| { name: "exist", value: doxygen.compound.docEmptyType }
+---| { name: "empty", value: doxygen.compound.docEmptyType }
+---| { name: "nabla", value: doxygen.compound.docEmptyType }
+---| { name: "isin", value: doxygen.compound.docEmptyType }
+---| { name: "notin", value: doxygen.compound.docEmptyType }
+---| { name: "ni", value: doxygen.compound.docEmptyType }
+---| { name: "prod", value: doxygen.compound.docEmptyType }
+---| { name: "sum", value: doxygen.compound.docEmptyType }
+---| { name: "minus", value: doxygen.compound.docEmptyType }
+---| { name: "lowast", value: doxygen.compound.docEmptyType }
+---| { name: "radic", value: doxygen.compound.docEmptyType }
+---| { name: "prop", value: doxygen.compound.docEmptyType }
+---| { name: "infin", value: doxygen.compound.docEmptyType }
+---| { name: "ang", value: doxygen.compound.docEmptyType }
+---| { name: "and", value: doxygen.compound.docEmptyType }
+---| { name: "or", value: doxygen.compound.docEmptyType }
+---| { name: "cap", value: doxygen.compound.docEmptyType }
+---| { name: "cup", value: doxygen.compound.docEmptyType }
+---| { name: "int", value: doxygen.compound.docEmptyType }
+---| { name: "there4", value: doxygen.compound.docEmptyType }
+---| { name: "sim", value: doxygen.compound.docEmptyType }
+---| { name: "cong", value: doxygen.compound.docEmptyType }
+---| { name: "asymp", value: doxygen.compound.docEmptyType }
+---| { name: "ne", value: doxygen.compound.docEmptyType }
+---| { name: "equiv", value: doxygen.compound.docEmptyType }
+---| { name: "le", value: doxygen.compound.docEmptyType }
+---| { name: "ge", value: doxygen.compound.docEmptyType }
+---| { name: "sub", value: doxygen.compound.docEmptyType }
+---| { name: "sup", value: doxygen.compound.docEmptyType }
+---| { name: "nsub", value: doxygen.compound.docEmptyType }
+---| { name: "sube", value: doxygen.compound.docEmptyType }
+---| { name: "supe", value: doxygen.compound.docEmptyType }
+---| { name: "oplus", value: doxygen.compound.docEmptyType }
+---| { name: "otimes", value: doxygen.compound.docEmptyType }
+---| { name: "perp", value: doxygen.compound.docEmptyType }
+---| { name: "sdot", value: doxygen.compound.docEmptyType }
+---| { name: "lceil", value: doxygen.compound.docEmptyType }
+---| { name: "rceil", value: doxygen.compound.docEmptyType }
+---| { name: "lfloor", value: doxygen.compound.docEmptyType }
+---| { name: "rfloor", value: doxygen.compound.docEmptyType }
+---| { name: "lang", value: doxygen.compound.docEmptyType }
+---| { name: "rang", value: doxygen.compound.docEmptyType }
+---| { name: "loz", value: doxygen.compound.docEmptyType }
+---| { name: "spades", value: doxygen.compound.docEmptyType }
+---| { name: "clubs", value: doxygen.compound.docEmptyType }
+---| { name: "hearts", value: doxygen.compound.docEmptyType }
+---| { name: "diams", value: doxygen.compound.docEmptyType }
+---| { name: "OElig", value: doxygen.compound.docEmptyType }
+---| { name: "oelig", value: doxygen.compound.docEmptyType }
+---| { name: "Scaron", value: doxygen.compound.docEmptyType }
+---| { name: "scaron", value: doxygen.compound.docEmptyType }
+---| { name: "Yumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "circ", value: doxygen.compound.docEmptyType }
+---| { name: "tilde", value: doxygen.compound.docEmptyType }
+---| { name: "ensp", value: doxygen.compound.docEmptyType }
+---| { name: "emsp", value: doxygen.compound.docEmptyType }
+---| { name: "thinsp", value: doxygen.compound.docEmptyType }
+---| { name: "zwnj", value: doxygen.compound.docEmptyType }
+---| { name: "zwj", value: doxygen.compound.docEmptyType }
+---| { name: "lrm", value: doxygen.compound.docEmptyType }
+---| { name: "rlm", value: doxygen.compound.docEmptyType }
+---| { name: "ndash", value: doxygen.compound.docEmptyType }
+---| { name: "mdash", value: doxygen.compound.docEmptyType }
+---| { name: "lsquo", value: doxygen.compound.docEmptyType }
+---| { name: "rsquo", value: doxygen.compound.docEmptyType }
+---| { name: "sbquo", value: doxygen.compound.docEmptyType }
+---| { name: "ldquo", value: doxygen.compound.docEmptyType }
+---| { name: "rdquo", value: doxygen.compound.docEmptyType }
+---| { name: "bdquo", value: doxygen.compound.docEmptyType }
+---| { name: "dagger", value: doxygen.compound.docEmptyType }
+---| { name: "Dagger", value: doxygen.compound.docEmptyType }
+---| { name: "permil", value: doxygen.compound.docEmptyType }
+---| { name: "lsaquo", value: doxygen.compound.docEmptyType }
+---| { name: "rsaquo", value: doxygen.compound.docEmptyType }
+---| { name: "euro", value: doxygen.compound.docEmptyType }
+---| { name: "tm", value: doxygen.compound.docEmptyType }
+
+---@class doxygen.compound.docCmdGroup
+---@field choice
+---| { name: "ulink", value: doxygen.compound.docURLLink }
+---| { name: "bold", value: doxygen.compound.docMarkupType }
+---| { name: "s", value: doxygen.compound.docMarkupType }
+---| { name: "strike", value: doxygen.compound.docMarkupType }
+---| { name: "underline", value: doxygen.compound.docMarkupType }
+---| { name: "emphasis", value: doxygen.compound.docMarkupType }
+---| { name: "computeroutput", value: doxygen.compound.docMarkupType }
+---| { name: "subscript", value: doxygen.compound.docMarkupType }
+---| { name: "superscript", value: doxygen.compound.docMarkupType }
+---| { name: "center", value: doxygen.compound.docMarkupType }
+---| { name: "small", value: doxygen.compound.docMarkupType }
+---| { name: "cite", value: doxygen.compound.docMarkupType }
+---| { name: "del", value: doxygen.compound.docMarkupType }
+---| { name: "ins", value: doxygen.compound.docMarkupType }
+---| { name: "htmlonly", value: doxygen.compound.docHtmlOnlyType }
+---| { name: "manonly", value: string }
+---| { name: "xmlonly", value: string }
+---| { name: "rtfonly", value: string }
+---| { name: "latexonly", value: string }
+---| { name: "docbookonly", value: string }
+---| { name: "image", value: doxygen.compound.docImageType }
+---| { name: "dot", value: doxygen.compound.docDotMscType }
+---| { name: "msc", value: doxygen.compound.docDotMscType }
+---| { name: "plantuml", value: doxygen.compound.docPlantumlType }
+---| { name: "anchor", value: doxygen.compound.docAnchorType }
+---| { name: "formula", value: doxygen.compound.docFormulaType }
+---| { name: "ref", value: doxygen.compound.docRefTextType }
+---| { name: "emoji", value: doxygen.compound.docEmojiType }
+---| { name: "linebreak", value: doxygen.compound.docEmptyType }
+---| { name: "nonbreakablespace", value: doxygen.compound.docEmptyType }
+---| { name: "iexcl", value: doxygen.compound.docEmptyType }
+---| { name: "cent", value: doxygen.compound.docEmptyType }
+---| { name: "pound", value: doxygen.compound.docEmptyType }
+---| { name: "curren", value: doxygen.compound.docEmptyType }
+---| { name: "yen", value: doxygen.compound.docEmptyType }
+---| { name: "brvbar", value: doxygen.compound.docEmptyType }
+---| { name: "sect", value: doxygen.compound.docEmptyType }
+---| { name: "umlaut", value: doxygen.compound.docEmptyType }
+---| { name: "copy", value: doxygen.compound.docEmptyType }
+---| { name: "ordf", value: doxygen.compound.docEmptyType }
+---| { name: "laquo", value: doxygen.compound.docEmptyType }
+---| { name: "not", value: doxygen.compound.docEmptyType }
+---| { name: "shy", value: doxygen.compound.docEmptyType }
+---| { name: "registered", value: doxygen.compound.docEmptyType }
+---| { name: "macr", value: doxygen.compound.docEmptyType }
+---| { name: "deg", value: doxygen.compound.docEmptyType }
+---| { name: "plusmn", value: doxygen.compound.docEmptyType }
+---| { name: "sup2", value: doxygen.compound.docEmptyType }
+---| { name: "sup3", value: doxygen.compound.docEmptyType }
+---| { name: "acute", value: doxygen.compound.docEmptyType }
+---| { name: "micro", value: doxygen.compound.docEmptyType }
+---| { name: "para", value: doxygen.compound.docEmptyType }
+---| { name: "middot", value: doxygen.compound.docEmptyType }
+---| { name: "cedil", value: doxygen.compound.docEmptyType }
+---| { name: "sup1", value: doxygen.compound.docEmptyType }
+---| { name: "ordm", value: doxygen.compound.docEmptyType }
+---| { name: "raquo", value: doxygen.compound.docEmptyType }
+---| { name: "frac14", value: doxygen.compound.docEmptyType }
+---| { name: "frac12", value: doxygen.compound.docEmptyType }
+---| { name: "frac34", value: doxygen.compound.docEmptyType }
+---| { name: "iquest", value: doxygen.compound.docEmptyType }
+---| { name: "Agrave", value: doxygen.compound.docEmptyType }
+---| { name: "Aacute", value: doxygen.compound.docEmptyType }
+---| { name: "Acirc", value: doxygen.compound.docEmptyType }
+---| { name: "Atilde", value: doxygen.compound.docEmptyType }
+---| { name: "Aumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "Aring", value: doxygen.compound.docEmptyType }
+---| { name: "AElig", value: doxygen.compound.docEmptyType }
+---| { name: "Ccedil", value: doxygen.compound.docEmptyType }
+---| { name: "Egrave", value: doxygen.compound.docEmptyType }
+---| { name: "Eacute", value: doxygen.compound.docEmptyType }
+---| { name: "Ecirc", value: doxygen.compound.docEmptyType }
+---| { name: "Eumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "Igrave", value: doxygen.compound.docEmptyType }
+---| { name: "Iacute", value: doxygen.compound.docEmptyType }
+---| { name: "Icirc", value: doxygen.compound.docEmptyType }
+---| { name: "Iumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "ETH", value: doxygen.compound.docEmptyType }
+---| { name: "Ntilde", value: doxygen.compound.docEmptyType }
+---| { name: "Ograve", value: doxygen.compound.docEmptyType }
+---| { name: "Oacute", value: doxygen.compound.docEmptyType }
+---| { name: "Ocirc", value: doxygen.compound.docEmptyType }
+---| { name: "Otilde", value: doxygen.compound.docEmptyType }
+---| { name: "Oumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "times", value: doxygen.compound.docEmptyType }
+---| { name: "Oslash", value: doxygen.compound.docEmptyType }
+---| { name: "Ugrave", value: doxygen.compound.docEmptyType }
+---| { name: "Uacute", value: doxygen.compound.docEmptyType }
+---| { name: "Ucirc", value: doxygen.compound.docEmptyType }
+---| { name: "Uumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "Yacute", value: doxygen.compound.docEmptyType }
+---| { name: "THORN", value: doxygen.compound.docEmptyType }
+---| { name: "szlig", value: doxygen.compound.docEmptyType }
+---| { name: "agrave", value: doxygen.compound.docEmptyType }
+---| { name: "aacute", value: doxygen.compound.docEmptyType }
+---| { name: "acirc", value: doxygen.compound.docEmptyType }
+---| { name: "atilde", value: doxygen.compound.docEmptyType }
+---| { name: "aumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "aring", value: doxygen.compound.docEmptyType }
+---| { name: "aelig", value: doxygen.compound.docEmptyType }
+---| { name: "ccedil", value: doxygen.compound.docEmptyType }
+---| { name: "egrave", value: doxygen.compound.docEmptyType }
+---| { name: "eacute", value: doxygen.compound.docEmptyType }
+---| { name: "ecirc", value: doxygen.compound.docEmptyType }
+---| { name: "eumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "igrave", value: doxygen.compound.docEmptyType }
+---| { name: "iacute", value: doxygen.compound.docEmptyType }
+---| { name: "icirc", value: doxygen.compound.docEmptyType }
+---| { name: "iumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "eth", value: doxygen.compound.docEmptyType }
+---| { name: "ntilde", value: doxygen.compound.docEmptyType }
+---| { name: "ograve", value: doxygen.compound.docEmptyType }
+---| { name: "oacute", value: doxygen.compound.docEmptyType }
+---| { name: "ocirc", value: doxygen.compound.docEmptyType }
+---| { name: "otilde", value: doxygen.compound.docEmptyType }
+---| { name: "oumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "divide", value: doxygen.compound.docEmptyType }
+---| { name: "oslash", value: doxygen.compound.docEmptyType }
+---| { name: "ugrave", value: doxygen.compound.docEmptyType }
+---| { name: "uacute", value: doxygen.compound.docEmptyType }
+---| { name: "ucirc", value: doxygen.compound.docEmptyType }
+---| { name: "uumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "yacute", value: doxygen.compound.docEmptyType }
+---| { name: "thorn", value: doxygen.compound.docEmptyType }
+---| { name: "yumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "fnof", value: doxygen.compound.docEmptyType }
+---| { name: "Alpha", value: doxygen.compound.docEmptyType }
+---| { name: "Beta", value: doxygen.compound.docEmptyType }
+---| { name: "Gamma", value: doxygen.compound.docEmptyType }
+---| { name: "Delta", value: doxygen.compound.docEmptyType }
+---| { name: "Epsilon", value: doxygen.compound.docEmptyType }
+---| { name: "Zeta", value: doxygen.compound.docEmptyType }
+---| { name: "Eta", value: doxygen.compound.docEmptyType }
+---| { name: "Theta", value: doxygen.compound.docEmptyType }
+---| { name: "Iota", value: doxygen.compound.docEmptyType }
+---| { name: "Kappa", value: doxygen.compound.docEmptyType }
+---| { name: "Lambda", value: doxygen.compound.docEmptyType }
+---| { name: "Mu", value: doxygen.compound.docEmptyType }
+---| { name: "Nu", value: doxygen.compound.docEmptyType }
+---| { name: "Xi", value: doxygen.compound.docEmptyType }
+---| { name: "Omicron", value: doxygen.compound.docEmptyType }
+---| { name: "Pi", value: doxygen.compound.docEmptyType }
+---| { name: "Rho", value: doxygen.compound.docEmptyType }
+---| { name: "Sigma", value: doxygen.compound.docEmptyType }
+---| { name: "Tau", value: doxygen.compound.docEmptyType }
+---| { name: "Upsilon", value: doxygen.compound.docEmptyType }
+---| { name: "Phi", value: doxygen.compound.docEmptyType }
+---| { name: "Chi", value: doxygen.compound.docEmptyType }
+---| { name: "Psi", value: doxygen.compound.docEmptyType }
+---| { name: "Omega", value: doxygen.compound.docEmptyType }
+---| { name: "alpha", value: doxygen.compound.docEmptyType }
+---| { name: "beta", value: doxygen.compound.docEmptyType }
+---| { name: "gamma", value: doxygen.compound.docEmptyType }
+---| { name: "delta", value: doxygen.compound.docEmptyType }
+---| { name: "epsilon", value: doxygen.compound.docEmptyType }
+---| { name: "zeta", value: doxygen.compound.docEmptyType }
+---| { name: "eta", value: doxygen.compound.docEmptyType }
+---| { name: "theta", value: doxygen.compound.docEmptyType }
+---| { name: "iota", value: doxygen.compound.docEmptyType }
+---| { name: "kappa", value: doxygen.compound.docEmptyType }
+---| { name: "lambda", value: doxygen.compound.docEmptyType }
+---| { name: "mu", value: doxygen.compound.docEmptyType }
+---| { name: "nu", value: doxygen.compound.docEmptyType }
+---| { name: "xi", value: doxygen.compound.docEmptyType }
+---| { name: "omicron", value: doxygen.compound.docEmptyType }
+---| { name: "pi", value: doxygen.compound.docEmptyType }
+---| { name: "rho", value: doxygen.compound.docEmptyType }
+---| { name: "sigmaf", value: doxygen.compound.docEmptyType }
+---| { name: "sigma", value: doxygen.compound.docEmptyType }
+---| { name: "tau", value: doxygen.compound.docEmptyType }
+---| { name: "upsilon", value: doxygen.compound.docEmptyType }
+---| { name: "phi", value: doxygen.compound.docEmptyType }
+---| { name: "chi", value: doxygen.compound.docEmptyType }
+---| { name: "psi", value: doxygen.compound.docEmptyType }
+---| { name: "omega", value: doxygen.compound.docEmptyType }
+---| { name: "thetasym", value: doxygen.compound.docEmptyType }
+---| { name: "upsih", value: doxygen.compound.docEmptyType }
+---| { name: "piv", value: doxygen.compound.docEmptyType }
+---| { name: "bull", value: doxygen.compound.docEmptyType }
+---| { name: "hellip", value: doxygen.compound.docEmptyType }
+---| { name: "prime", value: doxygen.compound.docEmptyType }
+---| { name: "Prime", value: doxygen.compound.docEmptyType }
+---| { name: "oline", value: doxygen.compound.docEmptyType }
+---| { name: "frasl", value: doxygen.compound.docEmptyType }
+---| { name: "weierp", value: doxygen.compound.docEmptyType }
+---| { name: "imaginary", value: doxygen.compound.docEmptyType }
+---| { name: "real", value: doxygen.compound.docEmptyType }
+---| { name: "trademark", value: doxygen.compound.docEmptyType }
+---| { name: "alefsym", value: doxygen.compound.docEmptyType }
+---| { name: "larr", value: doxygen.compound.docEmptyType }
+---| { name: "uarr", value: doxygen.compound.docEmptyType }
+---| { name: "rarr", value: doxygen.compound.docEmptyType }
+---| { name: "darr", value: doxygen.compound.docEmptyType }
+---| { name: "harr", value: doxygen.compound.docEmptyType }
+---| { name: "crarr", value: doxygen.compound.docEmptyType }
+---| { name: "lArr", value: doxygen.compound.docEmptyType }
+---| { name: "uArr", value: doxygen.compound.docEmptyType }
+---| { name: "rArr", value: doxygen.compound.docEmptyType }
+---| { name: "dArr", value: doxygen.compound.docEmptyType }
+---| { name: "hArr", value: doxygen.compound.docEmptyType }
+---| { name: "forall", value: doxygen.compound.docEmptyType }
+---| { name: "part", value: doxygen.compound.docEmptyType }
+---| { name: "exist", value: doxygen.compound.docEmptyType }
+---| { name: "empty", value: doxygen.compound.docEmptyType }
+---| { name: "nabla", value: doxygen.compound.docEmptyType }
+---| { name: "isin", value: doxygen.compound.docEmptyType }
+---| { name: "notin", value: doxygen.compound.docEmptyType }
+---| { name: "ni", value: doxygen.compound.docEmptyType }
+---| { name: "prod", value: doxygen.compound.docEmptyType }
+---| { name: "sum", value: doxygen.compound.docEmptyType }
+---| { name: "minus", value: doxygen.compound.docEmptyType }
+---| { name: "lowast", value: doxygen.compound.docEmptyType }
+---| { name: "radic", value: doxygen.compound.docEmptyType }
+---| { name: "prop", value: doxygen.compound.docEmptyType }
+---| { name: "infin", value: doxygen.compound.docEmptyType }
+---| { name: "ang", value: doxygen.compound.docEmptyType }
+---| { name: "and", value: doxygen.compound.docEmptyType }
+---| { name: "or", value: doxygen.compound.docEmptyType }
+---| { name: "cap", value: doxygen.compound.docEmptyType }
+---| { name: "cup", value: doxygen.compound.docEmptyType }
+---| { name: "int", value: doxygen.compound.docEmptyType }
+---| { name: "there4", value: doxygen.compound.docEmptyType }
+---| { name: "sim", value: doxygen.compound.docEmptyType }
+---| { name: "cong", value: doxygen.compound.docEmptyType }
+---| { name: "asymp", value: doxygen.compound.docEmptyType }
+---| { name: "ne", value: doxygen.compound.docEmptyType }
+---| { name: "equiv", value: doxygen.compound.docEmptyType }
+---| { name: "le", value: doxygen.compound.docEmptyType }
+---| { name: "ge", value: doxygen.compound.docEmptyType }
+---| { name: "sub", value: doxygen.compound.docEmptyType }
+---| { name: "sup", value: doxygen.compound.docEmptyType }
+---| { name: "nsub", value: doxygen.compound.docEmptyType }
+---| { name: "sube", value: doxygen.compound.docEmptyType }
+---| { name: "supe", value: doxygen.compound.docEmptyType }
+---| { name: "oplus", value: doxygen.compound.docEmptyType }
+---| { name: "otimes", value: doxygen.compound.docEmptyType }
+---| { name: "perp", value: doxygen.compound.docEmptyType }
+---| { name: "sdot", value: doxygen.compound.docEmptyType }
+---| { name: "lceil", value: doxygen.compound.docEmptyType }
+---| { name: "rceil", value: doxygen.compound.docEmptyType }
+---| { name: "lfloor", value: doxygen.compound.docEmptyType }
+---| { name: "rfloor", value: doxygen.compound.docEmptyType }
+---| { name: "lang", value: doxygen.compound.docEmptyType }
+---| { name: "rang", value: doxygen.compound.docEmptyType }
+---| { name: "loz", value: doxygen.compound.docEmptyType }
+---| { name: "spades", value: doxygen.compound.docEmptyType }
+---| { name: "clubs", value: doxygen.compound.docEmptyType }
+---| { name: "hearts", value: doxygen.compound.docEmptyType }
+---| { name: "diams", value: doxygen.compound.docEmptyType }
+---| { name: "OElig", value: doxygen.compound.docEmptyType }
+---| { name: "oelig", value: doxygen.compound.docEmptyType }
+---| { name: "Scaron", value: doxygen.compound.docEmptyType }
+---| { name: "scaron", value: doxygen.compound.docEmptyType }
+---| { name: "Yumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "circ", value: doxygen.compound.docEmptyType }
+---| { name: "tilde", value: doxygen.compound.docEmptyType }
+---| { name: "ensp", value: doxygen.compound.docEmptyType }
+---| { name: "emsp", value: doxygen.compound.docEmptyType }
+---| { name: "thinsp", value: doxygen.compound.docEmptyType }
+---| { name: "zwnj", value: doxygen.compound.docEmptyType }
+---| { name: "zwj", value: doxygen.compound.docEmptyType }
+---| { name: "lrm", value: doxygen.compound.docEmptyType }
+---| { name: "rlm", value: doxygen.compound.docEmptyType }
+---| { name: "ndash", value: doxygen.compound.docEmptyType }
+---| { name: "mdash", value: doxygen.compound.docEmptyType }
+---| { name: "lsquo", value: doxygen.compound.docEmptyType }
+---| { name: "rsquo", value: doxygen.compound.docEmptyType }
+---| { name: "sbquo", value: doxygen.compound.docEmptyType }
+---| { name: "ldquo", value: doxygen.compound.docEmptyType }
+---| { name: "rdquo", value: doxygen.compound.docEmptyType }
+---| { name: "bdquo", value: doxygen.compound.docEmptyType }
+---| { name: "dagger", value: doxygen.compound.docEmptyType }
+---| { name: "Dagger", value: doxygen.compound.docEmptyType }
+---| { name: "permil", value: doxygen.compound.docEmptyType }
+---| { name: "lsaquo", value: doxygen.compound.docEmptyType }
+---| { name: "rsaquo", value: doxygen.compound.docEmptyType }
+---| { name: "euro", value: doxygen.compound.docEmptyType }
+---| { name: "tm", value: doxygen.compound.docEmptyType }
+---| { name: "hruler", value: doxygen.compound.docEmptyType }
+---| { name: "preformatted", value: doxygen.compound.docMarkupType }
+---| { name: "programlisting", value: doxygen.compound.listingType }
+---| { name: "verbatim", value: string }
+---| { name: "javadocliteral", value: string }
+---| { name: "javadoccode", value: string }
+---| { name: "indexentry", value: doxygen.compound.docIndexEntryType }
+---| { name: "orderedlist", value: doxygen.compound.docListType }
+---| { name: "itemizedlist", value: doxygen.compound.docListType }
+---| { name: "simplesect", value: doxygen.compound.docSimpleSectType }
+---| { name: "title", value: doxygen.compound.docTitleType }
+---| { name: "variablelist", value: doxygen.compound.docVariableListType }
+---| { name: "table", value: doxygen.compound.docTableType }
+---| { name: "heading", value: doxygen.compound.docHeadingType }
+---| { name: "dotfile", value: doxygen.compound.docImageFileType }
+---| { name: "mscfile", value: doxygen.compound.docImageFileType }
+---| { name: "diafile", value: doxygen.compound.docImageFileType }
+---| { name: "toclist", value: doxygen.compound.docTocListType }
+---| { name: "language", value: doxygen.compound.docLanguageType }
+---| { name: "parameterlist", value: doxygen.compound.docParamListType }
+---| { name: "xrefsect", value: doxygen.compound.docXRefSectType }
+---| { name: "copydoc", value: doxygen.compound.docCopyType }
+---| { name: "details", value: doxygen.compound.docDetailsType }
+---| { name: "blockquote", value: doxygen.compound.docBlockQuoteType }
+---| { name: "parblock", value: doxygen.compound.docParBlockType }
+
+---@class doxygen.compound.docVariableListGroup
+--- start sequence
+---@field varlistentry doxygen.compound.docVarListEntryType (element)
+---@field listitem doxygen.compound.docListItemType (element)
+--- end sequence
