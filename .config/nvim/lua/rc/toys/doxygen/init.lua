@@ -33,21 +33,8 @@ local function build_element_tree(filename)
 end
 
 ---@async
-local function dump_xsd(dir)
-  local index = build_element_tree(vim.fs.joinpath(dir, "index.xsd"))
-  if index then
-    util.dump_json(index, "index.xsd", false)
-  end
-  local compound = build_element_tree(vim.fs.joinpath(dir, "compound.xsd"))
-  if compound then
-    util.dump_json(compound, "compound.xsd", false)
-  end
-end
-
----@async
 local function test()
   local dir = vim.fs.normalize("~/work/doxygentest/xml")
-  dump_xsd(dir)
   local index_file = vim.fs.joinpath(dir, "index.xml")
   local root = build_element_tree(index_file)
   if not root then
