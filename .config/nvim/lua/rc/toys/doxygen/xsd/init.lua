@@ -90,7 +90,7 @@ M.generate_lua(
     name_converter = name_converter,
     type_mappings = type_mappings,
     namespace = "doxygen.index",
-    text_foldings = { "listingType" },
+    text_foldings = { "listingType", "linkedTextType" },
   }
 )
 
@@ -101,7 +101,7 @@ M.generate_lua(
     name_converter = name_converter,
     type_mappings = type_mappings,
     namespace = "doxygen.compound",
-    text_foldings = { "listingType" },
+    text_foldings = { "listingType", "linkedTextType" },
   }
 )
 

@@ -50,6 +50,7 @@ local function test()
     local compound_file = vim.fs.joinpath(dir, compound_element.refid .. ".xml")
     local compound_root = build_element_tree(compound_file)
     if compound_root then
+      util.dump_json(compound_root, compound_element.refid .. "-root", false)
       local compound_index = compound_factory.DoxygenType(Builder:new(compound_root))
       util.dump_json(compound_index, compound_element.refid, false)
       if compound_index.compounddef then

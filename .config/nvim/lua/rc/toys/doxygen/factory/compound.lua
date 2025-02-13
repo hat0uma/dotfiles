@@ -312,9 +312,7 @@ end
 --- @param builder eeeBuilder
 --- @return doxygen.compound.linkedTextType
 function factory.linkedTextType(builder)
-  return { --- @type doxygen.compound.linkedTextType
-    content = builder:from_element_mixed(),
-  }
+  return builder:from_folded_text_content()
 end
 
 --- @param builder eeeBuilder

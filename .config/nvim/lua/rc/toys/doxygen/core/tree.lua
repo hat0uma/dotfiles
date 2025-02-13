@@ -1,6 +1,27 @@
 local sax = require("rc.toys.doxygen.core.sax")
 local M = {}
 
+--- Check element is mixed
+---@param element XmlElement
+---@return boolean
+local function is_mixed(element)
+  local element_num = 0
+  local text_num = 0
+  for i = 1, #element.content do
+    local v = element.content[i]
+    if type(v) == "string" and #vim.trim(v) ~= 0 then
+      text_num = text_num + 1
+    else
+      element_num = element_num + 1
+    end
+
+    if element_num ~= 0 and text_num ~= 0 then
+      return true
+    end
+  end
+  return false
+end
+
 ---@class XmlElement
 ---@field name string
 ---@field attrs table<string,string>
@@ -25,15 +46,17 @@ function M.build(filename, on_completed)
       ---@type XmlElement
       local current = table.remove(stack)
 
-      -- normalize text content
-      for i = #current.content, 1, -1 do
-        local v = current.content[i]
-        if type(v) == "string" then
-          local normalized = v:gsub("^%s+", "")
-          if #normalized == 0 then
-            table.remove(current.content, i)
-          else
-            current.content[i] = normalized
+      if not is_mixed(current) then
+        -- normalize text content
+        for i = #current.content, 1, -1 do
+          local v = current.content[i]
+          if type(v) == "string" then
+            local normalized = v:gsub("^%s+", "")
+            if #normalized == 0 then
+              table.remove(current.content, i)
+            else
+              current.content[i] = normalized
+            end
           end
         end
       end

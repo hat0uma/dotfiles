@@ -484,10 +484,7 @@
 ---@field briefdescription doxygen.compound.descriptionType? (element)
 --- end sequence
 
----@class doxygen.compound.linkedTextType (mixed)
----@field content doxygen.compound.linkedTextType
----| string (text content)
----| { name: "ref", value: doxygen.compound.refTextType[] }
+---@alias doxygen.compound.linkedTextType string[] (folded text)
 
 ---@class doxygen.compound.graphType
 --- start sequence
