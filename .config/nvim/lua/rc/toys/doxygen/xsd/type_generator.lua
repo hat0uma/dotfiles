@@ -152,7 +152,7 @@ function DoxygenTypeGenerator:_generate_mixed(schema, complex_type)
     end
   end
 
-  emitf("---@field %s %s", "content", self:_t(complex_type.name))
+  emitf("---@field %s", "content")
   emitf("---| string (text content)")
 
   while #stack > 0 do

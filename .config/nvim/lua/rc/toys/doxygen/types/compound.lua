@@ -450,7 +450,7 @@
 ---@field maybeambiguous boolean? (attribute)
 
 ---@class doxygen.compound.descriptionType (mixed)
----@field content doxygen.compound.descriptionType
+---@field content
 ---| string (text content)
 ---| { name: "title", value: string? }
 ---| { name: "para", value: doxygen.compound.docParaType[] }
@@ -523,14 +523,14 @@
 
 ---@class doxygen.compound.highlightType (mixed)
 ---@field class doxygen.compound.DoxHighlightClass? (attribute)
----@field content doxygen.compound.highlightType
+---@field content
 ---| string (text content)
 ---| { name: "sp", value: doxygen.compound.spType }
 ---| { name: "ref", value: doxygen.compound.refTextType }
 
 ---@class doxygen.compound.spType (mixed)
 ---@field value integer? (attribute)
----@field content doxygen.compound.spType
+---@field content
 ---| string (text content)
 
 ---@class doxygen.compound.referenceType (mixed)
@@ -538,7 +538,7 @@
 ---@field compoundref string? (attribute)
 ---@field startline integer? (attribute)
 ---@field endline integer? (attribute)
----@field content doxygen.compound.referenceType
+---@field content
 ---| string (text content)
 
 ---@class doxygen.compound.locationType
@@ -554,7 +554,7 @@
 
 ---@class doxygen.compound.docSect1Type (mixed)
 ---@field id string? (attribute)
----@field content doxygen.compound.docSect1Type
+---@field content
 ---| string (text content)
 ---| { name: "title", value: doxygen.compound.docTitleType? }
 ---| { name: "para", value: doxygen.compound.docParaType[] }
@@ -563,7 +563,7 @@
 
 ---@class doxygen.compound.docSect2Type (mixed)
 ---@field id string? (attribute)
----@field content doxygen.compound.docSect2Type
+---@field content
 ---| string (text content)
 ---| { name: "title", value: doxygen.compound.docTitleType }
 ---| { name: "para", value: doxygen.compound.docParaType[] }
@@ -572,7 +572,7 @@
 
 ---@class doxygen.compound.docSect3Type (mixed)
 ---@field id string? (attribute)
----@field content doxygen.compound.docSect3Type
+---@field content
 ---| string (text content)
 ---| { name: "title", value: doxygen.compound.docTitleType }
 ---| { name: "para", value: doxygen.compound.docParaType[] }
@@ -581,7 +581,7 @@
 
 ---@class doxygen.compound.docSect4Type (mixed)
 ---@field id string? (attribute)
----@field content doxygen.compound.docSect4Type
+---@field content
 ---| string (text content)
 ---| { name: "title", value: doxygen.compound.docTitleType }
 ---| { name: "para", value: doxygen.compound.docParaType[] }
@@ -590,7 +590,7 @@
 
 ---@class doxygen.compound.docSect5Type (mixed)
 ---@field id string? (attribute)
----@field content doxygen.compound.docSect5Type
+---@field content
 ---| string (text content)
 ---| { name: "title", value: doxygen.compound.docTitleType }
 ---| { name: "para", value: doxygen.compound.docParaType[] }
@@ -599,55 +599,55 @@
 
 ---@class doxygen.compound.docSect6Type (mixed)
 ---@field id string? (attribute)
----@field content doxygen.compound.docSect6Type
+---@field content
 ---| string (text content)
 ---| { name: "title", value: doxygen.compound.docTitleType }
 ---| { name: "para", value: doxygen.compound.docParaType[] }
 ---| { name: "internal", value: doxygen.compound.docInternalS6Type? }
 
 ---@class doxygen.compound.docInternalType (mixed)
----@field content doxygen.compound.docInternalType
+---@field content
 ---| string (text content)
 ---| { name: "para", value: doxygen.compound.docParaType[] }
 ---| { name: "sect1", value: doxygen.compound.docSect1Type[] }
 
 ---@class doxygen.compound.docInternalS1Type (mixed)
----@field content doxygen.compound.docInternalS1Type
+---@field content
 ---| string (text content)
 ---| { name: "para", value: doxygen.compound.docParaType[] }
 ---| { name: "sect2", value: doxygen.compound.docSect2Type[] }
 
 ---@class doxygen.compound.docInternalS2Type (mixed)
----@field content doxygen.compound.docInternalS2Type
+---@field content
 ---| string (text content)
 ---| { name: "para", value: doxygen.compound.docParaType[] }
 ---| { name: "sect3", value: doxygen.compound.docSect3Type[] }
 
 ---@class doxygen.compound.docInternalS3Type (mixed)
----@field content doxygen.compound.docInternalS3Type
+---@field content
 ---| string (text content)
 ---| { name: "para", value: doxygen.compound.docParaType[] }
 ---| { name: "sect4", value: doxygen.compound.docSect4Type[] }
 
 ---@class doxygen.compound.docInternalS4Type (mixed)
----@field content doxygen.compound.docInternalS4Type
+---@field content
 ---| string (text content)
 ---| { name: "para", value: doxygen.compound.docParaType[] }
 ---| { name: "sect5", value: doxygen.compound.docSect5Type[] }
 
 ---@class doxygen.compound.docInternalS5Type (mixed)
----@field content doxygen.compound.docInternalS5Type
+---@field content
 ---| string (text content)
 ---| { name: "para", value: doxygen.compound.docParaType[] }
 ---| { name: "sect5", value: doxygen.compound.docSect6Type[] }
 
 ---@class doxygen.compound.docInternalS6Type (mixed)
----@field content doxygen.compound.docInternalS6Type
+---@field content
 ---| string (text content)
 ---| { name: "para", value: doxygen.compound.docParaType[] }
 
 ---@class doxygen.compound.docTitleType (mixed)
----@field content doxygen.compound.docTitleType
+---@field content
 ---| string (text content)
 ---| { name: "ulink", value: doxygen.compound.docURLLink }
 ---| { name: "bold", value: doxygen.compound.docMarkupType }
@@ -929,7 +929,7 @@
 ---| { name: "tm", value: doxygen.compound.docEmptyType }
 
 ---@class doxygen.compound.docSummaryType (mixed)
----@field content doxygen.compound.docSummaryType
+---@field content
 ---| string (text content)
 ---| { name: "ulink", value: doxygen.compound.docURLLink }
 ---| { name: "bold", value: doxygen.compound.docMarkupType }
@@ -1211,7 +1211,7 @@
 ---| { name: "tm", value: doxygen.compound.docEmptyType }
 
 ---@class doxygen.compound.docParaType (mixed)
----@field content doxygen.compound.docParaType
+---@field content
 ---| string (text content)
 ---| { name: "ulink", value: doxygen.compound.docURLLink }
 ---| { name: "bold", value: doxygen.compound.docMarkupType }
@@ -1518,7 +1518,7 @@
 ---| { name: "parblock", value: doxygen.compound.docParBlockType }
 
 ---@class doxygen.compound.docMarkupType (mixed)
----@field content doxygen.compound.docMarkupType
+---@field content
 ---| string (text content)
 ---| { name: "ulink", value: doxygen.compound.docURLLink }
 ---| { name: "bold", value: doxygen.compound.docMarkupType }
@@ -1826,7 +1826,7 @@
 
 ---@class doxygen.compound.docURLLink (mixed)
 ---@field url string? (attribute)
----@field content doxygen.compound.docURLLink
+---@field content
 ---| string (text content)
 ---| { name: "ulink", value: doxygen.compound.docURLLink }
 ---| { name: "bold", value: doxygen.compound.docMarkupType }
@@ -2109,12 +2109,12 @@
 
 ---@class doxygen.compound.docAnchorType (mixed)
 ---@field id string? (attribute)
----@field content doxygen.compound.docAnchorType
+---@field content
 ---| string (text content)
 
 ---@class doxygen.compound.docFormulaType (mixed)
 ---@field id string? (attribute)
----@field content doxygen.compound.docFormulaType
+---@field content
 ---| string (text content)
 
 ---@class doxygen.compound.docIndexEntryType
@@ -2163,7 +2163,7 @@
 ---@field refid string? (attribute)
 ---@field kindref doxygen.compound.DoxRefKind? (attribute)
 ---@field external string? (attribute)
----@field content doxygen.compound.docRefTextType
+---@field content
 ---| string (text content)
 ---| { name: "ulink", value: doxygen.compound.docURLLink }
 ---| { name: "bold", value: doxygen.compound.docMarkupType }
@@ -2472,7 +2472,7 @@
 
 ---@class doxygen.compound.docCaptionType (mixed)
 ---@field id string? (attribute)
----@field content doxygen.compound.docCaptionType
+---@field content
 ---| string (text content)
 ---| { name: "ulink", value: doxygen.compound.docURLLink }
 ---| { name: "bold", value: doxygen.compound.docMarkupType }
@@ -2755,7 +2755,7 @@
 
 ---@class doxygen.compound.docHeadingType (mixed)
 ---@field level doxygen.compound.range_1_6? (attribute)
----@field content doxygen.compound.docHeadingType
+---@field content
 ---| string (text content)
 ---| { name: "ulink", value: doxygen.compound.docURLLink }
 ---| { name: "bold", value: doxygen.compound.docMarkupType }
@@ -3044,7 +3044,7 @@
 ---@field alt string? (attribute)
 ---@field inline boolean? (attribute)
 ---@field caption string? (attribute)
----@field content doxygen.compound.docImageType
+---@field content
 ---| string (text content)
 ---| { name: "ulink", value: doxygen.compound.docURLLink }
 ---| { name: "bold", value: doxygen.compound.docMarkupType }
@@ -3330,7 +3330,7 @@
 ---@field width string? (attribute)
 ---@field height string? (attribute)
 ---@field caption string? (attribute)
----@field content doxygen.compound.docDotMscType
+---@field content
 ---| string (text content)
 ---| { name: "ulink", value: doxygen.compound.docURLLink }
 ---| { name: "bold", value: doxygen.compound.docMarkupType }
@@ -3615,7 +3615,7 @@
 ---@field name string? (attribute)
 ---@field width string? (attribute)
 ---@field height string? (attribute)
----@field content doxygen.compound.docImageFileType
+---@field content
 ---| string (text content)
 ---| { name: "ulink", value: doxygen.compound.docURLLink }
 ---| { name: "bold", value: doxygen.compound.docMarkupType }
@@ -3902,7 +3902,7 @@
 ---@field height string? (attribute)
 ---@field caption string? (attribute)
 ---@field engine doxygen.compound.DoxPlantumlEngine? (attribute)
----@field content doxygen.compound.docPlantumlType
+---@field content
 ---| string (text content)
 ---| { name: "ulink", value: doxygen.compound.docURLLink }
 ---| { name: "bold", value: doxygen.compound.docMarkupType }
@@ -4185,7 +4185,7 @@
 
 ---@class doxygen.compound.docTocItemType (mixed)
 ---@field id string? (attribute)
----@field content doxygen.compound.docTocItemType
+---@field content
 ---| string (text content)
 ---| { name: "ulink", value: doxygen.compound.docURLLink }
 ---| { name: "bold", value: doxygen.compound.docMarkupType }
@@ -4496,13 +4496,13 @@
 --- end sequence
 
 ---@class doxygen.compound.docParamType (mixed)
----@field content doxygen.compound.docParamType
+---@field content
 ---| string (text content)
 ---| { name: "ref", value: doxygen.compound.refTextType? }
 
 ---@class doxygen.compound.docParamName (mixed)
 ---@field direction doxygen.compound.DoxParamDir? (attribute)
----@field content doxygen.compound.docParamName
+---@field content
 ---| string (text content)
 ---| { name: "ref", value: doxygen.compound.refTextType? }
 

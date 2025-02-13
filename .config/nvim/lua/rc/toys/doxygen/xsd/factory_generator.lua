@@ -211,14 +211,14 @@ end
 ---@param choice Xsd.Choice
 ---@return string
 function DoxygenFactoryGenerator:_generate_choice(choice)
-  local type = {}
+  local choices = {}
   local stack = {}
   push_to_stack(stack, choice.content)
   while #stack > 0 do
     local current = table.remove(stack) ---@type Xsd.Content|fun()
     if current.kind == "element" then
       table.insert(
-        type,
+        choices,
         string.format(
           '{ name = "%s", factory = factory.%s, occurence="%s" },',
           self:_v(current.name),
@@ -231,7 +231,7 @@ function DoxygenFactoryGenerator:_generate_choice(choice)
     end
   end
 
-  return "{" .. table.concat(type, "\n") .. "}"
+  return "{" .. table.concat(choices, "\n") .. "}"
 end
 
 --- Generate attribute line

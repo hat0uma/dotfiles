@@ -88,6 +88,8 @@ local function name_converter(name)
   return (name:gsub(":", "_"))
 end
 
+local text_foldings = { "listingType", "linkedTextType" }
+
 M.generate_lua(
   vim.fs.normalize("~/work/doxygentest/xml/index.xsd"),
   vim.fs.normalize(vim.fs.joinpath(get_script_path(), "../")),
@@ -95,7 +97,7 @@ M.generate_lua(
     name_converter = name_converter,
     type_mappings = type_mappings,
     namespace = "doxygen.index",
-    text_foldings = { "listingType", "linkedTextType" },
+    text_foldings = text_foldings,
   }
 )
 
@@ -106,7 +108,7 @@ M.generate_lua(
     name_converter = name_converter,
     type_mappings = type_mappings,
     namespace = "doxygen.compound",
-    text_foldings = { "listingType", "linkedTextType" },
+    text_foldings = text_foldings,
   }
 )
 
