@@ -1,3 +1,13 @@
+--- Push list to stack (mutate)
+---@generic T
+---@param stack T[]
+---@param list T[]
+local function push_to_stack(stack, list)
+  for i = #list, 1, -1 do
+    table.insert(stack, list[i])
+  end
+end
+
 --- Find simple type by name
 ---@param schema Xsd.Schema
 ---@param name string
@@ -22,6 +32,19 @@ local function find_group(schema, name)
     end
   end
   error("group not found: " .. name)
+end
+
+--- Push expanded group to stack (mutate)
+---@param schema Xsd.Schema
+---@param group_ref string
+---@param occurs Xsd.ContentOccur
+---@param stack Xsd.Content[]
+local function push_group_content_to_stack(stack, schema, group_ref, occurs)
+  local group = vim.deepcopy(find_group(schema, group_ref))
+  for i = #group.content, 1, -1 do
+    group.content[i].occurs = occurs
+    table.insert(stack, group.content[i])
+  end
 end
 
 ---@class DoxygenFactoryGenerator
@@ -68,6 +91,7 @@ function DoxygenFactoryGenerator:generate(schema)
   emit("local factory = {}")
   emit("")
 
+  -- Factory for string type
   start_factory("string")
   emit("  return builder:from_text()")
   end_factory()
@@ -85,27 +109,13 @@ function DoxygenFactoryGenerator:generate(schema)
       emitf("  return{ --- @type %s", self:_qualified(complex_type.name))
       for _, current in ipairs(complex_type.content) do
         if current.kind == "attribute" then
-          local type = self:_t(current.type)
-          local basetypes = { boolean = "boolean", string = "string", number = "number", integer = "number" }
-          emitf(
-            '    ["%s"] = builder:from_attr("%s","%s","%s"),',
-            self:_v(current.name),
-            current.name,
-            current.occurs,
-            basetypes[type] and basetypes[type] or find_simple_type(schema, current.type).base
-          )
+          emit(self:_generate_attribute_line(schema, current))
         end
       end
 
       local stack = {} ---@type Xsd.Content[]
-      local function push_to_stack(content) ---@param content Xsd.Content[]
-        for i = #content, 1, -1 do
-          table.insert(stack, content[i])
-        end
-      end
-
       emitf('    ["%s"] = builder:from_element_mixed({', "content") -- TODO
-      push_to_stack(complex_type.content)
+      push_to_stack(stack, complex_type.content)
       while #stack > 0 do
         local current = table.remove(stack) ---@type Xsd.Content
         if current.kind == "element" then
@@ -116,16 +126,11 @@ function DoxygenFactoryGenerator:generate(schema)
             current.occurs
           )
         elseif current.kind == "group" then
-          -- expand group
-          local group = vim.deepcopy(find_group(schema, current.ref))
-          for i = #group.content, 1, -1 do
-            group.content[i].occurs = current.occurs
-            table.insert(stack, group.content[i])
-          end
+          push_group_content_to_stack(stack, schema, current.ref, current.occurs)
         elseif current.kind == "attribute" then
-          -- skip
+          -- skip attributes because they are already emitted
         elseif current.kind == "sequence" or current.kind == "choice" then
-          push_to_stack(current.content)
+          push_to_stack(stack, current.content)
         else
           error("unexpected content: " .. vim.inspect(current))
         end
@@ -171,43 +176,19 @@ function DoxygenFactoryGenerator:_generate_content_fields(schema, element)
     emit(string.format(fmt, ...))
   end
   local stack = {} ---@type (Xsd.Content|fun())[]
-  local function push_to_stack(content) ---@param content Xsd.Content[]
-    for i = #content, 1, -1 do
-      table.insert(stack, content[i])
-    end
-  end
-
-  push_to_stack(element.content)
+  push_to_stack(stack, element.content)
   while #stack > 0 do
     local current = table.remove(stack) ---@type Xsd.Content|fun()
     if type(current) == "function" then
       current()
     elseif current.kind == "sequence" then
-      push_to_stack(current.content)
+      push_to_stack(stack, current.content)
     elseif current.kind == "choice" then
       emitf('    ["%s"] = builder:choice(%s),', "choice", self:_generate_choice(current))
     elseif current.kind == "group" then
-      -- expand group
-      local group = vim.deepcopy(find_group(schema, current.ref))
-      for i = #group.content, 1, -1 do
-        group.content[i].occurs = current.occurs
-        table.insert(stack, group.content[i])
-      end
+      push_group_content_to_stack(stack, schema, current.ref, current.occurs)
     elseif current.kind == "attribute" then
-      local type = self:_t(current.type)
-      local basetypes = {
-        boolean = "boolean",
-        string = "string",
-        number = "number",
-        integer = "number",
-      }
-      emitf(
-        '    ["%s"] = builder:from_attr("%s","%s","%s"),',
-        self:_v(current.name),
-        current.name,
-        current.occurs,
-        basetypes[type] and basetypes[type] or find_simple_type(schema, current.type).base
-      )
+      emit(self:_generate_attribute_line(schema, current))
     elseif current.kind == "element" then
       emitf(
         '    ["%s"] = builder:from_element("%s","%s",factory.%s),',
@@ -232,10 +213,7 @@ end
 function DoxygenFactoryGenerator:_generate_choice(choice)
   local type = {}
   local stack = {}
-  for i = #choice.content, 1, -1 do
-    table.insert(stack, choice.content[i])
-  end
-
+  push_to_stack(stack, choice.content)
   while #stack > 0 do
     local current = table.remove(stack) ---@type Xsd.Content|fun()
     if current.kind == "element" then
@@ -254,6 +232,23 @@ function DoxygenFactoryGenerator:_generate_choice(choice)
   end
 
   return "{" .. table.concat(type, "\n") .. "}"
+end
+
+--- Generate attribute line
+---@param schema Xsd.Schema
+---@param attribute Xsd.Attribute
+---@return string
+function DoxygenFactoryGenerator:_generate_attribute_line(schema, attribute)
+  local lua_type = self:_t(attribute.type)
+  local basetypes = { boolean = "boolean", string = "string", number = "number", integer = "number" }
+  local base = basetypes[lua_type] or find_simple_type(schema, attribute.type).base
+  return string.format(
+    '["%s"] = builder:from_attr("%s","%s","%s"),',
+    self:_v(attribute.name),
+    attribute.name,
+    attribute.occurs,
+    base
+  )
 end
 
 --- Convert type

@@ -1,4 +1,7 @@
--- Utility: push elements of a list onto a stack in reverse order
+---Utility: push elements of a list onto a stack in reverse order
+---@generic T
+---@param stack T[]
+---@param list T[]
 local function push_to_stack(stack, list)
   for i = #list, 1, -1 do
     table.insert(stack, list[i])
@@ -16,6 +19,19 @@ local function find_group(schema, name)
     end
   end
   error("group not found: " .. name)
+end
+
+--- Push expanded group to stack (mutate)
+---@param schema Xsd.Schema
+---@param group_ref string
+---@param occurs Xsd.ContentOccur
+---@param stack Xsd.Content[]
+local function push_group_content_to_stack(stack, schema, group_ref, occurs)
+  local group = vim.deepcopy(find_group(schema, group_ref))
+  for i = #group.content, 1, -1 do
+    group.content[i].occurs = occurs
+    table.insert(stack, group.content[i])
+  end
 end
 
 ---@class DoxygenTypeGenerator
@@ -132,7 +148,7 @@ function DoxygenTypeGenerator:_generate_mixed(schema, complex_type)
   emitf("---@class %s (mixed)", self:_t(complex_type.name))
   for _, content in ipairs(complex_type.content) do
     if content.kind == "attribute" then
-      emitf("---@field %s %s (attribute)", self:_v(content.name), self:_t(content.type, content.occurs))
+      emit(self:_attribute_field(content))
     end
   end
 
@@ -149,12 +165,7 @@ function DoxygenTypeGenerator:_generate_mixed(schema, complex_type)
     elseif current.kind == "sequence" or current.kind == "choice" then
       push_to_stack(stack, current.content)
     elseif current.kind == "group" then
-      -- expand group
-      local group = vim.deepcopy(find_group(schema, current.ref))
-      for i = #group.content, 1, -1 do
-        group.content[i].occurs = current.occurs
-        table.insert(stack, group.content[i])
-      end
+      push_group_content_to_stack(stack, schema, current.ref, current.occurs)
     elseif current.kind == "text" then
       error("text content not supported: " .. vim.inspect(current))
     else
@@ -194,16 +205,11 @@ function DoxygenTypeGenerator:_generate_content_fields(schema, element)
       emitf("---@field %s", "choice")
       emitf("---| %s", self:_generate_choice(current))
     elseif current.kind == "group" then
-      -- expand group
-      local group = vim.deepcopy(find_group(schema, current.ref))
-      for i = #group.content, 1, -1 do
-        group.content[i].occurs = current.occurs
-        table.insert(stack, group.content[i])
-      end
+      push_group_content_to_stack(stack, schema, current.ref, current.occurs)
     elseif current.kind == "attribute" then
-      emitf("---@field %s %s (attribute)", self:_v(current.name), self:_t(current.type, current.occurs))
+      emit(self:_attribute_field(current))
     elseif current.kind == "element" then
-      emitf("---@field %s %s (element)", self:_v(current.name), self:_t(current.type, current.occurs))
+      emit(self:_element_field(current))
     elseif current.kind == "text" then
       emitf("---@field %s %s (text content)", "text", self:_t(current.type))
     else
@@ -219,12 +225,11 @@ end
 ---@return string
 function DoxygenTypeGenerator:_generate_choice(choice)
   local elements = {}
-  -- Process each element in order
   for _, content in ipairs(choice.content) do
     if content.kind == "element" then
-      local type =
+      local elem_def =
         string.format('{ name: "%s", value: %s }', self:_v(content.name), self:_t(content.type, content.occurs))
-      table.insert(elements, type)
+      table.insert(elements, elem_def)
     else
       error("unexpected content in choice: " .. vim.inspect(content))
     end
@@ -267,6 +272,24 @@ function DoxygenTypeGenerator:_render_range(min, max)
   local min_symbol = min and (min.inclusive and "<=" or "<") or ""
   local max_symbol = max and (max.inclusive and "<=" or "<") or ""
   return string.format("%s%sx%s%s", min_value, min_symbol, max_symbol, max_value)
+end
+
+--- Generate attribute field
+---@param attribute Xsd.Attribute
+---@return string
+function DoxygenTypeGenerator:_attribute_field(attribute)
+  return string.format(
+    "---@field %s %s (attribute)",
+    self:_v(attribute.name),
+    self:_t(attribute.type, attribute.occurs)
+  )
+end
+
+--- Generate element field
+---@param element Xsd.Element
+---@return string
+function DoxygenTypeGenerator:_element_field(element)
+  return string.format("---@field %s %s (element)", self:_v(element.name), self:_t(element.type, element.occurs))
 end
 
 return DoxygenTypeGenerator
