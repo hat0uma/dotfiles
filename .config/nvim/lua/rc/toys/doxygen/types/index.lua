@@ -61,8 +61,3 @@
 --- end sequence
 ---@field refid string (attribute)
 ---@field kind doxygen.index.MemberKind (attribute)
-
---------------------------------
--- Groups
---------------------------------
-

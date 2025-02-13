@@ -6,6 +6,11 @@ local M = {}
 ---@field name_converter? fun(name: string):string
 ---@field type_mappings table<string,string>
 
+package.loaded["rc.toys.doxygen.xsd.factory_generator"] = nil
+package.loaded["rc.toys.doxygen.xsd.type_generator"] = nil
+package.loaded["rc.toys.doxygen.xsd.schema"] = nil
+package.loaded["rc.toys.doxygen.core.tree"] = nil
+
 local DoxygenFactoryGenerator = require("rc.toys.doxygen.xsd.factory_generator")
 local DoxygenTypeGenerator = require("rc.toys.doxygen.xsd.type_generator")
 local tree = require("rc.toys.doxygen.core.tree")

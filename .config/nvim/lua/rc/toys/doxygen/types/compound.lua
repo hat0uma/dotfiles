@@ -279,7 +279,7 @@
 ---@field innernamespace doxygen.compound.refType[] (element)
 ---@field innerpage doxygen.compound.refType[] (element)
 ---@field innergroup doxygen.compound.refType[] (element)
----@field qualifier string[] (text-only-element)
+---@field qualifier string[] (element)
 ---@field templateparamlist doxygen.compound.templateparamlistType? (element)
 ---@field sectiondef doxygen.compound.sectiondefType[] (element)
 ---@field tableofcontents doxygen.compound.tableofcontentsType? (element)
@@ -310,8 +310,8 @@
 
 ---@class doxygen.compound.memberRefType
 --- start sequence
----@field scope string (text-only-element)
----@field name string (text-only-element)
+---@field scope string (element)
+---@field name string (element)
 --- end sequence
 ---@field refid string? (attribute)
 ---@field prot doxygen.compound.DoxProtectionKind? (attribute)
@@ -379,16 +379,16 @@
 --- start sequence
 ---@field templateparamlist doxygen.compound.templateparamlistType? (element)
 ---@field type doxygen.compound.linkedTextType? (element)
----@field definition string? (text-only-element)
----@field argsstring string? (text-only-element)
----@field name string (text-only-element)
----@field qualifiedname string? (text-only-element)
----@field read string? (text-only-element)
----@field write string? (text-only-element)
----@field bitfield string? (text-only-element)
+---@field definition string? (element)
+---@field argsstring string? (element)
+---@field name string (element)
+---@field qualifiedname string? (element)
+---@field read string? (element)
+---@field write string? (element)
+---@field bitfield string? (element)
 ---@field reimplements doxygen.compound.reimplementType[] (element)
 ---@field reimplementedby doxygen.compound.reimplementType[] (element)
----@field qualifier string[] (text-only-element)
+---@field qualifier string[] (element)
 ---@field param doxygen.compound.paramType[] (element)
 ---@field enumvalue doxygen.compound.enumvalueType[] (element)
 ---@field requiresclause doxygen.compound.linkedTextType? (element)
@@ -459,7 +459,7 @@
 
 ---@class doxygen.compound.enumvalueType
 --- start sequence
----@field name string (text-only-element)
+---@field name string (element)
 ---@field initializer doxygen.compound.linkedTextType? (element)
 ---@field briefdescription doxygen.compound.descriptionType? (element)
 ---@field detaileddescription doxygen.compound.descriptionType? (element)
@@ -474,17 +474,17 @@
 
 ---@class doxygen.compound.paramType
 --- start sequence
----@field attributes string? (text-only-element)
+---@field attributes string? (element)
 ---@field type doxygen.compound.linkedTextType? (element)
----@field declname string? (text-only-element)
----@field defname string? (text-only-element)
----@field array string? (text-only-element)
+---@field declname string? (element)
+---@field defname string? (element)
+---@field array string? (element)
 ---@field defval doxygen.compound.linkedTextType? (element)
 ---@field typeconstraint doxygen.compound.linkedTextType? (element)
 ---@field briefdescription doxygen.compound.descriptionType? (element)
 --- end sequence
 
----@alias doxygen.compound.linkedTextType string[] (folded text)
+---@alias doxygen.compound.linkedTextType string (folded text)
 
 ---@class doxygen.compound.graphType
 --- start sequence
@@ -493,7 +493,7 @@
 
 ---@class doxygen.compound.nodeType
 --- start sequence
----@field label string (text-only-element)
+---@field label string (element)
 ---@field link doxygen.compound.linkType? (element)
 ---@field childnode doxygen.compound.childnodeType[] (element)
 --- end sequence
@@ -501,7 +501,7 @@
 
 ---@class doxygen.compound.childnodeType
 --- start sequence
----@field edgelabel string[] (text-only-element)
+---@field edgelabel string[] (element)
 --- end sequence
 ---@field refid string? (attribute)
 ---@field relation doxygen.compound.DoxGraphRelation? (attribute)
@@ -510,7 +510,7 @@
 ---@field refid string? (attribute)
 ---@field external string? (attribute)
 
----@alias doxygen.compound.listingType string[] (folded text)
+---@alias doxygen.compound.listingType string (folded text)
 
 ---@class doxygen.compound.codelineType
 --- start sequence
@@ -649,263 +649,6 @@
 ---@class doxygen.compound.docTitleType (mixed)
 ---@field content doxygen.compound.docTitleType
 ---| string (text content)
----| { name: "group", value: doxygen.compound.docTitleCmdGroup[] }
-
----@class doxygen.compound.docSummaryType (mixed)
----@field content doxygen.compound.docSummaryType
----| string (text content)
----| { name: "group", value: doxygen.compound.docTitleCmdGroup[] }
-
----@class doxygen.compound.docParaType (mixed)
----@field content doxygen.compound.docParaType
----| string (text content)
----| { name: "group", value: doxygen.compound.docCmdGroup[] }
-
----@class doxygen.compound.docMarkupType (mixed)
----@field content doxygen.compound.docMarkupType
----| string (text content)
----| { name: "group", value: doxygen.compound.docCmdGroup[] }
-
----@class doxygen.compound.docURLLink (mixed)
----@field url string? (attribute)
----@field content doxygen.compound.docURLLink
----| string (text content)
----| { name: "group", value: doxygen.compound.docTitleCmdGroup[] }
-
----@class doxygen.compound.docAnchorType (mixed)
----@field id string? (attribute)
----@field content doxygen.compound.docAnchorType
----| string (text content)
-
----@class doxygen.compound.docFormulaType (mixed)
----@field id string? (attribute)
----@field content doxygen.compound.docFormulaType
----| string (text content)
-
----@class doxygen.compound.docIndexEntryType
---- start sequence
----@field primaryie string (element)
----@field secondaryie string (element)
---- end sequence
-
----@class doxygen.compound.docListType
---- start sequence
----@field listitem doxygen.compound.docListItemType[] (element)
---- end sequence
----@field type doxygen.compound.DoxOlType? (attribute)
----@field start integer? (attribute)
-
----@class doxygen.compound.docListItemType
---- start sequence
----@field para doxygen.compound.docParaType[] (element)
---- end sequence
----@field override doxygen.compound.DoxCheck? (attribute)
----@field value integer? (attribute)
-
----@class doxygen.compound.docSimpleSectType
---- start sequence
----@field title doxygen.compound.docTitleType? (element)
---- start sequence
----@field para doxygen.compound.docParaType[] (element)
---- end sequence
---- end sequence
----@field kind doxygen.compound.DoxSimpleSectKind? (attribute)
-
----@class doxygen.compound.docVarListEntryType
---- start sequence
----@field term doxygen.compound.docTitleType (element)
---- end sequence
-
----@class doxygen.compound.docVariableListType
---- start sequence
----@field group doxygen.compound.docVariableListGroup
---- end sequence
-
----@class doxygen.compound.docRefTextType (mixed)
----@field refid string? (attribute)
----@field kindref doxygen.compound.DoxRefKind? (attribute)
----@field external string? (attribute)
----@field content doxygen.compound.docRefTextType
----| string (text content)
----| { name: "group", value: doxygen.compound.docTitleCmdGroup[] }
-
----@class doxygen.compound.docTableType
---- start sequence
----@field caption doxygen.compound.docCaptionType? (element)
----@field row doxygen.compound.docRowType[] (element)
---- end sequence
----@field rows integer? (attribute)
----@field cols integer? (attribute)
----@field width string? (attribute)
-
----@class doxygen.compound.docRowType
---- start sequence
----@field entry doxygen.compound.docEntryType[] (element)
---- end sequence
-
----@class doxygen.compound.docEntryType
---- start sequence
----@field para doxygen.compound.docParaType[] (element)
---- end sequence
----@field thead boolean? (attribute)
----@field colspan integer? (attribute)
----@field rowspan integer? (attribute)
----@field align doxygen.compound.DoxAlign? (attribute)
----@field valign doxygen.compound.DoxVerticalAlign? (attribute)
----@field width string? (attribute)
----@field class string? (attribute)
-
----@class doxygen.compound.docCaptionType (mixed)
----@field id string? (attribute)
----@field content doxygen.compound.docCaptionType
----| string (text content)
----| { name: "group", value: doxygen.compound.docTitleCmdGroup[] }
-
----@class doxygen.compound.docHeadingType (mixed)
----@field level doxygen.compound.range_1_6? (attribute)
----@field content doxygen.compound.docHeadingType
----| string (text content)
----| { name: "group", value: doxygen.compound.docTitleCmdGroup[] }
-
----@class doxygen.compound.docImageType (mixed)
----@field type doxygen.compound.DoxImageKind? (attribute)
----@field name string? (attribute)
----@field width string? (attribute)
----@field height string? (attribute)
----@field alt string? (attribute)
----@field inline boolean? (attribute)
----@field caption string? (attribute)
----@field content doxygen.compound.docImageType
----| string (text content)
----| { name: "group", value: doxygen.compound.docTitleCmdGroup[] }
-
----@class doxygen.compound.docDotMscType (mixed)
----@field name string? (attribute)
----@field width string? (attribute)
----@field height string? (attribute)
----@field caption string? (attribute)
----@field content doxygen.compound.docDotMscType
----| string (text content)
----| { name: "group", value: doxygen.compound.docTitleCmdGroup[] }
-
----@class doxygen.compound.docImageFileType (mixed)
----@field name string? (attribute)
----@field width string? (attribute)
----@field height string? (attribute)
----@field content doxygen.compound.docImageFileType
----| string (text content)
----| { name: "group", value: doxygen.compound.docTitleCmdGroup[] }
-
----@class doxygen.compound.docPlantumlType (mixed)
----@field name string? (attribute)
----@field width string? (attribute)
----@field height string? (attribute)
----@field caption string? (attribute)
----@field engine doxygen.compound.DoxPlantumlEngine? (attribute)
----@field content doxygen.compound.docPlantumlType
----| string (text content)
----| { name: "group", value: doxygen.compound.docTitleCmdGroup[] }
-
----@class doxygen.compound.docTocItemType (mixed)
----@field id string? (attribute)
----@field content doxygen.compound.docTocItemType
----| string (text content)
----| { name: "group", value: doxygen.compound.docTitleCmdGroup[] }
-
----@class doxygen.compound.docTocListType
---- start sequence
----@field tocitem doxygen.compound.docTocItemType[] (element)
---- end sequence
-
----@class doxygen.compound.docLanguageType
---- start sequence
----@field para doxygen.compound.docParaType[] (element)
---- end sequence
----@field langid string? (attribute)
-
----@class doxygen.compound.docParamListType
---- start sequence
----@field parameteritem doxygen.compound.docParamListItem[] (element)
---- end sequence
----@field kind doxygen.compound.DoxParamListKind? (attribute)
-
----@class doxygen.compound.docParamListItem
---- start sequence
----@field parameternamelist doxygen.compound.docParamNameList[] (element)
----@field parameterdescription doxygen.compound.descriptionType (element)
---- end sequence
-
----@class doxygen.compound.docParamNameList
---- start sequence
----@field parametertype doxygen.compound.docParamType[] (element)
----@field parametername doxygen.compound.docParamName[] (element)
---- end sequence
-
----@class doxygen.compound.docParamType (mixed)
----@field content doxygen.compound.docParamType
----| string (text content)
----| { name: "ref", value: doxygen.compound.refTextType? }
-
----@class doxygen.compound.docParamName (mixed)
----@field direction doxygen.compound.DoxParamDir? (attribute)
----@field content doxygen.compound.docParamName
----| string (text content)
----| { name: "ref", value: doxygen.compound.refTextType? }
-
----@class doxygen.compound.docXRefSectType
---- start sequence
----@field xreftitle string[] (element)
----@field xrefdescription doxygen.compound.descriptionType (element)
---- end sequence
----@field id string? (attribute)
-
----@class doxygen.compound.docCopyType
---- start sequence
----@field para doxygen.compound.docParaType[] (element)
----@field sect1 doxygen.compound.docSect1Type[] (element)
----@field internal doxygen.compound.docInternalType? (element)
---- end sequence
----@field link string? (attribute)
-
----@class doxygen.compound.docDetailsType
---- start sequence
----@field summary doxygen.compound.docSummaryType? (element)
----@field para doxygen.compound.docParaType[] (element)
---- end sequence
-
----@class doxygen.compound.docBlockQuoteType
---- start sequence
----@field para doxygen.compound.docParaType[] (element)
---- end sequence
-
----@class doxygen.compound.docParBlockType
---- start sequence
----@field para doxygen.compound.docParaType[] (element)
---- end sequence
-
----@class doxygen.compound.docEmptyType
-
----@class doxygen.compound.tableofcontentsType
---- start sequence
----@field tocsect doxygen.compound.tableofcontentsKindType[] (element)
---- end sequence
-
----@class doxygen.compound.tableofcontentsKindType
---- start sequence
----@field name string (element)
----@field reference string (element)
----@field tableofcontents doxygen.compound.tableofcontentsType[] (element)
---- end sequence
-
----@class doxygen.compound.docEmojiType
----@field name string? (attribute)
----@field unicode string? (attribute)
-
---------------------------------
--- Groups
---------------------------------
----@class doxygen.compound.docTitleCmdGroup
----@field choice
 ---| { name: "ulink", value: doxygen.compound.docURLLink }
 ---| { name: "bold", value: doxygen.compound.docMarkupType }
 ---| { name: "s", value: doxygen.compound.docMarkupType }
@@ -1185,8 +928,291 @@
 ---| { name: "euro", value: doxygen.compound.docEmptyType }
 ---| { name: "tm", value: doxygen.compound.docEmptyType }
 
----@class doxygen.compound.docCmdGroup
----@field choice
+---@class doxygen.compound.docSummaryType (mixed)
+---@field content doxygen.compound.docSummaryType
+---| string (text content)
+---| { name: "ulink", value: doxygen.compound.docURLLink }
+---| { name: "bold", value: doxygen.compound.docMarkupType }
+---| { name: "s", value: doxygen.compound.docMarkupType }
+---| { name: "strike", value: doxygen.compound.docMarkupType }
+---| { name: "underline", value: doxygen.compound.docMarkupType }
+---| { name: "emphasis", value: doxygen.compound.docMarkupType }
+---| { name: "computeroutput", value: doxygen.compound.docMarkupType }
+---| { name: "subscript", value: doxygen.compound.docMarkupType }
+---| { name: "superscript", value: doxygen.compound.docMarkupType }
+---| { name: "center", value: doxygen.compound.docMarkupType }
+---| { name: "small", value: doxygen.compound.docMarkupType }
+---| { name: "cite", value: doxygen.compound.docMarkupType }
+---| { name: "del", value: doxygen.compound.docMarkupType }
+---| { name: "ins", value: doxygen.compound.docMarkupType }
+---| { name: "htmlonly", value: doxygen.compound.docHtmlOnlyType }
+---| { name: "manonly", value: string }
+---| { name: "xmlonly", value: string }
+---| { name: "rtfonly", value: string }
+---| { name: "latexonly", value: string }
+---| { name: "docbookonly", value: string }
+---| { name: "image", value: doxygen.compound.docImageType }
+---| { name: "dot", value: doxygen.compound.docDotMscType }
+---| { name: "msc", value: doxygen.compound.docDotMscType }
+---| { name: "plantuml", value: doxygen.compound.docPlantumlType }
+---| { name: "anchor", value: doxygen.compound.docAnchorType }
+---| { name: "formula", value: doxygen.compound.docFormulaType }
+---| { name: "ref", value: doxygen.compound.docRefTextType }
+---| { name: "emoji", value: doxygen.compound.docEmojiType }
+---| { name: "linebreak", value: doxygen.compound.docEmptyType }
+---| { name: "nonbreakablespace", value: doxygen.compound.docEmptyType }
+---| { name: "iexcl", value: doxygen.compound.docEmptyType }
+---| { name: "cent", value: doxygen.compound.docEmptyType }
+---| { name: "pound", value: doxygen.compound.docEmptyType }
+---| { name: "curren", value: doxygen.compound.docEmptyType }
+---| { name: "yen", value: doxygen.compound.docEmptyType }
+---| { name: "brvbar", value: doxygen.compound.docEmptyType }
+---| { name: "sect", value: doxygen.compound.docEmptyType }
+---| { name: "umlaut", value: doxygen.compound.docEmptyType }
+---| { name: "copy", value: doxygen.compound.docEmptyType }
+---| { name: "ordf", value: doxygen.compound.docEmptyType }
+---| { name: "laquo", value: doxygen.compound.docEmptyType }
+---| { name: "not", value: doxygen.compound.docEmptyType }
+---| { name: "shy", value: doxygen.compound.docEmptyType }
+---| { name: "registered", value: doxygen.compound.docEmptyType }
+---| { name: "macr", value: doxygen.compound.docEmptyType }
+---| { name: "deg", value: doxygen.compound.docEmptyType }
+---| { name: "plusmn", value: doxygen.compound.docEmptyType }
+---| { name: "sup2", value: doxygen.compound.docEmptyType }
+---| { name: "sup3", value: doxygen.compound.docEmptyType }
+---| { name: "acute", value: doxygen.compound.docEmptyType }
+---| { name: "micro", value: doxygen.compound.docEmptyType }
+---| { name: "para", value: doxygen.compound.docEmptyType }
+---| { name: "middot", value: doxygen.compound.docEmptyType }
+---| { name: "cedil", value: doxygen.compound.docEmptyType }
+---| { name: "sup1", value: doxygen.compound.docEmptyType }
+---| { name: "ordm", value: doxygen.compound.docEmptyType }
+---| { name: "raquo", value: doxygen.compound.docEmptyType }
+---| { name: "frac14", value: doxygen.compound.docEmptyType }
+---| { name: "frac12", value: doxygen.compound.docEmptyType }
+---| { name: "frac34", value: doxygen.compound.docEmptyType }
+---| { name: "iquest", value: doxygen.compound.docEmptyType }
+---| { name: "Agrave", value: doxygen.compound.docEmptyType }
+---| { name: "Aacute", value: doxygen.compound.docEmptyType }
+---| { name: "Acirc", value: doxygen.compound.docEmptyType }
+---| { name: "Atilde", value: doxygen.compound.docEmptyType }
+---| { name: "Aumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "Aring", value: doxygen.compound.docEmptyType }
+---| { name: "AElig", value: doxygen.compound.docEmptyType }
+---| { name: "Ccedil", value: doxygen.compound.docEmptyType }
+---| { name: "Egrave", value: doxygen.compound.docEmptyType }
+---| { name: "Eacute", value: doxygen.compound.docEmptyType }
+---| { name: "Ecirc", value: doxygen.compound.docEmptyType }
+---| { name: "Eumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "Igrave", value: doxygen.compound.docEmptyType }
+---| { name: "Iacute", value: doxygen.compound.docEmptyType }
+---| { name: "Icirc", value: doxygen.compound.docEmptyType }
+---| { name: "Iumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "ETH", value: doxygen.compound.docEmptyType }
+---| { name: "Ntilde", value: doxygen.compound.docEmptyType }
+---| { name: "Ograve", value: doxygen.compound.docEmptyType }
+---| { name: "Oacute", value: doxygen.compound.docEmptyType }
+---| { name: "Ocirc", value: doxygen.compound.docEmptyType }
+---| { name: "Otilde", value: doxygen.compound.docEmptyType }
+---| { name: "Oumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "times", value: doxygen.compound.docEmptyType }
+---| { name: "Oslash", value: doxygen.compound.docEmptyType }
+---| { name: "Ugrave", value: doxygen.compound.docEmptyType }
+---| { name: "Uacute", value: doxygen.compound.docEmptyType }
+---| { name: "Ucirc", value: doxygen.compound.docEmptyType }
+---| { name: "Uumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "Yacute", value: doxygen.compound.docEmptyType }
+---| { name: "THORN", value: doxygen.compound.docEmptyType }
+---| { name: "szlig", value: doxygen.compound.docEmptyType }
+---| { name: "agrave", value: doxygen.compound.docEmptyType }
+---| { name: "aacute", value: doxygen.compound.docEmptyType }
+---| { name: "acirc", value: doxygen.compound.docEmptyType }
+---| { name: "atilde", value: doxygen.compound.docEmptyType }
+---| { name: "aumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "aring", value: doxygen.compound.docEmptyType }
+---| { name: "aelig", value: doxygen.compound.docEmptyType }
+---| { name: "ccedil", value: doxygen.compound.docEmptyType }
+---| { name: "egrave", value: doxygen.compound.docEmptyType }
+---| { name: "eacute", value: doxygen.compound.docEmptyType }
+---| { name: "ecirc", value: doxygen.compound.docEmptyType }
+---| { name: "eumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "igrave", value: doxygen.compound.docEmptyType }
+---| { name: "iacute", value: doxygen.compound.docEmptyType }
+---| { name: "icirc", value: doxygen.compound.docEmptyType }
+---| { name: "iumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "eth", value: doxygen.compound.docEmptyType }
+---| { name: "ntilde", value: doxygen.compound.docEmptyType }
+---| { name: "ograve", value: doxygen.compound.docEmptyType }
+---| { name: "oacute", value: doxygen.compound.docEmptyType }
+---| { name: "ocirc", value: doxygen.compound.docEmptyType }
+---| { name: "otilde", value: doxygen.compound.docEmptyType }
+---| { name: "oumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "divide", value: doxygen.compound.docEmptyType }
+---| { name: "oslash", value: doxygen.compound.docEmptyType }
+---| { name: "ugrave", value: doxygen.compound.docEmptyType }
+---| { name: "uacute", value: doxygen.compound.docEmptyType }
+---| { name: "ucirc", value: doxygen.compound.docEmptyType }
+---| { name: "uumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "yacute", value: doxygen.compound.docEmptyType }
+---| { name: "thorn", value: doxygen.compound.docEmptyType }
+---| { name: "yumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "fnof", value: doxygen.compound.docEmptyType }
+---| { name: "Alpha", value: doxygen.compound.docEmptyType }
+---| { name: "Beta", value: doxygen.compound.docEmptyType }
+---| { name: "Gamma", value: doxygen.compound.docEmptyType }
+---| { name: "Delta", value: doxygen.compound.docEmptyType }
+---| { name: "Epsilon", value: doxygen.compound.docEmptyType }
+---| { name: "Zeta", value: doxygen.compound.docEmptyType }
+---| { name: "Eta", value: doxygen.compound.docEmptyType }
+---| { name: "Theta", value: doxygen.compound.docEmptyType }
+---| { name: "Iota", value: doxygen.compound.docEmptyType }
+---| { name: "Kappa", value: doxygen.compound.docEmptyType }
+---| { name: "Lambda", value: doxygen.compound.docEmptyType }
+---| { name: "Mu", value: doxygen.compound.docEmptyType }
+---| { name: "Nu", value: doxygen.compound.docEmptyType }
+---| { name: "Xi", value: doxygen.compound.docEmptyType }
+---| { name: "Omicron", value: doxygen.compound.docEmptyType }
+---| { name: "Pi", value: doxygen.compound.docEmptyType }
+---| { name: "Rho", value: doxygen.compound.docEmptyType }
+---| { name: "Sigma", value: doxygen.compound.docEmptyType }
+---| { name: "Tau", value: doxygen.compound.docEmptyType }
+---| { name: "Upsilon", value: doxygen.compound.docEmptyType }
+---| { name: "Phi", value: doxygen.compound.docEmptyType }
+---| { name: "Chi", value: doxygen.compound.docEmptyType }
+---| { name: "Psi", value: doxygen.compound.docEmptyType }
+---| { name: "Omega", value: doxygen.compound.docEmptyType }
+---| { name: "alpha", value: doxygen.compound.docEmptyType }
+---| { name: "beta", value: doxygen.compound.docEmptyType }
+---| { name: "gamma", value: doxygen.compound.docEmptyType }
+---| { name: "delta", value: doxygen.compound.docEmptyType }
+---| { name: "epsilon", value: doxygen.compound.docEmptyType }
+---| { name: "zeta", value: doxygen.compound.docEmptyType }
+---| { name: "eta", value: doxygen.compound.docEmptyType }
+---| { name: "theta", value: doxygen.compound.docEmptyType }
+---| { name: "iota", value: doxygen.compound.docEmptyType }
+---| { name: "kappa", value: doxygen.compound.docEmptyType }
+---| { name: "lambda", value: doxygen.compound.docEmptyType }
+---| { name: "mu", value: doxygen.compound.docEmptyType }
+---| { name: "nu", value: doxygen.compound.docEmptyType }
+---| { name: "xi", value: doxygen.compound.docEmptyType }
+---| { name: "omicron", value: doxygen.compound.docEmptyType }
+---| { name: "pi", value: doxygen.compound.docEmptyType }
+---| { name: "rho", value: doxygen.compound.docEmptyType }
+---| { name: "sigmaf", value: doxygen.compound.docEmptyType }
+---| { name: "sigma", value: doxygen.compound.docEmptyType }
+---| { name: "tau", value: doxygen.compound.docEmptyType }
+---| { name: "upsilon", value: doxygen.compound.docEmptyType }
+---| { name: "phi", value: doxygen.compound.docEmptyType }
+---| { name: "chi", value: doxygen.compound.docEmptyType }
+---| { name: "psi", value: doxygen.compound.docEmptyType }
+---| { name: "omega", value: doxygen.compound.docEmptyType }
+---| { name: "thetasym", value: doxygen.compound.docEmptyType }
+---| { name: "upsih", value: doxygen.compound.docEmptyType }
+---| { name: "piv", value: doxygen.compound.docEmptyType }
+---| { name: "bull", value: doxygen.compound.docEmptyType }
+---| { name: "hellip", value: doxygen.compound.docEmptyType }
+---| { name: "prime", value: doxygen.compound.docEmptyType }
+---| { name: "Prime", value: doxygen.compound.docEmptyType }
+---| { name: "oline", value: doxygen.compound.docEmptyType }
+---| { name: "frasl", value: doxygen.compound.docEmptyType }
+---| { name: "weierp", value: doxygen.compound.docEmptyType }
+---| { name: "imaginary", value: doxygen.compound.docEmptyType }
+---| { name: "real", value: doxygen.compound.docEmptyType }
+---| { name: "trademark", value: doxygen.compound.docEmptyType }
+---| { name: "alefsym", value: doxygen.compound.docEmptyType }
+---| { name: "larr", value: doxygen.compound.docEmptyType }
+---| { name: "uarr", value: doxygen.compound.docEmptyType }
+---| { name: "rarr", value: doxygen.compound.docEmptyType }
+---| { name: "darr", value: doxygen.compound.docEmptyType }
+---| { name: "harr", value: doxygen.compound.docEmptyType }
+---| { name: "crarr", value: doxygen.compound.docEmptyType }
+---| { name: "lArr", value: doxygen.compound.docEmptyType }
+---| { name: "uArr", value: doxygen.compound.docEmptyType }
+---| { name: "rArr", value: doxygen.compound.docEmptyType }
+---| { name: "dArr", value: doxygen.compound.docEmptyType }
+---| { name: "hArr", value: doxygen.compound.docEmptyType }
+---| { name: "forall", value: doxygen.compound.docEmptyType }
+---| { name: "part", value: doxygen.compound.docEmptyType }
+---| { name: "exist", value: doxygen.compound.docEmptyType }
+---| { name: "empty", value: doxygen.compound.docEmptyType }
+---| { name: "nabla", value: doxygen.compound.docEmptyType }
+---| { name: "isin", value: doxygen.compound.docEmptyType }
+---| { name: "notin", value: doxygen.compound.docEmptyType }
+---| { name: "ni", value: doxygen.compound.docEmptyType }
+---| { name: "prod", value: doxygen.compound.docEmptyType }
+---| { name: "sum", value: doxygen.compound.docEmptyType }
+---| { name: "minus", value: doxygen.compound.docEmptyType }
+---| { name: "lowast", value: doxygen.compound.docEmptyType }
+---| { name: "radic", value: doxygen.compound.docEmptyType }
+---| { name: "prop", value: doxygen.compound.docEmptyType }
+---| { name: "infin", value: doxygen.compound.docEmptyType }
+---| { name: "ang", value: doxygen.compound.docEmptyType }
+---| { name: "and", value: doxygen.compound.docEmptyType }
+---| { name: "or", value: doxygen.compound.docEmptyType }
+---| { name: "cap", value: doxygen.compound.docEmptyType }
+---| { name: "cup", value: doxygen.compound.docEmptyType }
+---| { name: "int", value: doxygen.compound.docEmptyType }
+---| { name: "there4", value: doxygen.compound.docEmptyType }
+---| { name: "sim", value: doxygen.compound.docEmptyType }
+---| { name: "cong", value: doxygen.compound.docEmptyType }
+---| { name: "asymp", value: doxygen.compound.docEmptyType }
+---| { name: "ne", value: doxygen.compound.docEmptyType }
+---| { name: "equiv", value: doxygen.compound.docEmptyType }
+---| { name: "le", value: doxygen.compound.docEmptyType }
+---| { name: "ge", value: doxygen.compound.docEmptyType }
+---| { name: "sub", value: doxygen.compound.docEmptyType }
+---| { name: "sup", value: doxygen.compound.docEmptyType }
+---| { name: "nsub", value: doxygen.compound.docEmptyType }
+---| { name: "sube", value: doxygen.compound.docEmptyType }
+---| { name: "supe", value: doxygen.compound.docEmptyType }
+---| { name: "oplus", value: doxygen.compound.docEmptyType }
+---| { name: "otimes", value: doxygen.compound.docEmptyType }
+---| { name: "perp", value: doxygen.compound.docEmptyType }
+---| { name: "sdot", value: doxygen.compound.docEmptyType }
+---| { name: "lceil", value: doxygen.compound.docEmptyType }
+---| { name: "rceil", value: doxygen.compound.docEmptyType }
+---| { name: "lfloor", value: doxygen.compound.docEmptyType }
+---| { name: "rfloor", value: doxygen.compound.docEmptyType }
+---| { name: "lang", value: doxygen.compound.docEmptyType }
+---| { name: "rang", value: doxygen.compound.docEmptyType }
+---| { name: "loz", value: doxygen.compound.docEmptyType }
+---| { name: "spades", value: doxygen.compound.docEmptyType }
+---| { name: "clubs", value: doxygen.compound.docEmptyType }
+---| { name: "hearts", value: doxygen.compound.docEmptyType }
+---| { name: "diams", value: doxygen.compound.docEmptyType }
+---| { name: "OElig", value: doxygen.compound.docEmptyType }
+---| { name: "oelig", value: doxygen.compound.docEmptyType }
+---| { name: "Scaron", value: doxygen.compound.docEmptyType }
+---| { name: "scaron", value: doxygen.compound.docEmptyType }
+---| { name: "Yumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "circ", value: doxygen.compound.docEmptyType }
+---| { name: "tilde", value: doxygen.compound.docEmptyType }
+---| { name: "ensp", value: doxygen.compound.docEmptyType }
+---| { name: "emsp", value: doxygen.compound.docEmptyType }
+---| { name: "thinsp", value: doxygen.compound.docEmptyType }
+---| { name: "zwnj", value: doxygen.compound.docEmptyType }
+---| { name: "zwj", value: doxygen.compound.docEmptyType }
+---| { name: "lrm", value: doxygen.compound.docEmptyType }
+---| { name: "rlm", value: doxygen.compound.docEmptyType }
+---| { name: "ndash", value: doxygen.compound.docEmptyType }
+---| { name: "mdash", value: doxygen.compound.docEmptyType }
+---| { name: "lsquo", value: doxygen.compound.docEmptyType }
+---| { name: "rsquo", value: doxygen.compound.docEmptyType }
+---| { name: "sbquo", value: doxygen.compound.docEmptyType }
+---| { name: "ldquo", value: doxygen.compound.docEmptyType }
+---| { name: "rdquo", value: doxygen.compound.docEmptyType }
+---| { name: "bdquo", value: doxygen.compound.docEmptyType }
+---| { name: "dagger", value: doxygen.compound.docEmptyType }
+---| { name: "Dagger", value: doxygen.compound.docEmptyType }
+---| { name: "permil", value: doxygen.compound.docEmptyType }
+---| { name: "lsaquo", value: doxygen.compound.docEmptyType }
+---| { name: "rsaquo", value: doxygen.compound.docEmptyType }
+---| { name: "euro", value: doxygen.compound.docEmptyType }
+---| { name: "tm", value: doxygen.compound.docEmptyType }
+
+---@class doxygen.compound.docParaType (mixed)
+---@field content doxygen.compound.docParaType
+---| string (text content)
 ---| { name: "ulink", value: doxygen.compound.docURLLink }
 ---| { name: "bold", value: doxygen.compound.docMarkupType }
 ---| { name: "s", value: doxygen.compound.docMarkupType }
@@ -1491,8 +1517,3040 @@
 ---| { name: "blockquote", value: doxygen.compound.docBlockQuoteType }
 ---| { name: "parblock", value: doxygen.compound.docParBlockType }
 
----@class doxygen.compound.docVariableListGroup
+---@class doxygen.compound.docMarkupType (mixed)
+---@field content doxygen.compound.docMarkupType
+---| string (text content)
+---| { name: "ulink", value: doxygen.compound.docURLLink }
+---| { name: "bold", value: doxygen.compound.docMarkupType }
+---| { name: "s", value: doxygen.compound.docMarkupType }
+---| { name: "strike", value: doxygen.compound.docMarkupType }
+---| { name: "underline", value: doxygen.compound.docMarkupType }
+---| { name: "emphasis", value: doxygen.compound.docMarkupType }
+---| { name: "computeroutput", value: doxygen.compound.docMarkupType }
+---| { name: "subscript", value: doxygen.compound.docMarkupType }
+---| { name: "superscript", value: doxygen.compound.docMarkupType }
+---| { name: "center", value: doxygen.compound.docMarkupType }
+---| { name: "small", value: doxygen.compound.docMarkupType }
+---| { name: "cite", value: doxygen.compound.docMarkupType }
+---| { name: "del", value: doxygen.compound.docMarkupType }
+---| { name: "ins", value: doxygen.compound.docMarkupType }
+---| { name: "htmlonly", value: doxygen.compound.docHtmlOnlyType }
+---| { name: "manonly", value: string }
+---| { name: "xmlonly", value: string }
+---| { name: "rtfonly", value: string }
+---| { name: "latexonly", value: string }
+---| { name: "docbookonly", value: string }
+---| { name: "image", value: doxygen.compound.docImageType }
+---| { name: "dot", value: doxygen.compound.docDotMscType }
+---| { name: "msc", value: doxygen.compound.docDotMscType }
+---| { name: "plantuml", value: doxygen.compound.docPlantumlType }
+---| { name: "anchor", value: doxygen.compound.docAnchorType }
+---| { name: "formula", value: doxygen.compound.docFormulaType }
+---| { name: "ref", value: doxygen.compound.docRefTextType }
+---| { name: "emoji", value: doxygen.compound.docEmojiType }
+---| { name: "linebreak", value: doxygen.compound.docEmptyType }
+---| { name: "nonbreakablespace", value: doxygen.compound.docEmptyType }
+---| { name: "iexcl", value: doxygen.compound.docEmptyType }
+---| { name: "cent", value: doxygen.compound.docEmptyType }
+---| { name: "pound", value: doxygen.compound.docEmptyType }
+---| { name: "curren", value: doxygen.compound.docEmptyType }
+---| { name: "yen", value: doxygen.compound.docEmptyType }
+---| { name: "brvbar", value: doxygen.compound.docEmptyType }
+---| { name: "sect", value: doxygen.compound.docEmptyType }
+---| { name: "umlaut", value: doxygen.compound.docEmptyType }
+---| { name: "copy", value: doxygen.compound.docEmptyType }
+---| { name: "ordf", value: doxygen.compound.docEmptyType }
+---| { name: "laquo", value: doxygen.compound.docEmptyType }
+---| { name: "not", value: doxygen.compound.docEmptyType }
+---| { name: "shy", value: doxygen.compound.docEmptyType }
+---| { name: "registered", value: doxygen.compound.docEmptyType }
+---| { name: "macr", value: doxygen.compound.docEmptyType }
+---| { name: "deg", value: doxygen.compound.docEmptyType }
+---| { name: "plusmn", value: doxygen.compound.docEmptyType }
+---| { name: "sup2", value: doxygen.compound.docEmptyType }
+---| { name: "sup3", value: doxygen.compound.docEmptyType }
+---| { name: "acute", value: doxygen.compound.docEmptyType }
+---| { name: "micro", value: doxygen.compound.docEmptyType }
+---| { name: "para", value: doxygen.compound.docEmptyType }
+---| { name: "middot", value: doxygen.compound.docEmptyType }
+---| { name: "cedil", value: doxygen.compound.docEmptyType }
+---| { name: "sup1", value: doxygen.compound.docEmptyType }
+---| { name: "ordm", value: doxygen.compound.docEmptyType }
+---| { name: "raquo", value: doxygen.compound.docEmptyType }
+---| { name: "frac14", value: doxygen.compound.docEmptyType }
+---| { name: "frac12", value: doxygen.compound.docEmptyType }
+---| { name: "frac34", value: doxygen.compound.docEmptyType }
+---| { name: "iquest", value: doxygen.compound.docEmptyType }
+---| { name: "Agrave", value: doxygen.compound.docEmptyType }
+---| { name: "Aacute", value: doxygen.compound.docEmptyType }
+---| { name: "Acirc", value: doxygen.compound.docEmptyType }
+---| { name: "Atilde", value: doxygen.compound.docEmptyType }
+---| { name: "Aumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "Aring", value: doxygen.compound.docEmptyType }
+---| { name: "AElig", value: doxygen.compound.docEmptyType }
+---| { name: "Ccedil", value: doxygen.compound.docEmptyType }
+---| { name: "Egrave", value: doxygen.compound.docEmptyType }
+---| { name: "Eacute", value: doxygen.compound.docEmptyType }
+---| { name: "Ecirc", value: doxygen.compound.docEmptyType }
+---| { name: "Eumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "Igrave", value: doxygen.compound.docEmptyType }
+---| { name: "Iacute", value: doxygen.compound.docEmptyType }
+---| { name: "Icirc", value: doxygen.compound.docEmptyType }
+---| { name: "Iumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "ETH", value: doxygen.compound.docEmptyType }
+---| { name: "Ntilde", value: doxygen.compound.docEmptyType }
+---| { name: "Ograve", value: doxygen.compound.docEmptyType }
+---| { name: "Oacute", value: doxygen.compound.docEmptyType }
+---| { name: "Ocirc", value: doxygen.compound.docEmptyType }
+---| { name: "Otilde", value: doxygen.compound.docEmptyType }
+---| { name: "Oumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "times", value: doxygen.compound.docEmptyType }
+---| { name: "Oslash", value: doxygen.compound.docEmptyType }
+---| { name: "Ugrave", value: doxygen.compound.docEmptyType }
+---| { name: "Uacute", value: doxygen.compound.docEmptyType }
+---| { name: "Ucirc", value: doxygen.compound.docEmptyType }
+---| { name: "Uumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "Yacute", value: doxygen.compound.docEmptyType }
+---| { name: "THORN", value: doxygen.compound.docEmptyType }
+---| { name: "szlig", value: doxygen.compound.docEmptyType }
+---| { name: "agrave", value: doxygen.compound.docEmptyType }
+---| { name: "aacute", value: doxygen.compound.docEmptyType }
+---| { name: "acirc", value: doxygen.compound.docEmptyType }
+---| { name: "atilde", value: doxygen.compound.docEmptyType }
+---| { name: "aumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "aring", value: doxygen.compound.docEmptyType }
+---| { name: "aelig", value: doxygen.compound.docEmptyType }
+---| { name: "ccedil", value: doxygen.compound.docEmptyType }
+---| { name: "egrave", value: doxygen.compound.docEmptyType }
+---| { name: "eacute", value: doxygen.compound.docEmptyType }
+---| { name: "ecirc", value: doxygen.compound.docEmptyType }
+---| { name: "eumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "igrave", value: doxygen.compound.docEmptyType }
+---| { name: "iacute", value: doxygen.compound.docEmptyType }
+---| { name: "icirc", value: doxygen.compound.docEmptyType }
+---| { name: "iumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "eth", value: doxygen.compound.docEmptyType }
+---| { name: "ntilde", value: doxygen.compound.docEmptyType }
+---| { name: "ograve", value: doxygen.compound.docEmptyType }
+---| { name: "oacute", value: doxygen.compound.docEmptyType }
+---| { name: "ocirc", value: doxygen.compound.docEmptyType }
+---| { name: "otilde", value: doxygen.compound.docEmptyType }
+---| { name: "oumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "divide", value: doxygen.compound.docEmptyType }
+---| { name: "oslash", value: doxygen.compound.docEmptyType }
+---| { name: "ugrave", value: doxygen.compound.docEmptyType }
+---| { name: "uacute", value: doxygen.compound.docEmptyType }
+---| { name: "ucirc", value: doxygen.compound.docEmptyType }
+---| { name: "uumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "yacute", value: doxygen.compound.docEmptyType }
+---| { name: "thorn", value: doxygen.compound.docEmptyType }
+---| { name: "yumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "fnof", value: doxygen.compound.docEmptyType }
+---| { name: "Alpha", value: doxygen.compound.docEmptyType }
+---| { name: "Beta", value: doxygen.compound.docEmptyType }
+---| { name: "Gamma", value: doxygen.compound.docEmptyType }
+---| { name: "Delta", value: doxygen.compound.docEmptyType }
+---| { name: "Epsilon", value: doxygen.compound.docEmptyType }
+---| { name: "Zeta", value: doxygen.compound.docEmptyType }
+---| { name: "Eta", value: doxygen.compound.docEmptyType }
+---| { name: "Theta", value: doxygen.compound.docEmptyType }
+---| { name: "Iota", value: doxygen.compound.docEmptyType }
+---| { name: "Kappa", value: doxygen.compound.docEmptyType }
+---| { name: "Lambda", value: doxygen.compound.docEmptyType }
+---| { name: "Mu", value: doxygen.compound.docEmptyType }
+---| { name: "Nu", value: doxygen.compound.docEmptyType }
+---| { name: "Xi", value: doxygen.compound.docEmptyType }
+---| { name: "Omicron", value: doxygen.compound.docEmptyType }
+---| { name: "Pi", value: doxygen.compound.docEmptyType }
+---| { name: "Rho", value: doxygen.compound.docEmptyType }
+---| { name: "Sigma", value: doxygen.compound.docEmptyType }
+---| { name: "Tau", value: doxygen.compound.docEmptyType }
+---| { name: "Upsilon", value: doxygen.compound.docEmptyType }
+---| { name: "Phi", value: doxygen.compound.docEmptyType }
+---| { name: "Chi", value: doxygen.compound.docEmptyType }
+---| { name: "Psi", value: doxygen.compound.docEmptyType }
+---| { name: "Omega", value: doxygen.compound.docEmptyType }
+---| { name: "alpha", value: doxygen.compound.docEmptyType }
+---| { name: "beta", value: doxygen.compound.docEmptyType }
+---| { name: "gamma", value: doxygen.compound.docEmptyType }
+---| { name: "delta", value: doxygen.compound.docEmptyType }
+---| { name: "epsilon", value: doxygen.compound.docEmptyType }
+---| { name: "zeta", value: doxygen.compound.docEmptyType }
+---| { name: "eta", value: doxygen.compound.docEmptyType }
+---| { name: "theta", value: doxygen.compound.docEmptyType }
+---| { name: "iota", value: doxygen.compound.docEmptyType }
+---| { name: "kappa", value: doxygen.compound.docEmptyType }
+---| { name: "lambda", value: doxygen.compound.docEmptyType }
+---| { name: "mu", value: doxygen.compound.docEmptyType }
+---| { name: "nu", value: doxygen.compound.docEmptyType }
+---| { name: "xi", value: doxygen.compound.docEmptyType }
+---| { name: "omicron", value: doxygen.compound.docEmptyType }
+---| { name: "pi", value: doxygen.compound.docEmptyType }
+---| { name: "rho", value: doxygen.compound.docEmptyType }
+---| { name: "sigmaf", value: doxygen.compound.docEmptyType }
+---| { name: "sigma", value: doxygen.compound.docEmptyType }
+---| { name: "tau", value: doxygen.compound.docEmptyType }
+---| { name: "upsilon", value: doxygen.compound.docEmptyType }
+---| { name: "phi", value: doxygen.compound.docEmptyType }
+---| { name: "chi", value: doxygen.compound.docEmptyType }
+---| { name: "psi", value: doxygen.compound.docEmptyType }
+---| { name: "omega", value: doxygen.compound.docEmptyType }
+---| { name: "thetasym", value: doxygen.compound.docEmptyType }
+---| { name: "upsih", value: doxygen.compound.docEmptyType }
+---| { name: "piv", value: doxygen.compound.docEmptyType }
+---| { name: "bull", value: doxygen.compound.docEmptyType }
+---| { name: "hellip", value: doxygen.compound.docEmptyType }
+---| { name: "prime", value: doxygen.compound.docEmptyType }
+---| { name: "Prime", value: doxygen.compound.docEmptyType }
+---| { name: "oline", value: doxygen.compound.docEmptyType }
+---| { name: "frasl", value: doxygen.compound.docEmptyType }
+---| { name: "weierp", value: doxygen.compound.docEmptyType }
+---| { name: "imaginary", value: doxygen.compound.docEmptyType }
+---| { name: "real", value: doxygen.compound.docEmptyType }
+---| { name: "trademark", value: doxygen.compound.docEmptyType }
+---| { name: "alefsym", value: doxygen.compound.docEmptyType }
+---| { name: "larr", value: doxygen.compound.docEmptyType }
+---| { name: "uarr", value: doxygen.compound.docEmptyType }
+---| { name: "rarr", value: doxygen.compound.docEmptyType }
+---| { name: "darr", value: doxygen.compound.docEmptyType }
+---| { name: "harr", value: doxygen.compound.docEmptyType }
+---| { name: "crarr", value: doxygen.compound.docEmptyType }
+---| { name: "lArr", value: doxygen.compound.docEmptyType }
+---| { name: "uArr", value: doxygen.compound.docEmptyType }
+---| { name: "rArr", value: doxygen.compound.docEmptyType }
+---| { name: "dArr", value: doxygen.compound.docEmptyType }
+---| { name: "hArr", value: doxygen.compound.docEmptyType }
+---| { name: "forall", value: doxygen.compound.docEmptyType }
+---| { name: "part", value: doxygen.compound.docEmptyType }
+---| { name: "exist", value: doxygen.compound.docEmptyType }
+---| { name: "empty", value: doxygen.compound.docEmptyType }
+---| { name: "nabla", value: doxygen.compound.docEmptyType }
+---| { name: "isin", value: doxygen.compound.docEmptyType }
+---| { name: "notin", value: doxygen.compound.docEmptyType }
+---| { name: "ni", value: doxygen.compound.docEmptyType }
+---| { name: "prod", value: doxygen.compound.docEmptyType }
+---| { name: "sum", value: doxygen.compound.docEmptyType }
+---| { name: "minus", value: doxygen.compound.docEmptyType }
+---| { name: "lowast", value: doxygen.compound.docEmptyType }
+---| { name: "radic", value: doxygen.compound.docEmptyType }
+---| { name: "prop", value: doxygen.compound.docEmptyType }
+---| { name: "infin", value: doxygen.compound.docEmptyType }
+---| { name: "ang", value: doxygen.compound.docEmptyType }
+---| { name: "and", value: doxygen.compound.docEmptyType }
+---| { name: "or", value: doxygen.compound.docEmptyType }
+---| { name: "cap", value: doxygen.compound.docEmptyType }
+---| { name: "cup", value: doxygen.compound.docEmptyType }
+---| { name: "int", value: doxygen.compound.docEmptyType }
+---| { name: "there4", value: doxygen.compound.docEmptyType }
+---| { name: "sim", value: doxygen.compound.docEmptyType }
+---| { name: "cong", value: doxygen.compound.docEmptyType }
+---| { name: "asymp", value: doxygen.compound.docEmptyType }
+---| { name: "ne", value: doxygen.compound.docEmptyType }
+---| { name: "equiv", value: doxygen.compound.docEmptyType }
+---| { name: "le", value: doxygen.compound.docEmptyType }
+---| { name: "ge", value: doxygen.compound.docEmptyType }
+---| { name: "sub", value: doxygen.compound.docEmptyType }
+---| { name: "sup", value: doxygen.compound.docEmptyType }
+---| { name: "nsub", value: doxygen.compound.docEmptyType }
+---| { name: "sube", value: doxygen.compound.docEmptyType }
+---| { name: "supe", value: doxygen.compound.docEmptyType }
+---| { name: "oplus", value: doxygen.compound.docEmptyType }
+---| { name: "otimes", value: doxygen.compound.docEmptyType }
+---| { name: "perp", value: doxygen.compound.docEmptyType }
+---| { name: "sdot", value: doxygen.compound.docEmptyType }
+---| { name: "lceil", value: doxygen.compound.docEmptyType }
+---| { name: "rceil", value: doxygen.compound.docEmptyType }
+---| { name: "lfloor", value: doxygen.compound.docEmptyType }
+---| { name: "rfloor", value: doxygen.compound.docEmptyType }
+---| { name: "lang", value: doxygen.compound.docEmptyType }
+---| { name: "rang", value: doxygen.compound.docEmptyType }
+---| { name: "loz", value: doxygen.compound.docEmptyType }
+---| { name: "spades", value: doxygen.compound.docEmptyType }
+---| { name: "clubs", value: doxygen.compound.docEmptyType }
+---| { name: "hearts", value: doxygen.compound.docEmptyType }
+---| { name: "diams", value: doxygen.compound.docEmptyType }
+---| { name: "OElig", value: doxygen.compound.docEmptyType }
+---| { name: "oelig", value: doxygen.compound.docEmptyType }
+---| { name: "Scaron", value: doxygen.compound.docEmptyType }
+---| { name: "scaron", value: doxygen.compound.docEmptyType }
+---| { name: "Yumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "circ", value: doxygen.compound.docEmptyType }
+---| { name: "tilde", value: doxygen.compound.docEmptyType }
+---| { name: "ensp", value: doxygen.compound.docEmptyType }
+---| { name: "emsp", value: doxygen.compound.docEmptyType }
+---| { name: "thinsp", value: doxygen.compound.docEmptyType }
+---| { name: "zwnj", value: doxygen.compound.docEmptyType }
+---| { name: "zwj", value: doxygen.compound.docEmptyType }
+---| { name: "lrm", value: doxygen.compound.docEmptyType }
+---| { name: "rlm", value: doxygen.compound.docEmptyType }
+---| { name: "ndash", value: doxygen.compound.docEmptyType }
+---| { name: "mdash", value: doxygen.compound.docEmptyType }
+---| { name: "lsquo", value: doxygen.compound.docEmptyType }
+---| { name: "rsquo", value: doxygen.compound.docEmptyType }
+---| { name: "sbquo", value: doxygen.compound.docEmptyType }
+---| { name: "ldquo", value: doxygen.compound.docEmptyType }
+---| { name: "rdquo", value: doxygen.compound.docEmptyType }
+---| { name: "bdquo", value: doxygen.compound.docEmptyType }
+---| { name: "dagger", value: doxygen.compound.docEmptyType }
+---| { name: "Dagger", value: doxygen.compound.docEmptyType }
+---| { name: "permil", value: doxygen.compound.docEmptyType }
+---| { name: "lsaquo", value: doxygen.compound.docEmptyType }
+---| { name: "rsaquo", value: doxygen.compound.docEmptyType }
+---| { name: "euro", value: doxygen.compound.docEmptyType }
+---| { name: "tm", value: doxygen.compound.docEmptyType }
+---| { name: "hruler", value: doxygen.compound.docEmptyType }
+---| { name: "preformatted", value: doxygen.compound.docMarkupType }
+---| { name: "programlisting", value: doxygen.compound.listingType }
+---| { name: "verbatim", value: string }
+---| { name: "javadocliteral", value: string }
+---| { name: "javadoccode", value: string }
+---| { name: "indexentry", value: doxygen.compound.docIndexEntryType }
+---| { name: "orderedlist", value: doxygen.compound.docListType }
+---| { name: "itemizedlist", value: doxygen.compound.docListType }
+---| { name: "simplesect", value: doxygen.compound.docSimpleSectType }
+---| { name: "title", value: doxygen.compound.docTitleType }
+---| { name: "variablelist", value: doxygen.compound.docVariableListType }
+---| { name: "table", value: doxygen.compound.docTableType }
+---| { name: "heading", value: doxygen.compound.docHeadingType }
+---| { name: "dotfile", value: doxygen.compound.docImageFileType }
+---| { name: "mscfile", value: doxygen.compound.docImageFileType }
+---| { name: "diafile", value: doxygen.compound.docImageFileType }
+---| { name: "toclist", value: doxygen.compound.docTocListType }
+---| { name: "language", value: doxygen.compound.docLanguageType }
+---| { name: "parameterlist", value: doxygen.compound.docParamListType }
+---| { name: "xrefsect", value: doxygen.compound.docXRefSectType }
+---| { name: "copydoc", value: doxygen.compound.docCopyType }
+---| { name: "details", value: doxygen.compound.docDetailsType }
+---| { name: "blockquote", value: doxygen.compound.docBlockQuoteType }
+---| { name: "parblock", value: doxygen.compound.docParBlockType }
+
+---@class doxygen.compound.docURLLink (mixed)
+---@field url string? (attribute)
+---@field content doxygen.compound.docURLLink
+---| string (text content)
+---| { name: "ulink", value: doxygen.compound.docURLLink }
+---| { name: "bold", value: doxygen.compound.docMarkupType }
+---| { name: "s", value: doxygen.compound.docMarkupType }
+---| { name: "strike", value: doxygen.compound.docMarkupType }
+---| { name: "underline", value: doxygen.compound.docMarkupType }
+---| { name: "emphasis", value: doxygen.compound.docMarkupType }
+---| { name: "computeroutput", value: doxygen.compound.docMarkupType }
+---| { name: "subscript", value: doxygen.compound.docMarkupType }
+---| { name: "superscript", value: doxygen.compound.docMarkupType }
+---| { name: "center", value: doxygen.compound.docMarkupType }
+---| { name: "small", value: doxygen.compound.docMarkupType }
+---| { name: "cite", value: doxygen.compound.docMarkupType }
+---| { name: "del", value: doxygen.compound.docMarkupType }
+---| { name: "ins", value: doxygen.compound.docMarkupType }
+---| { name: "htmlonly", value: doxygen.compound.docHtmlOnlyType }
+---| { name: "manonly", value: string }
+---| { name: "xmlonly", value: string }
+---| { name: "rtfonly", value: string }
+---| { name: "latexonly", value: string }
+---| { name: "docbookonly", value: string }
+---| { name: "image", value: doxygen.compound.docImageType }
+---| { name: "dot", value: doxygen.compound.docDotMscType }
+---| { name: "msc", value: doxygen.compound.docDotMscType }
+---| { name: "plantuml", value: doxygen.compound.docPlantumlType }
+---| { name: "anchor", value: doxygen.compound.docAnchorType }
+---| { name: "formula", value: doxygen.compound.docFormulaType }
+---| { name: "ref", value: doxygen.compound.docRefTextType }
+---| { name: "emoji", value: doxygen.compound.docEmojiType }
+---| { name: "linebreak", value: doxygen.compound.docEmptyType }
+---| { name: "nonbreakablespace", value: doxygen.compound.docEmptyType }
+---| { name: "iexcl", value: doxygen.compound.docEmptyType }
+---| { name: "cent", value: doxygen.compound.docEmptyType }
+---| { name: "pound", value: doxygen.compound.docEmptyType }
+---| { name: "curren", value: doxygen.compound.docEmptyType }
+---| { name: "yen", value: doxygen.compound.docEmptyType }
+---| { name: "brvbar", value: doxygen.compound.docEmptyType }
+---| { name: "sect", value: doxygen.compound.docEmptyType }
+---| { name: "umlaut", value: doxygen.compound.docEmptyType }
+---| { name: "copy", value: doxygen.compound.docEmptyType }
+---| { name: "ordf", value: doxygen.compound.docEmptyType }
+---| { name: "laquo", value: doxygen.compound.docEmptyType }
+---| { name: "not", value: doxygen.compound.docEmptyType }
+---| { name: "shy", value: doxygen.compound.docEmptyType }
+---| { name: "registered", value: doxygen.compound.docEmptyType }
+---| { name: "macr", value: doxygen.compound.docEmptyType }
+---| { name: "deg", value: doxygen.compound.docEmptyType }
+---| { name: "plusmn", value: doxygen.compound.docEmptyType }
+---| { name: "sup2", value: doxygen.compound.docEmptyType }
+---| { name: "sup3", value: doxygen.compound.docEmptyType }
+---| { name: "acute", value: doxygen.compound.docEmptyType }
+---| { name: "micro", value: doxygen.compound.docEmptyType }
+---| { name: "para", value: doxygen.compound.docEmptyType }
+---| { name: "middot", value: doxygen.compound.docEmptyType }
+---| { name: "cedil", value: doxygen.compound.docEmptyType }
+---| { name: "sup1", value: doxygen.compound.docEmptyType }
+---| { name: "ordm", value: doxygen.compound.docEmptyType }
+---| { name: "raquo", value: doxygen.compound.docEmptyType }
+---| { name: "frac14", value: doxygen.compound.docEmptyType }
+---| { name: "frac12", value: doxygen.compound.docEmptyType }
+---| { name: "frac34", value: doxygen.compound.docEmptyType }
+---| { name: "iquest", value: doxygen.compound.docEmptyType }
+---| { name: "Agrave", value: doxygen.compound.docEmptyType }
+---| { name: "Aacute", value: doxygen.compound.docEmptyType }
+---| { name: "Acirc", value: doxygen.compound.docEmptyType }
+---| { name: "Atilde", value: doxygen.compound.docEmptyType }
+---| { name: "Aumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "Aring", value: doxygen.compound.docEmptyType }
+---| { name: "AElig", value: doxygen.compound.docEmptyType }
+---| { name: "Ccedil", value: doxygen.compound.docEmptyType }
+---| { name: "Egrave", value: doxygen.compound.docEmptyType }
+---| { name: "Eacute", value: doxygen.compound.docEmptyType }
+---| { name: "Ecirc", value: doxygen.compound.docEmptyType }
+---| { name: "Eumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "Igrave", value: doxygen.compound.docEmptyType }
+---| { name: "Iacute", value: doxygen.compound.docEmptyType }
+---| { name: "Icirc", value: doxygen.compound.docEmptyType }
+---| { name: "Iumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "ETH", value: doxygen.compound.docEmptyType }
+---| { name: "Ntilde", value: doxygen.compound.docEmptyType }
+---| { name: "Ograve", value: doxygen.compound.docEmptyType }
+---| { name: "Oacute", value: doxygen.compound.docEmptyType }
+---| { name: "Ocirc", value: doxygen.compound.docEmptyType }
+---| { name: "Otilde", value: doxygen.compound.docEmptyType }
+---| { name: "Oumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "times", value: doxygen.compound.docEmptyType }
+---| { name: "Oslash", value: doxygen.compound.docEmptyType }
+---| { name: "Ugrave", value: doxygen.compound.docEmptyType }
+---| { name: "Uacute", value: doxygen.compound.docEmptyType }
+---| { name: "Ucirc", value: doxygen.compound.docEmptyType }
+---| { name: "Uumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "Yacute", value: doxygen.compound.docEmptyType }
+---| { name: "THORN", value: doxygen.compound.docEmptyType }
+---| { name: "szlig", value: doxygen.compound.docEmptyType }
+---| { name: "agrave", value: doxygen.compound.docEmptyType }
+---| { name: "aacute", value: doxygen.compound.docEmptyType }
+---| { name: "acirc", value: doxygen.compound.docEmptyType }
+---| { name: "atilde", value: doxygen.compound.docEmptyType }
+---| { name: "aumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "aring", value: doxygen.compound.docEmptyType }
+---| { name: "aelig", value: doxygen.compound.docEmptyType }
+---| { name: "ccedil", value: doxygen.compound.docEmptyType }
+---| { name: "egrave", value: doxygen.compound.docEmptyType }
+---| { name: "eacute", value: doxygen.compound.docEmptyType }
+---| { name: "ecirc", value: doxygen.compound.docEmptyType }
+---| { name: "eumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "igrave", value: doxygen.compound.docEmptyType }
+---| { name: "iacute", value: doxygen.compound.docEmptyType }
+---| { name: "icirc", value: doxygen.compound.docEmptyType }
+---| { name: "iumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "eth", value: doxygen.compound.docEmptyType }
+---| { name: "ntilde", value: doxygen.compound.docEmptyType }
+---| { name: "ograve", value: doxygen.compound.docEmptyType }
+---| { name: "oacute", value: doxygen.compound.docEmptyType }
+---| { name: "ocirc", value: doxygen.compound.docEmptyType }
+---| { name: "otilde", value: doxygen.compound.docEmptyType }
+---| { name: "oumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "divide", value: doxygen.compound.docEmptyType }
+---| { name: "oslash", value: doxygen.compound.docEmptyType }
+---| { name: "ugrave", value: doxygen.compound.docEmptyType }
+---| { name: "uacute", value: doxygen.compound.docEmptyType }
+---| { name: "ucirc", value: doxygen.compound.docEmptyType }
+---| { name: "uumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "yacute", value: doxygen.compound.docEmptyType }
+---| { name: "thorn", value: doxygen.compound.docEmptyType }
+---| { name: "yumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "fnof", value: doxygen.compound.docEmptyType }
+---| { name: "Alpha", value: doxygen.compound.docEmptyType }
+---| { name: "Beta", value: doxygen.compound.docEmptyType }
+---| { name: "Gamma", value: doxygen.compound.docEmptyType }
+---| { name: "Delta", value: doxygen.compound.docEmptyType }
+---| { name: "Epsilon", value: doxygen.compound.docEmptyType }
+---| { name: "Zeta", value: doxygen.compound.docEmptyType }
+---| { name: "Eta", value: doxygen.compound.docEmptyType }
+---| { name: "Theta", value: doxygen.compound.docEmptyType }
+---| { name: "Iota", value: doxygen.compound.docEmptyType }
+---| { name: "Kappa", value: doxygen.compound.docEmptyType }
+---| { name: "Lambda", value: doxygen.compound.docEmptyType }
+---| { name: "Mu", value: doxygen.compound.docEmptyType }
+---| { name: "Nu", value: doxygen.compound.docEmptyType }
+---| { name: "Xi", value: doxygen.compound.docEmptyType }
+---| { name: "Omicron", value: doxygen.compound.docEmptyType }
+---| { name: "Pi", value: doxygen.compound.docEmptyType }
+---| { name: "Rho", value: doxygen.compound.docEmptyType }
+---| { name: "Sigma", value: doxygen.compound.docEmptyType }
+---| { name: "Tau", value: doxygen.compound.docEmptyType }
+---| { name: "Upsilon", value: doxygen.compound.docEmptyType }
+---| { name: "Phi", value: doxygen.compound.docEmptyType }
+---| { name: "Chi", value: doxygen.compound.docEmptyType }
+---| { name: "Psi", value: doxygen.compound.docEmptyType }
+---| { name: "Omega", value: doxygen.compound.docEmptyType }
+---| { name: "alpha", value: doxygen.compound.docEmptyType }
+---| { name: "beta", value: doxygen.compound.docEmptyType }
+---| { name: "gamma", value: doxygen.compound.docEmptyType }
+---| { name: "delta", value: doxygen.compound.docEmptyType }
+---| { name: "epsilon", value: doxygen.compound.docEmptyType }
+---| { name: "zeta", value: doxygen.compound.docEmptyType }
+---| { name: "eta", value: doxygen.compound.docEmptyType }
+---| { name: "theta", value: doxygen.compound.docEmptyType }
+---| { name: "iota", value: doxygen.compound.docEmptyType }
+---| { name: "kappa", value: doxygen.compound.docEmptyType }
+---| { name: "lambda", value: doxygen.compound.docEmptyType }
+---| { name: "mu", value: doxygen.compound.docEmptyType }
+---| { name: "nu", value: doxygen.compound.docEmptyType }
+---| { name: "xi", value: doxygen.compound.docEmptyType }
+---| { name: "omicron", value: doxygen.compound.docEmptyType }
+---| { name: "pi", value: doxygen.compound.docEmptyType }
+---| { name: "rho", value: doxygen.compound.docEmptyType }
+---| { name: "sigmaf", value: doxygen.compound.docEmptyType }
+---| { name: "sigma", value: doxygen.compound.docEmptyType }
+---| { name: "tau", value: doxygen.compound.docEmptyType }
+---| { name: "upsilon", value: doxygen.compound.docEmptyType }
+---| { name: "phi", value: doxygen.compound.docEmptyType }
+---| { name: "chi", value: doxygen.compound.docEmptyType }
+---| { name: "psi", value: doxygen.compound.docEmptyType }
+---| { name: "omega", value: doxygen.compound.docEmptyType }
+---| { name: "thetasym", value: doxygen.compound.docEmptyType }
+---| { name: "upsih", value: doxygen.compound.docEmptyType }
+---| { name: "piv", value: doxygen.compound.docEmptyType }
+---| { name: "bull", value: doxygen.compound.docEmptyType }
+---| { name: "hellip", value: doxygen.compound.docEmptyType }
+---| { name: "prime", value: doxygen.compound.docEmptyType }
+---| { name: "Prime", value: doxygen.compound.docEmptyType }
+---| { name: "oline", value: doxygen.compound.docEmptyType }
+---| { name: "frasl", value: doxygen.compound.docEmptyType }
+---| { name: "weierp", value: doxygen.compound.docEmptyType }
+---| { name: "imaginary", value: doxygen.compound.docEmptyType }
+---| { name: "real", value: doxygen.compound.docEmptyType }
+---| { name: "trademark", value: doxygen.compound.docEmptyType }
+---| { name: "alefsym", value: doxygen.compound.docEmptyType }
+---| { name: "larr", value: doxygen.compound.docEmptyType }
+---| { name: "uarr", value: doxygen.compound.docEmptyType }
+---| { name: "rarr", value: doxygen.compound.docEmptyType }
+---| { name: "darr", value: doxygen.compound.docEmptyType }
+---| { name: "harr", value: doxygen.compound.docEmptyType }
+---| { name: "crarr", value: doxygen.compound.docEmptyType }
+---| { name: "lArr", value: doxygen.compound.docEmptyType }
+---| { name: "uArr", value: doxygen.compound.docEmptyType }
+---| { name: "rArr", value: doxygen.compound.docEmptyType }
+---| { name: "dArr", value: doxygen.compound.docEmptyType }
+---| { name: "hArr", value: doxygen.compound.docEmptyType }
+---| { name: "forall", value: doxygen.compound.docEmptyType }
+---| { name: "part", value: doxygen.compound.docEmptyType }
+---| { name: "exist", value: doxygen.compound.docEmptyType }
+---| { name: "empty", value: doxygen.compound.docEmptyType }
+---| { name: "nabla", value: doxygen.compound.docEmptyType }
+---| { name: "isin", value: doxygen.compound.docEmptyType }
+---| { name: "notin", value: doxygen.compound.docEmptyType }
+---| { name: "ni", value: doxygen.compound.docEmptyType }
+---| { name: "prod", value: doxygen.compound.docEmptyType }
+---| { name: "sum", value: doxygen.compound.docEmptyType }
+---| { name: "minus", value: doxygen.compound.docEmptyType }
+---| { name: "lowast", value: doxygen.compound.docEmptyType }
+---| { name: "radic", value: doxygen.compound.docEmptyType }
+---| { name: "prop", value: doxygen.compound.docEmptyType }
+---| { name: "infin", value: doxygen.compound.docEmptyType }
+---| { name: "ang", value: doxygen.compound.docEmptyType }
+---| { name: "and", value: doxygen.compound.docEmptyType }
+---| { name: "or", value: doxygen.compound.docEmptyType }
+---| { name: "cap", value: doxygen.compound.docEmptyType }
+---| { name: "cup", value: doxygen.compound.docEmptyType }
+---| { name: "int", value: doxygen.compound.docEmptyType }
+---| { name: "there4", value: doxygen.compound.docEmptyType }
+---| { name: "sim", value: doxygen.compound.docEmptyType }
+---| { name: "cong", value: doxygen.compound.docEmptyType }
+---| { name: "asymp", value: doxygen.compound.docEmptyType }
+---| { name: "ne", value: doxygen.compound.docEmptyType }
+---| { name: "equiv", value: doxygen.compound.docEmptyType }
+---| { name: "le", value: doxygen.compound.docEmptyType }
+---| { name: "ge", value: doxygen.compound.docEmptyType }
+---| { name: "sub", value: doxygen.compound.docEmptyType }
+---| { name: "sup", value: doxygen.compound.docEmptyType }
+---| { name: "nsub", value: doxygen.compound.docEmptyType }
+---| { name: "sube", value: doxygen.compound.docEmptyType }
+---| { name: "supe", value: doxygen.compound.docEmptyType }
+---| { name: "oplus", value: doxygen.compound.docEmptyType }
+---| { name: "otimes", value: doxygen.compound.docEmptyType }
+---| { name: "perp", value: doxygen.compound.docEmptyType }
+---| { name: "sdot", value: doxygen.compound.docEmptyType }
+---| { name: "lceil", value: doxygen.compound.docEmptyType }
+---| { name: "rceil", value: doxygen.compound.docEmptyType }
+---| { name: "lfloor", value: doxygen.compound.docEmptyType }
+---| { name: "rfloor", value: doxygen.compound.docEmptyType }
+---| { name: "lang", value: doxygen.compound.docEmptyType }
+---| { name: "rang", value: doxygen.compound.docEmptyType }
+---| { name: "loz", value: doxygen.compound.docEmptyType }
+---| { name: "spades", value: doxygen.compound.docEmptyType }
+---| { name: "clubs", value: doxygen.compound.docEmptyType }
+---| { name: "hearts", value: doxygen.compound.docEmptyType }
+---| { name: "diams", value: doxygen.compound.docEmptyType }
+---| { name: "OElig", value: doxygen.compound.docEmptyType }
+---| { name: "oelig", value: doxygen.compound.docEmptyType }
+---| { name: "Scaron", value: doxygen.compound.docEmptyType }
+---| { name: "scaron", value: doxygen.compound.docEmptyType }
+---| { name: "Yumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "circ", value: doxygen.compound.docEmptyType }
+---| { name: "tilde", value: doxygen.compound.docEmptyType }
+---| { name: "ensp", value: doxygen.compound.docEmptyType }
+---| { name: "emsp", value: doxygen.compound.docEmptyType }
+---| { name: "thinsp", value: doxygen.compound.docEmptyType }
+---| { name: "zwnj", value: doxygen.compound.docEmptyType }
+---| { name: "zwj", value: doxygen.compound.docEmptyType }
+---| { name: "lrm", value: doxygen.compound.docEmptyType }
+---| { name: "rlm", value: doxygen.compound.docEmptyType }
+---| { name: "ndash", value: doxygen.compound.docEmptyType }
+---| { name: "mdash", value: doxygen.compound.docEmptyType }
+---| { name: "lsquo", value: doxygen.compound.docEmptyType }
+---| { name: "rsquo", value: doxygen.compound.docEmptyType }
+---| { name: "sbquo", value: doxygen.compound.docEmptyType }
+---| { name: "ldquo", value: doxygen.compound.docEmptyType }
+---| { name: "rdquo", value: doxygen.compound.docEmptyType }
+---| { name: "bdquo", value: doxygen.compound.docEmptyType }
+---| { name: "dagger", value: doxygen.compound.docEmptyType }
+---| { name: "Dagger", value: doxygen.compound.docEmptyType }
+---| { name: "permil", value: doxygen.compound.docEmptyType }
+---| { name: "lsaquo", value: doxygen.compound.docEmptyType }
+---| { name: "rsaquo", value: doxygen.compound.docEmptyType }
+---| { name: "euro", value: doxygen.compound.docEmptyType }
+---| { name: "tm", value: doxygen.compound.docEmptyType }
+
+---@class doxygen.compound.docAnchorType (mixed)
+---@field id string? (attribute)
+---@field content doxygen.compound.docAnchorType
+---| string (text content)
+
+---@class doxygen.compound.docFormulaType (mixed)
+---@field id string? (attribute)
+---@field content doxygen.compound.docFormulaType
+---| string (text content)
+
+---@class doxygen.compound.docIndexEntryType
+--- start sequence
+---@field primaryie string (element)
+---@field secondaryie string (element)
+--- end sequence
+
+---@class doxygen.compound.docListType
+--- start sequence
+---@field listitem doxygen.compound.docListItemType[] (element)
+--- end sequence
+---@field type doxygen.compound.DoxOlType? (attribute)
+---@field start integer? (attribute)
+
+---@class doxygen.compound.docListItemType
+--- start sequence
+---@field para doxygen.compound.docParaType[] (element)
+--- end sequence
+---@field override doxygen.compound.DoxCheck? (attribute)
+---@field value integer? (attribute)
+
+---@class doxygen.compound.docSimpleSectType
+--- start sequence
+---@field title doxygen.compound.docTitleType? (element)
+--- start sequence
+---@field para doxygen.compound.docParaType[] (element)
+--- end sequence
+--- end sequence
+---@field kind doxygen.compound.DoxSimpleSectKind? (attribute)
+
+---@class doxygen.compound.docVarListEntryType
+--- start sequence
+---@field term doxygen.compound.docTitleType (element)
+--- end sequence
+
+---@class doxygen.compound.docVariableListType
+--- start sequence
 --- start sequence
 ---@field varlistentry doxygen.compound.docVarListEntryType (element)
 ---@field listitem doxygen.compound.docListItemType (element)
 --- end sequence
+--- end sequence
+
+---@class doxygen.compound.docRefTextType (mixed)
+---@field refid string? (attribute)
+---@field kindref doxygen.compound.DoxRefKind? (attribute)
+---@field external string? (attribute)
+---@field content doxygen.compound.docRefTextType
+---| string (text content)
+---| { name: "ulink", value: doxygen.compound.docURLLink }
+---| { name: "bold", value: doxygen.compound.docMarkupType }
+---| { name: "s", value: doxygen.compound.docMarkupType }
+---| { name: "strike", value: doxygen.compound.docMarkupType }
+---| { name: "underline", value: doxygen.compound.docMarkupType }
+---| { name: "emphasis", value: doxygen.compound.docMarkupType }
+---| { name: "computeroutput", value: doxygen.compound.docMarkupType }
+---| { name: "subscript", value: doxygen.compound.docMarkupType }
+---| { name: "superscript", value: doxygen.compound.docMarkupType }
+---| { name: "center", value: doxygen.compound.docMarkupType }
+---| { name: "small", value: doxygen.compound.docMarkupType }
+---| { name: "cite", value: doxygen.compound.docMarkupType }
+---| { name: "del", value: doxygen.compound.docMarkupType }
+---| { name: "ins", value: doxygen.compound.docMarkupType }
+---| { name: "htmlonly", value: doxygen.compound.docHtmlOnlyType }
+---| { name: "manonly", value: string }
+---| { name: "xmlonly", value: string }
+---| { name: "rtfonly", value: string }
+---| { name: "latexonly", value: string }
+---| { name: "docbookonly", value: string }
+---| { name: "image", value: doxygen.compound.docImageType }
+---| { name: "dot", value: doxygen.compound.docDotMscType }
+---| { name: "msc", value: doxygen.compound.docDotMscType }
+---| { name: "plantuml", value: doxygen.compound.docPlantumlType }
+---| { name: "anchor", value: doxygen.compound.docAnchorType }
+---| { name: "formula", value: doxygen.compound.docFormulaType }
+---| { name: "ref", value: doxygen.compound.docRefTextType }
+---| { name: "emoji", value: doxygen.compound.docEmojiType }
+---| { name: "linebreak", value: doxygen.compound.docEmptyType }
+---| { name: "nonbreakablespace", value: doxygen.compound.docEmptyType }
+---| { name: "iexcl", value: doxygen.compound.docEmptyType }
+---| { name: "cent", value: doxygen.compound.docEmptyType }
+---| { name: "pound", value: doxygen.compound.docEmptyType }
+---| { name: "curren", value: doxygen.compound.docEmptyType }
+---| { name: "yen", value: doxygen.compound.docEmptyType }
+---| { name: "brvbar", value: doxygen.compound.docEmptyType }
+---| { name: "sect", value: doxygen.compound.docEmptyType }
+---| { name: "umlaut", value: doxygen.compound.docEmptyType }
+---| { name: "copy", value: doxygen.compound.docEmptyType }
+---| { name: "ordf", value: doxygen.compound.docEmptyType }
+---| { name: "laquo", value: doxygen.compound.docEmptyType }
+---| { name: "not", value: doxygen.compound.docEmptyType }
+---| { name: "shy", value: doxygen.compound.docEmptyType }
+---| { name: "registered", value: doxygen.compound.docEmptyType }
+---| { name: "macr", value: doxygen.compound.docEmptyType }
+---| { name: "deg", value: doxygen.compound.docEmptyType }
+---| { name: "plusmn", value: doxygen.compound.docEmptyType }
+---| { name: "sup2", value: doxygen.compound.docEmptyType }
+---| { name: "sup3", value: doxygen.compound.docEmptyType }
+---| { name: "acute", value: doxygen.compound.docEmptyType }
+---| { name: "micro", value: doxygen.compound.docEmptyType }
+---| { name: "para", value: doxygen.compound.docEmptyType }
+---| { name: "middot", value: doxygen.compound.docEmptyType }
+---| { name: "cedil", value: doxygen.compound.docEmptyType }
+---| { name: "sup1", value: doxygen.compound.docEmptyType }
+---| { name: "ordm", value: doxygen.compound.docEmptyType }
+---| { name: "raquo", value: doxygen.compound.docEmptyType }
+---| { name: "frac14", value: doxygen.compound.docEmptyType }
+---| { name: "frac12", value: doxygen.compound.docEmptyType }
+---| { name: "frac34", value: doxygen.compound.docEmptyType }
+---| { name: "iquest", value: doxygen.compound.docEmptyType }
+---| { name: "Agrave", value: doxygen.compound.docEmptyType }
+---| { name: "Aacute", value: doxygen.compound.docEmptyType }
+---| { name: "Acirc", value: doxygen.compound.docEmptyType }
+---| { name: "Atilde", value: doxygen.compound.docEmptyType }
+---| { name: "Aumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "Aring", value: doxygen.compound.docEmptyType }
+---| { name: "AElig", value: doxygen.compound.docEmptyType }
+---| { name: "Ccedil", value: doxygen.compound.docEmptyType }
+---| { name: "Egrave", value: doxygen.compound.docEmptyType }
+---| { name: "Eacute", value: doxygen.compound.docEmptyType }
+---| { name: "Ecirc", value: doxygen.compound.docEmptyType }
+---| { name: "Eumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "Igrave", value: doxygen.compound.docEmptyType }
+---| { name: "Iacute", value: doxygen.compound.docEmptyType }
+---| { name: "Icirc", value: doxygen.compound.docEmptyType }
+---| { name: "Iumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "ETH", value: doxygen.compound.docEmptyType }
+---| { name: "Ntilde", value: doxygen.compound.docEmptyType }
+---| { name: "Ograve", value: doxygen.compound.docEmptyType }
+---| { name: "Oacute", value: doxygen.compound.docEmptyType }
+---| { name: "Ocirc", value: doxygen.compound.docEmptyType }
+---| { name: "Otilde", value: doxygen.compound.docEmptyType }
+---| { name: "Oumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "times", value: doxygen.compound.docEmptyType }
+---| { name: "Oslash", value: doxygen.compound.docEmptyType }
+---| { name: "Ugrave", value: doxygen.compound.docEmptyType }
+---| { name: "Uacute", value: doxygen.compound.docEmptyType }
+---| { name: "Ucirc", value: doxygen.compound.docEmptyType }
+---| { name: "Uumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "Yacute", value: doxygen.compound.docEmptyType }
+---| { name: "THORN", value: doxygen.compound.docEmptyType }
+---| { name: "szlig", value: doxygen.compound.docEmptyType }
+---| { name: "agrave", value: doxygen.compound.docEmptyType }
+---| { name: "aacute", value: doxygen.compound.docEmptyType }
+---| { name: "acirc", value: doxygen.compound.docEmptyType }
+---| { name: "atilde", value: doxygen.compound.docEmptyType }
+---| { name: "aumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "aring", value: doxygen.compound.docEmptyType }
+---| { name: "aelig", value: doxygen.compound.docEmptyType }
+---| { name: "ccedil", value: doxygen.compound.docEmptyType }
+---| { name: "egrave", value: doxygen.compound.docEmptyType }
+---| { name: "eacute", value: doxygen.compound.docEmptyType }
+---| { name: "ecirc", value: doxygen.compound.docEmptyType }
+---| { name: "eumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "igrave", value: doxygen.compound.docEmptyType }
+---| { name: "iacute", value: doxygen.compound.docEmptyType }
+---| { name: "icirc", value: doxygen.compound.docEmptyType }
+---| { name: "iumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "eth", value: doxygen.compound.docEmptyType }
+---| { name: "ntilde", value: doxygen.compound.docEmptyType }
+---| { name: "ograve", value: doxygen.compound.docEmptyType }
+---| { name: "oacute", value: doxygen.compound.docEmptyType }
+---| { name: "ocirc", value: doxygen.compound.docEmptyType }
+---| { name: "otilde", value: doxygen.compound.docEmptyType }
+---| { name: "oumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "divide", value: doxygen.compound.docEmptyType }
+---| { name: "oslash", value: doxygen.compound.docEmptyType }
+---| { name: "ugrave", value: doxygen.compound.docEmptyType }
+---| { name: "uacute", value: doxygen.compound.docEmptyType }
+---| { name: "ucirc", value: doxygen.compound.docEmptyType }
+---| { name: "uumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "yacute", value: doxygen.compound.docEmptyType }
+---| { name: "thorn", value: doxygen.compound.docEmptyType }
+---| { name: "yumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "fnof", value: doxygen.compound.docEmptyType }
+---| { name: "Alpha", value: doxygen.compound.docEmptyType }
+---| { name: "Beta", value: doxygen.compound.docEmptyType }
+---| { name: "Gamma", value: doxygen.compound.docEmptyType }
+---| { name: "Delta", value: doxygen.compound.docEmptyType }
+---| { name: "Epsilon", value: doxygen.compound.docEmptyType }
+---| { name: "Zeta", value: doxygen.compound.docEmptyType }
+---| { name: "Eta", value: doxygen.compound.docEmptyType }
+---| { name: "Theta", value: doxygen.compound.docEmptyType }
+---| { name: "Iota", value: doxygen.compound.docEmptyType }
+---| { name: "Kappa", value: doxygen.compound.docEmptyType }
+---| { name: "Lambda", value: doxygen.compound.docEmptyType }
+---| { name: "Mu", value: doxygen.compound.docEmptyType }
+---| { name: "Nu", value: doxygen.compound.docEmptyType }
+---| { name: "Xi", value: doxygen.compound.docEmptyType }
+---| { name: "Omicron", value: doxygen.compound.docEmptyType }
+---| { name: "Pi", value: doxygen.compound.docEmptyType }
+---| { name: "Rho", value: doxygen.compound.docEmptyType }
+---| { name: "Sigma", value: doxygen.compound.docEmptyType }
+---| { name: "Tau", value: doxygen.compound.docEmptyType }
+---| { name: "Upsilon", value: doxygen.compound.docEmptyType }
+---| { name: "Phi", value: doxygen.compound.docEmptyType }
+---| { name: "Chi", value: doxygen.compound.docEmptyType }
+---| { name: "Psi", value: doxygen.compound.docEmptyType }
+---| { name: "Omega", value: doxygen.compound.docEmptyType }
+---| { name: "alpha", value: doxygen.compound.docEmptyType }
+---| { name: "beta", value: doxygen.compound.docEmptyType }
+---| { name: "gamma", value: doxygen.compound.docEmptyType }
+---| { name: "delta", value: doxygen.compound.docEmptyType }
+---| { name: "epsilon", value: doxygen.compound.docEmptyType }
+---| { name: "zeta", value: doxygen.compound.docEmptyType }
+---| { name: "eta", value: doxygen.compound.docEmptyType }
+---| { name: "theta", value: doxygen.compound.docEmptyType }
+---| { name: "iota", value: doxygen.compound.docEmptyType }
+---| { name: "kappa", value: doxygen.compound.docEmptyType }
+---| { name: "lambda", value: doxygen.compound.docEmptyType }
+---| { name: "mu", value: doxygen.compound.docEmptyType }
+---| { name: "nu", value: doxygen.compound.docEmptyType }
+---| { name: "xi", value: doxygen.compound.docEmptyType }
+---| { name: "omicron", value: doxygen.compound.docEmptyType }
+---| { name: "pi", value: doxygen.compound.docEmptyType }
+---| { name: "rho", value: doxygen.compound.docEmptyType }
+---| { name: "sigmaf", value: doxygen.compound.docEmptyType }
+---| { name: "sigma", value: doxygen.compound.docEmptyType }
+---| { name: "tau", value: doxygen.compound.docEmptyType }
+---| { name: "upsilon", value: doxygen.compound.docEmptyType }
+---| { name: "phi", value: doxygen.compound.docEmptyType }
+---| { name: "chi", value: doxygen.compound.docEmptyType }
+---| { name: "psi", value: doxygen.compound.docEmptyType }
+---| { name: "omega", value: doxygen.compound.docEmptyType }
+---| { name: "thetasym", value: doxygen.compound.docEmptyType }
+---| { name: "upsih", value: doxygen.compound.docEmptyType }
+---| { name: "piv", value: doxygen.compound.docEmptyType }
+---| { name: "bull", value: doxygen.compound.docEmptyType }
+---| { name: "hellip", value: doxygen.compound.docEmptyType }
+---| { name: "prime", value: doxygen.compound.docEmptyType }
+---| { name: "Prime", value: doxygen.compound.docEmptyType }
+---| { name: "oline", value: doxygen.compound.docEmptyType }
+---| { name: "frasl", value: doxygen.compound.docEmptyType }
+---| { name: "weierp", value: doxygen.compound.docEmptyType }
+---| { name: "imaginary", value: doxygen.compound.docEmptyType }
+---| { name: "real", value: doxygen.compound.docEmptyType }
+---| { name: "trademark", value: doxygen.compound.docEmptyType }
+---| { name: "alefsym", value: doxygen.compound.docEmptyType }
+---| { name: "larr", value: doxygen.compound.docEmptyType }
+---| { name: "uarr", value: doxygen.compound.docEmptyType }
+---| { name: "rarr", value: doxygen.compound.docEmptyType }
+---| { name: "darr", value: doxygen.compound.docEmptyType }
+---| { name: "harr", value: doxygen.compound.docEmptyType }
+---| { name: "crarr", value: doxygen.compound.docEmptyType }
+---| { name: "lArr", value: doxygen.compound.docEmptyType }
+---| { name: "uArr", value: doxygen.compound.docEmptyType }
+---| { name: "rArr", value: doxygen.compound.docEmptyType }
+---| { name: "dArr", value: doxygen.compound.docEmptyType }
+---| { name: "hArr", value: doxygen.compound.docEmptyType }
+---| { name: "forall", value: doxygen.compound.docEmptyType }
+---| { name: "part", value: doxygen.compound.docEmptyType }
+---| { name: "exist", value: doxygen.compound.docEmptyType }
+---| { name: "empty", value: doxygen.compound.docEmptyType }
+---| { name: "nabla", value: doxygen.compound.docEmptyType }
+---| { name: "isin", value: doxygen.compound.docEmptyType }
+---| { name: "notin", value: doxygen.compound.docEmptyType }
+---| { name: "ni", value: doxygen.compound.docEmptyType }
+---| { name: "prod", value: doxygen.compound.docEmptyType }
+---| { name: "sum", value: doxygen.compound.docEmptyType }
+---| { name: "minus", value: doxygen.compound.docEmptyType }
+---| { name: "lowast", value: doxygen.compound.docEmptyType }
+---| { name: "radic", value: doxygen.compound.docEmptyType }
+---| { name: "prop", value: doxygen.compound.docEmptyType }
+---| { name: "infin", value: doxygen.compound.docEmptyType }
+---| { name: "ang", value: doxygen.compound.docEmptyType }
+---| { name: "and", value: doxygen.compound.docEmptyType }
+---| { name: "or", value: doxygen.compound.docEmptyType }
+---| { name: "cap", value: doxygen.compound.docEmptyType }
+---| { name: "cup", value: doxygen.compound.docEmptyType }
+---| { name: "int", value: doxygen.compound.docEmptyType }
+---| { name: "there4", value: doxygen.compound.docEmptyType }
+---| { name: "sim", value: doxygen.compound.docEmptyType }
+---| { name: "cong", value: doxygen.compound.docEmptyType }
+---| { name: "asymp", value: doxygen.compound.docEmptyType }
+---| { name: "ne", value: doxygen.compound.docEmptyType }
+---| { name: "equiv", value: doxygen.compound.docEmptyType }
+---| { name: "le", value: doxygen.compound.docEmptyType }
+---| { name: "ge", value: doxygen.compound.docEmptyType }
+---| { name: "sub", value: doxygen.compound.docEmptyType }
+---| { name: "sup", value: doxygen.compound.docEmptyType }
+---| { name: "nsub", value: doxygen.compound.docEmptyType }
+---| { name: "sube", value: doxygen.compound.docEmptyType }
+---| { name: "supe", value: doxygen.compound.docEmptyType }
+---| { name: "oplus", value: doxygen.compound.docEmptyType }
+---| { name: "otimes", value: doxygen.compound.docEmptyType }
+---| { name: "perp", value: doxygen.compound.docEmptyType }
+---| { name: "sdot", value: doxygen.compound.docEmptyType }
+---| { name: "lceil", value: doxygen.compound.docEmptyType }
+---| { name: "rceil", value: doxygen.compound.docEmptyType }
+---| { name: "lfloor", value: doxygen.compound.docEmptyType }
+---| { name: "rfloor", value: doxygen.compound.docEmptyType }
+---| { name: "lang", value: doxygen.compound.docEmptyType }
+---| { name: "rang", value: doxygen.compound.docEmptyType }
+---| { name: "loz", value: doxygen.compound.docEmptyType }
+---| { name: "spades", value: doxygen.compound.docEmptyType }
+---| { name: "clubs", value: doxygen.compound.docEmptyType }
+---| { name: "hearts", value: doxygen.compound.docEmptyType }
+---| { name: "diams", value: doxygen.compound.docEmptyType }
+---| { name: "OElig", value: doxygen.compound.docEmptyType }
+---| { name: "oelig", value: doxygen.compound.docEmptyType }
+---| { name: "Scaron", value: doxygen.compound.docEmptyType }
+---| { name: "scaron", value: doxygen.compound.docEmptyType }
+---| { name: "Yumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "circ", value: doxygen.compound.docEmptyType }
+---| { name: "tilde", value: doxygen.compound.docEmptyType }
+---| { name: "ensp", value: doxygen.compound.docEmptyType }
+---| { name: "emsp", value: doxygen.compound.docEmptyType }
+---| { name: "thinsp", value: doxygen.compound.docEmptyType }
+---| { name: "zwnj", value: doxygen.compound.docEmptyType }
+---| { name: "zwj", value: doxygen.compound.docEmptyType }
+---| { name: "lrm", value: doxygen.compound.docEmptyType }
+---| { name: "rlm", value: doxygen.compound.docEmptyType }
+---| { name: "ndash", value: doxygen.compound.docEmptyType }
+---| { name: "mdash", value: doxygen.compound.docEmptyType }
+---| { name: "lsquo", value: doxygen.compound.docEmptyType }
+---| { name: "rsquo", value: doxygen.compound.docEmptyType }
+---| { name: "sbquo", value: doxygen.compound.docEmptyType }
+---| { name: "ldquo", value: doxygen.compound.docEmptyType }
+---| { name: "rdquo", value: doxygen.compound.docEmptyType }
+---| { name: "bdquo", value: doxygen.compound.docEmptyType }
+---| { name: "dagger", value: doxygen.compound.docEmptyType }
+---| { name: "Dagger", value: doxygen.compound.docEmptyType }
+---| { name: "permil", value: doxygen.compound.docEmptyType }
+---| { name: "lsaquo", value: doxygen.compound.docEmptyType }
+---| { name: "rsaquo", value: doxygen.compound.docEmptyType }
+---| { name: "euro", value: doxygen.compound.docEmptyType }
+---| { name: "tm", value: doxygen.compound.docEmptyType }
+
+---@class doxygen.compound.docTableType
+--- start sequence
+---@field caption doxygen.compound.docCaptionType? (element)
+---@field row doxygen.compound.docRowType[] (element)
+--- end sequence
+---@field rows integer? (attribute)
+---@field cols integer? (attribute)
+---@field width string? (attribute)
+
+---@class doxygen.compound.docRowType
+--- start sequence
+---@field entry doxygen.compound.docEntryType[] (element)
+--- end sequence
+
+---@class doxygen.compound.docEntryType
+--- start sequence
+---@field para doxygen.compound.docParaType[] (element)
+--- end sequence
+---@field thead boolean? (attribute)
+---@field colspan integer? (attribute)
+---@field rowspan integer? (attribute)
+---@field align doxygen.compound.DoxAlign? (attribute)
+---@field valign doxygen.compound.DoxVerticalAlign? (attribute)
+---@field width string? (attribute)
+---@field class string? (attribute)
+
+---@class doxygen.compound.docCaptionType (mixed)
+---@field id string? (attribute)
+---@field content doxygen.compound.docCaptionType
+---| string (text content)
+---| { name: "ulink", value: doxygen.compound.docURLLink }
+---| { name: "bold", value: doxygen.compound.docMarkupType }
+---| { name: "s", value: doxygen.compound.docMarkupType }
+---| { name: "strike", value: doxygen.compound.docMarkupType }
+---| { name: "underline", value: doxygen.compound.docMarkupType }
+---| { name: "emphasis", value: doxygen.compound.docMarkupType }
+---| { name: "computeroutput", value: doxygen.compound.docMarkupType }
+---| { name: "subscript", value: doxygen.compound.docMarkupType }
+---| { name: "superscript", value: doxygen.compound.docMarkupType }
+---| { name: "center", value: doxygen.compound.docMarkupType }
+---| { name: "small", value: doxygen.compound.docMarkupType }
+---| { name: "cite", value: doxygen.compound.docMarkupType }
+---| { name: "del", value: doxygen.compound.docMarkupType }
+---| { name: "ins", value: doxygen.compound.docMarkupType }
+---| { name: "htmlonly", value: doxygen.compound.docHtmlOnlyType }
+---| { name: "manonly", value: string }
+---| { name: "xmlonly", value: string }
+---| { name: "rtfonly", value: string }
+---| { name: "latexonly", value: string }
+---| { name: "docbookonly", value: string }
+---| { name: "image", value: doxygen.compound.docImageType }
+---| { name: "dot", value: doxygen.compound.docDotMscType }
+---| { name: "msc", value: doxygen.compound.docDotMscType }
+---| { name: "plantuml", value: doxygen.compound.docPlantumlType }
+---| { name: "anchor", value: doxygen.compound.docAnchorType }
+---| { name: "formula", value: doxygen.compound.docFormulaType }
+---| { name: "ref", value: doxygen.compound.docRefTextType }
+---| { name: "emoji", value: doxygen.compound.docEmojiType }
+---| { name: "linebreak", value: doxygen.compound.docEmptyType }
+---| { name: "nonbreakablespace", value: doxygen.compound.docEmptyType }
+---| { name: "iexcl", value: doxygen.compound.docEmptyType }
+---| { name: "cent", value: doxygen.compound.docEmptyType }
+---| { name: "pound", value: doxygen.compound.docEmptyType }
+---| { name: "curren", value: doxygen.compound.docEmptyType }
+---| { name: "yen", value: doxygen.compound.docEmptyType }
+---| { name: "brvbar", value: doxygen.compound.docEmptyType }
+---| { name: "sect", value: doxygen.compound.docEmptyType }
+---| { name: "umlaut", value: doxygen.compound.docEmptyType }
+---| { name: "copy", value: doxygen.compound.docEmptyType }
+---| { name: "ordf", value: doxygen.compound.docEmptyType }
+---| { name: "laquo", value: doxygen.compound.docEmptyType }
+---| { name: "not", value: doxygen.compound.docEmptyType }
+---| { name: "shy", value: doxygen.compound.docEmptyType }
+---| { name: "registered", value: doxygen.compound.docEmptyType }
+---| { name: "macr", value: doxygen.compound.docEmptyType }
+---| { name: "deg", value: doxygen.compound.docEmptyType }
+---| { name: "plusmn", value: doxygen.compound.docEmptyType }
+---| { name: "sup2", value: doxygen.compound.docEmptyType }
+---| { name: "sup3", value: doxygen.compound.docEmptyType }
+---| { name: "acute", value: doxygen.compound.docEmptyType }
+---| { name: "micro", value: doxygen.compound.docEmptyType }
+---| { name: "para", value: doxygen.compound.docEmptyType }
+---| { name: "middot", value: doxygen.compound.docEmptyType }
+---| { name: "cedil", value: doxygen.compound.docEmptyType }
+---| { name: "sup1", value: doxygen.compound.docEmptyType }
+---| { name: "ordm", value: doxygen.compound.docEmptyType }
+---| { name: "raquo", value: doxygen.compound.docEmptyType }
+---| { name: "frac14", value: doxygen.compound.docEmptyType }
+---| { name: "frac12", value: doxygen.compound.docEmptyType }
+---| { name: "frac34", value: doxygen.compound.docEmptyType }
+---| { name: "iquest", value: doxygen.compound.docEmptyType }
+---| { name: "Agrave", value: doxygen.compound.docEmptyType }
+---| { name: "Aacute", value: doxygen.compound.docEmptyType }
+---| { name: "Acirc", value: doxygen.compound.docEmptyType }
+---| { name: "Atilde", value: doxygen.compound.docEmptyType }
+---| { name: "Aumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "Aring", value: doxygen.compound.docEmptyType }
+---| { name: "AElig", value: doxygen.compound.docEmptyType }
+---| { name: "Ccedil", value: doxygen.compound.docEmptyType }
+---| { name: "Egrave", value: doxygen.compound.docEmptyType }
+---| { name: "Eacute", value: doxygen.compound.docEmptyType }
+---| { name: "Ecirc", value: doxygen.compound.docEmptyType }
+---| { name: "Eumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "Igrave", value: doxygen.compound.docEmptyType }
+---| { name: "Iacute", value: doxygen.compound.docEmptyType }
+---| { name: "Icirc", value: doxygen.compound.docEmptyType }
+---| { name: "Iumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "ETH", value: doxygen.compound.docEmptyType }
+---| { name: "Ntilde", value: doxygen.compound.docEmptyType }
+---| { name: "Ograve", value: doxygen.compound.docEmptyType }
+---| { name: "Oacute", value: doxygen.compound.docEmptyType }
+---| { name: "Ocirc", value: doxygen.compound.docEmptyType }
+---| { name: "Otilde", value: doxygen.compound.docEmptyType }
+---| { name: "Oumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "times", value: doxygen.compound.docEmptyType }
+---| { name: "Oslash", value: doxygen.compound.docEmptyType }
+---| { name: "Ugrave", value: doxygen.compound.docEmptyType }
+---| { name: "Uacute", value: doxygen.compound.docEmptyType }
+---| { name: "Ucirc", value: doxygen.compound.docEmptyType }
+---| { name: "Uumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "Yacute", value: doxygen.compound.docEmptyType }
+---| { name: "THORN", value: doxygen.compound.docEmptyType }
+---| { name: "szlig", value: doxygen.compound.docEmptyType }
+---| { name: "agrave", value: doxygen.compound.docEmptyType }
+---| { name: "aacute", value: doxygen.compound.docEmptyType }
+---| { name: "acirc", value: doxygen.compound.docEmptyType }
+---| { name: "atilde", value: doxygen.compound.docEmptyType }
+---| { name: "aumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "aring", value: doxygen.compound.docEmptyType }
+---| { name: "aelig", value: doxygen.compound.docEmptyType }
+---| { name: "ccedil", value: doxygen.compound.docEmptyType }
+---| { name: "egrave", value: doxygen.compound.docEmptyType }
+---| { name: "eacute", value: doxygen.compound.docEmptyType }
+---| { name: "ecirc", value: doxygen.compound.docEmptyType }
+---| { name: "eumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "igrave", value: doxygen.compound.docEmptyType }
+---| { name: "iacute", value: doxygen.compound.docEmptyType }
+---| { name: "icirc", value: doxygen.compound.docEmptyType }
+---| { name: "iumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "eth", value: doxygen.compound.docEmptyType }
+---| { name: "ntilde", value: doxygen.compound.docEmptyType }
+---| { name: "ograve", value: doxygen.compound.docEmptyType }
+---| { name: "oacute", value: doxygen.compound.docEmptyType }
+---| { name: "ocirc", value: doxygen.compound.docEmptyType }
+---| { name: "otilde", value: doxygen.compound.docEmptyType }
+---| { name: "oumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "divide", value: doxygen.compound.docEmptyType }
+---| { name: "oslash", value: doxygen.compound.docEmptyType }
+---| { name: "ugrave", value: doxygen.compound.docEmptyType }
+---| { name: "uacute", value: doxygen.compound.docEmptyType }
+---| { name: "ucirc", value: doxygen.compound.docEmptyType }
+---| { name: "uumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "yacute", value: doxygen.compound.docEmptyType }
+---| { name: "thorn", value: doxygen.compound.docEmptyType }
+---| { name: "yumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "fnof", value: doxygen.compound.docEmptyType }
+---| { name: "Alpha", value: doxygen.compound.docEmptyType }
+---| { name: "Beta", value: doxygen.compound.docEmptyType }
+---| { name: "Gamma", value: doxygen.compound.docEmptyType }
+---| { name: "Delta", value: doxygen.compound.docEmptyType }
+---| { name: "Epsilon", value: doxygen.compound.docEmptyType }
+---| { name: "Zeta", value: doxygen.compound.docEmptyType }
+---| { name: "Eta", value: doxygen.compound.docEmptyType }
+---| { name: "Theta", value: doxygen.compound.docEmptyType }
+---| { name: "Iota", value: doxygen.compound.docEmptyType }
+---| { name: "Kappa", value: doxygen.compound.docEmptyType }
+---| { name: "Lambda", value: doxygen.compound.docEmptyType }
+---| { name: "Mu", value: doxygen.compound.docEmptyType }
+---| { name: "Nu", value: doxygen.compound.docEmptyType }
+---| { name: "Xi", value: doxygen.compound.docEmptyType }
+---| { name: "Omicron", value: doxygen.compound.docEmptyType }
+---| { name: "Pi", value: doxygen.compound.docEmptyType }
+---| { name: "Rho", value: doxygen.compound.docEmptyType }
+---| { name: "Sigma", value: doxygen.compound.docEmptyType }
+---| { name: "Tau", value: doxygen.compound.docEmptyType }
+---| { name: "Upsilon", value: doxygen.compound.docEmptyType }
+---| { name: "Phi", value: doxygen.compound.docEmptyType }
+---| { name: "Chi", value: doxygen.compound.docEmptyType }
+---| { name: "Psi", value: doxygen.compound.docEmptyType }
+---| { name: "Omega", value: doxygen.compound.docEmptyType }
+---| { name: "alpha", value: doxygen.compound.docEmptyType }
+---| { name: "beta", value: doxygen.compound.docEmptyType }
+---| { name: "gamma", value: doxygen.compound.docEmptyType }
+---| { name: "delta", value: doxygen.compound.docEmptyType }
+---| { name: "epsilon", value: doxygen.compound.docEmptyType }
+---| { name: "zeta", value: doxygen.compound.docEmptyType }
+---| { name: "eta", value: doxygen.compound.docEmptyType }
+---| { name: "theta", value: doxygen.compound.docEmptyType }
+---| { name: "iota", value: doxygen.compound.docEmptyType }
+---| { name: "kappa", value: doxygen.compound.docEmptyType }
+---| { name: "lambda", value: doxygen.compound.docEmptyType }
+---| { name: "mu", value: doxygen.compound.docEmptyType }
+---| { name: "nu", value: doxygen.compound.docEmptyType }
+---| { name: "xi", value: doxygen.compound.docEmptyType }
+---| { name: "omicron", value: doxygen.compound.docEmptyType }
+---| { name: "pi", value: doxygen.compound.docEmptyType }
+---| { name: "rho", value: doxygen.compound.docEmptyType }
+---| { name: "sigmaf", value: doxygen.compound.docEmptyType }
+---| { name: "sigma", value: doxygen.compound.docEmptyType }
+---| { name: "tau", value: doxygen.compound.docEmptyType }
+---| { name: "upsilon", value: doxygen.compound.docEmptyType }
+---| { name: "phi", value: doxygen.compound.docEmptyType }
+---| { name: "chi", value: doxygen.compound.docEmptyType }
+---| { name: "psi", value: doxygen.compound.docEmptyType }
+---| { name: "omega", value: doxygen.compound.docEmptyType }
+---| { name: "thetasym", value: doxygen.compound.docEmptyType }
+---| { name: "upsih", value: doxygen.compound.docEmptyType }
+---| { name: "piv", value: doxygen.compound.docEmptyType }
+---| { name: "bull", value: doxygen.compound.docEmptyType }
+---| { name: "hellip", value: doxygen.compound.docEmptyType }
+---| { name: "prime", value: doxygen.compound.docEmptyType }
+---| { name: "Prime", value: doxygen.compound.docEmptyType }
+---| { name: "oline", value: doxygen.compound.docEmptyType }
+---| { name: "frasl", value: doxygen.compound.docEmptyType }
+---| { name: "weierp", value: doxygen.compound.docEmptyType }
+---| { name: "imaginary", value: doxygen.compound.docEmptyType }
+---| { name: "real", value: doxygen.compound.docEmptyType }
+---| { name: "trademark", value: doxygen.compound.docEmptyType }
+---| { name: "alefsym", value: doxygen.compound.docEmptyType }
+---| { name: "larr", value: doxygen.compound.docEmptyType }
+---| { name: "uarr", value: doxygen.compound.docEmptyType }
+---| { name: "rarr", value: doxygen.compound.docEmptyType }
+---| { name: "darr", value: doxygen.compound.docEmptyType }
+---| { name: "harr", value: doxygen.compound.docEmptyType }
+---| { name: "crarr", value: doxygen.compound.docEmptyType }
+---| { name: "lArr", value: doxygen.compound.docEmptyType }
+---| { name: "uArr", value: doxygen.compound.docEmptyType }
+---| { name: "rArr", value: doxygen.compound.docEmptyType }
+---| { name: "dArr", value: doxygen.compound.docEmptyType }
+---| { name: "hArr", value: doxygen.compound.docEmptyType }
+---| { name: "forall", value: doxygen.compound.docEmptyType }
+---| { name: "part", value: doxygen.compound.docEmptyType }
+---| { name: "exist", value: doxygen.compound.docEmptyType }
+---| { name: "empty", value: doxygen.compound.docEmptyType }
+---| { name: "nabla", value: doxygen.compound.docEmptyType }
+---| { name: "isin", value: doxygen.compound.docEmptyType }
+---| { name: "notin", value: doxygen.compound.docEmptyType }
+---| { name: "ni", value: doxygen.compound.docEmptyType }
+---| { name: "prod", value: doxygen.compound.docEmptyType }
+---| { name: "sum", value: doxygen.compound.docEmptyType }
+---| { name: "minus", value: doxygen.compound.docEmptyType }
+---| { name: "lowast", value: doxygen.compound.docEmptyType }
+---| { name: "radic", value: doxygen.compound.docEmptyType }
+---| { name: "prop", value: doxygen.compound.docEmptyType }
+---| { name: "infin", value: doxygen.compound.docEmptyType }
+---| { name: "ang", value: doxygen.compound.docEmptyType }
+---| { name: "and", value: doxygen.compound.docEmptyType }
+---| { name: "or", value: doxygen.compound.docEmptyType }
+---| { name: "cap", value: doxygen.compound.docEmptyType }
+---| { name: "cup", value: doxygen.compound.docEmptyType }
+---| { name: "int", value: doxygen.compound.docEmptyType }
+---| { name: "there4", value: doxygen.compound.docEmptyType }
+---| { name: "sim", value: doxygen.compound.docEmptyType }
+---| { name: "cong", value: doxygen.compound.docEmptyType }
+---| { name: "asymp", value: doxygen.compound.docEmptyType }
+---| { name: "ne", value: doxygen.compound.docEmptyType }
+---| { name: "equiv", value: doxygen.compound.docEmptyType }
+---| { name: "le", value: doxygen.compound.docEmptyType }
+---| { name: "ge", value: doxygen.compound.docEmptyType }
+---| { name: "sub", value: doxygen.compound.docEmptyType }
+---| { name: "sup", value: doxygen.compound.docEmptyType }
+---| { name: "nsub", value: doxygen.compound.docEmptyType }
+---| { name: "sube", value: doxygen.compound.docEmptyType }
+---| { name: "supe", value: doxygen.compound.docEmptyType }
+---| { name: "oplus", value: doxygen.compound.docEmptyType }
+---| { name: "otimes", value: doxygen.compound.docEmptyType }
+---| { name: "perp", value: doxygen.compound.docEmptyType }
+---| { name: "sdot", value: doxygen.compound.docEmptyType }
+---| { name: "lceil", value: doxygen.compound.docEmptyType }
+---| { name: "rceil", value: doxygen.compound.docEmptyType }
+---| { name: "lfloor", value: doxygen.compound.docEmptyType }
+---| { name: "rfloor", value: doxygen.compound.docEmptyType }
+---| { name: "lang", value: doxygen.compound.docEmptyType }
+---| { name: "rang", value: doxygen.compound.docEmptyType }
+---| { name: "loz", value: doxygen.compound.docEmptyType }
+---| { name: "spades", value: doxygen.compound.docEmptyType }
+---| { name: "clubs", value: doxygen.compound.docEmptyType }
+---| { name: "hearts", value: doxygen.compound.docEmptyType }
+---| { name: "diams", value: doxygen.compound.docEmptyType }
+---| { name: "OElig", value: doxygen.compound.docEmptyType }
+---| { name: "oelig", value: doxygen.compound.docEmptyType }
+---| { name: "Scaron", value: doxygen.compound.docEmptyType }
+---| { name: "scaron", value: doxygen.compound.docEmptyType }
+---| { name: "Yumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "circ", value: doxygen.compound.docEmptyType }
+---| { name: "tilde", value: doxygen.compound.docEmptyType }
+---| { name: "ensp", value: doxygen.compound.docEmptyType }
+---| { name: "emsp", value: doxygen.compound.docEmptyType }
+---| { name: "thinsp", value: doxygen.compound.docEmptyType }
+---| { name: "zwnj", value: doxygen.compound.docEmptyType }
+---| { name: "zwj", value: doxygen.compound.docEmptyType }
+---| { name: "lrm", value: doxygen.compound.docEmptyType }
+---| { name: "rlm", value: doxygen.compound.docEmptyType }
+---| { name: "ndash", value: doxygen.compound.docEmptyType }
+---| { name: "mdash", value: doxygen.compound.docEmptyType }
+---| { name: "lsquo", value: doxygen.compound.docEmptyType }
+---| { name: "rsquo", value: doxygen.compound.docEmptyType }
+---| { name: "sbquo", value: doxygen.compound.docEmptyType }
+---| { name: "ldquo", value: doxygen.compound.docEmptyType }
+---| { name: "rdquo", value: doxygen.compound.docEmptyType }
+---| { name: "bdquo", value: doxygen.compound.docEmptyType }
+---| { name: "dagger", value: doxygen.compound.docEmptyType }
+---| { name: "Dagger", value: doxygen.compound.docEmptyType }
+---| { name: "permil", value: doxygen.compound.docEmptyType }
+---| { name: "lsaquo", value: doxygen.compound.docEmptyType }
+---| { name: "rsaquo", value: doxygen.compound.docEmptyType }
+---| { name: "euro", value: doxygen.compound.docEmptyType }
+---| { name: "tm", value: doxygen.compound.docEmptyType }
+
+---@class doxygen.compound.docHeadingType (mixed)
+---@field level doxygen.compound.range_1_6? (attribute)
+---@field content doxygen.compound.docHeadingType
+---| string (text content)
+---| { name: "ulink", value: doxygen.compound.docURLLink }
+---| { name: "bold", value: doxygen.compound.docMarkupType }
+---| { name: "s", value: doxygen.compound.docMarkupType }
+---| { name: "strike", value: doxygen.compound.docMarkupType }
+---| { name: "underline", value: doxygen.compound.docMarkupType }
+---| { name: "emphasis", value: doxygen.compound.docMarkupType }
+---| { name: "computeroutput", value: doxygen.compound.docMarkupType }
+---| { name: "subscript", value: doxygen.compound.docMarkupType }
+---| { name: "superscript", value: doxygen.compound.docMarkupType }
+---| { name: "center", value: doxygen.compound.docMarkupType }
+---| { name: "small", value: doxygen.compound.docMarkupType }
+---| { name: "cite", value: doxygen.compound.docMarkupType }
+---| { name: "del", value: doxygen.compound.docMarkupType }
+---| { name: "ins", value: doxygen.compound.docMarkupType }
+---| { name: "htmlonly", value: doxygen.compound.docHtmlOnlyType }
+---| { name: "manonly", value: string }
+---| { name: "xmlonly", value: string }
+---| { name: "rtfonly", value: string }
+---| { name: "latexonly", value: string }
+---| { name: "docbookonly", value: string }
+---| { name: "image", value: doxygen.compound.docImageType }
+---| { name: "dot", value: doxygen.compound.docDotMscType }
+---| { name: "msc", value: doxygen.compound.docDotMscType }
+---| { name: "plantuml", value: doxygen.compound.docPlantumlType }
+---| { name: "anchor", value: doxygen.compound.docAnchorType }
+---| { name: "formula", value: doxygen.compound.docFormulaType }
+---| { name: "ref", value: doxygen.compound.docRefTextType }
+---| { name: "emoji", value: doxygen.compound.docEmojiType }
+---| { name: "linebreak", value: doxygen.compound.docEmptyType }
+---| { name: "nonbreakablespace", value: doxygen.compound.docEmptyType }
+---| { name: "iexcl", value: doxygen.compound.docEmptyType }
+---| { name: "cent", value: doxygen.compound.docEmptyType }
+---| { name: "pound", value: doxygen.compound.docEmptyType }
+---| { name: "curren", value: doxygen.compound.docEmptyType }
+---| { name: "yen", value: doxygen.compound.docEmptyType }
+---| { name: "brvbar", value: doxygen.compound.docEmptyType }
+---| { name: "sect", value: doxygen.compound.docEmptyType }
+---| { name: "umlaut", value: doxygen.compound.docEmptyType }
+---| { name: "copy", value: doxygen.compound.docEmptyType }
+---| { name: "ordf", value: doxygen.compound.docEmptyType }
+---| { name: "laquo", value: doxygen.compound.docEmptyType }
+---| { name: "not", value: doxygen.compound.docEmptyType }
+---| { name: "shy", value: doxygen.compound.docEmptyType }
+---| { name: "registered", value: doxygen.compound.docEmptyType }
+---| { name: "macr", value: doxygen.compound.docEmptyType }
+---| { name: "deg", value: doxygen.compound.docEmptyType }
+---| { name: "plusmn", value: doxygen.compound.docEmptyType }
+---| { name: "sup2", value: doxygen.compound.docEmptyType }
+---| { name: "sup3", value: doxygen.compound.docEmptyType }
+---| { name: "acute", value: doxygen.compound.docEmptyType }
+---| { name: "micro", value: doxygen.compound.docEmptyType }
+---| { name: "para", value: doxygen.compound.docEmptyType }
+---| { name: "middot", value: doxygen.compound.docEmptyType }
+---| { name: "cedil", value: doxygen.compound.docEmptyType }
+---| { name: "sup1", value: doxygen.compound.docEmptyType }
+---| { name: "ordm", value: doxygen.compound.docEmptyType }
+---| { name: "raquo", value: doxygen.compound.docEmptyType }
+---| { name: "frac14", value: doxygen.compound.docEmptyType }
+---| { name: "frac12", value: doxygen.compound.docEmptyType }
+---| { name: "frac34", value: doxygen.compound.docEmptyType }
+---| { name: "iquest", value: doxygen.compound.docEmptyType }
+---| { name: "Agrave", value: doxygen.compound.docEmptyType }
+---| { name: "Aacute", value: doxygen.compound.docEmptyType }
+---| { name: "Acirc", value: doxygen.compound.docEmptyType }
+---| { name: "Atilde", value: doxygen.compound.docEmptyType }
+---| { name: "Aumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "Aring", value: doxygen.compound.docEmptyType }
+---| { name: "AElig", value: doxygen.compound.docEmptyType }
+---| { name: "Ccedil", value: doxygen.compound.docEmptyType }
+---| { name: "Egrave", value: doxygen.compound.docEmptyType }
+---| { name: "Eacute", value: doxygen.compound.docEmptyType }
+---| { name: "Ecirc", value: doxygen.compound.docEmptyType }
+---| { name: "Eumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "Igrave", value: doxygen.compound.docEmptyType }
+---| { name: "Iacute", value: doxygen.compound.docEmptyType }
+---| { name: "Icirc", value: doxygen.compound.docEmptyType }
+---| { name: "Iumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "ETH", value: doxygen.compound.docEmptyType }
+---| { name: "Ntilde", value: doxygen.compound.docEmptyType }
+---| { name: "Ograve", value: doxygen.compound.docEmptyType }
+---| { name: "Oacute", value: doxygen.compound.docEmptyType }
+---| { name: "Ocirc", value: doxygen.compound.docEmptyType }
+---| { name: "Otilde", value: doxygen.compound.docEmptyType }
+---| { name: "Oumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "times", value: doxygen.compound.docEmptyType }
+---| { name: "Oslash", value: doxygen.compound.docEmptyType }
+---| { name: "Ugrave", value: doxygen.compound.docEmptyType }
+---| { name: "Uacute", value: doxygen.compound.docEmptyType }
+---| { name: "Ucirc", value: doxygen.compound.docEmptyType }
+---| { name: "Uumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "Yacute", value: doxygen.compound.docEmptyType }
+---| { name: "THORN", value: doxygen.compound.docEmptyType }
+---| { name: "szlig", value: doxygen.compound.docEmptyType }
+---| { name: "agrave", value: doxygen.compound.docEmptyType }
+---| { name: "aacute", value: doxygen.compound.docEmptyType }
+---| { name: "acirc", value: doxygen.compound.docEmptyType }
+---| { name: "atilde", value: doxygen.compound.docEmptyType }
+---| { name: "aumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "aring", value: doxygen.compound.docEmptyType }
+---| { name: "aelig", value: doxygen.compound.docEmptyType }
+---| { name: "ccedil", value: doxygen.compound.docEmptyType }
+---| { name: "egrave", value: doxygen.compound.docEmptyType }
+---| { name: "eacute", value: doxygen.compound.docEmptyType }
+---| { name: "ecirc", value: doxygen.compound.docEmptyType }
+---| { name: "eumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "igrave", value: doxygen.compound.docEmptyType }
+---| { name: "iacute", value: doxygen.compound.docEmptyType }
+---| { name: "icirc", value: doxygen.compound.docEmptyType }
+---| { name: "iumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "eth", value: doxygen.compound.docEmptyType }
+---| { name: "ntilde", value: doxygen.compound.docEmptyType }
+---| { name: "ograve", value: doxygen.compound.docEmptyType }
+---| { name: "oacute", value: doxygen.compound.docEmptyType }
+---| { name: "ocirc", value: doxygen.compound.docEmptyType }
+---| { name: "otilde", value: doxygen.compound.docEmptyType }
+---| { name: "oumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "divide", value: doxygen.compound.docEmptyType }
+---| { name: "oslash", value: doxygen.compound.docEmptyType }
+---| { name: "ugrave", value: doxygen.compound.docEmptyType }
+---| { name: "uacute", value: doxygen.compound.docEmptyType }
+---| { name: "ucirc", value: doxygen.compound.docEmptyType }
+---| { name: "uumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "yacute", value: doxygen.compound.docEmptyType }
+---| { name: "thorn", value: doxygen.compound.docEmptyType }
+---| { name: "yumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "fnof", value: doxygen.compound.docEmptyType }
+---| { name: "Alpha", value: doxygen.compound.docEmptyType }
+---| { name: "Beta", value: doxygen.compound.docEmptyType }
+---| { name: "Gamma", value: doxygen.compound.docEmptyType }
+---| { name: "Delta", value: doxygen.compound.docEmptyType }
+---| { name: "Epsilon", value: doxygen.compound.docEmptyType }
+---| { name: "Zeta", value: doxygen.compound.docEmptyType }
+---| { name: "Eta", value: doxygen.compound.docEmptyType }
+---| { name: "Theta", value: doxygen.compound.docEmptyType }
+---| { name: "Iota", value: doxygen.compound.docEmptyType }
+---| { name: "Kappa", value: doxygen.compound.docEmptyType }
+---| { name: "Lambda", value: doxygen.compound.docEmptyType }
+---| { name: "Mu", value: doxygen.compound.docEmptyType }
+---| { name: "Nu", value: doxygen.compound.docEmptyType }
+---| { name: "Xi", value: doxygen.compound.docEmptyType }
+---| { name: "Omicron", value: doxygen.compound.docEmptyType }
+---| { name: "Pi", value: doxygen.compound.docEmptyType }
+---| { name: "Rho", value: doxygen.compound.docEmptyType }
+---| { name: "Sigma", value: doxygen.compound.docEmptyType }
+---| { name: "Tau", value: doxygen.compound.docEmptyType }
+---| { name: "Upsilon", value: doxygen.compound.docEmptyType }
+---| { name: "Phi", value: doxygen.compound.docEmptyType }
+---| { name: "Chi", value: doxygen.compound.docEmptyType }
+---| { name: "Psi", value: doxygen.compound.docEmptyType }
+---| { name: "Omega", value: doxygen.compound.docEmptyType }
+---| { name: "alpha", value: doxygen.compound.docEmptyType }
+---| { name: "beta", value: doxygen.compound.docEmptyType }
+---| { name: "gamma", value: doxygen.compound.docEmptyType }
+---| { name: "delta", value: doxygen.compound.docEmptyType }
+---| { name: "epsilon", value: doxygen.compound.docEmptyType }
+---| { name: "zeta", value: doxygen.compound.docEmptyType }
+---| { name: "eta", value: doxygen.compound.docEmptyType }
+---| { name: "theta", value: doxygen.compound.docEmptyType }
+---| { name: "iota", value: doxygen.compound.docEmptyType }
+---| { name: "kappa", value: doxygen.compound.docEmptyType }
+---| { name: "lambda", value: doxygen.compound.docEmptyType }
+---| { name: "mu", value: doxygen.compound.docEmptyType }
+---| { name: "nu", value: doxygen.compound.docEmptyType }
+---| { name: "xi", value: doxygen.compound.docEmptyType }
+---| { name: "omicron", value: doxygen.compound.docEmptyType }
+---| { name: "pi", value: doxygen.compound.docEmptyType }
+---| { name: "rho", value: doxygen.compound.docEmptyType }
+---| { name: "sigmaf", value: doxygen.compound.docEmptyType }
+---| { name: "sigma", value: doxygen.compound.docEmptyType }
+---| { name: "tau", value: doxygen.compound.docEmptyType }
+---| { name: "upsilon", value: doxygen.compound.docEmptyType }
+---| { name: "phi", value: doxygen.compound.docEmptyType }
+---| { name: "chi", value: doxygen.compound.docEmptyType }
+---| { name: "psi", value: doxygen.compound.docEmptyType }
+---| { name: "omega", value: doxygen.compound.docEmptyType }
+---| { name: "thetasym", value: doxygen.compound.docEmptyType }
+---| { name: "upsih", value: doxygen.compound.docEmptyType }
+---| { name: "piv", value: doxygen.compound.docEmptyType }
+---| { name: "bull", value: doxygen.compound.docEmptyType }
+---| { name: "hellip", value: doxygen.compound.docEmptyType }
+---| { name: "prime", value: doxygen.compound.docEmptyType }
+---| { name: "Prime", value: doxygen.compound.docEmptyType }
+---| { name: "oline", value: doxygen.compound.docEmptyType }
+---| { name: "frasl", value: doxygen.compound.docEmptyType }
+---| { name: "weierp", value: doxygen.compound.docEmptyType }
+---| { name: "imaginary", value: doxygen.compound.docEmptyType }
+---| { name: "real", value: doxygen.compound.docEmptyType }
+---| { name: "trademark", value: doxygen.compound.docEmptyType }
+---| { name: "alefsym", value: doxygen.compound.docEmptyType }
+---| { name: "larr", value: doxygen.compound.docEmptyType }
+---| { name: "uarr", value: doxygen.compound.docEmptyType }
+---| { name: "rarr", value: doxygen.compound.docEmptyType }
+---| { name: "darr", value: doxygen.compound.docEmptyType }
+---| { name: "harr", value: doxygen.compound.docEmptyType }
+---| { name: "crarr", value: doxygen.compound.docEmptyType }
+---| { name: "lArr", value: doxygen.compound.docEmptyType }
+---| { name: "uArr", value: doxygen.compound.docEmptyType }
+---| { name: "rArr", value: doxygen.compound.docEmptyType }
+---| { name: "dArr", value: doxygen.compound.docEmptyType }
+---| { name: "hArr", value: doxygen.compound.docEmptyType }
+---| { name: "forall", value: doxygen.compound.docEmptyType }
+---| { name: "part", value: doxygen.compound.docEmptyType }
+---| { name: "exist", value: doxygen.compound.docEmptyType }
+---| { name: "empty", value: doxygen.compound.docEmptyType }
+---| { name: "nabla", value: doxygen.compound.docEmptyType }
+---| { name: "isin", value: doxygen.compound.docEmptyType }
+---| { name: "notin", value: doxygen.compound.docEmptyType }
+---| { name: "ni", value: doxygen.compound.docEmptyType }
+---| { name: "prod", value: doxygen.compound.docEmptyType }
+---| { name: "sum", value: doxygen.compound.docEmptyType }
+---| { name: "minus", value: doxygen.compound.docEmptyType }
+---| { name: "lowast", value: doxygen.compound.docEmptyType }
+---| { name: "radic", value: doxygen.compound.docEmptyType }
+---| { name: "prop", value: doxygen.compound.docEmptyType }
+---| { name: "infin", value: doxygen.compound.docEmptyType }
+---| { name: "ang", value: doxygen.compound.docEmptyType }
+---| { name: "and", value: doxygen.compound.docEmptyType }
+---| { name: "or", value: doxygen.compound.docEmptyType }
+---| { name: "cap", value: doxygen.compound.docEmptyType }
+---| { name: "cup", value: doxygen.compound.docEmptyType }
+---| { name: "int", value: doxygen.compound.docEmptyType }
+---| { name: "there4", value: doxygen.compound.docEmptyType }
+---| { name: "sim", value: doxygen.compound.docEmptyType }
+---| { name: "cong", value: doxygen.compound.docEmptyType }
+---| { name: "asymp", value: doxygen.compound.docEmptyType }
+---| { name: "ne", value: doxygen.compound.docEmptyType }
+---| { name: "equiv", value: doxygen.compound.docEmptyType }
+---| { name: "le", value: doxygen.compound.docEmptyType }
+---| { name: "ge", value: doxygen.compound.docEmptyType }
+---| { name: "sub", value: doxygen.compound.docEmptyType }
+---| { name: "sup", value: doxygen.compound.docEmptyType }
+---| { name: "nsub", value: doxygen.compound.docEmptyType }
+---| { name: "sube", value: doxygen.compound.docEmptyType }
+---| { name: "supe", value: doxygen.compound.docEmptyType }
+---| { name: "oplus", value: doxygen.compound.docEmptyType }
+---| { name: "otimes", value: doxygen.compound.docEmptyType }
+---| { name: "perp", value: doxygen.compound.docEmptyType }
+---| { name: "sdot", value: doxygen.compound.docEmptyType }
+---| { name: "lceil", value: doxygen.compound.docEmptyType }
+---| { name: "rceil", value: doxygen.compound.docEmptyType }
+---| { name: "lfloor", value: doxygen.compound.docEmptyType }
+---| { name: "rfloor", value: doxygen.compound.docEmptyType }
+---| { name: "lang", value: doxygen.compound.docEmptyType }
+---| { name: "rang", value: doxygen.compound.docEmptyType }
+---| { name: "loz", value: doxygen.compound.docEmptyType }
+---| { name: "spades", value: doxygen.compound.docEmptyType }
+---| { name: "clubs", value: doxygen.compound.docEmptyType }
+---| { name: "hearts", value: doxygen.compound.docEmptyType }
+---| { name: "diams", value: doxygen.compound.docEmptyType }
+---| { name: "OElig", value: doxygen.compound.docEmptyType }
+---| { name: "oelig", value: doxygen.compound.docEmptyType }
+---| { name: "Scaron", value: doxygen.compound.docEmptyType }
+---| { name: "scaron", value: doxygen.compound.docEmptyType }
+---| { name: "Yumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "circ", value: doxygen.compound.docEmptyType }
+---| { name: "tilde", value: doxygen.compound.docEmptyType }
+---| { name: "ensp", value: doxygen.compound.docEmptyType }
+---| { name: "emsp", value: doxygen.compound.docEmptyType }
+---| { name: "thinsp", value: doxygen.compound.docEmptyType }
+---| { name: "zwnj", value: doxygen.compound.docEmptyType }
+---| { name: "zwj", value: doxygen.compound.docEmptyType }
+---| { name: "lrm", value: doxygen.compound.docEmptyType }
+---| { name: "rlm", value: doxygen.compound.docEmptyType }
+---| { name: "ndash", value: doxygen.compound.docEmptyType }
+---| { name: "mdash", value: doxygen.compound.docEmptyType }
+---| { name: "lsquo", value: doxygen.compound.docEmptyType }
+---| { name: "rsquo", value: doxygen.compound.docEmptyType }
+---| { name: "sbquo", value: doxygen.compound.docEmptyType }
+---| { name: "ldquo", value: doxygen.compound.docEmptyType }
+---| { name: "rdquo", value: doxygen.compound.docEmptyType }
+---| { name: "bdquo", value: doxygen.compound.docEmptyType }
+---| { name: "dagger", value: doxygen.compound.docEmptyType }
+---| { name: "Dagger", value: doxygen.compound.docEmptyType }
+---| { name: "permil", value: doxygen.compound.docEmptyType }
+---| { name: "lsaquo", value: doxygen.compound.docEmptyType }
+---| { name: "rsaquo", value: doxygen.compound.docEmptyType }
+---| { name: "euro", value: doxygen.compound.docEmptyType }
+---| { name: "tm", value: doxygen.compound.docEmptyType }
+
+---@class doxygen.compound.docImageType (mixed)
+---@field type doxygen.compound.DoxImageKind? (attribute)
+---@field name string? (attribute)
+---@field width string? (attribute)
+---@field height string? (attribute)
+---@field alt string? (attribute)
+---@field inline boolean? (attribute)
+---@field caption string? (attribute)
+---@field content doxygen.compound.docImageType
+---| string (text content)
+---| { name: "ulink", value: doxygen.compound.docURLLink }
+---| { name: "bold", value: doxygen.compound.docMarkupType }
+---| { name: "s", value: doxygen.compound.docMarkupType }
+---| { name: "strike", value: doxygen.compound.docMarkupType }
+---| { name: "underline", value: doxygen.compound.docMarkupType }
+---| { name: "emphasis", value: doxygen.compound.docMarkupType }
+---| { name: "computeroutput", value: doxygen.compound.docMarkupType }
+---| { name: "subscript", value: doxygen.compound.docMarkupType }
+---| { name: "superscript", value: doxygen.compound.docMarkupType }
+---| { name: "center", value: doxygen.compound.docMarkupType }
+---| { name: "small", value: doxygen.compound.docMarkupType }
+---| { name: "cite", value: doxygen.compound.docMarkupType }
+---| { name: "del", value: doxygen.compound.docMarkupType }
+---| { name: "ins", value: doxygen.compound.docMarkupType }
+---| { name: "htmlonly", value: doxygen.compound.docHtmlOnlyType }
+---| { name: "manonly", value: string }
+---| { name: "xmlonly", value: string }
+---| { name: "rtfonly", value: string }
+---| { name: "latexonly", value: string }
+---| { name: "docbookonly", value: string }
+---| { name: "image", value: doxygen.compound.docImageType }
+---| { name: "dot", value: doxygen.compound.docDotMscType }
+---| { name: "msc", value: doxygen.compound.docDotMscType }
+---| { name: "plantuml", value: doxygen.compound.docPlantumlType }
+---| { name: "anchor", value: doxygen.compound.docAnchorType }
+---| { name: "formula", value: doxygen.compound.docFormulaType }
+---| { name: "ref", value: doxygen.compound.docRefTextType }
+---| { name: "emoji", value: doxygen.compound.docEmojiType }
+---| { name: "linebreak", value: doxygen.compound.docEmptyType }
+---| { name: "nonbreakablespace", value: doxygen.compound.docEmptyType }
+---| { name: "iexcl", value: doxygen.compound.docEmptyType }
+---| { name: "cent", value: doxygen.compound.docEmptyType }
+---| { name: "pound", value: doxygen.compound.docEmptyType }
+---| { name: "curren", value: doxygen.compound.docEmptyType }
+---| { name: "yen", value: doxygen.compound.docEmptyType }
+---| { name: "brvbar", value: doxygen.compound.docEmptyType }
+---| { name: "sect", value: doxygen.compound.docEmptyType }
+---| { name: "umlaut", value: doxygen.compound.docEmptyType }
+---| { name: "copy", value: doxygen.compound.docEmptyType }
+---| { name: "ordf", value: doxygen.compound.docEmptyType }
+---| { name: "laquo", value: doxygen.compound.docEmptyType }
+---| { name: "not", value: doxygen.compound.docEmptyType }
+---| { name: "shy", value: doxygen.compound.docEmptyType }
+---| { name: "registered", value: doxygen.compound.docEmptyType }
+---| { name: "macr", value: doxygen.compound.docEmptyType }
+---| { name: "deg", value: doxygen.compound.docEmptyType }
+---| { name: "plusmn", value: doxygen.compound.docEmptyType }
+---| { name: "sup2", value: doxygen.compound.docEmptyType }
+---| { name: "sup3", value: doxygen.compound.docEmptyType }
+---| { name: "acute", value: doxygen.compound.docEmptyType }
+---| { name: "micro", value: doxygen.compound.docEmptyType }
+---| { name: "para", value: doxygen.compound.docEmptyType }
+---| { name: "middot", value: doxygen.compound.docEmptyType }
+---| { name: "cedil", value: doxygen.compound.docEmptyType }
+---| { name: "sup1", value: doxygen.compound.docEmptyType }
+---| { name: "ordm", value: doxygen.compound.docEmptyType }
+---| { name: "raquo", value: doxygen.compound.docEmptyType }
+---| { name: "frac14", value: doxygen.compound.docEmptyType }
+---| { name: "frac12", value: doxygen.compound.docEmptyType }
+---| { name: "frac34", value: doxygen.compound.docEmptyType }
+---| { name: "iquest", value: doxygen.compound.docEmptyType }
+---| { name: "Agrave", value: doxygen.compound.docEmptyType }
+---| { name: "Aacute", value: doxygen.compound.docEmptyType }
+---| { name: "Acirc", value: doxygen.compound.docEmptyType }
+---| { name: "Atilde", value: doxygen.compound.docEmptyType }
+---| { name: "Aumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "Aring", value: doxygen.compound.docEmptyType }
+---| { name: "AElig", value: doxygen.compound.docEmptyType }
+---| { name: "Ccedil", value: doxygen.compound.docEmptyType }
+---| { name: "Egrave", value: doxygen.compound.docEmptyType }
+---| { name: "Eacute", value: doxygen.compound.docEmptyType }
+---| { name: "Ecirc", value: doxygen.compound.docEmptyType }
+---| { name: "Eumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "Igrave", value: doxygen.compound.docEmptyType }
+---| { name: "Iacute", value: doxygen.compound.docEmptyType }
+---| { name: "Icirc", value: doxygen.compound.docEmptyType }
+---| { name: "Iumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "ETH", value: doxygen.compound.docEmptyType }
+---| { name: "Ntilde", value: doxygen.compound.docEmptyType }
+---| { name: "Ograve", value: doxygen.compound.docEmptyType }
+---| { name: "Oacute", value: doxygen.compound.docEmptyType }
+---| { name: "Ocirc", value: doxygen.compound.docEmptyType }
+---| { name: "Otilde", value: doxygen.compound.docEmptyType }
+---| { name: "Oumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "times", value: doxygen.compound.docEmptyType }
+---| { name: "Oslash", value: doxygen.compound.docEmptyType }
+---| { name: "Ugrave", value: doxygen.compound.docEmptyType }
+---| { name: "Uacute", value: doxygen.compound.docEmptyType }
+---| { name: "Ucirc", value: doxygen.compound.docEmptyType }
+---| { name: "Uumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "Yacute", value: doxygen.compound.docEmptyType }
+---| { name: "THORN", value: doxygen.compound.docEmptyType }
+---| { name: "szlig", value: doxygen.compound.docEmptyType }
+---| { name: "agrave", value: doxygen.compound.docEmptyType }
+---| { name: "aacute", value: doxygen.compound.docEmptyType }
+---| { name: "acirc", value: doxygen.compound.docEmptyType }
+---| { name: "atilde", value: doxygen.compound.docEmptyType }
+---| { name: "aumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "aring", value: doxygen.compound.docEmptyType }
+---| { name: "aelig", value: doxygen.compound.docEmptyType }
+---| { name: "ccedil", value: doxygen.compound.docEmptyType }
+---| { name: "egrave", value: doxygen.compound.docEmptyType }
+---| { name: "eacute", value: doxygen.compound.docEmptyType }
+---| { name: "ecirc", value: doxygen.compound.docEmptyType }
+---| { name: "eumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "igrave", value: doxygen.compound.docEmptyType }
+---| { name: "iacute", value: doxygen.compound.docEmptyType }
+---| { name: "icirc", value: doxygen.compound.docEmptyType }
+---| { name: "iumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "eth", value: doxygen.compound.docEmptyType }
+---| { name: "ntilde", value: doxygen.compound.docEmptyType }
+---| { name: "ograve", value: doxygen.compound.docEmptyType }
+---| { name: "oacute", value: doxygen.compound.docEmptyType }
+---| { name: "ocirc", value: doxygen.compound.docEmptyType }
+---| { name: "otilde", value: doxygen.compound.docEmptyType }
+---| { name: "oumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "divide", value: doxygen.compound.docEmptyType }
+---| { name: "oslash", value: doxygen.compound.docEmptyType }
+---| { name: "ugrave", value: doxygen.compound.docEmptyType }
+---| { name: "uacute", value: doxygen.compound.docEmptyType }
+---| { name: "ucirc", value: doxygen.compound.docEmptyType }
+---| { name: "uumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "yacute", value: doxygen.compound.docEmptyType }
+---| { name: "thorn", value: doxygen.compound.docEmptyType }
+---| { name: "yumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "fnof", value: doxygen.compound.docEmptyType }
+---| { name: "Alpha", value: doxygen.compound.docEmptyType }
+---| { name: "Beta", value: doxygen.compound.docEmptyType }
+---| { name: "Gamma", value: doxygen.compound.docEmptyType }
+---| { name: "Delta", value: doxygen.compound.docEmptyType }
+---| { name: "Epsilon", value: doxygen.compound.docEmptyType }
+---| { name: "Zeta", value: doxygen.compound.docEmptyType }
+---| { name: "Eta", value: doxygen.compound.docEmptyType }
+---| { name: "Theta", value: doxygen.compound.docEmptyType }
+---| { name: "Iota", value: doxygen.compound.docEmptyType }
+---| { name: "Kappa", value: doxygen.compound.docEmptyType }
+---| { name: "Lambda", value: doxygen.compound.docEmptyType }
+---| { name: "Mu", value: doxygen.compound.docEmptyType }
+---| { name: "Nu", value: doxygen.compound.docEmptyType }
+---| { name: "Xi", value: doxygen.compound.docEmptyType }
+---| { name: "Omicron", value: doxygen.compound.docEmptyType }
+---| { name: "Pi", value: doxygen.compound.docEmptyType }
+---| { name: "Rho", value: doxygen.compound.docEmptyType }
+---| { name: "Sigma", value: doxygen.compound.docEmptyType }
+---| { name: "Tau", value: doxygen.compound.docEmptyType }
+---| { name: "Upsilon", value: doxygen.compound.docEmptyType }
+---| { name: "Phi", value: doxygen.compound.docEmptyType }
+---| { name: "Chi", value: doxygen.compound.docEmptyType }
+---| { name: "Psi", value: doxygen.compound.docEmptyType }
+---| { name: "Omega", value: doxygen.compound.docEmptyType }
+---| { name: "alpha", value: doxygen.compound.docEmptyType }
+---| { name: "beta", value: doxygen.compound.docEmptyType }
+---| { name: "gamma", value: doxygen.compound.docEmptyType }
+---| { name: "delta", value: doxygen.compound.docEmptyType }
+---| { name: "epsilon", value: doxygen.compound.docEmptyType }
+---| { name: "zeta", value: doxygen.compound.docEmptyType }
+---| { name: "eta", value: doxygen.compound.docEmptyType }
+---| { name: "theta", value: doxygen.compound.docEmptyType }
+---| { name: "iota", value: doxygen.compound.docEmptyType }
+---| { name: "kappa", value: doxygen.compound.docEmptyType }
+---| { name: "lambda", value: doxygen.compound.docEmptyType }
+---| { name: "mu", value: doxygen.compound.docEmptyType }
+---| { name: "nu", value: doxygen.compound.docEmptyType }
+---| { name: "xi", value: doxygen.compound.docEmptyType }
+---| { name: "omicron", value: doxygen.compound.docEmptyType }
+---| { name: "pi", value: doxygen.compound.docEmptyType }
+---| { name: "rho", value: doxygen.compound.docEmptyType }
+---| { name: "sigmaf", value: doxygen.compound.docEmptyType }
+---| { name: "sigma", value: doxygen.compound.docEmptyType }
+---| { name: "tau", value: doxygen.compound.docEmptyType }
+---| { name: "upsilon", value: doxygen.compound.docEmptyType }
+---| { name: "phi", value: doxygen.compound.docEmptyType }
+---| { name: "chi", value: doxygen.compound.docEmptyType }
+---| { name: "psi", value: doxygen.compound.docEmptyType }
+---| { name: "omega", value: doxygen.compound.docEmptyType }
+---| { name: "thetasym", value: doxygen.compound.docEmptyType }
+---| { name: "upsih", value: doxygen.compound.docEmptyType }
+---| { name: "piv", value: doxygen.compound.docEmptyType }
+---| { name: "bull", value: doxygen.compound.docEmptyType }
+---| { name: "hellip", value: doxygen.compound.docEmptyType }
+---| { name: "prime", value: doxygen.compound.docEmptyType }
+---| { name: "Prime", value: doxygen.compound.docEmptyType }
+---| { name: "oline", value: doxygen.compound.docEmptyType }
+---| { name: "frasl", value: doxygen.compound.docEmptyType }
+---| { name: "weierp", value: doxygen.compound.docEmptyType }
+---| { name: "imaginary", value: doxygen.compound.docEmptyType }
+---| { name: "real", value: doxygen.compound.docEmptyType }
+---| { name: "trademark", value: doxygen.compound.docEmptyType }
+---| { name: "alefsym", value: doxygen.compound.docEmptyType }
+---| { name: "larr", value: doxygen.compound.docEmptyType }
+---| { name: "uarr", value: doxygen.compound.docEmptyType }
+---| { name: "rarr", value: doxygen.compound.docEmptyType }
+---| { name: "darr", value: doxygen.compound.docEmptyType }
+---| { name: "harr", value: doxygen.compound.docEmptyType }
+---| { name: "crarr", value: doxygen.compound.docEmptyType }
+---| { name: "lArr", value: doxygen.compound.docEmptyType }
+---| { name: "uArr", value: doxygen.compound.docEmptyType }
+---| { name: "rArr", value: doxygen.compound.docEmptyType }
+---| { name: "dArr", value: doxygen.compound.docEmptyType }
+---| { name: "hArr", value: doxygen.compound.docEmptyType }
+---| { name: "forall", value: doxygen.compound.docEmptyType }
+---| { name: "part", value: doxygen.compound.docEmptyType }
+---| { name: "exist", value: doxygen.compound.docEmptyType }
+---| { name: "empty", value: doxygen.compound.docEmptyType }
+---| { name: "nabla", value: doxygen.compound.docEmptyType }
+---| { name: "isin", value: doxygen.compound.docEmptyType }
+---| { name: "notin", value: doxygen.compound.docEmptyType }
+---| { name: "ni", value: doxygen.compound.docEmptyType }
+---| { name: "prod", value: doxygen.compound.docEmptyType }
+---| { name: "sum", value: doxygen.compound.docEmptyType }
+---| { name: "minus", value: doxygen.compound.docEmptyType }
+---| { name: "lowast", value: doxygen.compound.docEmptyType }
+---| { name: "radic", value: doxygen.compound.docEmptyType }
+---| { name: "prop", value: doxygen.compound.docEmptyType }
+---| { name: "infin", value: doxygen.compound.docEmptyType }
+---| { name: "ang", value: doxygen.compound.docEmptyType }
+---| { name: "and", value: doxygen.compound.docEmptyType }
+---| { name: "or", value: doxygen.compound.docEmptyType }
+---| { name: "cap", value: doxygen.compound.docEmptyType }
+---| { name: "cup", value: doxygen.compound.docEmptyType }
+---| { name: "int", value: doxygen.compound.docEmptyType }
+---| { name: "there4", value: doxygen.compound.docEmptyType }
+---| { name: "sim", value: doxygen.compound.docEmptyType }
+---| { name: "cong", value: doxygen.compound.docEmptyType }
+---| { name: "asymp", value: doxygen.compound.docEmptyType }
+---| { name: "ne", value: doxygen.compound.docEmptyType }
+---| { name: "equiv", value: doxygen.compound.docEmptyType }
+---| { name: "le", value: doxygen.compound.docEmptyType }
+---| { name: "ge", value: doxygen.compound.docEmptyType }
+---| { name: "sub", value: doxygen.compound.docEmptyType }
+---| { name: "sup", value: doxygen.compound.docEmptyType }
+---| { name: "nsub", value: doxygen.compound.docEmptyType }
+---| { name: "sube", value: doxygen.compound.docEmptyType }
+---| { name: "supe", value: doxygen.compound.docEmptyType }
+---| { name: "oplus", value: doxygen.compound.docEmptyType }
+---| { name: "otimes", value: doxygen.compound.docEmptyType }
+---| { name: "perp", value: doxygen.compound.docEmptyType }
+---| { name: "sdot", value: doxygen.compound.docEmptyType }
+---| { name: "lceil", value: doxygen.compound.docEmptyType }
+---| { name: "rceil", value: doxygen.compound.docEmptyType }
+---| { name: "lfloor", value: doxygen.compound.docEmptyType }
+---| { name: "rfloor", value: doxygen.compound.docEmptyType }
+---| { name: "lang", value: doxygen.compound.docEmptyType }
+---| { name: "rang", value: doxygen.compound.docEmptyType }
+---| { name: "loz", value: doxygen.compound.docEmptyType }
+---| { name: "spades", value: doxygen.compound.docEmptyType }
+---| { name: "clubs", value: doxygen.compound.docEmptyType }
+---| { name: "hearts", value: doxygen.compound.docEmptyType }
+---| { name: "diams", value: doxygen.compound.docEmptyType }
+---| { name: "OElig", value: doxygen.compound.docEmptyType }
+---| { name: "oelig", value: doxygen.compound.docEmptyType }
+---| { name: "Scaron", value: doxygen.compound.docEmptyType }
+---| { name: "scaron", value: doxygen.compound.docEmptyType }
+---| { name: "Yumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "circ", value: doxygen.compound.docEmptyType }
+---| { name: "tilde", value: doxygen.compound.docEmptyType }
+---| { name: "ensp", value: doxygen.compound.docEmptyType }
+---| { name: "emsp", value: doxygen.compound.docEmptyType }
+---| { name: "thinsp", value: doxygen.compound.docEmptyType }
+---| { name: "zwnj", value: doxygen.compound.docEmptyType }
+---| { name: "zwj", value: doxygen.compound.docEmptyType }
+---| { name: "lrm", value: doxygen.compound.docEmptyType }
+---| { name: "rlm", value: doxygen.compound.docEmptyType }
+---| { name: "ndash", value: doxygen.compound.docEmptyType }
+---| { name: "mdash", value: doxygen.compound.docEmptyType }
+---| { name: "lsquo", value: doxygen.compound.docEmptyType }
+---| { name: "rsquo", value: doxygen.compound.docEmptyType }
+---| { name: "sbquo", value: doxygen.compound.docEmptyType }
+---| { name: "ldquo", value: doxygen.compound.docEmptyType }
+---| { name: "rdquo", value: doxygen.compound.docEmptyType }
+---| { name: "bdquo", value: doxygen.compound.docEmptyType }
+---| { name: "dagger", value: doxygen.compound.docEmptyType }
+---| { name: "Dagger", value: doxygen.compound.docEmptyType }
+---| { name: "permil", value: doxygen.compound.docEmptyType }
+---| { name: "lsaquo", value: doxygen.compound.docEmptyType }
+---| { name: "rsaquo", value: doxygen.compound.docEmptyType }
+---| { name: "euro", value: doxygen.compound.docEmptyType }
+---| { name: "tm", value: doxygen.compound.docEmptyType }
+
+---@class doxygen.compound.docDotMscType (mixed)
+---@field name string? (attribute)
+---@field width string? (attribute)
+---@field height string? (attribute)
+---@field caption string? (attribute)
+---@field content doxygen.compound.docDotMscType
+---| string (text content)
+---| { name: "ulink", value: doxygen.compound.docURLLink }
+---| { name: "bold", value: doxygen.compound.docMarkupType }
+---| { name: "s", value: doxygen.compound.docMarkupType }
+---| { name: "strike", value: doxygen.compound.docMarkupType }
+---| { name: "underline", value: doxygen.compound.docMarkupType }
+---| { name: "emphasis", value: doxygen.compound.docMarkupType }
+---| { name: "computeroutput", value: doxygen.compound.docMarkupType }
+---| { name: "subscript", value: doxygen.compound.docMarkupType }
+---| { name: "superscript", value: doxygen.compound.docMarkupType }
+---| { name: "center", value: doxygen.compound.docMarkupType }
+---| { name: "small", value: doxygen.compound.docMarkupType }
+---| { name: "cite", value: doxygen.compound.docMarkupType }
+---| { name: "del", value: doxygen.compound.docMarkupType }
+---| { name: "ins", value: doxygen.compound.docMarkupType }
+---| { name: "htmlonly", value: doxygen.compound.docHtmlOnlyType }
+---| { name: "manonly", value: string }
+---| { name: "xmlonly", value: string }
+---| { name: "rtfonly", value: string }
+---| { name: "latexonly", value: string }
+---| { name: "docbookonly", value: string }
+---| { name: "image", value: doxygen.compound.docImageType }
+---| { name: "dot", value: doxygen.compound.docDotMscType }
+---| { name: "msc", value: doxygen.compound.docDotMscType }
+---| { name: "plantuml", value: doxygen.compound.docPlantumlType }
+---| { name: "anchor", value: doxygen.compound.docAnchorType }
+---| { name: "formula", value: doxygen.compound.docFormulaType }
+---| { name: "ref", value: doxygen.compound.docRefTextType }
+---| { name: "emoji", value: doxygen.compound.docEmojiType }
+---| { name: "linebreak", value: doxygen.compound.docEmptyType }
+---| { name: "nonbreakablespace", value: doxygen.compound.docEmptyType }
+---| { name: "iexcl", value: doxygen.compound.docEmptyType }
+---| { name: "cent", value: doxygen.compound.docEmptyType }
+---| { name: "pound", value: doxygen.compound.docEmptyType }
+---| { name: "curren", value: doxygen.compound.docEmptyType }
+---| { name: "yen", value: doxygen.compound.docEmptyType }
+---| { name: "brvbar", value: doxygen.compound.docEmptyType }
+---| { name: "sect", value: doxygen.compound.docEmptyType }
+---| { name: "umlaut", value: doxygen.compound.docEmptyType }
+---| { name: "copy", value: doxygen.compound.docEmptyType }
+---| { name: "ordf", value: doxygen.compound.docEmptyType }
+---| { name: "laquo", value: doxygen.compound.docEmptyType }
+---| { name: "not", value: doxygen.compound.docEmptyType }
+---| { name: "shy", value: doxygen.compound.docEmptyType }
+---| { name: "registered", value: doxygen.compound.docEmptyType }
+---| { name: "macr", value: doxygen.compound.docEmptyType }
+---| { name: "deg", value: doxygen.compound.docEmptyType }
+---| { name: "plusmn", value: doxygen.compound.docEmptyType }
+---| { name: "sup2", value: doxygen.compound.docEmptyType }
+---| { name: "sup3", value: doxygen.compound.docEmptyType }
+---| { name: "acute", value: doxygen.compound.docEmptyType }
+---| { name: "micro", value: doxygen.compound.docEmptyType }
+---| { name: "para", value: doxygen.compound.docEmptyType }
+---| { name: "middot", value: doxygen.compound.docEmptyType }
+---| { name: "cedil", value: doxygen.compound.docEmptyType }
+---| { name: "sup1", value: doxygen.compound.docEmptyType }
+---| { name: "ordm", value: doxygen.compound.docEmptyType }
+---| { name: "raquo", value: doxygen.compound.docEmptyType }
+---| { name: "frac14", value: doxygen.compound.docEmptyType }
+---| { name: "frac12", value: doxygen.compound.docEmptyType }
+---| { name: "frac34", value: doxygen.compound.docEmptyType }
+---| { name: "iquest", value: doxygen.compound.docEmptyType }
+---| { name: "Agrave", value: doxygen.compound.docEmptyType }
+---| { name: "Aacute", value: doxygen.compound.docEmptyType }
+---| { name: "Acirc", value: doxygen.compound.docEmptyType }
+---| { name: "Atilde", value: doxygen.compound.docEmptyType }
+---| { name: "Aumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "Aring", value: doxygen.compound.docEmptyType }
+---| { name: "AElig", value: doxygen.compound.docEmptyType }
+---| { name: "Ccedil", value: doxygen.compound.docEmptyType }
+---| { name: "Egrave", value: doxygen.compound.docEmptyType }
+---| { name: "Eacute", value: doxygen.compound.docEmptyType }
+---| { name: "Ecirc", value: doxygen.compound.docEmptyType }
+---| { name: "Eumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "Igrave", value: doxygen.compound.docEmptyType }
+---| { name: "Iacute", value: doxygen.compound.docEmptyType }
+---| { name: "Icirc", value: doxygen.compound.docEmptyType }
+---| { name: "Iumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "ETH", value: doxygen.compound.docEmptyType }
+---| { name: "Ntilde", value: doxygen.compound.docEmptyType }
+---| { name: "Ograve", value: doxygen.compound.docEmptyType }
+---| { name: "Oacute", value: doxygen.compound.docEmptyType }
+---| { name: "Ocirc", value: doxygen.compound.docEmptyType }
+---| { name: "Otilde", value: doxygen.compound.docEmptyType }
+---| { name: "Oumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "times", value: doxygen.compound.docEmptyType }
+---| { name: "Oslash", value: doxygen.compound.docEmptyType }
+---| { name: "Ugrave", value: doxygen.compound.docEmptyType }
+---| { name: "Uacute", value: doxygen.compound.docEmptyType }
+---| { name: "Ucirc", value: doxygen.compound.docEmptyType }
+---| { name: "Uumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "Yacute", value: doxygen.compound.docEmptyType }
+---| { name: "THORN", value: doxygen.compound.docEmptyType }
+---| { name: "szlig", value: doxygen.compound.docEmptyType }
+---| { name: "agrave", value: doxygen.compound.docEmptyType }
+---| { name: "aacute", value: doxygen.compound.docEmptyType }
+---| { name: "acirc", value: doxygen.compound.docEmptyType }
+---| { name: "atilde", value: doxygen.compound.docEmptyType }
+---| { name: "aumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "aring", value: doxygen.compound.docEmptyType }
+---| { name: "aelig", value: doxygen.compound.docEmptyType }
+---| { name: "ccedil", value: doxygen.compound.docEmptyType }
+---| { name: "egrave", value: doxygen.compound.docEmptyType }
+---| { name: "eacute", value: doxygen.compound.docEmptyType }
+---| { name: "ecirc", value: doxygen.compound.docEmptyType }
+---| { name: "eumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "igrave", value: doxygen.compound.docEmptyType }
+---| { name: "iacute", value: doxygen.compound.docEmptyType }
+---| { name: "icirc", value: doxygen.compound.docEmptyType }
+---| { name: "iumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "eth", value: doxygen.compound.docEmptyType }
+---| { name: "ntilde", value: doxygen.compound.docEmptyType }
+---| { name: "ograve", value: doxygen.compound.docEmptyType }
+---| { name: "oacute", value: doxygen.compound.docEmptyType }
+---| { name: "ocirc", value: doxygen.compound.docEmptyType }
+---| { name: "otilde", value: doxygen.compound.docEmptyType }
+---| { name: "oumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "divide", value: doxygen.compound.docEmptyType }
+---| { name: "oslash", value: doxygen.compound.docEmptyType }
+---| { name: "ugrave", value: doxygen.compound.docEmptyType }
+---| { name: "uacute", value: doxygen.compound.docEmptyType }
+---| { name: "ucirc", value: doxygen.compound.docEmptyType }
+---| { name: "uumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "yacute", value: doxygen.compound.docEmptyType }
+---| { name: "thorn", value: doxygen.compound.docEmptyType }
+---| { name: "yumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "fnof", value: doxygen.compound.docEmptyType }
+---| { name: "Alpha", value: doxygen.compound.docEmptyType }
+---| { name: "Beta", value: doxygen.compound.docEmptyType }
+---| { name: "Gamma", value: doxygen.compound.docEmptyType }
+---| { name: "Delta", value: doxygen.compound.docEmptyType }
+---| { name: "Epsilon", value: doxygen.compound.docEmptyType }
+---| { name: "Zeta", value: doxygen.compound.docEmptyType }
+---| { name: "Eta", value: doxygen.compound.docEmptyType }
+---| { name: "Theta", value: doxygen.compound.docEmptyType }
+---| { name: "Iota", value: doxygen.compound.docEmptyType }
+---| { name: "Kappa", value: doxygen.compound.docEmptyType }
+---| { name: "Lambda", value: doxygen.compound.docEmptyType }
+---| { name: "Mu", value: doxygen.compound.docEmptyType }
+---| { name: "Nu", value: doxygen.compound.docEmptyType }
+---| { name: "Xi", value: doxygen.compound.docEmptyType }
+---| { name: "Omicron", value: doxygen.compound.docEmptyType }
+---| { name: "Pi", value: doxygen.compound.docEmptyType }
+---| { name: "Rho", value: doxygen.compound.docEmptyType }
+---| { name: "Sigma", value: doxygen.compound.docEmptyType }
+---| { name: "Tau", value: doxygen.compound.docEmptyType }
+---| { name: "Upsilon", value: doxygen.compound.docEmptyType }
+---| { name: "Phi", value: doxygen.compound.docEmptyType }
+---| { name: "Chi", value: doxygen.compound.docEmptyType }
+---| { name: "Psi", value: doxygen.compound.docEmptyType }
+---| { name: "Omega", value: doxygen.compound.docEmptyType }
+---| { name: "alpha", value: doxygen.compound.docEmptyType }
+---| { name: "beta", value: doxygen.compound.docEmptyType }
+---| { name: "gamma", value: doxygen.compound.docEmptyType }
+---| { name: "delta", value: doxygen.compound.docEmptyType }
+---| { name: "epsilon", value: doxygen.compound.docEmptyType }
+---| { name: "zeta", value: doxygen.compound.docEmptyType }
+---| { name: "eta", value: doxygen.compound.docEmptyType }
+---| { name: "theta", value: doxygen.compound.docEmptyType }
+---| { name: "iota", value: doxygen.compound.docEmptyType }
+---| { name: "kappa", value: doxygen.compound.docEmptyType }
+---| { name: "lambda", value: doxygen.compound.docEmptyType }
+---| { name: "mu", value: doxygen.compound.docEmptyType }
+---| { name: "nu", value: doxygen.compound.docEmptyType }
+---| { name: "xi", value: doxygen.compound.docEmptyType }
+---| { name: "omicron", value: doxygen.compound.docEmptyType }
+---| { name: "pi", value: doxygen.compound.docEmptyType }
+---| { name: "rho", value: doxygen.compound.docEmptyType }
+---| { name: "sigmaf", value: doxygen.compound.docEmptyType }
+---| { name: "sigma", value: doxygen.compound.docEmptyType }
+---| { name: "tau", value: doxygen.compound.docEmptyType }
+---| { name: "upsilon", value: doxygen.compound.docEmptyType }
+---| { name: "phi", value: doxygen.compound.docEmptyType }
+---| { name: "chi", value: doxygen.compound.docEmptyType }
+---| { name: "psi", value: doxygen.compound.docEmptyType }
+---| { name: "omega", value: doxygen.compound.docEmptyType }
+---| { name: "thetasym", value: doxygen.compound.docEmptyType }
+---| { name: "upsih", value: doxygen.compound.docEmptyType }
+---| { name: "piv", value: doxygen.compound.docEmptyType }
+---| { name: "bull", value: doxygen.compound.docEmptyType }
+---| { name: "hellip", value: doxygen.compound.docEmptyType }
+---| { name: "prime", value: doxygen.compound.docEmptyType }
+---| { name: "Prime", value: doxygen.compound.docEmptyType }
+---| { name: "oline", value: doxygen.compound.docEmptyType }
+---| { name: "frasl", value: doxygen.compound.docEmptyType }
+---| { name: "weierp", value: doxygen.compound.docEmptyType }
+---| { name: "imaginary", value: doxygen.compound.docEmptyType }
+---| { name: "real", value: doxygen.compound.docEmptyType }
+---| { name: "trademark", value: doxygen.compound.docEmptyType }
+---| { name: "alefsym", value: doxygen.compound.docEmptyType }
+---| { name: "larr", value: doxygen.compound.docEmptyType }
+---| { name: "uarr", value: doxygen.compound.docEmptyType }
+---| { name: "rarr", value: doxygen.compound.docEmptyType }
+---| { name: "darr", value: doxygen.compound.docEmptyType }
+---| { name: "harr", value: doxygen.compound.docEmptyType }
+---| { name: "crarr", value: doxygen.compound.docEmptyType }
+---| { name: "lArr", value: doxygen.compound.docEmptyType }
+---| { name: "uArr", value: doxygen.compound.docEmptyType }
+---| { name: "rArr", value: doxygen.compound.docEmptyType }
+---| { name: "dArr", value: doxygen.compound.docEmptyType }
+---| { name: "hArr", value: doxygen.compound.docEmptyType }
+---| { name: "forall", value: doxygen.compound.docEmptyType }
+---| { name: "part", value: doxygen.compound.docEmptyType }
+---| { name: "exist", value: doxygen.compound.docEmptyType }
+---| { name: "empty", value: doxygen.compound.docEmptyType }
+---| { name: "nabla", value: doxygen.compound.docEmptyType }
+---| { name: "isin", value: doxygen.compound.docEmptyType }
+---| { name: "notin", value: doxygen.compound.docEmptyType }
+---| { name: "ni", value: doxygen.compound.docEmptyType }
+---| { name: "prod", value: doxygen.compound.docEmptyType }
+---| { name: "sum", value: doxygen.compound.docEmptyType }
+---| { name: "minus", value: doxygen.compound.docEmptyType }
+---| { name: "lowast", value: doxygen.compound.docEmptyType }
+---| { name: "radic", value: doxygen.compound.docEmptyType }
+---| { name: "prop", value: doxygen.compound.docEmptyType }
+---| { name: "infin", value: doxygen.compound.docEmptyType }
+---| { name: "ang", value: doxygen.compound.docEmptyType }
+---| { name: "and", value: doxygen.compound.docEmptyType }
+---| { name: "or", value: doxygen.compound.docEmptyType }
+---| { name: "cap", value: doxygen.compound.docEmptyType }
+---| { name: "cup", value: doxygen.compound.docEmptyType }
+---| { name: "int", value: doxygen.compound.docEmptyType }
+---| { name: "there4", value: doxygen.compound.docEmptyType }
+---| { name: "sim", value: doxygen.compound.docEmptyType }
+---| { name: "cong", value: doxygen.compound.docEmptyType }
+---| { name: "asymp", value: doxygen.compound.docEmptyType }
+---| { name: "ne", value: doxygen.compound.docEmptyType }
+---| { name: "equiv", value: doxygen.compound.docEmptyType }
+---| { name: "le", value: doxygen.compound.docEmptyType }
+---| { name: "ge", value: doxygen.compound.docEmptyType }
+---| { name: "sub", value: doxygen.compound.docEmptyType }
+---| { name: "sup", value: doxygen.compound.docEmptyType }
+---| { name: "nsub", value: doxygen.compound.docEmptyType }
+---| { name: "sube", value: doxygen.compound.docEmptyType }
+---| { name: "supe", value: doxygen.compound.docEmptyType }
+---| { name: "oplus", value: doxygen.compound.docEmptyType }
+---| { name: "otimes", value: doxygen.compound.docEmptyType }
+---| { name: "perp", value: doxygen.compound.docEmptyType }
+---| { name: "sdot", value: doxygen.compound.docEmptyType }
+---| { name: "lceil", value: doxygen.compound.docEmptyType }
+---| { name: "rceil", value: doxygen.compound.docEmptyType }
+---| { name: "lfloor", value: doxygen.compound.docEmptyType }
+---| { name: "rfloor", value: doxygen.compound.docEmptyType }
+---| { name: "lang", value: doxygen.compound.docEmptyType }
+---| { name: "rang", value: doxygen.compound.docEmptyType }
+---| { name: "loz", value: doxygen.compound.docEmptyType }
+---| { name: "spades", value: doxygen.compound.docEmptyType }
+---| { name: "clubs", value: doxygen.compound.docEmptyType }
+---| { name: "hearts", value: doxygen.compound.docEmptyType }
+---| { name: "diams", value: doxygen.compound.docEmptyType }
+---| { name: "OElig", value: doxygen.compound.docEmptyType }
+---| { name: "oelig", value: doxygen.compound.docEmptyType }
+---| { name: "Scaron", value: doxygen.compound.docEmptyType }
+---| { name: "scaron", value: doxygen.compound.docEmptyType }
+---| { name: "Yumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "circ", value: doxygen.compound.docEmptyType }
+---| { name: "tilde", value: doxygen.compound.docEmptyType }
+---| { name: "ensp", value: doxygen.compound.docEmptyType }
+---| { name: "emsp", value: doxygen.compound.docEmptyType }
+---| { name: "thinsp", value: doxygen.compound.docEmptyType }
+---| { name: "zwnj", value: doxygen.compound.docEmptyType }
+---| { name: "zwj", value: doxygen.compound.docEmptyType }
+---| { name: "lrm", value: doxygen.compound.docEmptyType }
+---| { name: "rlm", value: doxygen.compound.docEmptyType }
+---| { name: "ndash", value: doxygen.compound.docEmptyType }
+---| { name: "mdash", value: doxygen.compound.docEmptyType }
+---| { name: "lsquo", value: doxygen.compound.docEmptyType }
+---| { name: "rsquo", value: doxygen.compound.docEmptyType }
+---| { name: "sbquo", value: doxygen.compound.docEmptyType }
+---| { name: "ldquo", value: doxygen.compound.docEmptyType }
+---| { name: "rdquo", value: doxygen.compound.docEmptyType }
+---| { name: "bdquo", value: doxygen.compound.docEmptyType }
+---| { name: "dagger", value: doxygen.compound.docEmptyType }
+---| { name: "Dagger", value: doxygen.compound.docEmptyType }
+---| { name: "permil", value: doxygen.compound.docEmptyType }
+---| { name: "lsaquo", value: doxygen.compound.docEmptyType }
+---| { name: "rsaquo", value: doxygen.compound.docEmptyType }
+---| { name: "euro", value: doxygen.compound.docEmptyType }
+---| { name: "tm", value: doxygen.compound.docEmptyType }
+
+---@class doxygen.compound.docImageFileType (mixed)
+---@field name string? (attribute)
+---@field width string? (attribute)
+---@field height string? (attribute)
+---@field content doxygen.compound.docImageFileType
+---| string (text content)
+---| { name: "ulink", value: doxygen.compound.docURLLink }
+---| { name: "bold", value: doxygen.compound.docMarkupType }
+---| { name: "s", value: doxygen.compound.docMarkupType }
+---| { name: "strike", value: doxygen.compound.docMarkupType }
+---| { name: "underline", value: doxygen.compound.docMarkupType }
+---| { name: "emphasis", value: doxygen.compound.docMarkupType }
+---| { name: "computeroutput", value: doxygen.compound.docMarkupType }
+---| { name: "subscript", value: doxygen.compound.docMarkupType }
+---| { name: "superscript", value: doxygen.compound.docMarkupType }
+---| { name: "center", value: doxygen.compound.docMarkupType }
+---| { name: "small", value: doxygen.compound.docMarkupType }
+---| { name: "cite", value: doxygen.compound.docMarkupType }
+---| { name: "del", value: doxygen.compound.docMarkupType }
+---| { name: "ins", value: doxygen.compound.docMarkupType }
+---| { name: "htmlonly", value: doxygen.compound.docHtmlOnlyType }
+---| { name: "manonly", value: string }
+---| { name: "xmlonly", value: string }
+---| { name: "rtfonly", value: string }
+---| { name: "latexonly", value: string }
+---| { name: "docbookonly", value: string }
+---| { name: "image", value: doxygen.compound.docImageType }
+---| { name: "dot", value: doxygen.compound.docDotMscType }
+---| { name: "msc", value: doxygen.compound.docDotMscType }
+---| { name: "plantuml", value: doxygen.compound.docPlantumlType }
+---| { name: "anchor", value: doxygen.compound.docAnchorType }
+---| { name: "formula", value: doxygen.compound.docFormulaType }
+---| { name: "ref", value: doxygen.compound.docRefTextType }
+---| { name: "emoji", value: doxygen.compound.docEmojiType }
+---| { name: "linebreak", value: doxygen.compound.docEmptyType }
+---| { name: "nonbreakablespace", value: doxygen.compound.docEmptyType }
+---| { name: "iexcl", value: doxygen.compound.docEmptyType }
+---| { name: "cent", value: doxygen.compound.docEmptyType }
+---| { name: "pound", value: doxygen.compound.docEmptyType }
+---| { name: "curren", value: doxygen.compound.docEmptyType }
+---| { name: "yen", value: doxygen.compound.docEmptyType }
+---| { name: "brvbar", value: doxygen.compound.docEmptyType }
+---| { name: "sect", value: doxygen.compound.docEmptyType }
+---| { name: "umlaut", value: doxygen.compound.docEmptyType }
+---| { name: "copy", value: doxygen.compound.docEmptyType }
+---| { name: "ordf", value: doxygen.compound.docEmptyType }
+---| { name: "laquo", value: doxygen.compound.docEmptyType }
+---| { name: "not", value: doxygen.compound.docEmptyType }
+---| { name: "shy", value: doxygen.compound.docEmptyType }
+---| { name: "registered", value: doxygen.compound.docEmptyType }
+---| { name: "macr", value: doxygen.compound.docEmptyType }
+---| { name: "deg", value: doxygen.compound.docEmptyType }
+---| { name: "plusmn", value: doxygen.compound.docEmptyType }
+---| { name: "sup2", value: doxygen.compound.docEmptyType }
+---| { name: "sup3", value: doxygen.compound.docEmptyType }
+---| { name: "acute", value: doxygen.compound.docEmptyType }
+---| { name: "micro", value: doxygen.compound.docEmptyType }
+---| { name: "para", value: doxygen.compound.docEmptyType }
+---| { name: "middot", value: doxygen.compound.docEmptyType }
+---| { name: "cedil", value: doxygen.compound.docEmptyType }
+---| { name: "sup1", value: doxygen.compound.docEmptyType }
+---| { name: "ordm", value: doxygen.compound.docEmptyType }
+---| { name: "raquo", value: doxygen.compound.docEmptyType }
+---| { name: "frac14", value: doxygen.compound.docEmptyType }
+---| { name: "frac12", value: doxygen.compound.docEmptyType }
+---| { name: "frac34", value: doxygen.compound.docEmptyType }
+---| { name: "iquest", value: doxygen.compound.docEmptyType }
+---| { name: "Agrave", value: doxygen.compound.docEmptyType }
+---| { name: "Aacute", value: doxygen.compound.docEmptyType }
+---| { name: "Acirc", value: doxygen.compound.docEmptyType }
+---| { name: "Atilde", value: doxygen.compound.docEmptyType }
+---| { name: "Aumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "Aring", value: doxygen.compound.docEmptyType }
+---| { name: "AElig", value: doxygen.compound.docEmptyType }
+---| { name: "Ccedil", value: doxygen.compound.docEmptyType }
+---| { name: "Egrave", value: doxygen.compound.docEmptyType }
+---| { name: "Eacute", value: doxygen.compound.docEmptyType }
+---| { name: "Ecirc", value: doxygen.compound.docEmptyType }
+---| { name: "Eumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "Igrave", value: doxygen.compound.docEmptyType }
+---| { name: "Iacute", value: doxygen.compound.docEmptyType }
+---| { name: "Icirc", value: doxygen.compound.docEmptyType }
+---| { name: "Iumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "ETH", value: doxygen.compound.docEmptyType }
+---| { name: "Ntilde", value: doxygen.compound.docEmptyType }
+---| { name: "Ograve", value: doxygen.compound.docEmptyType }
+---| { name: "Oacute", value: doxygen.compound.docEmptyType }
+---| { name: "Ocirc", value: doxygen.compound.docEmptyType }
+---| { name: "Otilde", value: doxygen.compound.docEmptyType }
+---| { name: "Oumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "times", value: doxygen.compound.docEmptyType }
+---| { name: "Oslash", value: doxygen.compound.docEmptyType }
+---| { name: "Ugrave", value: doxygen.compound.docEmptyType }
+---| { name: "Uacute", value: doxygen.compound.docEmptyType }
+---| { name: "Ucirc", value: doxygen.compound.docEmptyType }
+---| { name: "Uumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "Yacute", value: doxygen.compound.docEmptyType }
+---| { name: "THORN", value: doxygen.compound.docEmptyType }
+---| { name: "szlig", value: doxygen.compound.docEmptyType }
+---| { name: "agrave", value: doxygen.compound.docEmptyType }
+---| { name: "aacute", value: doxygen.compound.docEmptyType }
+---| { name: "acirc", value: doxygen.compound.docEmptyType }
+---| { name: "atilde", value: doxygen.compound.docEmptyType }
+---| { name: "aumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "aring", value: doxygen.compound.docEmptyType }
+---| { name: "aelig", value: doxygen.compound.docEmptyType }
+---| { name: "ccedil", value: doxygen.compound.docEmptyType }
+---| { name: "egrave", value: doxygen.compound.docEmptyType }
+---| { name: "eacute", value: doxygen.compound.docEmptyType }
+---| { name: "ecirc", value: doxygen.compound.docEmptyType }
+---| { name: "eumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "igrave", value: doxygen.compound.docEmptyType }
+---| { name: "iacute", value: doxygen.compound.docEmptyType }
+---| { name: "icirc", value: doxygen.compound.docEmptyType }
+---| { name: "iumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "eth", value: doxygen.compound.docEmptyType }
+---| { name: "ntilde", value: doxygen.compound.docEmptyType }
+---| { name: "ograve", value: doxygen.compound.docEmptyType }
+---| { name: "oacute", value: doxygen.compound.docEmptyType }
+---| { name: "ocirc", value: doxygen.compound.docEmptyType }
+---| { name: "otilde", value: doxygen.compound.docEmptyType }
+---| { name: "oumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "divide", value: doxygen.compound.docEmptyType }
+---| { name: "oslash", value: doxygen.compound.docEmptyType }
+---| { name: "ugrave", value: doxygen.compound.docEmptyType }
+---| { name: "uacute", value: doxygen.compound.docEmptyType }
+---| { name: "ucirc", value: doxygen.compound.docEmptyType }
+---| { name: "uumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "yacute", value: doxygen.compound.docEmptyType }
+---| { name: "thorn", value: doxygen.compound.docEmptyType }
+---| { name: "yumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "fnof", value: doxygen.compound.docEmptyType }
+---| { name: "Alpha", value: doxygen.compound.docEmptyType }
+---| { name: "Beta", value: doxygen.compound.docEmptyType }
+---| { name: "Gamma", value: doxygen.compound.docEmptyType }
+---| { name: "Delta", value: doxygen.compound.docEmptyType }
+---| { name: "Epsilon", value: doxygen.compound.docEmptyType }
+---| { name: "Zeta", value: doxygen.compound.docEmptyType }
+---| { name: "Eta", value: doxygen.compound.docEmptyType }
+---| { name: "Theta", value: doxygen.compound.docEmptyType }
+---| { name: "Iota", value: doxygen.compound.docEmptyType }
+---| { name: "Kappa", value: doxygen.compound.docEmptyType }
+---| { name: "Lambda", value: doxygen.compound.docEmptyType }
+---| { name: "Mu", value: doxygen.compound.docEmptyType }
+---| { name: "Nu", value: doxygen.compound.docEmptyType }
+---| { name: "Xi", value: doxygen.compound.docEmptyType }
+---| { name: "Omicron", value: doxygen.compound.docEmptyType }
+---| { name: "Pi", value: doxygen.compound.docEmptyType }
+---| { name: "Rho", value: doxygen.compound.docEmptyType }
+---| { name: "Sigma", value: doxygen.compound.docEmptyType }
+---| { name: "Tau", value: doxygen.compound.docEmptyType }
+---| { name: "Upsilon", value: doxygen.compound.docEmptyType }
+---| { name: "Phi", value: doxygen.compound.docEmptyType }
+---| { name: "Chi", value: doxygen.compound.docEmptyType }
+---| { name: "Psi", value: doxygen.compound.docEmptyType }
+---| { name: "Omega", value: doxygen.compound.docEmptyType }
+---| { name: "alpha", value: doxygen.compound.docEmptyType }
+---| { name: "beta", value: doxygen.compound.docEmptyType }
+---| { name: "gamma", value: doxygen.compound.docEmptyType }
+---| { name: "delta", value: doxygen.compound.docEmptyType }
+---| { name: "epsilon", value: doxygen.compound.docEmptyType }
+---| { name: "zeta", value: doxygen.compound.docEmptyType }
+---| { name: "eta", value: doxygen.compound.docEmptyType }
+---| { name: "theta", value: doxygen.compound.docEmptyType }
+---| { name: "iota", value: doxygen.compound.docEmptyType }
+---| { name: "kappa", value: doxygen.compound.docEmptyType }
+---| { name: "lambda", value: doxygen.compound.docEmptyType }
+---| { name: "mu", value: doxygen.compound.docEmptyType }
+---| { name: "nu", value: doxygen.compound.docEmptyType }
+---| { name: "xi", value: doxygen.compound.docEmptyType }
+---| { name: "omicron", value: doxygen.compound.docEmptyType }
+---| { name: "pi", value: doxygen.compound.docEmptyType }
+---| { name: "rho", value: doxygen.compound.docEmptyType }
+---| { name: "sigmaf", value: doxygen.compound.docEmptyType }
+---| { name: "sigma", value: doxygen.compound.docEmptyType }
+---| { name: "tau", value: doxygen.compound.docEmptyType }
+---| { name: "upsilon", value: doxygen.compound.docEmptyType }
+---| { name: "phi", value: doxygen.compound.docEmptyType }
+---| { name: "chi", value: doxygen.compound.docEmptyType }
+---| { name: "psi", value: doxygen.compound.docEmptyType }
+---| { name: "omega", value: doxygen.compound.docEmptyType }
+---| { name: "thetasym", value: doxygen.compound.docEmptyType }
+---| { name: "upsih", value: doxygen.compound.docEmptyType }
+---| { name: "piv", value: doxygen.compound.docEmptyType }
+---| { name: "bull", value: doxygen.compound.docEmptyType }
+---| { name: "hellip", value: doxygen.compound.docEmptyType }
+---| { name: "prime", value: doxygen.compound.docEmptyType }
+---| { name: "Prime", value: doxygen.compound.docEmptyType }
+---| { name: "oline", value: doxygen.compound.docEmptyType }
+---| { name: "frasl", value: doxygen.compound.docEmptyType }
+---| { name: "weierp", value: doxygen.compound.docEmptyType }
+---| { name: "imaginary", value: doxygen.compound.docEmptyType }
+---| { name: "real", value: doxygen.compound.docEmptyType }
+---| { name: "trademark", value: doxygen.compound.docEmptyType }
+---| { name: "alefsym", value: doxygen.compound.docEmptyType }
+---| { name: "larr", value: doxygen.compound.docEmptyType }
+---| { name: "uarr", value: doxygen.compound.docEmptyType }
+---| { name: "rarr", value: doxygen.compound.docEmptyType }
+---| { name: "darr", value: doxygen.compound.docEmptyType }
+---| { name: "harr", value: doxygen.compound.docEmptyType }
+---| { name: "crarr", value: doxygen.compound.docEmptyType }
+---| { name: "lArr", value: doxygen.compound.docEmptyType }
+---| { name: "uArr", value: doxygen.compound.docEmptyType }
+---| { name: "rArr", value: doxygen.compound.docEmptyType }
+---| { name: "dArr", value: doxygen.compound.docEmptyType }
+---| { name: "hArr", value: doxygen.compound.docEmptyType }
+---| { name: "forall", value: doxygen.compound.docEmptyType }
+---| { name: "part", value: doxygen.compound.docEmptyType }
+---| { name: "exist", value: doxygen.compound.docEmptyType }
+---| { name: "empty", value: doxygen.compound.docEmptyType }
+---| { name: "nabla", value: doxygen.compound.docEmptyType }
+---| { name: "isin", value: doxygen.compound.docEmptyType }
+---| { name: "notin", value: doxygen.compound.docEmptyType }
+---| { name: "ni", value: doxygen.compound.docEmptyType }
+---| { name: "prod", value: doxygen.compound.docEmptyType }
+---| { name: "sum", value: doxygen.compound.docEmptyType }
+---| { name: "minus", value: doxygen.compound.docEmptyType }
+---| { name: "lowast", value: doxygen.compound.docEmptyType }
+---| { name: "radic", value: doxygen.compound.docEmptyType }
+---| { name: "prop", value: doxygen.compound.docEmptyType }
+---| { name: "infin", value: doxygen.compound.docEmptyType }
+---| { name: "ang", value: doxygen.compound.docEmptyType }
+---| { name: "and", value: doxygen.compound.docEmptyType }
+---| { name: "or", value: doxygen.compound.docEmptyType }
+---| { name: "cap", value: doxygen.compound.docEmptyType }
+---| { name: "cup", value: doxygen.compound.docEmptyType }
+---| { name: "int", value: doxygen.compound.docEmptyType }
+---| { name: "there4", value: doxygen.compound.docEmptyType }
+---| { name: "sim", value: doxygen.compound.docEmptyType }
+---| { name: "cong", value: doxygen.compound.docEmptyType }
+---| { name: "asymp", value: doxygen.compound.docEmptyType }
+---| { name: "ne", value: doxygen.compound.docEmptyType }
+---| { name: "equiv", value: doxygen.compound.docEmptyType }
+---| { name: "le", value: doxygen.compound.docEmptyType }
+---| { name: "ge", value: doxygen.compound.docEmptyType }
+---| { name: "sub", value: doxygen.compound.docEmptyType }
+---| { name: "sup", value: doxygen.compound.docEmptyType }
+---| { name: "nsub", value: doxygen.compound.docEmptyType }
+---| { name: "sube", value: doxygen.compound.docEmptyType }
+---| { name: "supe", value: doxygen.compound.docEmptyType }
+---| { name: "oplus", value: doxygen.compound.docEmptyType }
+---| { name: "otimes", value: doxygen.compound.docEmptyType }
+---| { name: "perp", value: doxygen.compound.docEmptyType }
+---| { name: "sdot", value: doxygen.compound.docEmptyType }
+---| { name: "lceil", value: doxygen.compound.docEmptyType }
+---| { name: "rceil", value: doxygen.compound.docEmptyType }
+---| { name: "lfloor", value: doxygen.compound.docEmptyType }
+---| { name: "rfloor", value: doxygen.compound.docEmptyType }
+---| { name: "lang", value: doxygen.compound.docEmptyType }
+---| { name: "rang", value: doxygen.compound.docEmptyType }
+---| { name: "loz", value: doxygen.compound.docEmptyType }
+---| { name: "spades", value: doxygen.compound.docEmptyType }
+---| { name: "clubs", value: doxygen.compound.docEmptyType }
+---| { name: "hearts", value: doxygen.compound.docEmptyType }
+---| { name: "diams", value: doxygen.compound.docEmptyType }
+---| { name: "OElig", value: doxygen.compound.docEmptyType }
+---| { name: "oelig", value: doxygen.compound.docEmptyType }
+---| { name: "Scaron", value: doxygen.compound.docEmptyType }
+---| { name: "scaron", value: doxygen.compound.docEmptyType }
+---| { name: "Yumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "circ", value: doxygen.compound.docEmptyType }
+---| { name: "tilde", value: doxygen.compound.docEmptyType }
+---| { name: "ensp", value: doxygen.compound.docEmptyType }
+---| { name: "emsp", value: doxygen.compound.docEmptyType }
+---| { name: "thinsp", value: doxygen.compound.docEmptyType }
+---| { name: "zwnj", value: doxygen.compound.docEmptyType }
+---| { name: "zwj", value: doxygen.compound.docEmptyType }
+---| { name: "lrm", value: doxygen.compound.docEmptyType }
+---| { name: "rlm", value: doxygen.compound.docEmptyType }
+---| { name: "ndash", value: doxygen.compound.docEmptyType }
+---| { name: "mdash", value: doxygen.compound.docEmptyType }
+---| { name: "lsquo", value: doxygen.compound.docEmptyType }
+---| { name: "rsquo", value: doxygen.compound.docEmptyType }
+---| { name: "sbquo", value: doxygen.compound.docEmptyType }
+---| { name: "ldquo", value: doxygen.compound.docEmptyType }
+---| { name: "rdquo", value: doxygen.compound.docEmptyType }
+---| { name: "bdquo", value: doxygen.compound.docEmptyType }
+---| { name: "dagger", value: doxygen.compound.docEmptyType }
+---| { name: "Dagger", value: doxygen.compound.docEmptyType }
+---| { name: "permil", value: doxygen.compound.docEmptyType }
+---| { name: "lsaquo", value: doxygen.compound.docEmptyType }
+---| { name: "rsaquo", value: doxygen.compound.docEmptyType }
+---| { name: "euro", value: doxygen.compound.docEmptyType }
+---| { name: "tm", value: doxygen.compound.docEmptyType }
+
+---@class doxygen.compound.docPlantumlType (mixed)
+---@field name string? (attribute)
+---@field width string? (attribute)
+---@field height string? (attribute)
+---@field caption string? (attribute)
+---@field engine doxygen.compound.DoxPlantumlEngine? (attribute)
+---@field content doxygen.compound.docPlantumlType
+---| string (text content)
+---| { name: "ulink", value: doxygen.compound.docURLLink }
+---| { name: "bold", value: doxygen.compound.docMarkupType }
+---| { name: "s", value: doxygen.compound.docMarkupType }
+---| { name: "strike", value: doxygen.compound.docMarkupType }
+---| { name: "underline", value: doxygen.compound.docMarkupType }
+---| { name: "emphasis", value: doxygen.compound.docMarkupType }
+---| { name: "computeroutput", value: doxygen.compound.docMarkupType }
+---| { name: "subscript", value: doxygen.compound.docMarkupType }
+---| { name: "superscript", value: doxygen.compound.docMarkupType }
+---| { name: "center", value: doxygen.compound.docMarkupType }
+---| { name: "small", value: doxygen.compound.docMarkupType }
+---| { name: "cite", value: doxygen.compound.docMarkupType }
+---| { name: "del", value: doxygen.compound.docMarkupType }
+---| { name: "ins", value: doxygen.compound.docMarkupType }
+---| { name: "htmlonly", value: doxygen.compound.docHtmlOnlyType }
+---| { name: "manonly", value: string }
+---| { name: "xmlonly", value: string }
+---| { name: "rtfonly", value: string }
+---| { name: "latexonly", value: string }
+---| { name: "docbookonly", value: string }
+---| { name: "image", value: doxygen.compound.docImageType }
+---| { name: "dot", value: doxygen.compound.docDotMscType }
+---| { name: "msc", value: doxygen.compound.docDotMscType }
+---| { name: "plantuml", value: doxygen.compound.docPlantumlType }
+---| { name: "anchor", value: doxygen.compound.docAnchorType }
+---| { name: "formula", value: doxygen.compound.docFormulaType }
+---| { name: "ref", value: doxygen.compound.docRefTextType }
+---| { name: "emoji", value: doxygen.compound.docEmojiType }
+---| { name: "linebreak", value: doxygen.compound.docEmptyType }
+---| { name: "nonbreakablespace", value: doxygen.compound.docEmptyType }
+---| { name: "iexcl", value: doxygen.compound.docEmptyType }
+---| { name: "cent", value: doxygen.compound.docEmptyType }
+---| { name: "pound", value: doxygen.compound.docEmptyType }
+---| { name: "curren", value: doxygen.compound.docEmptyType }
+---| { name: "yen", value: doxygen.compound.docEmptyType }
+---| { name: "brvbar", value: doxygen.compound.docEmptyType }
+---| { name: "sect", value: doxygen.compound.docEmptyType }
+---| { name: "umlaut", value: doxygen.compound.docEmptyType }
+---| { name: "copy", value: doxygen.compound.docEmptyType }
+---| { name: "ordf", value: doxygen.compound.docEmptyType }
+---| { name: "laquo", value: doxygen.compound.docEmptyType }
+---| { name: "not", value: doxygen.compound.docEmptyType }
+---| { name: "shy", value: doxygen.compound.docEmptyType }
+---| { name: "registered", value: doxygen.compound.docEmptyType }
+---| { name: "macr", value: doxygen.compound.docEmptyType }
+---| { name: "deg", value: doxygen.compound.docEmptyType }
+---| { name: "plusmn", value: doxygen.compound.docEmptyType }
+---| { name: "sup2", value: doxygen.compound.docEmptyType }
+---| { name: "sup3", value: doxygen.compound.docEmptyType }
+---| { name: "acute", value: doxygen.compound.docEmptyType }
+---| { name: "micro", value: doxygen.compound.docEmptyType }
+---| { name: "para", value: doxygen.compound.docEmptyType }
+---| { name: "middot", value: doxygen.compound.docEmptyType }
+---| { name: "cedil", value: doxygen.compound.docEmptyType }
+---| { name: "sup1", value: doxygen.compound.docEmptyType }
+---| { name: "ordm", value: doxygen.compound.docEmptyType }
+---| { name: "raquo", value: doxygen.compound.docEmptyType }
+---| { name: "frac14", value: doxygen.compound.docEmptyType }
+---| { name: "frac12", value: doxygen.compound.docEmptyType }
+---| { name: "frac34", value: doxygen.compound.docEmptyType }
+---| { name: "iquest", value: doxygen.compound.docEmptyType }
+---| { name: "Agrave", value: doxygen.compound.docEmptyType }
+---| { name: "Aacute", value: doxygen.compound.docEmptyType }
+---| { name: "Acirc", value: doxygen.compound.docEmptyType }
+---| { name: "Atilde", value: doxygen.compound.docEmptyType }
+---| { name: "Aumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "Aring", value: doxygen.compound.docEmptyType }
+---| { name: "AElig", value: doxygen.compound.docEmptyType }
+---| { name: "Ccedil", value: doxygen.compound.docEmptyType }
+---| { name: "Egrave", value: doxygen.compound.docEmptyType }
+---| { name: "Eacute", value: doxygen.compound.docEmptyType }
+---| { name: "Ecirc", value: doxygen.compound.docEmptyType }
+---| { name: "Eumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "Igrave", value: doxygen.compound.docEmptyType }
+---| { name: "Iacute", value: doxygen.compound.docEmptyType }
+---| { name: "Icirc", value: doxygen.compound.docEmptyType }
+---| { name: "Iumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "ETH", value: doxygen.compound.docEmptyType }
+---| { name: "Ntilde", value: doxygen.compound.docEmptyType }
+---| { name: "Ograve", value: doxygen.compound.docEmptyType }
+---| { name: "Oacute", value: doxygen.compound.docEmptyType }
+---| { name: "Ocirc", value: doxygen.compound.docEmptyType }
+---| { name: "Otilde", value: doxygen.compound.docEmptyType }
+---| { name: "Oumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "times", value: doxygen.compound.docEmptyType }
+---| { name: "Oslash", value: doxygen.compound.docEmptyType }
+---| { name: "Ugrave", value: doxygen.compound.docEmptyType }
+---| { name: "Uacute", value: doxygen.compound.docEmptyType }
+---| { name: "Ucirc", value: doxygen.compound.docEmptyType }
+---| { name: "Uumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "Yacute", value: doxygen.compound.docEmptyType }
+---| { name: "THORN", value: doxygen.compound.docEmptyType }
+---| { name: "szlig", value: doxygen.compound.docEmptyType }
+---| { name: "agrave", value: doxygen.compound.docEmptyType }
+---| { name: "aacute", value: doxygen.compound.docEmptyType }
+---| { name: "acirc", value: doxygen.compound.docEmptyType }
+---| { name: "atilde", value: doxygen.compound.docEmptyType }
+---| { name: "aumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "aring", value: doxygen.compound.docEmptyType }
+---| { name: "aelig", value: doxygen.compound.docEmptyType }
+---| { name: "ccedil", value: doxygen.compound.docEmptyType }
+---| { name: "egrave", value: doxygen.compound.docEmptyType }
+---| { name: "eacute", value: doxygen.compound.docEmptyType }
+---| { name: "ecirc", value: doxygen.compound.docEmptyType }
+---| { name: "eumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "igrave", value: doxygen.compound.docEmptyType }
+---| { name: "iacute", value: doxygen.compound.docEmptyType }
+---| { name: "icirc", value: doxygen.compound.docEmptyType }
+---| { name: "iumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "eth", value: doxygen.compound.docEmptyType }
+---| { name: "ntilde", value: doxygen.compound.docEmptyType }
+---| { name: "ograve", value: doxygen.compound.docEmptyType }
+---| { name: "oacute", value: doxygen.compound.docEmptyType }
+---| { name: "ocirc", value: doxygen.compound.docEmptyType }
+---| { name: "otilde", value: doxygen.compound.docEmptyType }
+---| { name: "oumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "divide", value: doxygen.compound.docEmptyType }
+---| { name: "oslash", value: doxygen.compound.docEmptyType }
+---| { name: "ugrave", value: doxygen.compound.docEmptyType }
+---| { name: "uacute", value: doxygen.compound.docEmptyType }
+---| { name: "ucirc", value: doxygen.compound.docEmptyType }
+---| { name: "uumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "yacute", value: doxygen.compound.docEmptyType }
+---| { name: "thorn", value: doxygen.compound.docEmptyType }
+---| { name: "yumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "fnof", value: doxygen.compound.docEmptyType }
+---| { name: "Alpha", value: doxygen.compound.docEmptyType }
+---| { name: "Beta", value: doxygen.compound.docEmptyType }
+---| { name: "Gamma", value: doxygen.compound.docEmptyType }
+---| { name: "Delta", value: doxygen.compound.docEmptyType }
+---| { name: "Epsilon", value: doxygen.compound.docEmptyType }
+---| { name: "Zeta", value: doxygen.compound.docEmptyType }
+---| { name: "Eta", value: doxygen.compound.docEmptyType }
+---| { name: "Theta", value: doxygen.compound.docEmptyType }
+---| { name: "Iota", value: doxygen.compound.docEmptyType }
+---| { name: "Kappa", value: doxygen.compound.docEmptyType }
+---| { name: "Lambda", value: doxygen.compound.docEmptyType }
+---| { name: "Mu", value: doxygen.compound.docEmptyType }
+---| { name: "Nu", value: doxygen.compound.docEmptyType }
+---| { name: "Xi", value: doxygen.compound.docEmptyType }
+---| { name: "Omicron", value: doxygen.compound.docEmptyType }
+---| { name: "Pi", value: doxygen.compound.docEmptyType }
+---| { name: "Rho", value: doxygen.compound.docEmptyType }
+---| { name: "Sigma", value: doxygen.compound.docEmptyType }
+---| { name: "Tau", value: doxygen.compound.docEmptyType }
+---| { name: "Upsilon", value: doxygen.compound.docEmptyType }
+---| { name: "Phi", value: doxygen.compound.docEmptyType }
+---| { name: "Chi", value: doxygen.compound.docEmptyType }
+---| { name: "Psi", value: doxygen.compound.docEmptyType }
+---| { name: "Omega", value: doxygen.compound.docEmptyType }
+---| { name: "alpha", value: doxygen.compound.docEmptyType }
+---| { name: "beta", value: doxygen.compound.docEmptyType }
+---| { name: "gamma", value: doxygen.compound.docEmptyType }
+---| { name: "delta", value: doxygen.compound.docEmptyType }
+---| { name: "epsilon", value: doxygen.compound.docEmptyType }
+---| { name: "zeta", value: doxygen.compound.docEmptyType }
+---| { name: "eta", value: doxygen.compound.docEmptyType }
+---| { name: "theta", value: doxygen.compound.docEmptyType }
+---| { name: "iota", value: doxygen.compound.docEmptyType }
+---| { name: "kappa", value: doxygen.compound.docEmptyType }
+---| { name: "lambda", value: doxygen.compound.docEmptyType }
+---| { name: "mu", value: doxygen.compound.docEmptyType }
+---| { name: "nu", value: doxygen.compound.docEmptyType }
+---| { name: "xi", value: doxygen.compound.docEmptyType }
+---| { name: "omicron", value: doxygen.compound.docEmptyType }
+---| { name: "pi", value: doxygen.compound.docEmptyType }
+---| { name: "rho", value: doxygen.compound.docEmptyType }
+---| { name: "sigmaf", value: doxygen.compound.docEmptyType }
+---| { name: "sigma", value: doxygen.compound.docEmptyType }
+---| { name: "tau", value: doxygen.compound.docEmptyType }
+---| { name: "upsilon", value: doxygen.compound.docEmptyType }
+---| { name: "phi", value: doxygen.compound.docEmptyType }
+---| { name: "chi", value: doxygen.compound.docEmptyType }
+---| { name: "psi", value: doxygen.compound.docEmptyType }
+---| { name: "omega", value: doxygen.compound.docEmptyType }
+---| { name: "thetasym", value: doxygen.compound.docEmptyType }
+---| { name: "upsih", value: doxygen.compound.docEmptyType }
+---| { name: "piv", value: doxygen.compound.docEmptyType }
+---| { name: "bull", value: doxygen.compound.docEmptyType }
+---| { name: "hellip", value: doxygen.compound.docEmptyType }
+---| { name: "prime", value: doxygen.compound.docEmptyType }
+---| { name: "Prime", value: doxygen.compound.docEmptyType }
+---| { name: "oline", value: doxygen.compound.docEmptyType }
+---| { name: "frasl", value: doxygen.compound.docEmptyType }
+---| { name: "weierp", value: doxygen.compound.docEmptyType }
+---| { name: "imaginary", value: doxygen.compound.docEmptyType }
+---| { name: "real", value: doxygen.compound.docEmptyType }
+---| { name: "trademark", value: doxygen.compound.docEmptyType }
+---| { name: "alefsym", value: doxygen.compound.docEmptyType }
+---| { name: "larr", value: doxygen.compound.docEmptyType }
+---| { name: "uarr", value: doxygen.compound.docEmptyType }
+---| { name: "rarr", value: doxygen.compound.docEmptyType }
+---| { name: "darr", value: doxygen.compound.docEmptyType }
+---| { name: "harr", value: doxygen.compound.docEmptyType }
+---| { name: "crarr", value: doxygen.compound.docEmptyType }
+---| { name: "lArr", value: doxygen.compound.docEmptyType }
+---| { name: "uArr", value: doxygen.compound.docEmptyType }
+---| { name: "rArr", value: doxygen.compound.docEmptyType }
+---| { name: "dArr", value: doxygen.compound.docEmptyType }
+---| { name: "hArr", value: doxygen.compound.docEmptyType }
+---| { name: "forall", value: doxygen.compound.docEmptyType }
+---| { name: "part", value: doxygen.compound.docEmptyType }
+---| { name: "exist", value: doxygen.compound.docEmptyType }
+---| { name: "empty", value: doxygen.compound.docEmptyType }
+---| { name: "nabla", value: doxygen.compound.docEmptyType }
+---| { name: "isin", value: doxygen.compound.docEmptyType }
+---| { name: "notin", value: doxygen.compound.docEmptyType }
+---| { name: "ni", value: doxygen.compound.docEmptyType }
+---| { name: "prod", value: doxygen.compound.docEmptyType }
+---| { name: "sum", value: doxygen.compound.docEmptyType }
+---| { name: "minus", value: doxygen.compound.docEmptyType }
+---| { name: "lowast", value: doxygen.compound.docEmptyType }
+---| { name: "radic", value: doxygen.compound.docEmptyType }
+---| { name: "prop", value: doxygen.compound.docEmptyType }
+---| { name: "infin", value: doxygen.compound.docEmptyType }
+---| { name: "ang", value: doxygen.compound.docEmptyType }
+---| { name: "and", value: doxygen.compound.docEmptyType }
+---| { name: "or", value: doxygen.compound.docEmptyType }
+---| { name: "cap", value: doxygen.compound.docEmptyType }
+---| { name: "cup", value: doxygen.compound.docEmptyType }
+---| { name: "int", value: doxygen.compound.docEmptyType }
+---| { name: "there4", value: doxygen.compound.docEmptyType }
+---| { name: "sim", value: doxygen.compound.docEmptyType }
+---| { name: "cong", value: doxygen.compound.docEmptyType }
+---| { name: "asymp", value: doxygen.compound.docEmptyType }
+---| { name: "ne", value: doxygen.compound.docEmptyType }
+---| { name: "equiv", value: doxygen.compound.docEmptyType }
+---| { name: "le", value: doxygen.compound.docEmptyType }
+---| { name: "ge", value: doxygen.compound.docEmptyType }
+---| { name: "sub", value: doxygen.compound.docEmptyType }
+---| { name: "sup", value: doxygen.compound.docEmptyType }
+---| { name: "nsub", value: doxygen.compound.docEmptyType }
+---| { name: "sube", value: doxygen.compound.docEmptyType }
+---| { name: "supe", value: doxygen.compound.docEmptyType }
+---| { name: "oplus", value: doxygen.compound.docEmptyType }
+---| { name: "otimes", value: doxygen.compound.docEmptyType }
+---| { name: "perp", value: doxygen.compound.docEmptyType }
+---| { name: "sdot", value: doxygen.compound.docEmptyType }
+---| { name: "lceil", value: doxygen.compound.docEmptyType }
+---| { name: "rceil", value: doxygen.compound.docEmptyType }
+---| { name: "lfloor", value: doxygen.compound.docEmptyType }
+---| { name: "rfloor", value: doxygen.compound.docEmptyType }
+---| { name: "lang", value: doxygen.compound.docEmptyType }
+---| { name: "rang", value: doxygen.compound.docEmptyType }
+---| { name: "loz", value: doxygen.compound.docEmptyType }
+---| { name: "spades", value: doxygen.compound.docEmptyType }
+---| { name: "clubs", value: doxygen.compound.docEmptyType }
+---| { name: "hearts", value: doxygen.compound.docEmptyType }
+---| { name: "diams", value: doxygen.compound.docEmptyType }
+---| { name: "OElig", value: doxygen.compound.docEmptyType }
+---| { name: "oelig", value: doxygen.compound.docEmptyType }
+---| { name: "Scaron", value: doxygen.compound.docEmptyType }
+---| { name: "scaron", value: doxygen.compound.docEmptyType }
+---| { name: "Yumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "circ", value: doxygen.compound.docEmptyType }
+---| { name: "tilde", value: doxygen.compound.docEmptyType }
+---| { name: "ensp", value: doxygen.compound.docEmptyType }
+---| { name: "emsp", value: doxygen.compound.docEmptyType }
+---| { name: "thinsp", value: doxygen.compound.docEmptyType }
+---| { name: "zwnj", value: doxygen.compound.docEmptyType }
+---| { name: "zwj", value: doxygen.compound.docEmptyType }
+---| { name: "lrm", value: doxygen.compound.docEmptyType }
+---| { name: "rlm", value: doxygen.compound.docEmptyType }
+---| { name: "ndash", value: doxygen.compound.docEmptyType }
+---| { name: "mdash", value: doxygen.compound.docEmptyType }
+---| { name: "lsquo", value: doxygen.compound.docEmptyType }
+---| { name: "rsquo", value: doxygen.compound.docEmptyType }
+---| { name: "sbquo", value: doxygen.compound.docEmptyType }
+---| { name: "ldquo", value: doxygen.compound.docEmptyType }
+---| { name: "rdquo", value: doxygen.compound.docEmptyType }
+---| { name: "bdquo", value: doxygen.compound.docEmptyType }
+---| { name: "dagger", value: doxygen.compound.docEmptyType }
+---| { name: "Dagger", value: doxygen.compound.docEmptyType }
+---| { name: "permil", value: doxygen.compound.docEmptyType }
+---| { name: "lsaquo", value: doxygen.compound.docEmptyType }
+---| { name: "rsaquo", value: doxygen.compound.docEmptyType }
+---| { name: "euro", value: doxygen.compound.docEmptyType }
+---| { name: "tm", value: doxygen.compound.docEmptyType }
+
+---@class doxygen.compound.docTocItemType (mixed)
+---@field id string? (attribute)
+---@field content doxygen.compound.docTocItemType
+---| string (text content)
+---| { name: "ulink", value: doxygen.compound.docURLLink }
+---| { name: "bold", value: doxygen.compound.docMarkupType }
+---| { name: "s", value: doxygen.compound.docMarkupType }
+---| { name: "strike", value: doxygen.compound.docMarkupType }
+---| { name: "underline", value: doxygen.compound.docMarkupType }
+---| { name: "emphasis", value: doxygen.compound.docMarkupType }
+---| { name: "computeroutput", value: doxygen.compound.docMarkupType }
+---| { name: "subscript", value: doxygen.compound.docMarkupType }
+---| { name: "superscript", value: doxygen.compound.docMarkupType }
+---| { name: "center", value: doxygen.compound.docMarkupType }
+---| { name: "small", value: doxygen.compound.docMarkupType }
+---| { name: "cite", value: doxygen.compound.docMarkupType }
+---| { name: "del", value: doxygen.compound.docMarkupType }
+---| { name: "ins", value: doxygen.compound.docMarkupType }
+---| { name: "htmlonly", value: doxygen.compound.docHtmlOnlyType }
+---| { name: "manonly", value: string }
+---| { name: "xmlonly", value: string }
+---| { name: "rtfonly", value: string }
+---| { name: "latexonly", value: string }
+---| { name: "docbookonly", value: string }
+---| { name: "image", value: doxygen.compound.docImageType }
+---| { name: "dot", value: doxygen.compound.docDotMscType }
+---| { name: "msc", value: doxygen.compound.docDotMscType }
+---| { name: "plantuml", value: doxygen.compound.docPlantumlType }
+---| { name: "anchor", value: doxygen.compound.docAnchorType }
+---| { name: "formula", value: doxygen.compound.docFormulaType }
+---| { name: "ref", value: doxygen.compound.docRefTextType }
+---| { name: "emoji", value: doxygen.compound.docEmojiType }
+---| { name: "linebreak", value: doxygen.compound.docEmptyType }
+---| { name: "nonbreakablespace", value: doxygen.compound.docEmptyType }
+---| { name: "iexcl", value: doxygen.compound.docEmptyType }
+---| { name: "cent", value: doxygen.compound.docEmptyType }
+---| { name: "pound", value: doxygen.compound.docEmptyType }
+---| { name: "curren", value: doxygen.compound.docEmptyType }
+---| { name: "yen", value: doxygen.compound.docEmptyType }
+---| { name: "brvbar", value: doxygen.compound.docEmptyType }
+---| { name: "sect", value: doxygen.compound.docEmptyType }
+---| { name: "umlaut", value: doxygen.compound.docEmptyType }
+---| { name: "copy", value: doxygen.compound.docEmptyType }
+---| { name: "ordf", value: doxygen.compound.docEmptyType }
+---| { name: "laquo", value: doxygen.compound.docEmptyType }
+---| { name: "not", value: doxygen.compound.docEmptyType }
+---| { name: "shy", value: doxygen.compound.docEmptyType }
+---| { name: "registered", value: doxygen.compound.docEmptyType }
+---| { name: "macr", value: doxygen.compound.docEmptyType }
+---| { name: "deg", value: doxygen.compound.docEmptyType }
+---| { name: "plusmn", value: doxygen.compound.docEmptyType }
+---| { name: "sup2", value: doxygen.compound.docEmptyType }
+---| { name: "sup3", value: doxygen.compound.docEmptyType }
+---| { name: "acute", value: doxygen.compound.docEmptyType }
+---| { name: "micro", value: doxygen.compound.docEmptyType }
+---| { name: "para", value: doxygen.compound.docEmptyType }
+---| { name: "middot", value: doxygen.compound.docEmptyType }
+---| { name: "cedil", value: doxygen.compound.docEmptyType }
+---| { name: "sup1", value: doxygen.compound.docEmptyType }
+---| { name: "ordm", value: doxygen.compound.docEmptyType }
+---| { name: "raquo", value: doxygen.compound.docEmptyType }
+---| { name: "frac14", value: doxygen.compound.docEmptyType }
+---| { name: "frac12", value: doxygen.compound.docEmptyType }
+---| { name: "frac34", value: doxygen.compound.docEmptyType }
+---| { name: "iquest", value: doxygen.compound.docEmptyType }
+---| { name: "Agrave", value: doxygen.compound.docEmptyType }
+---| { name: "Aacute", value: doxygen.compound.docEmptyType }
+---| { name: "Acirc", value: doxygen.compound.docEmptyType }
+---| { name: "Atilde", value: doxygen.compound.docEmptyType }
+---| { name: "Aumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "Aring", value: doxygen.compound.docEmptyType }
+---| { name: "AElig", value: doxygen.compound.docEmptyType }
+---| { name: "Ccedil", value: doxygen.compound.docEmptyType }
+---| { name: "Egrave", value: doxygen.compound.docEmptyType }
+---| { name: "Eacute", value: doxygen.compound.docEmptyType }
+---| { name: "Ecirc", value: doxygen.compound.docEmptyType }
+---| { name: "Eumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "Igrave", value: doxygen.compound.docEmptyType }
+---| { name: "Iacute", value: doxygen.compound.docEmptyType }
+---| { name: "Icirc", value: doxygen.compound.docEmptyType }
+---| { name: "Iumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "ETH", value: doxygen.compound.docEmptyType }
+---| { name: "Ntilde", value: doxygen.compound.docEmptyType }
+---| { name: "Ograve", value: doxygen.compound.docEmptyType }
+---| { name: "Oacute", value: doxygen.compound.docEmptyType }
+---| { name: "Ocirc", value: doxygen.compound.docEmptyType }
+---| { name: "Otilde", value: doxygen.compound.docEmptyType }
+---| { name: "Oumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "times", value: doxygen.compound.docEmptyType }
+---| { name: "Oslash", value: doxygen.compound.docEmptyType }
+---| { name: "Ugrave", value: doxygen.compound.docEmptyType }
+---| { name: "Uacute", value: doxygen.compound.docEmptyType }
+---| { name: "Ucirc", value: doxygen.compound.docEmptyType }
+---| { name: "Uumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "Yacute", value: doxygen.compound.docEmptyType }
+---| { name: "THORN", value: doxygen.compound.docEmptyType }
+---| { name: "szlig", value: doxygen.compound.docEmptyType }
+---| { name: "agrave", value: doxygen.compound.docEmptyType }
+---| { name: "aacute", value: doxygen.compound.docEmptyType }
+---| { name: "acirc", value: doxygen.compound.docEmptyType }
+---| { name: "atilde", value: doxygen.compound.docEmptyType }
+---| { name: "aumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "aring", value: doxygen.compound.docEmptyType }
+---| { name: "aelig", value: doxygen.compound.docEmptyType }
+---| { name: "ccedil", value: doxygen.compound.docEmptyType }
+---| { name: "egrave", value: doxygen.compound.docEmptyType }
+---| { name: "eacute", value: doxygen.compound.docEmptyType }
+---| { name: "ecirc", value: doxygen.compound.docEmptyType }
+---| { name: "eumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "igrave", value: doxygen.compound.docEmptyType }
+---| { name: "iacute", value: doxygen.compound.docEmptyType }
+---| { name: "icirc", value: doxygen.compound.docEmptyType }
+---| { name: "iumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "eth", value: doxygen.compound.docEmptyType }
+---| { name: "ntilde", value: doxygen.compound.docEmptyType }
+---| { name: "ograve", value: doxygen.compound.docEmptyType }
+---| { name: "oacute", value: doxygen.compound.docEmptyType }
+---| { name: "ocirc", value: doxygen.compound.docEmptyType }
+---| { name: "otilde", value: doxygen.compound.docEmptyType }
+---| { name: "oumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "divide", value: doxygen.compound.docEmptyType }
+---| { name: "oslash", value: doxygen.compound.docEmptyType }
+---| { name: "ugrave", value: doxygen.compound.docEmptyType }
+---| { name: "uacute", value: doxygen.compound.docEmptyType }
+---| { name: "ucirc", value: doxygen.compound.docEmptyType }
+---| { name: "uumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "yacute", value: doxygen.compound.docEmptyType }
+---| { name: "thorn", value: doxygen.compound.docEmptyType }
+---| { name: "yumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "fnof", value: doxygen.compound.docEmptyType }
+---| { name: "Alpha", value: doxygen.compound.docEmptyType }
+---| { name: "Beta", value: doxygen.compound.docEmptyType }
+---| { name: "Gamma", value: doxygen.compound.docEmptyType }
+---| { name: "Delta", value: doxygen.compound.docEmptyType }
+---| { name: "Epsilon", value: doxygen.compound.docEmptyType }
+---| { name: "Zeta", value: doxygen.compound.docEmptyType }
+---| { name: "Eta", value: doxygen.compound.docEmptyType }
+---| { name: "Theta", value: doxygen.compound.docEmptyType }
+---| { name: "Iota", value: doxygen.compound.docEmptyType }
+---| { name: "Kappa", value: doxygen.compound.docEmptyType }
+---| { name: "Lambda", value: doxygen.compound.docEmptyType }
+---| { name: "Mu", value: doxygen.compound.docEmptyType }
+---| { name: "Nu", value: doxygen.compound.docEmptyType }
+---| { name: "Xi", value: doxygen.compound.docEmptyType }
+---| { name: "Omicron", value: doxygen.compound.docEmptyType }
+---| { name: "Pi", value: doxygen.compound.docEmptyType }
+---| { name: "Rho", value: doxygen.compound.docEmptyType }
+---| { name: "Sigma", value: doxygen.compound.docEmptyType }
+---| { name: "Tau", value: doxygen.compound.docEmptyType }
+---| { name: "Upsilon", value: doxygen.compound.docEmptyType }
+---| { name: "Phi", value: doxygen.compound.docEmptyType }
+---| { name: "Chi", value: doxygen.compound.docEmptyType }
+---| { name: "Psi", value: doxygen.compound.docEmptyType }
+---| { name: "Omega", value: doxygen.compound.docEmptyType }
+---| { name: "alpha", value: doxygen.compound.docEmptyType }
+---| { name: "beta", value: doxygen.compound.docEmptyType }
+---| { name: "gamma", value: doxygen.compound.docEmptyType }
+---| { name: "delta", value: doxygen.compound.docEmptyType }
+---| { name: "epsilon", value: doxygen.compound.docEmptyType }
+---| { name: "zeta", value: doxygen.compound.docEmptyType }
+---| { name: "eta", value: doxygen.compound.docEmptyType }
+---| { name: "theta", value: doxygen.compound.docEmptyType }
+---| { name: "iota", value: doxygen.compound.docEmptyType }
+---| { name: "kappa", value: doxygen.compound.docEmptyType }
+---| { name: "lambda", value: doxygen.compound.docEmptyType }
+---| { name: "mu", value: doxygen.compound.docEmptyType }
+---| { name: "nu", value: doxygen.compound.docEmptyType }
+---| { name: "xi", value: doxygen.compound.docEmptyType }
+---| { name: "omicron", value: doxygen.compound.docEmptyType }
+---| { name: "pi", value: doxygen.compound.docEmptyType }
+---| { name: "rho", value: doxygen.compound.docEmptyType }
+---| { name: "sigmaf", value: doxygen.compound.docEmptyType }
+---| { name: "sigma", value: doxygen.compound.docEmptyType }
+---| { name: "tau", value: doxygen.compound.docEmptyType }
+---| { name: "upsilon", value: doxygen.compound.docEmptyType }
+---| { name: "phi", value: doxygen.compound.docEmptyType }
+---| { name: "chi", value: doxygen.compound.docEmptyType }
+---| { name: "psi", value: doxygen.compound.docEmptyType }
+---| { name: "omega", value: doxygen.compound.docEmptyType }
+---| { name: "thetasym", value: doxygen.compound.docEmptyType }
+---| { name: "upsih", value: doxygen.compound.docEmptyType }
+---| { name: "piv", value: doxygen.compound.docEmptyType }
+---| { name: "bull", value: doxygen.compound.docEmptyType }
+---| { name: "hellip", value: doxygen.compound.docEmptyType }
+---| { name: "prime", value: doxygen.compound.docEmptyType }
+---| { name: "Prime", value: doxygen.compound.docEmptyType }
+---| { name: "oline", value: doxygen.compound.docEmptyType }
+---| { name: "frasl", value: doxygen.compound.docEmptyType }
+---| { name: "weierp", value: doxygen.compound.docEmptyType }
+---| { name: "imaginary", value: doxygen.compound.docEmptyType }
+---| { name: "real", value: doxygen.compound.docEmptyType }
+---| { name: "trademark", value: doxygen.compound.docEmptyType }
+---| { name: "alefsym", value: doxygen.compound.docEmptyType }
+---| { name: "larr", value: doxygen.compound.docEmptyType }
+---| { name: "uarr", value: doxygen.compound.docEmptyType }
+---| { name: "rarr", value: doxygen.compound.docEmptyType }
+---| { name: "darr", value: doxygen.compound.docEmptyType }
+---| { name: "harr", value: doxygen.compound.docEmptyType }
+---| { name: "crarr", value: doxygen.compound.docEmptyType }
+---| { name: "lArr", value: doxygen.compound.docEmptyType }
+---| { name: "uArr", value: doxygen.compound.docEmptyType }
+---| { name: "rArr", value: doxygen.compound.docEmptyType }
+---| { name: "dArr", value: doxygen.compound.docEmptyType }
+---| { name: "hArr", value: doxygen.compound.docEmptyType }
+---| { name: "forall", value: doxygen.compound.docEmptyType }
+---| { name: "part", value: doxygen.compound.docEmptyType }
+---| { name: "exist", value: doxygen.compound.docEmptyType }
+---| { name: "empty", value: doxygen.compound.docEmptyType }
+---| { name: "nabla", value: doxygen.compound.docEmptyType }
+---| { name: "isin", value: doxygen.compound.docEmptyType }
+---| { name: "notin", value: doxygen.compound.docEmptyType }
+---| { name: "ni", value: doxygen.compound.docEmptyType }
+---| { name: "prod", value: doxygen.compound.docEmptyType }
+---| { name: "sum", value: doxygen.compound.docEmptyType }
+---| { name: "minus", value: doxygen.compound.docEmptyType }
+---| { name: "lowast", value: doxygen.compound.docEmptyType }
+---| { name: "radic", value: doxygen.compound.docEmptyType }
+---| { name: "prop", value: doxygen.compound.docEmptyType }
+---| { name: "infin", value: doxygen.compound.docEmptyType }
+---| { name: "ang", value: doxygen.compound.docEmptyType }
+---| { name: "and", value: doxygen.compound.docEmptyType }
+---| { name: "or", value: doxygen.compound.docEmptyType }
+---| { name: "cap", value: doxygen.compound.docEmptyType }
+---| { name: "cup", value: doxygen.compound.docEmptyType }
+---| { name: "int", value: doxygen.compound.docEmptyType }
+---| { name: "there4", value: doxygen.compound.docEmptyType }
+---| { name: "sim", value: doxygen.compound.docEmptyType }
+---| { name: "cong", value: doxygen.compound.docEmptyType }
+---| { name: "asymp", value: doxygen.compound.docEmptyType }
+---| { name: "ne", value: doxygen.compound.docEmptyType }
+---| { name: "equiv", value: doxygen.compound.docEmptyType }
+---| { name: "le", value: doxygen.compound.docEmptyType }
+---| { name: "ge", value: doxygen.compound.docEmptyType }
+---| { name: "sub", value: doxygen.compound.docEmptyType }
+---| { name: "sup", value: doxygen.compound.docEmptyType }
+---| { name: "nsub", value: doxygen.compound.docEmptyType }
+---| { name: "sube", value: doxygen.compound.docEmptyType }
+---| { name: "supe", value: doxygen.compound.docEmptyType }
+---| { name: "oplus", value: doxygen.compound.docEmptyType }
+---| { name: "otimes", value: doxygen.compound.docEmptyType }
+---| { name: "perp", value: doxygen.compound.docEmptyType }
+---| { name: "sdot", value: doxygen.compound.docEmptyType }
+---| { name: "lceil", value: doxygen.compound.docEmptyType }
+---| { name: "rceil", value: doxygen.compound.docEmptyType }
+---| { name: "lfloor", value: doxygen.compound.docEmptyType }
+---| { name: "rfloor", value: doxygen.compound.docEmptyType }
+---| { name: "lang", value: doxygen.compound.docEmptyType }
+---| { name: "rang", value: doxygen.compound.docEmptyType }
+---| { name: "loz", value: doxygen.compound.docEmptyType }
+---| { name: "spades", value: doxygen.compound.docEmptyType }
+---| { name: "clubs", value: doxygen.compound.docEmptyType }
+---| { name: "hearts", value: doxygen.compound.docEmptyType }
+---| { name: "diams", value: doxygen.compound.docEmptyType }
+---| { name: "OElig", value: doxygen.compound.docEmptyType }
+---| { name: "oelig", value: doxygen.compound.docEmptyType }
+---| { name: "Scaron", value: doxygen.compound.docEmptyType }
+---| { name: "scaron", value: doxygen.compound.docEmptyType }
+---| { name: "Yumlaut", value: doxygen.compound.docEmptyType }
+---| { name: "circ", value: doxygen.compound.docEmptyType }
+---| { name: "tilde", value: doxygen.compound.docEmptyType }
+---| { name: "ensp", value: doxygen.compound.docEmptyType }
+---| { name: "emsp", value: doxygen.compound.docEmptyType }
+---| { name: "thinsp", value: doxygen.compound.docEmptyType }
+---| { name: "zwnj", value: doxygen.compound.docEmptyType }
+---| { name: "zwj", value: doxygen.compound.docEmptyType }
+---| { name: "lrm", value: doxygen.compound.docEmptyType }
+---| { name: "rlm", value: doxygen.compound.docEmptyType }
+---| { name: "ndash", value: doxygen.compound.docEmptyType }
+---| { name: "mdash", value: doxygen.compound.docEmptyType }
+---| { name: "lsquo", value: doxygen.compound.docEmptyType }
+---| { name: "rsquo", value: doxygen.compound.docEmptyType }
+---| { name: "sbquo", value: doxygen.compound.docEmptyType }
+---| { name: "ldquo", value: doxygen.compound.docEmptyType }
+---| { name: "rdquo", value: doxygen.compound.docEmptyType }
+---| { name: "bdquo", value: doxygen.compound.docEmptyType }
+---| { name: "dagger", value: doxygen.compound.docEmptyType }
+---| { name: "Dagger", value: doxygen.compound.docEmptyType }
+---| { name: "permil", value: doxygen.compound.docEmptyType }
+---| { name: "lsaquo", value: doxygen.compound.docEmptyType }
+---| { name: "rsaquo", value: doxygen.compound.docEmptyType }
+---| { name: "euro", value: doxygen.compound.docEmptyType }
+---| { name: "tm", value: doxygen.compound.docEmptyType }
+
+---@class doxygen.compound.docTocListType
+--- start sequence
+---@field tocitem doxygen.compound.docTocItemType[] (element)
+--- end sequence
+
+---@class doxygen.compound.docLanguageType
+--- start sequence
+---@field para doxygen.compound.docParaType[] (element)
+--- end sequence
+---@field langid string? (attribute)
+
+---@class doxygen.compound.docParamListType
+--- start sequence
+---@field parameteritem doxygen.compound.docParamListItem[] (element)
+--- end sequence
+---@field kind doxygen.compound.DoxParamListKind? (attribute)
+
+---@class doxygen.compound.docParamListItem
+--- start sequence
+---@field parameternamelist doxygen.compound.docParamNameList[] (element)
+---@field parameterdescription doxygen.compound.descriptionType (element)
+--- end sequence
+
+---@class doxygen.compound.docParamNameList
+--- start sequence
+---@field parametertype doxygen.compound.docParamType[] (element)
+---@field parametername doxygen.compound.docParamName[] (element)
+--- end sequence
+
+---@class doxygen.compound.docParamType (mixed)
+---@field content doxygen.compound.docParamType
+---| string (text content)
+---| { name: "ref", value: doxygen.compound.refTextType? }
+
+---@class doxygen.compound.docParamName (mixed)
+---@field direction doxygen.compound.DoxParamDir? (attribute)
+---@field content doxygen.compound.docParamName
+---| string (text content)
+---| { name: "ref", value: doxygen.compound.refTextType? }
+
+---@class doxygen.compound.docXRefSectType
+--- start sequence
+---@field xreftitle string[] (element)
+---@field xrefdescription doxygen.compound.descriptionType (element)
+--- end sequence
+---@field id string? (attribute)
+
+---@class doxygen.compound.docCopyType
+--- start sequence
+---@field para doxygen.compound.docParaType[] (element)
+---@field sect1 doxygen.compound.docSect1Type[] (element)
+---@field internal doxygen.compound.docInternalType? (element)
+--- end sequence
+---@field link string? (attribute)
+
+---@class doxygen.compound.docDetailsType
+--- start sequence
+---@field summary doxygen.compound.docSummaryType? (element)
+---@field para doxygen.compound.docParaType[] (element)
+--- end sequence
+
+---@class doxygen.compound.docBlockQuoteType
+--- start sequence
+---@field para doxygen.compound.docParaType[] (element)
+--- end sequence
+
+---@class doxygen.compound.docParBlockType
+--- start sequence
+---@field para doxygen.compound.docParaType[] (element)
+--- end sequence
+
+---@class doxygen.compound.docEmptyType
+
+---@class doxygen.compound.tableofcontentsType
+--- start sequence
+---@field tocsect doxygen.compound.tableofcontentsKindType[] (element)
+--- end sequence
+
+---@class doxygen.compound.tableofcontentsKindType
+--- start sequence
+---@field name string (element)
+---@field reference string (element)
+---@field tableofcontents doxygen.compound.tableofcontentsType[] (element)
+--- end sequence
+
+---@class doxygen.compound.docEmojiType
+---@field name string? (attribute)
+---@field unicode string? (attribute)

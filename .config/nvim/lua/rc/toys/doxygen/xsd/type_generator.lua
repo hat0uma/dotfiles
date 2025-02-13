@@ -5,6 +5,19 @@ local function push_to_stack(stack, list)
   end
 end
 
+--- Find a group by name
+---@param schema Xsd.Schema
+---@param name string
+---@return Xsd.Group
+local function find_group(schema, name)
+  for _, group in ipairs(schema.groups) do
+    if group.name == name then
+      return group
+    end
+  end
+  error("group not found: " .. name)
+end
+
 ---@class DoxygenTypeGenerator
 ---@field opts DoxygenGeneratorOpts
 local DoxygenTypeGenerator = {}
@@ -65,25 +78,25 @@ function DoxygenTypeGenerator:generate(schema)
   emit("--------------------------------")
   for _, complex_type in ipairs(schema.complex_types) do
     if vim.tbl_contains(self.opts.text_foldings, complex_type.name) then
-      emitf("---@alias %s string[] (folded text)", self:_t(complex_type.name))
+      emitf("---@alias %s string (folded text)", self:_t(complex_type.name))
       emit("")
     elseif complex_type.mixed then
-      emit(self:_generate_mixed(complex_type))
+      emit(self:_generate_mixed(schema, complex_type))
     else
       emitf("---@class %s", self:_t(complex_type.name))
-      emit(self:_generate_content_fields(complex_type))
+      emit(self:_generate_content_fields(schema, complex_type))
     end
     emit("")
   end
 
-  emit("--------------------------------")
-  emit("-- Groups")
-  emit("--------------------------------")
-  for _, group in ipairs(schema.groups) do
-    emitf("---@class %s", self:_t(group.name))
-    emit(self:_generate_content_fields(group))
-    emit("")
-  end
+  -- emit("--------------------------------")
+  -- emit("-- Groups")
+  -- emit("--------------------------------")
+  -- for _, group in ipairs(schema.groups) do
+  --   emitf("---@class %s", self:_t(group.name))
+  --   emit(self:_generate_content_fields(schema, group))
+  --   emit("")
+  -- end
 
   return lines
 end
@@ -100,9 +113,10 @@ function DoxygenTypeGenerator:_qualified(type)
 end
 
 ---
+---@param schema Xsd.Schema
 ---@param complex_type Xsd.ComplexType
 ---@return string
-function DoxygenTypeGenerator:_generate_mixed(complex_type)
+function DoxygenTypeGenerator:_generate_mixed(schema, complex_type)
   local lines = {}
   local function emit(line)
     table.insert(lines, line)
@@ -122,7 +136,7 @@ function DoxygenTypeGenerator:_generate_mixed(complex_type)
     end
   end
 
-  emitf("---@field content %s", self:_t(complex_type.name))
+  emitf("---@field %s %s", "content", self:_t(complex_type.name))
   emitf("---| string (text content)")
 
   while #stack > 0 do
@@ -135,9 +149,12 @@ function DoxygenTypeGenerator:_generate_mixed(complex_type)
     elseif current.kind == "sequence" or current.kind == "choice" then
       push_to_stack(stack, current.content)
     elseif current.kind == "group" then
-      emitf('---| { name: "%s", value: %s }', "group", self:_t(current.ref, current.occurs))
-    elseif current.kind == "text-only-element" then
-      error("text-only-element not supported: " .. vim.inspect(current))
+      -- expand group
+      local group = vim.deepcopy(find_group(schema, current.ref))
+      for i = #group.content, 1, -1 do
+        group.content[i].occurs = current.occurs
+        table.insert(stack, group.content[i])
+      end
     elseif current.kind == "text" then
       error("text content not supported: " .. vim.inspect(current))
     else
@@ -148,9 +165,10 @@ function DoxygenTypeGenerator:_generate_mixed(complex_type)
   return table.concat(lines, "\n")
 end
 
+---@param schema Xsd.Schema
 ---@param element Xsd.ComplexType | Xsd.Group
 ---@return string
-function DoxygenTypeGenerator:_generate_content_fields(element)
+function DoxygenTypeGenerator:_generate_content_fields(schema, element)
   local lines = {}
   local function emit(line)
     table.insert(lines, line)
@@ -176,13 +194,16 @@ function DoxygenTypeGenerator:_generate_content_fields(element)
       emitf("---@field %s", "choice")
       emitf("---| %s", self:_generate_choice(current))
     elseif current.kind == "group" then
-      emitf("---@field %s %s", "group", self:_t(current.ref))
+      -- expand group
+      local group = vim.deepcopy(find_group(schema, current.ref))
+      for i = #group.content, 1, -1 do
+        group.content[i].occurs = current.occurs
+        table.insert(stack, group.content[i])
+      end
     elseif current.kind == "attribute" then
       emitf("---@field %s %s (attribute)", self:_v(current.name), self:_t(current.type, current.occurs))
     elseif current.kind == "element" then
       emitf("---@field %s %s (element)", self:_v(current.name), self:_t(current.type, current.occurs))
-    elseif current.kind == "text-only-element" then
-      emitf("---@field %s %s (text-only-element)", self:_v(current.name), self:_t(current.type, current.occurs))
     elseif current.kind == "text" then
       emitf("---@field %s %s (text content)", "text", self:_t(current.type))
     else

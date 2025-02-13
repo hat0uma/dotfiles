@@ -27,23 +27,12 @@ function Builder:from_element(name, occurence, factory) end
 ---@return string
 function Builder:from_text() end
 
----@return (string | { name: string, value: string })[]
-function Builder:from_element_mixed() end
-
----@param name string
----@param occurence "required"
 ---@return string
-function Builder:from_text_only_element(name, occurence) end
+function Builder:from_folded_text_content() end
 
----@param name string
----@param occurence "optional"
----@return string?
-function Builder:from_text_only_element(name, occurence) end
-
----@param name string
----@param occurence "array"
----@return string[]
-function Builder:from_text_only_element(name, occurence) end
+---@param items table<string, { factory: Factory<any>, occurence: "required" | "optional" | "array" }>
+---@return (string | { name: string, value: string })[]
+function Builder:from_element_mixed(items) end
 
 ---@param choices { name: string, factory: Factory<any> }[]
 ---@param occurence "required"

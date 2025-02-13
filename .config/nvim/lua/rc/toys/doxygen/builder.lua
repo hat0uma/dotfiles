@@ -103,9 +103,29 @@ end
 function Builder:from_element(name, occurence, factory)
   if occurence == "array" then
     return self:_from_element_array(name, factory)
+  elseif occurence == "optional" then
+    return self:_from_element_optional(name, factory)
+  else
+    return self:_from_element_required(name, factory)
   end
+end
 
-  local optional = occurence == "optional"
+---@generic T
+---@param name string
+---@param factory Factory<T>
+---@return T
+function Builder:_from_element_required(name, factory)
+  return assert(
+    self:_from_element_optional(name, factory),
+    string.format("required element <%s> is missing in %s", name, self._element.name)
+  )
+end
+
+---@generic T
+---@param name string
+---@param factory Factory<T>
+---@return T?
+function Builder:_from_element_optional(name, factory)
   for i = self._next_index, #self._element.content do
     local child = self._element.content[i]
     if type(child) == "string" then
@@ -119,10 +139,6 @@ function Builder:from_element(name, occurence, factory)
     self._next_index = i + 1
     local child_builder = Builder:new(child)
     return assert(factory(child_builder), string.format("factory failed for %s", name))
-  end
-
-  if not optional then
-    error(string.format("required element <%s> is missing in %s", name, self._element.name))
   end
 
   return nil
@@ -150,98 +166,28 @@ function Builder:_from_element_array(name, factory)
   return result
 end
 
----@generic T
----@param name string
----@param factory Factory<T>
----@return T?
-function Builder:from_child_element_optional(name, factory)
-  for i = self._next_index, #self._element.content do
-    local child = self._element.content[i]
-    assert(type(child) ~= "string", "unexpected text content")
-
-    if child.name ~= name then
-      return nil
-    end
-
-    self._next_index = i + 1
-    local child_builder = Builder:new(child)
-    return factory(child_builder)
-  end
-
-  return nil
-end
-
----@param element XmlElement
----@return string?
-local function get_text_content(element)
-  if #element.content == 0 then
-    return nil
-  end
-
-  assert(#element.content == 1, string.format("unexpected content in %s", vim.inspect(element, { depth = 2 })))
-  local text = element.content[1]
-  assert(type(text) == "string", string.format("unexpected content in %s", element.name))
-  return text
-end
-
----@return string
-function Builder:from_text()
-  return assert(
-    get_text_content(self._element),
-    string.format("required text content in %s is missing", self._element.name)
-  )
-end
-
----@param name string
----@param occurence "required" | "optional" | "array"
----@return string | string[] | nil
-function Builder:from_text_only_element(name, occurence)
-  if occurence == "array" then
-    return self:from_text_only_element_array(name)
-  end
-
-  local value = self:from_text_only_element_optional(name)
-  if not value and occurence == "required" then
-    error(string.format("required element %s is missing", name))
-  end
-
-  return value
-end
-
----@param name string
----@return string?
-function Builder:from_text_only_element_optional(name)
+---@param items table<string, { factory: Factory<any>, occurence: "required" | "optional" | "array" }>
+---@return (string | { name: string, value: string })[]
+function Builder:from_element_mixed(items)
+  local result = {}
   for i = self._next_index, #self._element.content do
     local child = self._element.content[i]
     if type(child) == "string" then
-      break
-    end
+      table.insert(result, child)
+    else
+      local item = items[child.name]
+      if not item then
+        error(string.format("unexpected element <%s> in %s", child.name, self._element.name))
+      end
 
-    if child.name ~= name then
-      break
+      -- TODO handle occurence
+      self._next_index = i + 1
+      local child_builder = Builder:new(child)
+      table.insert(result, { name = child.name, value = item.factory(child_builder) })
     end
-
-    self._next_index = i + 1
-    return get_text_content(child)
   end
 
-  return nil
-end
-
----@return (string | { name: string, value: string })[]
-function Builder:from_element_mixed()
-  return self:from_folded_text_content()
-  -- TODO: should handle mixed content with child factories
-  -- local result = {}
-  -- for i = self._next_index, #self._element.content do
-  --   local child = self._element.content[i]
-  --   if type(child) == "string" then
-  --     table.insert(result, child)
-  --   else
-  --     table.insert(result, { name = child.name })
-  --   end
-  -- end
-  -- return result
+  return result
 end
 
 ---@param choices { name: string, factory: Factory<any> }[]
@@ -251,21 +197,17 @@ end
 ---@overload fun(choices: { name: string, factory: Factory<any> }[], occurence: "array"): { name: string, value: any }[]
 function Builder:choice(choices, occurence)
   if occurence == "array" then
-    return self:choice_array(choices)
+    return self:_choice_array(choices)
+  elseif occurence == "optional" then
+    return self:_choice_optional(choices)
+  else
+    return self:_choice_required(choices)
   end
-
-  local optional = occurence == "optional"
-  local result = self:choice_optional(choices)
-  if not result and not optional then
-    error(string.format("required choice is missing in %s", self._element.name))
-  end
-
-  return result
 end
 
 ---@param choices { name: string, factory: Factory<any> }[]
 ---@return { name: string, value: any }[]
-function Builder:choice_array(choices)
+function Builder:_choice_array(choices)
   local result = {}
   for i = self._next_index, #self._element.content do
     local child = self._element.content[i]
@@ -286,7 +228,7 @@ end
 ---
 ---@param choices { name: string, factory: Factory<any> }[]
 ---@return { name: string, value: any }?
-function Builder:choice_optional(choices)
+function Builder:_choice_optional(choices)
   for i = self._next_index, #self._element.content do
     local child = self._element.content[i]
     assert(type(child) ~= "string", string.format("unexpected text content in %s", self._element.name))
@@ -302,24 +244,34 @@ function Builder:choice_optional(choices)
   return nil
 end
 
----@param name string
----@return string[]
-function Builder:from_text_only_element_array(name)
-  local result = {}
-  for i = self._next_index, #self._element.content do
-    local child = self._element.content[i]
-    assert(type(child) ~= "string", string.format("unexpected text content in %s", self._element.name))
-    if child.name ~= name then
-      break
-    end
-
-    self._next_index = i + 1
-    table.insert(result, get_text_content(child))
+---@param choices { name: string, factory: Factory<any> }[]
+---@return { name: string, value: any }
+function Builder:_choice_required(choices)
+  local result = self:_choice_optional(choices)
+  if not result then
+    error(string.format("required choice is missing in %s", self._element.name))
   end
-
   return result
 end
 
+---@return string
+function Builder:from_text()
+  if #self._element.content == 0 then
+    return ""
+  end
+
+  if #self._element.content > 1 then
+    error(string.format("unexpected content in %s", self._element.name))
+  end
+
+  local text = self._element.content[1]
+  if type(text) ~= "string" then
+    error(string.format("unexpected content in %s", self._element.name))
+  end
+  return text
+end
+
+---@return string
 function Builder:from_folded_text_content()
   self._next_index = self._next_index + 1
 
@@ -340,7 +292,7 @@ function Builder:from_folded_text_content()
     end
   end
 
-  return vim.split(table.concat(text_buffer, ""), "\n")
+  return table.concat(text_buffer, "")
 end
 
 return Builder

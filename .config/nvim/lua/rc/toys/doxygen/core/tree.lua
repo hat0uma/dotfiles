@@ -1,25 +1,33 @@
 local sax = require("rc.toys.doxygen.core.sax")
 local M = {}
 
---- Check element is mixed
+--- Check if the element has text content
 ---@param element XmlElement
 ---@return boolean
-local function is_mixed(element)
-  local element_num = 0
-  local text_num = 0
+local function has_text(element)
   for i = 1, #element.content do
     local v = element.content[i]
     if type(v) == "string" and #vim.trim(v) ~= 0 then
-      text_num = text_num + 1
-    else
-      element_num = element_num + 1
-    end
-
-    if element_num ~= 0 and text_num ~= 0 then
       return true
     end
   end
   return false
+end
+
+--- Normalize text content
+---@param element XmlElement
+local function normalize_whitespace(element)
+  for i = #element.content, 1, -1 do
+    local v = element.content[i]
+    if type(v) == "string" then
+      local normalized = v:gsub("^%s+", "")
+      if #normalized == 0 then
+        table.remove(element.content, i)
+      else
+        element.content[i] = normalized
+      end
+    end
+  end
 end
 
 ---@class XmlElement
@@ -45,20 +53,8 @@ function M.build(filename, on_completed)
     end_element_ns = function(localname, prefix, uri)
       ---@type XmlElement
       local current = table.remove(stack)
-
-      if not is_mixed(current) then
-        -- normalize text content
-        for i = #current.content, 1, -1 do
-          local v = current.content[i]
-          if type(v) == "string" then
-            local normalized = v:gsub("^%s+", "")
-            if #normalized == 0 then
-              table.remove(current.content, i)
-            else
-              current.content[i] = normalized
-            end
-          end
-        end
+      if not has_text(current) then
+        normalize_whitespace(current)
       end
 
       -- pop the stack and append to parent

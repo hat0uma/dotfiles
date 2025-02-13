@@ -26,13 +26,6 @@ local M = {}
 ---@field occurs Xsd.ContentOccur
 ---@field note? string
 
----@class Xsd.TextOnlyElement
----@field kind "text-only-element"
----@field name string
----@field type "string"
----@field occurs Xsd.ContentOccur
----@field note? string
-
 ---@class Xsd.GroupRef
 ---@field kind "group"
 ---@field ref string
@@ -57,7 +50,6 @@ local M = {}
 --- | Xsd.GroupRef
 --- | Xsd.Attribute
 --- | Xsd.Element
---- | Xsd.TextOnlyElement
 --- | Xsd.TextContent
 
 ---@class Xsd.ComplexType
@@ -146,23 +138,12 @@ local function xsd_build_content(node)
         })
       end
     elseif current.name == "xsd:element" then
-      local element ---@type Xsd.Element | Xsd.TextOnlyElement
-      if current.attrs.type then
-        element = { ---@type Xsd.Element
-          kind = "element",
-          name = current.attrs.name,
-          type = current.attrs.type,
-          occurs = detect_occurs(current.attrs.minOccurs, current.attrs.maxOccurs),
-        }
-      else
-        element = { ---@type Xsd.TextOnlyElement
-          kind = "text-only-element",
-          name = current.attrs.name,
-          type = "string",
-          occurs = detect_occurs(current.attrs.minOccurs, current.attrs.maxOccurs),
-          note = "(text only)",
-        }
-      end
+      local element = { ---@type Xsd.Element
+        kind = "element",
+        name = current.attrs.name,
+        type = current.attrs.type or "string",
+        occurs = detect_occurs(current.attrs.minOccurs, current.attrs.maxOccurs),
+      }
       table.insert(push_to, element)
     elseif current.name == "xsd:attribute" then
       local attribute = { ---@type Xsd.Attribute
