@@ -91,6 +91,12 @@ return {
         end,
       },
       {
+        "<leader>G",
+        function()
+          require("snacks").picker.grep_word()
+        end,
+      },
+      {
         "<leader>b",
         function()
           require("snacks").picker.buffers()
@@ -175,6 +181,8 @@ return {
           ["<CR>"] = { "enter", mode = { "n", "i" } },
           ["<BS>"] = { "backspace", mode = { "i" } },
           ["p"] = { "toggle_preview", mode = { "n" } },
+          ["J"] = { "history_forward", mode = { "n" } },
+          ["K"] = { "history_back", mode = { "n" } },
           ["gv"] = function(win)
             vim.cmd.vsplit()
             win:execute("edit")
