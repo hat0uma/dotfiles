@@ -86,16 +86,13 @@ local function lazy_plugins(opts, ctx)
 
   for _, plugin in ipairs(plugins) do
     table.insert(results, {
-      file = find(plugin.dir, {
-        "README.md",
-        "README.mkd",
-      }) or find_vimdoc(plugin.dir),
+      file = find(plugin.dir, { "README.md", "README.mkd" }) or find_vimdoc(plugin.dir),
       idx = #results + 1,
       score = 0,
       text = plugin.name,
     })
     if not results[#results].file then
-      print(plugin.name, " has no README.md")
+      print(plugin.name, " has no documents.")
     end
   end
 
@@ -122,6 +119,9 @@ return {
             --   "files",
             -- },
             title = "Oldfiles",
+            layout = {
+              preview = { enabled = false },
+            },
             preview = "file",
             format = "file",
           })
@@ -130,11 +130,16 @@ return {
       {
         "<leader>f",
         function()
-          require("snacks").picker.files()
+          require("snacks").picker.files({
+            hidden = true,
+            layout = {
+              preview = { enabled = false },
+            },
+          })
         end,
       },
       {
-        "<leader>p",
+        "<leader>P",
         function()
           require("snacks").picker.pick({
             finder = lazy_plugins,
@@ -175,9 +180,15 @@ return {
         end,
       },
       {
-        "<leader>P",
+        "<leader>p",
         function()
-          require("telescope").extensions.projects.projects({})
+          require("snacks").picker.lazy()
+          -- require("snacks").picker.projects({
+          --   dev = { "~/dev", "~/projects", "~/work", "~/UnityProjects" },
+          -- })
+          --- "💤" lazy
+          --- "" unity
+          -- require("telescope").extensions.projects.projects({})
         end,
       },
       {
@@ -198,12 +209,12 @@ return {
   ---@type snacks.picker.Config?|{}
   opts = {
     layout = {
-      preview = false,
+      -- preview = "main",
     },
     ui_select = true,
     on_show = function(picker)
       vim.cmd.stopinsert()
-      picker:action("toggle_hidden")
+      -- picker:toggle("preview", { enable = false })
     end,
     formatters = {
       file = {
