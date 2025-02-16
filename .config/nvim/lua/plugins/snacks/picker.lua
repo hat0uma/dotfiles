@@ -47,6 +47,61 @@ local function oldfiles(current_bufnr)
   return results
 end
 
+---@param dir string
+---@param files string[]
+---@return string?
+local function find(dir, files)
+  for _, file in ipairs(files) do
+    local path = vim.fs.joinpath(dir, file)
+    if vim.uv.fs_access(path, "R") then
+      return path
+    end
+  end
+end
+
+--- Find a vimdoc file in a directory
+---@param plugin_dir string
+---@return string?
+local function find_vimdoc(plugin_dir)
+  local doc_dir = vim.fs.joinpath(plugin_dir, "doc")
+  if vim.fn.isdirectory(doc_dir) == 0 then
+    return nil
+  end
+
+  for name, type in vim.fs.dir(doc_dir, {}) do
+    if type == "file" and (name:match("%.txt$") or name:match("%.jax$")) then
+      return vim.fs.joinpath(doc_dir, name)
+    end
+  end
+
+  return nil
+end
+
+---@param opts snacks.picker.Config
+---@param ctx snacks.picker.finder.ctx
+---@return snacks.picker.Item[]
+local function lazy_plugins(opts, ctx)
+  local results = {} ---@type snacks.picker.Item[]
+  local plugins = require("lazy").plugins()
+
+  for _, plugin in ipairs(plugins) do
+    table.insert(results, {
+      file = find(plugin.dir, {
+        "README.md",
+        "README.mkd",
+      }) or find_vimdoc(plugin.dir),
+      idx = #results + 1,
+      score = 0,
+      text = plugin.name,
+    })
+    if not results[#results].file then
+      print(plugin.name, " has no README.md")
+    end
+  end
+
+  return results
+end
+
 return {
   init = function()
     local nmaps = {
@@ -81,7 +136,18 @@ return {
       {
         "<leader>p",
         function()
-          require("telescope").extensions.lazy.lazy()
+          require("snacks").picker.pick({
+            finder = lazy_plugins,
+            title = "Plugins",
+            preview = "file",
+            format = function(item, picker)
+              local ret = {}
+              table.insert(ret, { "", "SpecialChar" })
+              table.insert(ret, { " " })
+              table.insert(ret, { item.text })
+              return ret
+            end,
+          })
         end,
       },
       {
