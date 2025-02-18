@@ -8,8 +8,7 @@ function M.on_attach(client, bufnr)
   end
 
   local lsp_workspace_symbol = function()
-    vim.lsp.buf.workspace_symbol()
-    require("snacks").picker.lsp_symbols({ workspace = true })
+    require("snacks").picker.lsp_workspace_symbols()
   end
 
   local references = function()

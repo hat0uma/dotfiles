@@ -38,7 +38,7 @@ return {
         ["<C-o>"] = history.back,
         ["<C-i>"] = history.forward,
         ["<CR>"] = contextmenu.open,
-        ["g<Tab>"] = my_actions.toggle_tab,
+        ["<Tab>"] = my_actions.toggle_tab,
       },
       float = {
         padding = 2,

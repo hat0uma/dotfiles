@@ -99,6 +99,43 @@ local function lazy_plugins(opts, ctx)
   return results
 end
 
+---@param dir string
+---@return fun(opts:snacks.picker.Config, ctx: snacks.picker.finder.ctx):snacks.picker.finder.result
+local function repos(dir)
+  local patterns = { "^%.git$", "^%.svn$", "^.*%.sln$" }
+  dir = vim.fs.normalize(dir)
+
+  --- Check dir is repos
+  ---@param path string
+  ---@return boolean
+  local function is_repos(path)
+    for child_name, _ in vim.fs.dir(path) do
+      for _, pattern in ipairs(patterns) do
+        if child_name:match(pattern) then
+          return true
+        end
+      end
+    end
+    return false
+  end
+
+  return function(opts, ctx)
+    local results = {} ---@type snacks.picker.Item[]
+    if vim.fn.isdirectory(dir) == 0 then
+      return results
+    end
+
+    for name, type in vim.fs.dir(dir) do
+      local path = vim.fs.joinpath(dir, name)
+      if type == "directory" and is_repos(path) then
+        table.insert(results, { file = path, idx = #results + 1, score = 0, text = path })
+      end
+    end
+
+    return results
+  end
+end
+
 return {
   init = function()
     local nmaps = {
@@ -131,7 +168,6 @@ return {
         "<leader>f",
         function()
           require("snacks").picker.files({
-            hidden = true,
             layout = {
               preview = { enabled = false },
             },
@@ -141,16 +177,73 @@ return {
       {
         "<leader>P",
         function()
-          require("snacks").picker.pick({
-            finder = lazy_plugins,
-            title = "Plugins",
-            preview = "file",
-            format = function(item, picker)
+          ---@param category string
+          ---@param icon? string
+          ---@param icon_hl? string
+          ---@return snacks.picker.format
+          local function text_with_icon(category, icon, icon_hl)
+            return function(item, picker)
               local ret = {}
-              table.insert(ret, { "", "SpecialChar" })
+              table.insert(ret, { icon or "", icon_hl or "SpecialChar" })
               table.insert(ret, { " " })
-              table.insert(ret, { item.text })
+              table.insert(ret, { Snacks.picker.util.align(vim.fs.basename(item.text), 30) })
+              table.insert(ret, { " " })
+              table.insert(ret, { category, "Comment" })
               return ret
+            end
+          end
+
+          require("snacks").picker.pick({
+            title = "Repos",
+            preview = "file",
+            multi = {
+              {
+                finder = lazy_plugins,
+                format = text_with_icon("plugin", "💤", "NoTexthl"),
+              },
+              {
+                finder = repos("~/Unity/Projects"),
+                format = text_with_icon("~/Unity/Projects", " ", "NoTexthl"),
+              },
+              {
+                finder = repos("~/source/repos"),
+                format = text_with_icon("~/source/repos", "󰘐 ", "NoTexthl"),
+              },
+              -- {
+              --   source = "projects",
+              --   format = function(item, picker)
+              --     local repo_name ---@type string
+              --     local find_root ---@type string
+              --     if vim.tbl_contains(project_patterns, vim.fs.basename(item.file)) then -- marker
+              --       local repo_path = vim.fs.dirname(item.file)
+              --       find_root = vim.fs.dirname(repo_path)
+              --       repo_name = vim.fs.basename(repo_path)
+              --     else
+              --       find_root = vim.fs.dirname(item.file)
+              --       repo_name = vim.fs.basename(item.file)
+              --     end
+              --
+              --     local cwd = vim.fs.normalize(assert(vim.uv.cwd()))
+              --     local home = vim.fs.normalize(assert(vim.uv.os_homedir()))
+              --     local dirname = vim.fs.dirname(find_root):gsub(cwd .. "/", ""):gsub(home, "~")
+              --
+              --     local ret = {}
+              --     table.insert(ret, { "", "SpecialChar" })
+              --     table.insert(ret, { " " })
+              --     table.insert(ret, { Snacks.picker.util.align(repo_name, 30) })
+              --     table.insert(ret, { " " })
+              --     table.insert(ret, { dirname, "Comment" })
+              --     return ret
+              --   end,
+              -- },
+            },
+            confirm = function(picker, item, action)
+              if vim.fn.isdirectory(item.file) ~= 1 then
+                picker:action("jump")
+              else
+                picker:close()
+                require("snacks").picker.files({ cwd = item.file })
+              end
             end,
           })
         end,
@@ -183,12 +276,6 @@ return {
         "<leader>p",
         function()
           require("snacks").picker.lazy()
-          -- require("snacks").picker.projects({
-          --   dev = { "~/dev", "~/projects", "~/work", "~/UnityProjects" },
-          -- })
-          --- "💤" lazy
-          --- "" unity
-          -- require("telescope").extensions.projects.projects({})
         end,
       },
       {
@@ -234,6 +321,42 @@ return {
           frecency = false,
         },
       },
+      projects = {
+        dev = {
+          "~/dev",
+          "~/projects",
+          "~/work",
+          "~/UnityProjects",
+          "~/Unity/Projects",
+          "~/source/repos",
+        },
+        patterns = {
+          ".git",
+          "_darcs",
+          ".hg",
+          ".bzr",
+          ".svn",
+          "package.json",
+          "Makefile",
+          "*.sln",
+        },
+      },
+      grep = {
+        hidden = true,
+      },
+      files = {
+        hidden = true,
+      },
+      lazy = {
+        confirm = function(picker, item)
+          if item.file then
+            local resolved = vim.fs.normalize(assert(vim.uv.fs_realpath(item.file)))
+            item.file = resolved
+            item._path = resolved
+          end
+          picker:action("jump")
+        end,
+      },
     },
     actions = {
       enter = function(picker, item)
@@ -260,14 +383,8 @@ return {
           ["p"] = { "toggle_preview", mode = { "n" } },
           ["J"] = { "history_forward", mode = { "n" } },
           ["K"] = { "history_back", mode = { "n" } },
-          ["gv"] = function(win)
-            vim.cmd.vsplit()
-            win:execute("edit")
-          end,
-          ["gs"] = function(win)
-            vim.cmd.split()
-            win:execute("edit")
-          end,
+          ["gv"] = { "vsplit", mode = { "n" } },
+          ["gs"] = { "split", mode = { "n" } },
         },
       },
     },

@@ -72,6 +72,20 @@ return {
   end,
   keys = {
     { "<leader>s", toggle, mode = { "n" } },
+    {
+      "]s",
+      function()
+        require("aerial").next()
+      end,
+      mode = { "n" },
+    },
+    {
+      "[s",
+      function()
+        require("aerial").prev()
+      end,
+      mode = { "n" },
+    },
   },
   cmd = "AerialToggle",
 }
