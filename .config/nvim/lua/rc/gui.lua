@@ -52,7 +52,7 @@ local function can_restart()
 
   vim.api.nvim_win_set_buf(0, modified_buf)
   if vim.fn.confirm("Unsaved changes exists. Restart anyway?", "&Yes\n&No", 2) == 1 then
-    vim.fn.quit({ bang = true })
+    vim.cmd.quit({ bang = true })
     return can_restart()
   end
 
