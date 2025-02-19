@@ -11,18 +11,21 @@ Provide two versions:
 
 --- Inspect the commit buffer to determine if it has a commit message and diff
 ---@param bufnr number
----@return { has_commit_message: boolean, has_commit_diff: boolean }
+---@return { has_commit_message: boolean, diff?: string }
 local function inspect_commit_buf(bufnr)
-  local info = { has_commit_message = false, has_commit_diff = false }
+  local info = { has_commit_message = false }
   local count = vim.api.nvim_buf_line_count(bufnr)
-  for i = 1, count do
-    local line = vim.api.nvim_buf_get_lines(bufnr, i - 1, i, false)[1]
+  for i = 0, count - 1 do
+    local line = vim.api.nvim_buf_get_lines(bufnr, i, i + 1, false)[1]
     if #line ~= 0 and not vim.startswith(line, "#") then
       info.has_commit_message = true
     end
     if vim.startswith(line, "# ------------------------ >8 ------------------------") then
-      info.has_commit_diff = true
-      return info
+      -- [i+1] is # do not modify or remove this line
+      -- [i+2] is # Everything below is ignored
+      -- [i+3] to end is the diff
+      info.diff = table.concat(vim.api.nvim_buf_get_lines(bufnr, i + 3, -1, false), "\n")
+      break
     end
   end
 
@@ -32,7 +35,7 @@ end
 local function write_commit_message()
   local bufnr = vim.api.nvim_get_current_buf()
   local buf = inspect_commit_buf(bufnr)
-  vim.print(buf)
+  vim.print({ has_commit_message = buf.has_commit_message, has_diff = buf.diff ~= nil })
   if buf.has_commit_message then
     vim.notify("Commit message already exists")
     return
@@ -41,30 +44,17 @@ local function write_commit_message()
   local config = require("codecompanion.config")
   local context_utils = require("codecompanion.utils.context")
   local context = context_utils.get(bufnr, {})
-  require("codecompanion.strategies.inline")
-    .new({
-      opts = { placement = "before|false" },
-      context = context,
-      -- prompts = config.prompt_library["Generate a Commit Message"].prompts,
-      prompts = {
-        {
-          role = config.constants.USER_ROLE,
-          content = function()
-            if buf.has_commit_diff then -- this is useful for commit --amend
-              local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
-              return COMMIT_MESSAGE_PROMPT .. "\n" .. table.concat(lines, "\n")
-            end
+  -- require("codecompanion.strategies.inline")
+  --   .new({
+  --     placement = "before",
+  --     context = context,
+  --     -- prompts = config.prompt_library["Generate a Commit Message"].prompts,
+  --   })
+  --   :prompt(COMMIT_MESSAGE_PROMPT .. "\n" .. get_diff(buf, bufnr))
 
-            local diff = vim.fn.system("git diff --no-ext-diff --staged")
-            return string.format("%s\n```diff\n%s\n```", COMMIT_MESSAGE_PROMPT, diff)
-          end,
-          opts = {
-            contains_code = true,
-          },
-        },
-      },
-    })
-    :start({})
+  require("codecompanion").inline({
+    args = COMMIT_MESSAGE_PROMPT .. "\n" .. buf.diff or vim.fn.system("git diff --no-ext-diff --staged"),
+  })
 end
 
 return {
