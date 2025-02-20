@@ -346,6 +346,15 @@ return {
       },
       files = {
         hidden = true,
+        pattern = function(picker)
+          local cwd = picker.opts.cwd or vim.uv.cwd()
+          local is_unity_project = vim.uv.fs_access(vim.fs.joinpath(cwd, "Assets"), "R")
+          if is_unity_project then
+            return "file:!meta$ "
+          end
+          return ""
+        end,
+        -- live = true,
       },
       lazy = {
         confirm = function(picker, item)
