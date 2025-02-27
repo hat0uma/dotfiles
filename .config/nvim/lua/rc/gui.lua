@@ -14,7 +14,7 @@ function M.on_startup()
   vim.cmd.source(SESSION_PATH)
 end
 
-local function get_first_modified_buf()
+local function get_first_unsaved_buf()
   local bufs = vim.api.nvim_list_bufs()
   for _, bufnr in ipairs(bufs) do
     if vim.api.nvim_get_option_value("modified", { buf = bufnr }) then
@@ -45,14 +45,21 @@ local function get_restart_cmd()
 end
 
 local function can_restart()
-  local modified_buf = get_first_modified_buf()
-  if not modified_buf then
+  local unsaved_buf = get_first_unsaved_buf()
+  if not unsaved_buf then
     return true
   end
 
-  vim.api.nvim_win_set_buf(0, modified_buf)
-  if vim.fn.confirm("Unsaved changes exists. Restart anyway?", "&Yes\n&No", 2) == 1 then
-    vim.cmd.quit({ bang = true })
+  vim.api.nvim_win_set_buf(0, unsaved_buf)
+  local choice = vim.fn.confirm("Save changes?", "&Yes\n&No")
+  if choice == 0 then
+    print("interrupted")
+  elseif choice == 1 then
+    -- yes
+    vim.cmd.write()
+    return can_restart()
+  elseif choice == 2 then
+    vim.cmd.bdelete({ bang = true })
     return can_restart()
   end
 
