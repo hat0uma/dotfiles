@@ -6,7 +6,7 @@ local function curcenter(ev)
     return -- floating window, do nothing
   end
 
-  if vim.o.buftype == "nofile" then
+  if vim.o.buftype == "nofile" or vim.o.buftype == "terminal" then
     return -- scratch buffer, do nothing
   end
 

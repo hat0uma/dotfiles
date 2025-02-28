@@ -2,18 +2,21 @@ return {
   "stevearc/overseer.nvim",
   config = function()
     require("overseer").setup({
-      strategy = "toggleterm",
-      use_shell = false,
-      direction = "float",
-      auto_scroll = nil,
-      close_on_exit = false,
-      open_on_start = true,
+      strategy = {
+        "toggleterm",
+        -- direction = "float",
+        direction = "horizontal",
+        auto_scroll = nil,
+        close_on_exit = false,
+        open_on_start = true,
+      },
     })
     require("plugins.overseer.tasks").setup()
   end,
   init = function()
     local opts = { silent = true, noremap = true }
     vim.keymap.set("n", "<leader>0", "<Cmd>OverseerToggle<CR>", opts)
+    vim.keymap.set("n", "<leader>A", "<Cmd>OverseerRun<CR>", opts)
     vim.api.nvim_create_autocmd("Filetype", {
       pattern = "OverseerList",
       callback = function()
