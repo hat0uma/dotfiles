@@ -104,6 +104,10 @@ local function config()
       lualine_x = {},
       lualine_y = {
         {
+          require("plugins.lualine.components.codecompanion"),
+          color = { fg = palette.fg, bg = palette.bg },
+        },
+        {
           "diagnostics",
           sources = { "nvim_diagnostic" },
           sections = { "error", "warn", "info", "hint" },
