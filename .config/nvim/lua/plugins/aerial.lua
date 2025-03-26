@@ -6,11 +6,12 @@ local function get_winids()
 end
 
 local function toggle()
-  if #get_winids() == 1 then
-    require("aerial").toggle({ direction = "left" })
-  else
-    require("aerial").toggle({ direction = "float" })
-  end
+  require("aerial").toggle({ direction = "float" })
+  -- if #get_winids() == 1 then
+  --   require("aerial").toggle({ direction = "left" })
+  -- else
+  --   require("aerial").toggle({ direction = "float" })
+  -- end
 end
 
 return {

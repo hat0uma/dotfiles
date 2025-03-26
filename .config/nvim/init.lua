@@ -125,7 +125,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 -------------------------------------------------------------------------
 -- files
 vim.o.fileformats = "unix,dos,mac"
-vim.o.fileencodings = "utf-8,sjis,iso-2022-jp,euc-jp"
+vim.o.fileencodings = "utf-8,cp932,sjis,iso-2022-jp,euc-jp"
 vim.g.scriptencoding = "utf-8"
 vim.o.expandtab = true
 vim.o.tabstop = 4

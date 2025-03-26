@@ -29,6 +29,7 @@ return {
     config = function()
       local neogit = require("neogit")
       neogit.setup({
+        disable_signs = true,
         disable_commit_confirmation = true,
         integrations = {
           telescope = false, -- If turned on, neogit uses Telescope with the `ivy` theme, which I don't like.
