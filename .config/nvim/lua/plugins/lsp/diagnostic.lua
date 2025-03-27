@@ -20,7 +20,7 @@ return {
       },
       severity_sort = true,
       jump = {
-        float = false,
+        float = true,
       },
     })
   end,
@@ -28,9 +28,17 @@ return {
   vim.api.nvim_create_user_command("DiagnosticShowMode", function(opts)
     local mode = opts.fargs[1] --- @type any
     if mode == "virtual_lines" then
-      vim.diagnostic.config({ virtual_lines = true, virtual_text = false })
+      vim.diagnostic.config({
+        virtual_lines = true,
+        virtual_text = false,
+        jump = { float = false },
+      })
     elseif mode == "virtual_text" then
-      vim.diagnostic.config({ virtual_lines = false, virtual_text = true })
+      vim.diagnostic.config({
+        virtual_lines = false,
+        virtual_text = true,
+        jump = { float = true },
+      })
     else
       vim.notify("unknown argument " .. mode, vim.log.levels.ERROR)
     end
