@@ -1,8 +1,3 @@
-local M = {}
-
----@type integer?
-M._temp_buf = nil
-
 local queries = {
   c = {
     definition = [[
@@ -18,11 +13,11 @@ local queries = {
   },
 }
 
---- Lookup function definition from specified buffer
+--- Extract function definition from specified buffer
 ---@param bufnr integer
 ---@param identifier string
 ---@return string?
-local function lookup_function_definition_from_buf(bufnr, identifier)
+local function extract_function_definition_from_buf(bufnr, identifier)
   local parser = assert(vim.treesitter.get_parser(bufnr))
   local lang = parser:lang()
   local tree = parser:parse()[1]
@@ -46,7 +41,7 @@ end
 ---@param rev string
 ---@param path string
 ---@param on_end fun(content?: string, err?: string)
-local function show_rev_file(dir, rev, path, on_end)
+local function show_file_at_rev(dir, rev, path, on_end)
   local cmd = {
     "git",
     "--no-pager",
@@ -64,17 +59,22 @@ local function show_rev_file(dir, rev, path, on_end)
   end)
 end
 
+local M = {}
+
+---@type integer?
+M._temp_buf = nil
+
 ---
 ---@param dir string
 ---@param path string
 ---@param identifier string
 ---@param rev string
 ---@param on_end fun( definition: string|nil )
-local function lookup_function_definition(dir, path, identifier, rev, on_end)
+local function extract_function_definition_at_rev(dir, path, identifier, rev, on_end)
   local bufnr = M._temp_buf or vim.api.nvim_create_buf(false, true)
   M._temp_buf = bufnr
 
-  show_rev_file(
+  show_file_at_rev(
     dir,
     rev,
     path,
@@ -98,7 +98,7 @@ local function lookup_function_definition(dir, path, identifier, rev, on_end)
       end
 
       vim.bo[bufnr].filetype = ft
-      local def = lookup_function_definition_from_buf(bufnr, identifier)
+      local def = extract_function_definition_from_buf(bufnr, identifier)
       on_end(def)
     end)
   )
@@ -117,10 +117,10 @@ local function get_function_diff(dir, path, identifier, rev1, rev2, diff_opts)
   M._temp_buf = bufnr
 
   local rev1_def, rev2_def ---@type string?, string?
-  lookup_function_definition(dir, path, identifier, rev1, function(def)
+  extract_function_definition_at_rev(dir, path, identifier, rev1, function(def)
     rev1_def = (def or "") .. "\n"
   end)
-  lookup_function_definition(dir, path, identifier, rev2, function(def)
+  extract_function_definition_at_rev(dir, path, identifier, rev2, function(def)
     rev2_def = (def or "") .. "\n"
   end)
 
@@ -179,7 +179,7 @@ function M.list_commits(dir)
     "git",
     "--no-pager",
     "log",
-    "--pretty=format:%h,%ad,%s",
+    "--pretty=format:%h%n%ad%n%s",
     "--date=format:%Y/%m/%d %H:%M:%S",
     "--name-only",
   }
@@ -189,12 +189,16 @@ function M.list_commits(dir)
   end
 
   local commits = {} ---@type rc.toys.Track.Commit[]
-  --- <hash>,<date>,<subject>
+  --- <hash>
+  --- <date>
+  --- <subject>
   --- file1
   --- file2
   --- ...
   ---
-  --- <hash>,<date>,<subject>
+  --- <hash>
+  --- <date>
+  --- <subject>
   --- file1
   --- file2
   --- ...
@@ -206,21 +210,13 @@ function M.list_commits(dir)
       break
     end
 
-    local start_pos = 1
-    local function text_until_next(delimiter)
-      local match = head:find(delimiter, start_pos)
-      local text = head:sub(start_pos, match - 1)
-      start_pos = match + 1
-      return text
-    end
-
     table.insert(commits, {
-      hash = text_until_next(","),
-      date = text_until_next(","),
-      subject = head:sub(start_pos, #head),
+      hash = l[1],
+      date = l[2],
+      subject = l[3],
       files = vim
         .iter(l)
-        :skip(1)
+        :skip(3)
         :map(function(item)
           return vim.fs.normalize(item)
         end)
