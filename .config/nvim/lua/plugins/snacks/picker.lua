@@ -138,6 +138,10 @@ end
 
 return {
   init = function()
+    vim.keymap.set("ca", "pick", function()
+      return "lua Snacks.picker({})<Left><Left><Left><Left>"
+    end, { expr = true })
+
     local nmaps = {
       {
         "<leader>o",
@@ -173,6 +177,11 @@ return {
             },
           })
         end,
+      },
+      {
+
+        "<leader>n",
+        "<Cmd>Noice snacks<CR>",
       },
       {
         "<leader>P",
@@ -364,6 +373,42 @@ return {
             item._path = resolved
           end
           picker:action("jump")
+        end,
+      },
+      noice = {
+        confirm = function(picker, item)
+          if not item then
+            return
+          end
+
+          picker:action("close")
+          local buf = vim.api.nvim_create_buf(false, true)
+          vim.api.nvim_buf_set_keymap(buf, "n", "q", ":q<CR>", { silent = true })
+
+          local Config = require("noice.config")
+          local Format = require("noice.text.format")
+          local message = Format.format(item.message, "snacks_preview")
+          message:render(buf, Config.ns)
+
+          local lines = vim.opt.lines:get()
+          local cols = vim.opt.columns:get()
+          local width = math.ceil(cols * 0.8)
+          local height = math.ceil(lines * 0.8 - 4)
+          local left = math.ceil((cols - width) * 0.5)
+          local top = math.ceil((lines - height) * 0.5)
+
+          local win = vim.api.nvim_open_win(buf, true, {
+            relative = "editor",
+            style = "minimal",
+            width = width,
+            height = height,
+            col = left,
+            row = top,
+            border = "rounded",
+          })
+
+          vim.api.nvim_set_option_value("wrap", true, { win = win, scope = "local" })
+          vim.api.nvim_set_option_value("modifiable", false, { buf = buf, scope = "local" })
         end,
       },
     },

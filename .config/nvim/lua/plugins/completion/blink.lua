@@ -4,7 +4,7 @@ end
 
 local spec = {
   "saghen/blink.cmp",
-  version = "*",
+  version = "1.*",
   config = function()
     -- winhighlight = "Normal:Normal,FloatBorder:Grey,CursorLine:PmenuSel,Search:None",
     -- vim.api.nvim_set_hl(0, "BlinkCmpMenu", { link = "Normal" })
@@ -68,17 +68,24 @@ local spec = {
       },
 
       completion = {
-        list = { selection = {
-          preselect = false,
-          auto_insert = true,
-        } },
-        menu = { border = "rounded" },
-        documentation = { window = { border = "rounded" } },
+        list = { selection = { preselect = false, auto_insert = true } },
+
+        trigger = { show_on_blocked_trigger_characters = {} },
+
+        menu = { border = "rounded", auto_show = true },
+        documentation = { window = { border = "rounded" }, auto_show = true },
         accept = { auto_brackets = { enabled = false } },
       },
 
-      snippets = { preset = "luasnip" },
+      cmdline = {
+        completion = {
+          list = { selection = { preselect = false, auto_insert = true } },
+          menu = { auto_show = true },
+          ghost_text = { enabled = false },
+        },
+      },
 
+      snippets = { preset = "luasnip" },
       appearance = {
         use_nvim_cmp_as_default = true,
         nerd_font_variant = "mono",
@@ -89,10 +96,20 @@ local spec = {
         per_filetype = {
           codecompanion = { "codecompanion" },
         },
+        providers = {
+          lsp = {
+            override = {
+              get_trigger_characters = function(self)
+                local trigger_characters = self:get_trigger_characters()
+                vim.list_extend(trigger_characters, { "\n", "\t", " " })
+                return trigger_characters
+              end,
+            },
+          },
+        },
       },
     })
   end,
-
 }
 
 return {
