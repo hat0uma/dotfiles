@@ -1,11 +1,4 @@
 return {
-  "CopilotC-Nvim/CopilotChat.nvim",
-  branch = "main",
-  dependencies = {
-    { "zbirenbaum/copilot.lua" },
-    { "nvim-lua/plenary.nvim" },
-    { "nvim-telescope/telescope.nvim" },
-  },
   config = function()
     local config = require("CopilotChat.config")
     local additional_prompts = {

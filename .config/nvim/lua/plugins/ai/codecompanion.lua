@@ -300,55 +300,14 @@ return {
     })
 
     -- Write commit message for git commit
-    local group = vim.api.nvim_create_augroup("rc.auto_commit_message", {})
-    vim.api.nvim_create_autocmd("FileType", {
-      pattern = "gitcommit",
-      callback = function()
-        write_commit_message()
-        vim.api.nvim_buf_create_user_command(0, "CodeCompanionCommit", write_commit_message, {})
-      end,
-      group = group,
-    })
+    -- local group = vim.api.nvim_create_augroup("rc.auto_commit_message", {})
+    -- vim.api.nvim_create_autocmd("FileType", {
+    --   pattern = "gitcommit",
+    --   callback = function()
+    --     write_commit_message()
+    --     vim.api.nvim_buf_create_user_command(0, "CodeCompanionCommit", write_commit_message, {})
+    --   end,
+    --   group = group,
+    -- })
   end,
-  dependencies = {
-    "nvim-lua/plenary.nvim",
-    "nvim-treesitter/nvim-treesitter",
-    {
-      "echasnovski/mini.diff",
-      config = function()
-        -- require("mini.diff").setup({
-        --   -- source = {},
-        -- })
-      end,
-    },
-  },
-  cmd = {
-    "CodeCompanion",
-    "CodeCompanionActions",
-    "CodeCompanionChat",
-    "CodeCompanionCmd",
-  },
-  ft = { "gitcommit" },
-  keys = {
-    {
-      "<leader>ca",
-      "<cmd>CodeCompanionActions<CR>",
-      mode = { "n", "v" },
-    },
-    {
-      "<leader>cc",
-      "<cmd>CodeCompanionChat<CR>",
-      mode = { "n", "v" },
-    },
-    {
-      "<leader>ce",
-      ":CodeCompanion",
-      mode = { "n", "v" },
-    },
-    {
-      "<leader>ct",
-      "<cmd>CodeCompanionCmd<CR>",
-      mode = { "n", "v" },
-    },
-  },
 }

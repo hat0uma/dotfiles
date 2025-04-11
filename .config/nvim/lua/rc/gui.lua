@@ -51,6 +51,7 @@ local function can_restart()
   end
 
   vim.api.nvim_win_set_buf(0, unsaved_buf)
+  vim.wait(1)
   local choice = vim.fn.confirm("Save changes?", "&Yes\n&No")
   if choice == 0 then
     print("interrupted")
