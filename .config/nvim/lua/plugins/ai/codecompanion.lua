@@ -1,5 +1,6 @@
-local COMMIT_MESSAGE_PROMPT = [[
-Write a commit message following the conventional-commit format:
+local COMMIT_MESSAGE_PROMPT_FORMAT = [[
+You are a expert software engineer.
+Please generate a commit message following the conventional-commit format:
 
 - The title is at most 50 characters.
 - The message body is wrapped at 72 characters per line.
@@ -7,6 +8,13 @@ Write a commit message following the conventional-commit format:
 Provide two versions:
 1. English.
 2. <type> and <scope> are in English and other parts are in Japanese.
+
+
+Changes to be committed:
+
+```diff
+%s
+```
 ]]
 
 --- Inspect the commit buffer to determine if it has a commit message and diff
@@ -53,31 +61,45 @@ local function write_commit_message()
   --   :prompt(COMMIT_MESSAGE_PROMPT .. "\n" .. get_diff(buf, bufnr))
 
   require("codecompanion").inline({
-    args = COMMIT_MESSAGE_PROMPT .. "\n" .. buf.diff or vim.fn.system("git diff --no-ext-diff --staged"),
+    args = string.format(COMMIT_MESSAGE_PROMPT_FORMAT, buf.diff or vim.fn.system("git diff --no-ext-diff --staged")),
   })
 end
+
+-- local adapter = "copilot"
+-- local adapter = "deepseek"
+local adapter = "gemini"
 
 return {
   "olimorris/codecompanion.nvim",
   config = function()
     require("codecompanion").setup({
+      opts = { language = "Japanese" },
+      prompt_library = {
+        ["Generate a Commit Message"] = {
+          prompts = {
+            {
+              role = "user",
+              content = function()
+                local diff = vim.fn.system("git diff --no-ext-diff --staged -U50")
+                return string.format(COMMIT_MESSAGE_PROMPT_FORMAT, diff)
+              end,
+              opts = { contains_code = true },
+            },
+          },
+        },
+      },
       strategies = {
         inline = {
-          -- adapter = "deepseek",
-          adapter = "copilot",
+          adapter = adapter,
           keymaps = {
             accept_change = {
-              modes = {
-                n = "ga",
-              },
+              modes = { n = "ga" },
               index = 1,
               callback = "keymaps.accept_change",
               description = "Accept change",
             },
             reject_change = {
-              modes = {
-                n = "gr",
-              },
+              modes = { n = "gr" },
               index = 2,
               callback = "keymaps.reject_change",
               description = "Reject change",
@@ -85,187 +107,29 @@ return {
           },
         },
         chat = {
-          -- adapter = "deepseek",
-          adapter = "copilot",
-          slash_commands = {
-            ["buffer"] = {
-              opts = {
-                provider = "default", ---@type "default"|"telescope"|"mini_pick"|"fzf_lua"
-              },
-            },
-            ["file"] = {
-              opts = {
-                provider = "default", ---@type "default"|"telescope"|"mini_pick"|"fzf_lua"
-              },
-            },
-          },
+          adapter = adapter,
           keymaps = {
-            options = {
-              modes = {
-                n = "?",
-              },
-              callback = "keymaps.options",
-              description = "Options",
-              hide = true,
-            },
-            completion = {
-              modes = {
-                i = "<C-_>",
-              },
-              index = 1,
-              callback = "keymaps.completion",
-              description = "Completion Menu",
-            },
-            send = {
-              modes = {
-                n = { "<CR>", "<C-s>" },
-                i = "<C-s>",
-              },
-              index = 2,
-              callback = "keymaps.send",
-              description = "Send",
-            },
-            regenerate = {
-              modes = {
-                n = "gr",
-              },
-              index = 3,
-              callback = "keymaps.regenerate",
-              description = "Regenerate the last response",
-            },
             close = {
-              modes = {
-                n = "q",
-              },
+              modes = { n = "q" },
               index = 4,
               callback = "keymaps.close",
               description = "Close Chat",
             },
-            stop = {
-              modes = {
-                n = "<C-c>",
+          },
+          slash_commands = {
+            ["buffer"] = {
+              opts = {
+                provider = "snacks", ---@type "default"|"telescope"|"mini_pick"|"fzf_lua"|"snacks"
               },
-              index = 5,
-              callback = "keymaps.stop",
-              description = "Stop Request",
             },
-            clear = {
-              modes = {
-                n = "gx",
+            ["file"] = {
+              opts = {
+                provider = "snacks", ---@type "default"|"telescope"|"mini_pick"|"fzf_lua"|"snacks"
               },
-              index = 6,
-              callback = "keymaps.clear",
-              description = "Clear Chat",
-            },
-            codeblock = {
-              modes = {
-                n = "gc",
-              },
-              index = 7,
-              callback = "keymaps.codeblock",
-              description = "Insert Codeblock",
-            },
-            yank_code = {
-              modes = {
-                n = "gy",
-              },
-              index = 8,
-              callback = "keymaps.yank_code",
-              description = "Yank Code",
-            },
-            pin = {
-              modes = {
-                n = "gp",
-              },
-              index = 9,
-              callback = "keymaps.pin_reference",
-              description = "Pin Reference",
-            },
-            watch = {
-              modes = {
-                n = "gw",
-              },
-              index = 10,
-              callback = "keymaps.toggle_watch",
-              description = "Watch Buffer",
-            },
-            next_chat = {
-              modes = {
-                n = "}",
-              },
-              index = 11,
-              callback = "keymaps.next_chat",
-              description = "Next Chat",
-            },
-            previous_chat = {
-              modes = {
-                n = "{",
-              },
-              index = 12,
-              callback = "keymaps.previous_chat",
-              description = "Previous Chat",
-            },
-            next_header = {
-              modes = {
-                n = "]]",
-              },
-              index = 13,
-              callback = "keymaps.next_header",
-              description = "Next Header",
-            },
-            previous_header = {
-              modes = {
-                n = "[[",
-              },
-              index = 14,
-              callback = "keymaps.previous_header",
-              description = "Previous Header",
-            },
-            change_adapter = {
-              modes = {
-                n = "ga",
-              },
-              index = 15,
-              callback = "keymaps.change_adapter",
-              description = "Change adapter",
-            },
-            fold_code = {
-              modes = {
-                n = "gf",
-              },
-              index = 15,
-              callback = "keymaps.fold_code",
-              description = "Fold code",
-            },
-            debug = {
-              modes = {
-                n = "gd",
-              },
-              index = 16,
-              callback = "keymaps.debug",
-              description = "View debug info",
-            },
-            system_prompt = {
-              modes = {
-                n = "gs",
-              },
-              index = 17,
-              callback = "keymaps.toggle_system_prompt",
-              description = "Toggle the system prompt",
             },
           },
-          opts = {
-            register = "+", -- The register to use for yanking code
-            yank_jump_delay_ms = 400, -- Delay in milliseconds before jumping back from the yanked code
-          },
+          opts = { register = "+", yank_jump_delay_ms = 400 },
         },
-      },
-      adapters = {
-        deepseek = function()
-          return require("codecompanion.adapters").extend("deepseek", {
-            env = { api_key = "cmd:op read op://Personal/deepseek/credential --no-newline" },
-          })
-        end,
       },
       display = {
         diff = {
@@ -296,6 +160,21 @@ return {
             },
           },
         },
+      },
+      adapters = {
+        deepseek = function()
+          return require("codecompanion.adapters").extend("deepseek", {
+            env = { api_key = "cmd:op read op://Personal/deepseek/credential --no-newline" },
+          })
+        end,
+        gemini = function()
+          return require("codecompanion.adapters").extend("gemini", {
+            env = {
+              api_key = "GEMINI_API_KEY",
+              model = "gemini-2.5-pro-experimental-03-25",
+            },
+          })
+        end,
       },
     })
 
