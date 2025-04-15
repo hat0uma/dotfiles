@@ -67,6 +67,7 @@ end
 
 -- local adapter = "copilot"
 -- local adapter = "deepseek"
+-- local adapter = "gemma3"
 local adapter = "gemini"
 
 return {
@@ -173,6 +174,11 @@ return {
               api_key = "GEMINI_API_KEY",
               model = "gemini-2.5-pro-experimental-03-25",
             },
+          })
+        end,
+        gemma3 = function()
+          return require("codecompanion.adapters").extend("ollama", {
+            model = "gemma3:12b",
           })
         end,
       },
