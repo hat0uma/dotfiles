@@ -54,6 +54,7 @@ end
 function M.save_handle()
   local bufnr = vim.api.nvim_get_current_buf()
   if not vim.g.format_on_save_enabled then
+    vim.cmd.write()
     return
   end
   if vim.g.format_on_save_mode == "Buffer" then

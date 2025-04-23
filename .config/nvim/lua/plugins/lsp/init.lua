@@ -96,7 +96,6 @@ return {
             vim.lsp.codelens.refresh({ bufnr = bufnr })
           end
 
-          require("plugins.lsp.format").on_attach(client, bufnr)
           require("plugins.lsp.keymap").on_attach(client, bufnr)
         end,
       })

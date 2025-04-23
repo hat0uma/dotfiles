@@ -60,8 +60,8 @@ local spec = {
               luasnip.expand_or_jump()
             elseif neogen.jumpable() then
               vim.fn.feedkeys(t("<cmd>lua require('neogen').jump_next()<CR>"), "")
-            elseif has_words_before() then
-              cmp.complete()
+            -- elseif has_words_before() then
+            --   cmp.complete()
             else
               fallback()
             end

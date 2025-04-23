@@ -35,7 +35,26 @@ M.configurations = {
   },
   vimls = {},
   dockerls = {},
-  pyright = {},
+  pyright = {
+    on_init = function(client) ---@param client vim.lsp.Client
+      local venv = vim.fs.joinpath(client.config.root_dir, ".venv")
+      if vim.uv.fs_access(venv, "R") then
+        client.config.settings.venv = venv
+        client.config.settings.python.pythonPath =
+          vim.fs.joinpath(venv, rc.sys.is_windows and "Scripts/python.exe" or "bin/python")
+      end
+    end,
+    root_markers = {
+      ".venv",
+      "pyproject.toml",
+      "setup.py",
+      "setup.cfg",
+      "requirements.txt",
+      "Pipfile",
+      "pyrightconfig.json",
+      ".git",
+    },
+  },
   rust_analyzer = {},
   clangd = {
     cmd = { "clangd", "--background-index", "--clang-tidy" },
@@ -62,7 +81,21 @@ M.configurations = {
       },
     },
   },
-  ruff = {},
+  ruff = {
+    root_markers = {
+      "pyproject.toml",
+      "ruff.toml",
+      ".git",
+      ".venv",
+    },
+    on_init = function(client) ---@param client vim.lsp.Client
+      client.config.settings.interpreter = {
+        rc.sys.is_windows
+          and vim.fs.joinpath(client.config.root_dir, ".venv/Scripts/python.exe")
+          and vim.fs.joinpath(client.config.root_dir, ".venv/bin/python"),
+      }
+    end,
+  },
   gopls = {
     -- cmd = { vim.fn.expand "~/go/bin/gopls" },
     settings = {
@@ -153,7 +186,7 @@ function M.install()
     "powershell-editor-services",
     "prettierd",
     "pyright",
-    "ruff-lsp",
+    "ruff",
     "mypy",
     "shellcheck",
     "shfmt",

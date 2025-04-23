@@ -75,6 +75,7 @@ return {
           ".svn",
         },
         detection_methods = { "pattern", "lsp" },
+        ignore_lsp = { "null-ls" },
       })
     end,
     event = "BufReadPost",

@@ -305,6 +305,21 @@ return {
   ---@type snacks.picker.Config?|{}
   opts = {
     layout = {
+      layout = {
+        box = "vertical",
+        width = 0.9,
+        min_width = 120,
+        height = 0.9,
+        {
+          box = "vertical",
+          border = "rounded",
+          title = "{title} {live} {flags}",
+          { win = "input", height = 1, border = "bottom" },
+          { win = "list", border = "none" },
+        },
+        { win = "preview", title = "{preview}", border = "rounded" },
+      },
+
       -- preview = "main",
     },
     ui_select = true,
