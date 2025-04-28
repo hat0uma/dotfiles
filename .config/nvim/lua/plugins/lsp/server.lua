@@ -1,4 +1,6 @@
 local M = {}
+
+---@type table<string,vim.lsp.Config>
 M.configurations = {
   jdtls = {},
   lua_ls = {
@@ -65,7 +67,9 @@ M.configurations = {
   powershell_es = {},
   denols = {
     -- single_file_support = true,
-    root_dir = require("lspconfig").util.root_pattern("deno.json"),
+    root_markers = {
+      "deno.json",
+    },
     init_options = {
       enable = true,
       lint = true,
