@@ -309,7 +309,7 @@ return {
         box = "vertical",
         width = 0.9,
         min_width = 120,
-        height = 0.9,
+        height = 0.95,
         {
           box = "vertical",
           border = "rounded",
@@ -321,7 +321,7 @@ return {
           win = "preview",
           title = "{preview}",
           border = "rounded",
-          height = 0.75,
+          height = 0.8,
         },
       },
 
