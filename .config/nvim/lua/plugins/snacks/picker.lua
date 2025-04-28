@@ -317,7 +317,12 @@ return {
           { win = "input", height = 1, border = "bottom" },
           { win = "list", border = "none" },
         },
-        { win = "preview", title = "{preview}", border = "rounded" },
+        {
+          win = "preview",
+          title = "{preview}",
+          border = "rounded",
+          height = 0.75,
+        },
       },
 
       -- preview = "main",
