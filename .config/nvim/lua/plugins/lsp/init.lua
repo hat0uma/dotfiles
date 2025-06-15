@@ -11,12 +11,6 @@ return {
     cmd = { "Mason", "MasonInstall" },
   },
   {
-    "williamboman/mason-lspconfig.nvim",
-    config = function()
-      require("mason-lspconfig").setup()
-    end,
-  },
-  {
     "folke/lazydev.nvim",
     ft = "lua", -- only load on lua files
     opts = {
@@ -64,7 +58,6 @@ return {
     "neovim/nvim-lspconfig",
     event = "BufReadPre",
     config = function()
-      require("mason-lspconfig")
       require("plugins.lsp.handlers").setup()
 
       --- create capabilities
@@ -111,7 +104,8 @@ return {
             diagnostic_hdlr = false,
           })
         else
-          require("lspconfig")[name].setup(opts)
+          vim.lsp.config(name, opts)
+          vim.lsp.enable(name)
         end
       end
 
@@ -135,7 +129,7 @@ return {
     dependencies = {
       "none-ls.nvim",
       "SmiteshP/nvim-navic",
-      "mason-lspconfig.nvim",
+      "mason.nvim",
       "neoconf.nvim",
       "clangd_extensions.nvim",
       "go.nvim",
