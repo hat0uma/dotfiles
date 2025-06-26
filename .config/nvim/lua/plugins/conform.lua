@@ -84,7 +84,7 @@ local formatter_for_ts = function(bufnr)
   if #deno > 0 then
     return {} -- deno lsp has its own formatter
   else
-    return { { "prettierd", "prettier" } }
+    return { "prettierd", "prettier", stop_after_first = true }
   end
 end
 

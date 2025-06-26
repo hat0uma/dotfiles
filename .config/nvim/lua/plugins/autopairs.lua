@@ -29,7 +29,17 @@ function M.config()
   -- cmp.event:on( 'confirm_done', cmp_autopairs.on_confirm_done({  map_char = { tex = '' } }))
 
   -- operator with filetypes
-  local operators = { ">", "<", "+", "-", "=", "*", "/", "~", "!" }
+  local operators = {
+    ">",
+    "<",
+    "+",
+    "-",
+    "=",
+    -- "*",
+    -- "/",
+    "~",
+    "!",
+  }
   local escaped_brackets = { "%(", "%)", "%{", "%}", "%[", "%]" }
   local not_string_or_comment = ts_conds.is_not_ts_node({
     "string",

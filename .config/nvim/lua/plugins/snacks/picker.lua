@@ -1,3 +1,41 @@
+---@type ffi.namespace*
+local shlwapi
+
+--- check path is network path
+---@param path string
+---@return boolean
+local function is_network_path(path)
+  if not rc.sys.is_windows then
+    return false
+  end
+
+  if not shlwapi then
+    local ffi = require("ffi")
+    ffi.cdef([[
+      typedef int BOOL;
+      typedef uint16_t wchar_t;
+      typedef const wchar_t *LPCWSTR;
+      BOOL PathIsNetworkPathW(LPCWSTR pszPath);
+    ]])
+    shlwapi = ffi.load("Shlwapi.dll")
+  end
+
+  local str_utf16 = vim.iconv(path .. "\0", "UTF-8", "UTF-16LE", {})
+  local p = require("ffi").cast("LPCWSTR", str_utf16)
+  return shlwapi.PathIsNetworkPathW(p) ~= 0
+end
+
+--- Resolve symlink and normalize
+---@param path string
+---@return string?
+local function resolve(path)
+  if rc.sys.is_windows and is_network_path(path) then
+    return vim.fs.normalize(path)
+  else
+    return vim.uv.fs_realpath(path)
+  end
+end
+
 ---@param current_bufnr number
 ---@return snacks.picker.Item[]
 local function oldfiles(current_bufnr)
@@ -19,7 +57,7 @@ local function oldfiles(current_bufnr)
     local bufname = vim.api.nvim_buf_get_name(bufnr)
     local buf_stats = vim.api.nvim__buf_stats(bufnr)
     local open_by_lsp = buf_stats.current_lnum == 0
-    local file = vim.uv.fs_realpath(bufname)
+    local file = resolve(bufname)
 
     if not open_by_lsp and file and bufnr ~= current_bufnr then
       table.insert(results, {
@@ -33,7 +71,7 @@ local function oldfiles(current_bufnr)
 
   -- get all oldfiles
   for _, file in ipairs(vim.v.oldfiles) do
-    local path = vim.uv.fs_realpath(file)
+    local path = resolve(file)
     if path and not in_results(path) and path ~= current_file then
       table.insert(results, {
         file = path,

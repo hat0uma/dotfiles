@@ -244,8 +244,8 @@ function M.setup()
   -- add_action(fmt("Explorer Here"), "all", nil, open_folder)
   add_system_action(fmt("Explorer Here"), "all", nil, rc.sys.get_open_command("."))
   add_action(fmt("Terminal Here"), "all", nil, open_terminal)
-  add_action(fmt("Picker", "Grep Here"), "all", nil, grep)
-  add_action(fmt("Picker", "Find Files Here"), "all", nil, find_files)
+  add_action(fmt("Grep Here"), "all", nil, grep)
+  add_action(fmt("Find Files Here"), "all", nil, find_files)
   add_action(fmt("System", "Archive"), "all", nil, archive_folder)
 
   -------------------------------------

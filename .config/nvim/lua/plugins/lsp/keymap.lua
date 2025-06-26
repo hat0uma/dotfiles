@@ -24,7 +24,7 @@ function M.on_attach(client, bufnr)
     if vim.tbl_contains(client_names, "omnisharp") then
       require("omnisharp_extended").lsp_definitions()
     else
-      vim.lsp.buf.definition()
+      vim.lsp.buf.definition({ reuse_win = true })
     end
     -- elseif vim.tbl_contains(client_names, "typescript-tools") then
     --   require("typescript-tools.api").go_to_source_definition(false)
