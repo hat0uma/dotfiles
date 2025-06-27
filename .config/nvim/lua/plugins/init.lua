@@ -19,6 +19,10 @@ return {
     end,
   },
   {
+    "nvim-lua/plenary.nvim",
+    cmd = { "PlenaryBustedDirectory", "PlenaryBustedFile" },
+  },
+  {
     "Wansmer/treesj",
     config = function()
       require("treesj").setup({
