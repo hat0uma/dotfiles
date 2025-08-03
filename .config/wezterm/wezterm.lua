@@ -59,6 +59,38 @@ wezterm.on("trigger-neovim-with-scrollback", function(window, pane)
   os.remove(name)
 end)
 
+wezterm.on("trigger-neovim-with-ansi-scrollback", function(window, pane)
+  -- Retrieve the current pane's text
+  local text = pane:get_lines_as_escapes(pane:get_dimensions().scrollback_rows)
+
+  -- Create a temporary file to pass to the pager
+  local name = os.tmpname()
+  local f = assert(io.open(name, "w+"))
+  f:write(text)
+  f:flush()
+  f:close()
+
+  -- Open a new window running less and tell it to open the file
+  window:perform_action(
+    act.SpawnCommandInNewTab({
+      -- args = { "nvim", "-c", "e ++ff=unix", name },
+      -- args = { "nvim", "-c", "set ff=unix", name },
+      args = { "nvim", name },
+      domain = { DomainName = "local" },
+    }),
+    pane
+  )
+
+  -- Wait "enough" time for less to read the file before we remove it.
+  -- The window creation and process spawn are asynchronous wrt. running
+  -- this script and are not awaitable, so we just pick a number.
+  --
+  -- Note: We don't strictly need to remove this file, but it is nice
+  -- to avoid cluttering up the temporary directory.
+  wezterm.sleep_ms(1000)
+  os.remove(name)
+end)
+
 return {
   launch_menu = launch_menu,
   audible_bell = "Disabled",
@@ -111,6 +143,11 @@ return {
       key = "e",
       mods = "LEADER",
       action = act.EmitEvent("trigger-neovim-with-scrollback"),
+    },
+    {
+      key = "E",
+      mods = "LEADER",
+      action = act.EmitEvent("trigger-neovim-with-ansi-scrollback"),
     },
   },
 }
