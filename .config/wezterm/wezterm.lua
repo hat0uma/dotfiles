@@ -75,7 +75,7 @@ wezterm.on("trigger-neovim-with-ansi-scrollback", function(window, pane)
     act.SpawnCommandInNewTab({
       -- args = { "nvim", "-c", "e ++ff=unix", name },
       -- args = { "nvim", "-c", "set ff=unix", name },
-      args = { "nvim", name },
+      args = { "nvim", "-c", "DeansiEnable", name },
       domain = { DomainName = "local" },
     }),
     pane

@@ -19,6 +19,11 @@ return {
     end,
   },
   {
+    "hat0uma/deansi.nvim",
+    opts = {},
+    cmd = { "DeansiEnable", "DeansiDisable", "DeansiToggle" },
+  },
+  {
     "nvim-lua/plenary.nvim",
     cmd = { "PlenaryBustedDirectory", "PlenaryBustedFile" },
   },
