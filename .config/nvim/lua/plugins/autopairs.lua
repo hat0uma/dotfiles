@@ -74,13 +74,23 @@ function M.config()
       ---@param opts CondOpts
       ---@return string
       :replace_endpair(function(opts)
+        -- C arrow operator
+        if operator == ">" and (vim.bo[opts.bufnr].filetype == "c" or vim.bo[opts.bufnr].filetype == "cpp") then
+          local current = opts.line:sub(1, opts.col)
+          local ws1, ws2 = current:match("[%w_" .. table.concat(escaped_brackets) .. "](%s*)%-(%s*)$")
+          if ws1 and ws2 then
+            vim.print(string.format("ws1: [%s], ws2: [%s]", ws1, ws2))
+            return string.rep("<bs>", #ws1) .. string.rep("<bs>", #ws2) .. "<bs><bs>->"
+          end
+        end
+
         local prev_2char = opts.line:sub(opts.col - 2, opts.col - 1)
         -- single operator
-        if string.match(prev_2char, "[%w_" .. table.concat(escaped_brackets) .. "]$") then
+        if prev_2char:match("[%w_" .. table.concat(escaped_brackets) .. "]$") then
           return ("<bs> %s "):format(operator)
         end
         -- double operator
-        if string.match(prev_2char, ("[%s] "):format(table.concat(operators))) then
+        if prev_2char:match(("[%s] "):format(table.concat(operators))) then
           return ("<bs><bs>%s "):format(operator)
         end
         return " "
