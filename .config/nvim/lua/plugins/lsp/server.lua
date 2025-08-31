@@ -109,6 +109,17 @@ M.configurations = {
       },
     },
   },
+  roslyn_ls = {
+    offset_encoding = "utf-16",
+    cmd = {
+      "Microsoft.CodeAnalysis.LanguageServer",
+      "--stdio",
+      "--logLevel",
+      "Information",
+      "--extensionLogDirectory",
+      vim.fn.stdpath("cache"),
+    },
+  },
   marksman = {},
   eslint = {
     -- on_new_config = function(config, new_root_dir)
@@ -138,28 +149,28 @@ M.configurations = {
   hls = {},
   html = {},
   cssls = {},
-  omnisharp = {
-    settings = {
-      RoslynExtensionsOptions = {
-        EnableImportCompletion = true,
-        InlayHintsOptions = {
-          -- https://github.com/OmniSharp/omnisharp-roslyn/blob/master/src/OmniSharp.Shared/Options/InlayHintsOptions.cs
-          EnableForParameters = true,
-          ForLiteralParameters = true,
-          ForIndexerParameters = false,
-          ForObjectCreationParameters = true,
-          ForOtherParameters = true,
-          SuppressForParametersThatDifferOnlyBySuffix = true,
-          SuppressForParametersThatMatchMethodIntent = true,
-          SuppressForParametersThatMatchArgumentName = true,
-          EnableForTypes = false,
-          ForImplicitVariableTypes = true,
-          ForLambdaParameterTypes = true,
-          ForImplicitObjectCreation = true,
-        },
-      },
-    },
-  },
+  -- omnisharp = {
+  --   settings = {
+  --     RoslynExtensionsOptions = {
+  --       EnableImportCompletion = true,
+  --       InlayHintsOptions = {
+  --         -- https://github.com/OmniSharp/omnisharp-roslyn/blob/master/src/OmniSharp.Shared/Options/InlayHintsOptions.cs
+  --         EnableForParameters = true,
+  --         ForLiteralParameters = true,
+  --         ForIndexerParameters = false,
+  --         ForObjectCreationParameters = true,
+  --         ForOtherParameters = true,
+  --         SuppressForParametersThatDifferOnlyBySuffix = true,
+  --         SuppressForParametersThatMatchMethodIntent = true,
+  --         SuppressForParametersThatMatchArgumentName = true,
+  --         EnableForTypes = false,
+  --         ForImplicitVariableTypes = true,
+  --         ForLambdaParameterTypes = true,
+  --         ForImplicitObjectCreation = true,
+  --       },
+  --     },
+  --   },
+  -- },
   -- tsserver = {
   --   root_dir = require("lspconfig").util.root_pattern "package.json",
   --   single_file_support = false,
