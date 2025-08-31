@@ -14,6 +14,14 @@ local M = {
     end,
     dependencies = require("plugins.treesitter.parser").local_parser_packages(),
     event = "BufReadPost",
+    cmd = {
+      "TSUpdate",
+      "TSUpdateSync",
+      "TSInstall",
+      "TSInstallSync",
+      "TSInstallInfo",
+      "TSUninstall",
+    },
   },
   {
     "nvim-treesitter/nvim-treesitter-textobjects",

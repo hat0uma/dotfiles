@@ -53,9 +53,8 @@ local function parser_to_lazy_package(lang)
   --- @type LazyPluginSpec
   return {
     parser.install_info.url,
-    build = function() ---@async
-      local update_parser = require("nvim-treesitter.install").update({ with_sync = true })
-      update_parser(lang)
+    build = function(plugin)
+      vim.cmd(string.format("TSInstallSync! %s", lang))
     end,
     submodules = false,
   }
@@ -102,18 +101,15 @@ function M.install(opts)
 
   M.setup()
 
-  -- Update packages
-  require("lazy").sync({
+  local manager_opts = { --- @type ManagerOpts
     plugins = vim.tbl_map(get_repo_name, parsers),
     wait = opts.sync,
-  })
+  }
 
-  -- local _opts = vim.tbl_extend("keep", opts or {}, { force = false, sync = false })
-  -- local parsers_text = table.concat(parsers, " ")
-  --
-  -- local sync = _opts.sync and "Sync" or ""
-  -- local force = _opts.force and "!" or ""
-  -- vim.cmd(string.format("TSInstall%s%s %s", sync, force, parsers_text))
+  -- Update parsers
+  -- Force build parsers
+  require("lazy").update(manager_opts)
+  require("lazy").build(manager_opts)
 end
 
 return M
