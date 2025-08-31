@@ -20,6 +20,17 @@ return {
   {
     "NeogitOrg/neogit",
     init = function()
+      if rc.sys.is_windows then
+        local git_path = vim.fn.resolve(vim.fn.exepath("git"))
+        if git_path == "" then
+          return
+        end
+
+        -- Use directly the git.exe under mingw64/bin to improve performance
+        local cmd_dir = vim.fs.dirname(git_path) -- e.g., C:/Program Files/Git/cmd
+        local mingw64dir = vim.fs.joinpath(vim.fs.dirname(cmd_dir), "mingw64", "bin")
+        vim.env.PATH = mingw64dir .. ";" .. vim.env.PATH
+      end
       local opts = { silent = true, noremap = true }
       vim.keymap.set("n", "<C-g>", ":<C-u>Neogit<CR>", opts)
       -- vim.keymap.set("n", ",c", ":<C-u>Neogit commit<CR>", opts)
