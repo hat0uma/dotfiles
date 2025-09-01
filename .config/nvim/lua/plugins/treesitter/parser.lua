@@ -42,6 +42,10 @@ local function get_repo_name(lang)
   return parts[#parts]
 end
 
+local function is_headless()
+  return #vim.api.nvim_list_uis() == 0
+end
+
 ---@param lang string
 ---@return LazyPluginSpec?
 local function parser_to_lazy_package(lang)
@@ -54,7 +58,11 @@ local function parser_to_lazy_package(lang)
   return {
     parser.install_info.url,
     build = function(plugin)
-      vim.cmd(string.format("TSInstallSync! %s", lang))
+      if is_headless() then
+        vim.cmd(string.format("TSInstallSync! %s", lang))
+      else
+        vim.cmd(string.format("TSInstall! %s", lang))
+      end
     end,
     submodules = false,
   }

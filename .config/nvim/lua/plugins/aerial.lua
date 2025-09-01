@@ -16,6 +16,19 @@ end
 
 return {
   "stevearc/aerial.nvim",
+  init = function()
+    vim.api.nvim_create_user_command("ClipLocation", function(opts)
+      local bufname = vim.api.nvim_buf_get_name(0)
+      local filename = vim.fs.basename(bufname)
+      local cursor = vim.api.nvim_win_get_cursor(0)
+
+      local location = require("aerial").get_location(true)
+
+      local locstring = #location ~= 0 and location[#location].name or ""
+      local text = string.format('"%s\n%d"\t%s', filename, cursor[1], locstring)
+      vim.fn.setreg("+", text)
+    end, {})
+  end,
   config = function()
     require("aerial").setup({
       backends = {
