@@ -68,7 +68,8 @@ end
 -- local adapter = "copilot"
 -- local adapter = "deepseek"
 -- local adapter = "gemma3"
-local adapter = "gemini"
+-- local adapter = "gemini"
+local adapter = "claude_code"
 
 return {
   "olimorris/codecompanion.nvim",
@@ -138,6 +139,9 @@ return {
           -- provider = "mini_diff",
           provider = "default",
         },
+        action_palette = {
+          provider = "snacks",
+        },
         chat = {
           window = {
             layout = "horizontal", ---@type "float"|"vertical"|"horizontal"|"buffer"
@@ -163,24 +167,33 @@ return {
         },
       },
       adapters = {
-        deepseek = function()
-          return require("codecompanion.adapters").extend("deepseek", {
-            env = { api_key = "cmd:op read op://Personal/deepseek/credential --no-newline" },
-          })
-        end,
-        gemini = function()
-          return require("codecompanion.adapters").extend("gemini", {
-            env = {
-              api_key = "GEMINI_API_KEY",
-              model = "gemini-2.5-pro-experimental-03-25",
-            },
-          })
-        end,
-        gemma3 = function()
-          return require("codecompanion.adapters").extend("ollama", {
-            model = "gemma3:12b",
-          })
-        end,
+        http = {
+          deepseek = function()
+            return require("codecompanion.adapters").extend("deepseek", {
+              env = { api_key = "cmd:op read op://Personal/deepseek/credential --no-newline" },
+            })
+          end,
+          gemini = function()
+            return require("codecompanion.adapters").extend("gemini", {
+              env = {
+                api_key = "GEMINI_API_KEY",
+                model = "gemini-2.5-pro-experimental-03-25",
+              },
+            })
+          end,
+          gemma3 = function()
+            return require("codecompanion.adapters").extend("ollama", {
+              model = "gemma3:12b",
+            })
+          end,
+        },
+        acp = {
+          claude_code = function()
+            return require("codecompanion.adapters").extend("claude_code", {
+              env = { CLAUDE_CODE_OAUTH_TOKEN = "cmd:op read op://Personal/claude_pro/credential --no-newline" },
+            })
+          end,
+        },
       },
     })
 
