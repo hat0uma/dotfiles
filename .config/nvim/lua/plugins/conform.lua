@@ -14,6 +14,12 @@ vim.g.format_on_save_mode = "Buffer" --- @type "Hunks"|"Buffer"
 ---@param client vim.lsp.Client
 ---@return boolean
 local function filter(client)
+  if client.name == "tsserver" or client.name == "typescript-tools" then
+    local biome = vim.lsp.get_clients({ bufnr = vim.api.nvim_get_current_buf(), name = "biome" })
+    if #biome > 0 then
+      return false
+    end
+  end
   return not vim.tbl_contains(format_disable_clients, client.name)
 end
 
@@ -81,8 +87,11 @@ end
 
 local formatter_for_ts = function(bufnr)
   local deno = vim.lsp.get_clients({ bufnr = bufnr, name = "denols" })
+  local biome = vim.lsp.get_clients({ bufnr = bufnr, name = "biome" })
   if #deno > 0 then
     return {} -- deno lsp has its own formatter
+  elseif #biome > 0 then
+    return {} -- use biome
   else
     return { "prettierd", "prettier", stop_after_first = true }
   end
@@ -94,8 +103,8 @@ M.config = function()
       lua = { "stylua" },
       typescript = formatter_for_ts,
       typescriptreact = formatter_for_ts,
-      javascript = { "prettierd", "prettier", stop_after_first = true },
-      javascriptreact = { "prettierd", "prettier", stop_after_first = true },
+      javascript = formatter_for_ts,
+      javascriptreact = formatter_for_ts,
       css = { "prettierd", "prettier", stop_after_first = true },
       scss = { "prettierd", "prettier", stop_after_first = true },
       json = { "fixjson" },
