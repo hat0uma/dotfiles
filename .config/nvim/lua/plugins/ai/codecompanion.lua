@@ -69,7 +69,8 @@ end
 -- local adapter = "deepseek"
 -- local adapter = "gemma3"
 -- local adapter = "gemini"
-local adapter = "claude_code"
+-- local adapter = "claude_code"
+local adapter = "gemini_cli"
 
 return {
   "olimorris/codecompanion.nvim",
@@ -191,6 +192,21 @@ return {
           claude_code = function()
             return require("codecompanion.adapters").extend("claude_code", {
               env = { CLAUDE_CODE_OAUTH_TOKEN = "cmd:op read op://Personal/claude_pro/credential --no-newline" },
+            })
+          end,
+          gemini_cli = function()
+            return require("codecompanion.adapters").extend("gemini_cli", {
+              defaults = {
+                ---@type string
+                oauth_credentials_path = vim.fs.abspath("~/.gemini/oauth_creds.json"),
+              },
+              handlers = {
+                auth = function(self)
+                  ---@type string|nil
+                  local oauth_credentials_path = self.defaults.oauth_credentials_path
+                  return (oauth_credentials_path and vim.fn.filereadable(oauth_credentials_path)) == 1
+                end,
+              },
             })
           end,
         },
