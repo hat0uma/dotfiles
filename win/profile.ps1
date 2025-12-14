@@ -1,4 +1,4 @@
-# keybinds
+﻿# keybinds
 Set-PSReadLineOption -BellStyle None -EditMode Emacs
 Set-PSReadlineKeyHandler -Chord Tab -Function Complete
 
@@ -13,7 +13,8 @@ Set-Alias -Name ll -Value Get-ChildItem
 
 if ( Test-Path env:NVIM )
 {
-    Remove-Alias -Force -Name sp
+    # Remove-Alias -Force -Name sp
+    Remove-Item -Force Alias:\sp
     . _nvim_hooks.ps1
 }
 
@@ -32,7 +33,8 @@ function ln($target, $link)
     New-Item -ItemType SymbolicLink -Path $link -Value $target
 }
 
-Remove-Alias -Force -Name nv
+# Remove-Alias -Force -Name nv
+Remove-Item -Force Alias:\nv
 function nv()
 {
     $env:NVIM_RESTART_ENABLE = 1
