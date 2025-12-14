@@ -44,6 +44,46 @@ function nv()
     Remove-Item env:NVIM_RESTART_ENABLE
 }
 
+function Get-ShortenCwd()
+{
+    $fullPath = (Get-Location).Path
+    if ($fullPath.StartsWith($HOME)) {
+        $displayPath = $fullPath.Replace($HOME, "~")
+    } else {
+        $displayPath = $fullPath
+    }
+    return $displayPath
+}
+
+function prompt {
+    $isSuccess = $?
+
+    # $currentPrincipal = [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()
+    # $isAdmin = $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+
+    Write-Host "┌──" -NoNewline -ForegroundColor Blue
+
+    # # (username@computername)
+    # Write-Host "(" -NoNewline -ForegroundColor Blue
+    # Write-Host "$($env:USERNAME)@$($env:COMPUTERNAME))" -NoNewline -ForegroundColor Yellow
+    
+    # -[cwd]
+    Write-Host "-[" -NoNewline -ForegroundColor Blue
+    Write-Host (Get-ShortenCwd) -NoNewline -ForegroundColor Cyan
+    Write-Host "]" -NoNewline -ForegroundColor Blue
+
+    # └─(^_^) < 
+    Write-Host "`n└─" -NoNewline -ForegroundColor Blue
+    if ($isSuccess) {
+        Write-Host "(*'▽')" -NoNewline -ForegroundColor Green
+    } else {
+        Write-Host "(=>_<)" -NoNewline -ForegroundColor Red
+    }
+
+    # prompt
+    return " < "
+}
+
 # others
 $MaximumHistoryCount = 10000;
 
