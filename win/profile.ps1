@@ -75,23 +75,35 @@ function prompt {
     # $currentPrincipal = [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()
     # $isAdmin = $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 
-    Write-Host "┌──" -NoNewline -ForegroundColor Blue
+    # Write-Host "┌──" -NoNewline -ForegroundColor Blue
+    Write-Host "╭─" -NoNewline -ForegroundColor Blue
 
+    # ---------------------------------
     # # (username@computername)-
+    # ---------------------------------
     # Write-Host "(" -NoNewline -ForegroundColor Blue
     # Write-Host "$($env:USERNAME)@$($env:COMPUTERNAME))-" -NoNewline -ForegroundColor Yellow
     
+    # ---------------------------------
     # [cwd]
+    # ---------------------------------
     Write-Host "[" -NoNewline -ForegroundColor Blue
     Write-Host (Get-ShortenCwd) -NoNewline -ForegroundColor Cyan
     Write-Host "]" -NoNewline -ForegroundColor Blue
 
+    # ---------------------------------
     # └─(^_^) < 
-    Write-Host "`n└─" -NoNewline -ForegroundColor Blue
+    # ---------------------------------
+    # Write-Host "`n└─" -NoNewline -ForegroundColor Blue
+    Write-Host "`n╰──" -NoNewline -ForegroundColor Blue
     if ($isSuccess) {
-        Write-Host "(*'▽')" -NoNewline -ForegroundColor Green
+        # Write-Host "(*'▽')" -NoNewline -ForegroundColor Green
+        # Write-Host "(o^~^o)" -NoNewline -ForegroundColor Green
+        # Write-Host "(o・∇・o)" -NoNewline -ForegroundColor Green
+        Write-Host "(o·∇·o)" -NoNewline -ForegroundColor Green
     } else {
-        Write-Host "(=>_<)" -NoNewline -ForegroundColor Red
+        # Write-Host "(=>_<)" -NoNewline -ForegroundColor Red
+        Write-Host "(*>△<)" -NoNewline -ForegroundColor Red
     }
 
     # prompt
