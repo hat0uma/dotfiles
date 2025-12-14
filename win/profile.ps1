@@ -58,20 +58,31 @@ function Get-ShortenCwd()
     return $displayPath
 }
 
+$Global:IsClearScreenAction = $false
+Set-PSReadLineKeyHandler -Chord Ctrl+l -ScriptBlock {
+    $Global:IsClearScreenAction = $true
+    [Microsoft.PowerShell.PSConsoleReadLine]::ClearScreen()
+    $Global:IsClearScreenAction = $false
+}
+
+$Global:LastPromptStatus = $true
 function prompt {
-    $isSuccess = $?
+    if (-not $Global:IsClearScreenAction) {
+        $Global:LastPromptStatus = $?
+    }
+    $isSuccess = $Global:LastPromptStatus
 
     # $currentPrincipal = [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()
     # $isAdmin = $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 
     Write-Host "┌──" -NoNewline -ForegroundColor Blue
 
-    # # (username@computername)
+    # # (username@computername)-
     # Write-Host "(" -NoNewline -ForegroundColor Blue
-    # Write-Host "$($env:USERNAME)@$($env:COMPUTERNAME))" -NoNewline -ForegroundColor Yellow
+    # Write-Host "$($env:USERNAME)@$($env:COMPUTERNAME))-" -NoNewline -ForegroundColor Yellow
     
-    # -[cwd]
-    Write-Host "-[" -NoNewline -ForegroundColor Blue
+    # [cwd]
+    Write-Host "[" -NoNewline -ForegroundColor Blue
     Write-Host (Get-ShortenCwd) -NoNewline -ForegroundColor Cyan
     Write-Host "]" -NoNewline -ForegroundColor Blue
 
