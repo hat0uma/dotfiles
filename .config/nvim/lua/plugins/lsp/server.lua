@@ -66,7 +66,14 @@ M.configurations = {
       offsetEncoding = "utf-16",
     },
   },
-  powershell_es = {},
+  powershell_es = {
+    bundle_path = vim.fs.joinpath(
+      vim.fn.stdpath("data"),
+      "mason/packages/powershell-editor-services"
+      -- "/PowerShellEditorServices"
+    ),
+    -- shell = "powershell.exe",
+  },
   denols = {
     -- single_file_support = true,
     root_markers = {
