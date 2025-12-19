@@ -58,23 +58,26 @@ function nv()
 # Prompt Lines
 Set-PSReadLineOption -ExtraPromptLineCount 1
 
-$Global:IsClearScreenAction = $false
-$Global:IsGitPromptUpdateAction = $false
-Set-PSReadLineKeyHandler -Chord Ctrl+l -ScriptBlock {
-    $Global:IsClearScreenAction = $true
-    [Microsoft.PowerShell.PSConsoleReadLine]::ClearScreen()
-    $Global:IsClearScreenAction = $false
+$Global:StatusUpdateAllowed = $true
+Set-PSReadLineKeyHandler -Key Enter -ScriptBlock {
+    $Global:StatusUpdateAllowed = $true
+    [Microsoft.PowerShell.PSConsoleReadLine]::AcceptLine()
 }
 
 $Global:LastPromptStatus = $true
 function prompt
 {
     # Error status
-    if (-not $Global:IsClearScreenAction -and -not $Global:IsGitPromptUpdateAction)
+    if ($Global:StatusUpdateAllowed)
     {
+        # Save Exit status
         $Global:LastPromptStatus = $?
+
+        # Start update git status
+        Start-UpdateGitPrompt $PWD.ProviderPath
+
+        $Global:StatusUpdateAllowed = $false
     }
-    $isSuccess = $Global:LastPromptStatus
 
     # Path
     $currentPath = $PWD.ProviderPath
@@ -90,11 +93,6 @@ function prompt
     $colorReset  = "$esc[0m"
 
     # Git
-    if (-not $Global:IsClearScreenAction -and -not $Global:IsGitPromptUpdateAction)
-    {
-        Start-UpdateGitPrompt $currentPath
-    }
-
     $gitBranch = Get-GitPrompt $currentPath
     $gitPart = ""
     if ($gitBranch)
@@ -103,6 +101,7 @@ function prompt
     }
 
     # Face
+    $isSuccess = $Global:LastPromptStatus
     if($isSuccess)
     {
         #$face="(*'▽')"
@@ -190,9 +189,7 @@ $OnTimerElapsed = {
     }
 
     # Redraw prompt
-    $Global:IsGitPromptUpdateAction=$true
     [Microsoft.PowerShell.PSConsoleReadLine]::InvokePrompt()
-    $Global:IsGitPromptUpdateAction=$false
 }
 
 
