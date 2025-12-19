@@ -1,4 +1,6 @@
-﻿# Keybinds
+﻿$sw = [System.Diagnostics.Stopwatch]::StartNew()
+
+# Keybinds
 # Install-Module -name PSReadLine -AllowClobber -Force -Scope CurrentUser
 Set-PSReadLineOption -BellStyle None -EditMode Emacs
 Set-PSReadlineKeyHandler -Chord Tab -Function Complete
@@ -35,12 +37,12 @@ function ln($target, $link)
 if ( Test-Path env:NVIM )
 {
     # Remove-Alias -Force -Name sp
-    Remove-Item -Force Alias:\sp
+    Remove-Item -Force Alias:\sp -ErrorAction SilentlyContinue
     . _nvim_hooks.ps1
 }
 
 # Remove-Alias -Force -Name nv
-Remove-Item -Force Alias:\nv
+Remove-Item -Force Alias:\nv -ErrorAction SilentlyContinue
 function nv()
 {
     $env:NVIM_RESTART_ENABLE = 1
@@ -85,12 +87,12 @@ function prompt
 
     # Color settings
     $esc = [char]27
-    $colorPath   = "$esc[36m" # cyan
-    $colorGit    = "$esc[90m" # black(bright)
-    $colorBorder   = "$esc[34m" # blue
-    $colorSuccess= "$esc[32m" # green
-    $colorError= "$esc[31m" # red
-    $colorReset  = "$esc[0m"
+    $colorPath      = "$esc[36m" # cyan
+    $colorGit       = "$esc[90m" # black(bright)
+    $colorBorder    = "$esc[34m" # blue
+    $colorSuccess   = "$esc[32m" # green
+    $colorError     = "$esc[31m" # red
+    $colorReset     = "$esc[0m"
 
     # Git
     $gitBranch = Get-GitPrompt $currentPath
@@ -131,6 +133,10 @@ function prompt
 # Git
 ###############################################
 
+$Global:GitPromptInitialized = $false
+$Global:GitPromptTimer = $null
+$Global:GitPromptRunspace = $null
+
 # Initialize global state
 $Global:GitPromptState = [hashtable]::Synchronized(@{
         Path          = ""
@@ -139,75 +145,72 @@ $Global:GitPromptState = [hashtable]::Synchronized(@{
         AsyncResult   = $null # IAsyncResult from BeginInvoke()
     })
 
-# Cleanup and create timer
-if ($Global:GitPromptTimer)
-{ 
-    $Global:GitPromptTimer.Stop()
-    $Global:GitPromptTimer.Dispose() 
-}
-$Global:GitPromptTimer = New-Object System.Timers.Timer
-$Global:GitPromptTimer.Interval = 50
-$Global:GitPromptTimer.AutoReset = $true
-
-# Create Runspace
-if (-not $Global:GitPromptRunspace)
+function Initialize-GitBackend
 {
+    # Create Runspace
     $Global:GitPromptRunspace = [runspacefactory]::createRunspace()
     $Global:GitPromptRunspace.Open()
-}
 
-# Action when timer fires
-$OnTimerElapsed = {
-    # Wait Event Completion
-    if (-not $Global:GitPromptState.AsyncResult -or -not( $Global:GitPromptState.AsyncResult.IsCompleted ))
-    {
-        return
-    }
+    # create timer
+    $Global:GitPromptTimer = New-Object System.Timers.Timer
+    $Global:GitPromptTimer.Interval = 50
+    $Global:GitPromptTimer.AutoReset = $true
 
-    $Global:GitPromptTimer.Stop()
-    try
-    {
-        # Get results (returns a collection, so get the first element)
-        $results = $Global:GitPromptState.PowerShell.EndInvoke($Global:GitPromptState.AsyncResult)
-        if ($results -and $results.Count -gt 0)
+    # Action when timer fires
+    $OnTimerElapsed = {
+        # Wait Event Completion
+        if (-not $Global:GitPromptState.AsyncResult -or -not( $Global:GitPromptState.AsyncResult.IsCompleted ))
         {
-            $Global:GitPromptState.Prompt = $results[0]
-        } else
-        {
-            $Global:GitPromptState.Prompt = ""
+            return
         }
-    } catch
-    {
-        # Write-Host "$_"
-        $Global:GitPromptState.Prompt = ""
-    } finally
-    {
-        # Resource cleanup
-        $Global:GitPromptState.PowerShell.Dispose()
-        $Global:GitPromptState.PowerShell = $null
-        $Global:GitPromptState.AsyncResult = $null
+
+        $Global:GitPromptTimer.Stop()
+        try
+        {
+            # Get results (returns a collection, so get the first element)
+            $results = $Global:GitPromptState.PowerShell.EndInvoke($Global:GitPromptState.AsyncResult)
+            if ($results -and $results.Count -gt 0)
+            {
+                $Global:GitPromptState.Prompt = $results[0]
+            } else
+            {
+                $Global:GitPromptState.Prompt = ""
+            }
+        } catch
+        {
+            # Write-Host "$_"
+            $Global:GitPromptState.Prompt = ""
+        } finally
+        {
+            # Resource cleanup
+            $Global:GitPromptState.PowerShell.Dispose()
+            $Global:GitPromptState.PowerShell = $null
+            $Global:GitPromptState.AsyncResult = $null
+        }
+
+        # Redraw prompt
+        [Microsoft.PowerShell.PSConsoleReadLine]::InvokePrompt()
     }
 
-    # Redraw prompt
-    [Microsoft.PowerShell.PSConsoleReadLine]::InvokePrompt()
+
+    # Register timer callback
+    Register-ObjectEvent `
+        -InputObject $Global:GitPromptTimer `
+        -EventName Elapsed `
+        -Action $OnTimerElapsed `
+        -SourceIdentifier "GitPromptTimer" | Out-Null
 }
-
-
-Get-EventSubscriber `
-| Where-Object { $_.SourceIdentifier -eq 'GitPromptTimer' } `
-| ForEach-Object { 
-    Unregister-Event -SourceIdentifier $_.SourceIdentifier -Force 
-}
-
-Register-ObjectEvent `
-    -InputObject $Global:GitPromptTimer `
-    -EventName Elapsed `
-    -Action $OnTimerElapsed `
-    -SourceIdentifier "GitPromptTimer" | Out-Null
 
 function Start-UpdateGitPrompt
 {
     param([Parameter(Mandatory)][string]$CurrentPath)
+
+    # Initialize
+    if (-not $Global:GitPromptInitialized)
+    {
+        Initialize-GitBackend
+        $Global:GitPromptInitialized = $true
+    }
 
     # Path chnaged
     $Global:GitPromptState.Path = $CurrentPath
@@ -273,3 +276,6 @@ function Get-GitPrompt
 {
     return $Global:GitPromptState.Prompt
 }
+
+$sw.Stop()
+# Write-Host "Profile Load Time: $($sw.ElapsedMilliseconds) ms" -ForegroundColor Green
