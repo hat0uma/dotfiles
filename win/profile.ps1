@@ -1,27 +1,19 @@
-﻿# keybinds
+﻿# Keybinds
 # Install-Module -name PSReadLine -AllowClobber -Force -Scope CurrentUser
 Set-PSReadLineOption -BellStyle None -EditMode Emacs
 Set-PSReadlineKeyHandler -Chord Tab -Function Complete
 
-# encoding
+# Encoding
 $PSDefaultParameterValues["Out-File:Encoding"] = "utf8"
 $OutputEncoding = [System.Text.Encoding]::UTF8
 [System.Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 [System.Console]::InputEncoding = [System.Text.Encoding]::UTF8
 
-# others
+# Others
 $MaximumHistoryCount = 10000;
 
 # aliases and functions
 Set-Alias -Name ll -Value Get-ChildItem
-
-if ( Test-Path env:NVIM )
-{
-    # Remove-Alias -Force -Name sp
-    Remove-Item -Force Alias:\sp
-    . _nvim_hooks.ps1
-}
-
 function open($file)
 { 
     invoke-item $file
@@ -37,6 +29,16 @@ function ln($target, $link)
     New-Item -ItemType SymbolicLink -Path $link -Value $target
 }
 
+# ==============================================================================
+# Neovim
+# ==============================================================================
+if ( Test-Path env:NVIM )
+{
+    # Remove-Alias -Force -Name sp
+    Remove-Item -Force Alias:\sp
+    . _nvim_hooks.ps1
+}
+
 # Remove-Alias -Force -Name nv
 Remove-Item -Force Alias:\nv
 function nv()
@@ -50,20 +52,14 @@ function nv()
     Remove-Item env:NVIM_RESTART_ENABLE
 }
 
-function Get-ShortenCwd()
-{
-    $fullPath = (Get-Location).Path
-    if ($fullPath.StartsWith($HOME))
-    {
-        $displayPath = $fullPath.Replace($HOME, "~")
-    } else
-    {
-        $displayPath = $fullPath
-    }
-    return $displayPath
-}
+# ==============================================================================
+# Prompt Function
+# ==============================================================================
+# Prompt Lines
+Set-PSReadLineOption -ExtraPromptLineCount 1
 
 $Global:IsClearScreenAction = $false
+$Global:IsGitPromptUpdateAction = $false
 Set-PSReadLineKeyHandler -Chord Ctrl+l -ScriptBlock {
     $Global:IsClearScreenAction = $true
     [Microsoft.PowerShell.PSConsoleReadLine]::ClearScreen()
@@ -73,196 +69,210 @@ Set-PSReadLineKeyHandler -Chord Ctrl+l -ScriptBlock {
 $Global:LastPromptStatus = $true
 function prompt
 {
-    if (-not $Global:IsClearScreenAction)
+    # Error status
+    if (-not $Global:IsClearScreenAction -and -not $Global:IsGitPromptUpdateAction)
     {
         $Global:LastPromptStatus = $?
     }
     $isSuccess = $Global:LastPromptStatus
 
-    # $currentPrincipal = [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()
-    # $isAdmin = $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+    # Path
+    $currentPath = $PWD.ProviderPath
+    $displayPath = $currentPath.Replace($HOME, "~")
 
-    # Write-Host "┌──" -NoNewline -ForegroundColor Blue
-    Write-Host "╭─" -NoNewline -ForegroundColor Blue
+    # Color settings
+    $esc = [char]27
+    $colorPath   = "$esc[36m" # cyan
+    $colorGit    = "$esc[90m" # black(bright)
+    $colorBorder   = "$esc[34m" # blue
+    $colorSuccess= "$esc[32m" # green
+    $colorError= "$esc[31m" # red
+    $colorReset  = "$esc[0m"
 
-    # ---------------------------------
-    # # (username@computername)-
-    # ---------------------------------
-    # Write-Host "(" -NoNewline -ForegroundColor Blue
-    # Write-Host "$($env:USERNAME)@$($env:COMPUTERNAME))-" -NoNewline -ForegroundColor Yellow
-    
-    # ---------------------------------
-    # [cwd]
-    # ---------------------------------
-    Write-Host "[" -NoNewline -ForegroundColor Blue
-    Write-Host (Get-ShortenCwd) -NoNewline -ForegroundColor Cyan
-    Write-Host "]" -NoNewline -ForegroundColor Blue
-
-    # ---------------------------------
-    # └─(^_^) < 
-    # ---------------------------------
-    # Write-Host "`n└─" -NoNewline -ForegroundColor Blue
-    Write-Host "`n╰──" -NoNewline -ForegroundColor Blue
-    if ($isSuccess)
+    # Git
+    if (-not $Global:IsClearScreenAction -and -not $Global:IsGitPromptUpdateAction)
     {
-        # Write-Host "(*'▽')" -NoNewline -ForegroundColor Green
-        # Write-Host "(o^~^o)" -NoNewline -ForegroundColor Green
-        # Write-Host "(o・∇・o)" -NoNewline -ForegroundColor Green
-        Write-Host "(o·∇·o)" -NoNewline -ForegroundColor Green
-    } else
-    {
-        # Write-Host "(=>_<)" -NoNewline -ForegroundColor Red
-        Write-Host "(*>△<)" -NoNewline -ForegroundColor Red
+        Start-UpdateGitPrompt $currentPath
     }
 
-    # prompt
-    return " < "
+    $gitBranch = Get-GitPrompt $currentPath
+    $gitPart = ""
+    if ($gitBranch)
+    {
+        $gitPart = " $colorGit" + $gitBranch
+    }
+
+    # Face
+    if($isSuccess)
+    {
+        #$face="(*'▽')"
+        #$face="(o^~^o)"
+        #$face="(o・∇・o)"
+        $face="(o·∇·o)"
+        $faceColor=$colorSuccess
+    } else
+    {
+        $face=# "(=>_<)"
+        $face="(*>△<)"
+        $faceColor=$colorError
+    }
+
+    # User & Computer
+    # Write-Host "(" -NoNewline -ForegroundColor Blue
+    # Write-Host "$($env:USERNAME)@$($env:COMPUTERNAME))-" -NoNewline -ForegroundColor Yellow
+
+    return (
+        "$colorBorder╭─[$colorPath$displayPath$colorBorder]$gitPart$colorReset`n"+
+        "$colorBorder╰──$faceColor$face$colorReset < "
+    )
 }
-# # ==============================================================================
-# # PowerShell Async Git Prompt
-# # ==============================================================================
-#
-# # Initialize global state
-# $Global:AsyncPromptState = [hashtable]::Synchronized(@{
-#         Path          = ""
-#         GitBranch     = ""
-#         IsCalculating = $false
-#         Runspace      = $null
-#         PowerShell    = $null
-#     })
-#
-# # Cleanup and create timer
-# if ($Global:AsyncPromptTimer)
-# { 
-#     $Global:AsyncPromptTimer.Stop()
-#     $Global:AsyncPromptTimer.Dispose() 
-# }
-# $Global:AsyncPromptTimer = New-Object System.Timers.Timer
-# $Global:AsyncPromptTimer.Interval = 50
-# $Global:AsyncPromptTimer.AutoReset = $true
-#
-# # Action when timer fires
-# $OnTimerElapsed = {
-#     # Process only if Runspace exists and is completed
-#     if ($Global:AsyncPromptState.Runspace -and $Global:AsyncPromptState.Runspace.IsCompleted)
-#     {
-#         $Global:AsyncPromptTimer.Stop()
-#
-#         try
-#         {
-#             # Get results (returns a collection, so get the first element)
-#             $results = $Global:AsyncPromptState.PowerShell.EndInvoke($Global:AsyncPromptState.Runspace)
-#             
-#             if ($results -and $results.Count -gt 0)
-#             {
-#                 $Global:AsyncPromptState.GitBranch = $results[0]
-#             } else
-#             {
-#                 $Global:AsyncPromptState.GitBranch = ""
-#             }
-#         } catch
-#         {
-#             # Silently clear Git info on error (Use Write-Host $_ for debugging)
-#             $Global:AsyncPromptState.GitBranch = ""
-#         } finally
-#         {
-#             # Resource cleanup
-#             $Global:AsyncPromptState.PowerShell.Dispose()
-#             $Global:AsyncPromptState.Runspace = $null
-#             $Global:AsyncPromptState.PowerShell = $null
-#             $Global:AsyncPromptState.IsCalculating = $false
-#         }
-#
-#         # Redraw prompt
-#         [Microsoft.PowerShell.PSConsoleReadLine]::InvokePrompt()
-#     }
-# }
-#
-# Register-ObjectEvent -InputObject $Global:AsyncPromptTimer -EventName Elapsed -Action $OnTimerElapsed -SourceIdentifier "AsyncPromptTimer" | Out-Null
-#
-# # ==============================================================================
-# # Prompt Function
-# # ==============================================================================
-# function prompt
-# {
-#     $currentPath = $PWD.ProviderPath
-#     $esc = [char]27
-#
-#     # Color settings
-#     $colorPath   = "$esc[34;1m" 
-#     $colorGit    = "$esc[90m"   
-#     $colorSymbol = "$esc[35m"   
-#     $colorReset  = "$esc[0m"
-#
-#     # Start async task if path changed
-#     if ($Global:AsyncPromptState.Path -ne $currentPath)
-#     {
-#         $Global:AsyncPromptState.Path = $currentPath
-#         $Global:AsyncPromptState.GitBranch = "" # Clear display while calculating
-#         
-#         if (-not $Global:AsyncPromptState.IsCalculating)
-#         {
-#             $Global:AsyncPromptState.IsCalculating = $true
-#             
-#             # Create a new Runspace for each execution (Stable approach)
-#             $Global:AsyncPromptState.Runspace = [runspacefactory]::CreateRunspace()
-#             $Global:AsyncPromptState.Runspace.Open()
-#             $Global:AsyncPromptState.PowerShell = [powershell]::Create()
-#             $Global:AsyncPromptState.PowerShell.Runspace = $Global:AsyncPromptState.Runspace
-#             
-#             # Script block running in background
-#             $Global:AsyncPromptState.PowerShell.AddScript({
-#                     param($targetPath)
-#                 
-#                     # Error avoidance: Exit if path does not exist
-#                     if (-not (Test-Path -LiteralPath $targetPath))
-#                     { return "" 
-#                     }
-#                 
-#                     # Move to path (Use LiteralPath to handle symbols like [])
-#                     Set-Location -LiteralPath $targetPath
-#                 
-#                     # Encoding fix
-#                     [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
-#
-#                     # Check if inside git work tree (judge by exit code)
-#                     git rev-parse --is-inside-work-tree > $null 2>&1
-#                     if ($LASTEXITCODE -eq 0)
-#                     {
-#                         # Get branch name
-#                         $branch = git branch --show-current 2>$null
-#                         if (-not $branch)
-#                         { 
-#                             $branch = (git rev-parse --short HEAD 2>$null) 
-#                         }
-#                     
-#                         # Check dirty status
-#                         $status = git status --porcelain 2>$null
-#                         $symbol = if ($status)
-#                         { "*" 
-#                         } else
-#                         { "" 
-#                         }
-#                     
-#                         return "$branch$symbol"
-#                     }
-#                     return ""
-#                 }).AddArgument($currentPath) | Out-Null
-#
-#             # Begin asynchronous execution
-#             $Global:AsyncPromptState.Runspace = $Global:AsyncPromptState.PowerShell.BeginInvoke()
-#             $Global:AsyncPromptTimer.Start()
-#         }
-#     }
-#
-#     # --- View Logic ---
-#     $displayPath = $currentPath.Replace($HOME, "~")
-#     
-#     $gitPart = ""
-#     if ($Global:AsyncPromptState.GitBranch)
-#     {
-#         $gitPart = " $colorGit" + $Global:AsyncPromptState.GitBranch
-#     }
-#
-#     return "$colorPath$displayPath$gitPart $colorSymbol❯ $colorReset"
-# }
+
+
+###############################################
+# Git
+###############################################
+
+# Initialize global state
+$Global:GitPromptState = [hashtable]::Synchronized(@{
+        Path          = ""
+        Prompt        = ""
+        PowerShell    = $null
+        AsyncResult   = $null # IAsyncResult from BeginInvoke()
+    })
+
+# Cleanup and create timer
+if ($Global:GitPromptTimer)
+{ 
+    $Global:GitPromptTimer.Stop()
+    $Global:GitPromptTimer.Dispose() 
+}
+$Global:GitPromptTimer = New-Object System.Timers.Timer
+$Global:GitPromptTimer.Interval = 50
+$Global:GitPromptTimer.AutoReset = $true
+
+# Create Runspace
+if (-not $Global:GitPromptRunspace)
+{
+    $Global:GitPromptRunspace = [runspacefactory]::createRunspace()
+    $Global:GitPromptRunspace.Open()
+}
+
+# Action when timer fires
+$OnTimerElapsed = {
+    # Wait Event Completion
+    if (-not $Global:GitPromptState.AsyncResult -or -not( $Global:GitPromptState.AsyncResult.IsCompleted ))
+    {
+        return
+    }
+
+    $Global:GitPromptTimer.Stop()
+    try
+    {
+        # Get results (returns a collection, so get the first element)
+        $results = $Global:GitPromptState.PowerShell.EndInvoke($Global:GitPromptState.AsyncResult)
+        if ($results -and $results.Count -gt 0)
+        {
+            $Global:GitPromptState.Prompt = $results[0]
+        } else
+        {
+            $Global:GitPromptState.Prompt = ""
+        }
+    } catch
+    {
+        # Write-Host "$_"
+        $Global:GitPromptState.Prompt = ""
+    } finally
+    {
+        # Resource cleanup
+        $Global:GitPromptState.PowerShell.Dispose()
+        $Global:GitPromptState.PowerShell = $null
+        $Global:GitPromptState.AsyncResult = $null
+    }
+
+    # Redraw prompt
+    $Global:IsGitPromptUpdateAction=$true
+    [Microsoft.PowerShell.PSConsoleReadLine]::InvokePrompt()
+    $Global:IsGitPromptUpdateAction=$false
+}
+
+
+Get-EventSubscriber `
+| Where-Object { $_.SourceIdentifier -eq 'GitPromptTimer' } `
+| ForEach-Object { 
+    Unregister-Event -SourceIdentifier $_.SourceIdentifier -Force 
+}
+
+Register-ObjectEvent `
+    -InputObject $Global:GitPromptTimer `
+    -EventName Elapsed `
+    -Action $OnTimerElapsed `
+    -SourceIdentifier "GitPromptTimer" | Out-Null
+
+function Start-UpdateGitPrompt
+{
+    param([Parameter(Mandatory)][string]$CurrentPath)
+
+    # Path chnaged
+    $Global:GitPromptState.Path = $CurrentPath
+    $Global:GitPromptState.Prompt = "" # Clear display while calculating
+
+    # Dispose old instances
+    if ($Global:GitPromptState.PowerShell)
+    { 
+        $Global:GitPromptState.PowerShell.Dispose() 
+    }
+
+    # Create a new instance
+    $Global:GitPromptState.PowerShell = [powershell]::Create()
+    $Global:GitPromptState.PowerShell.Runspace = $Global:GitPromptRunspace
+
+    # Register Background Job
+    $Global:GitPromptState.PowerShell.AddScript({
+            param($targetPath)
+
+            # Exit if git missing
+            if (-not (Get-Command git -ErrorAction SilentlyContinue))
+            { 
+                return ""
+            }
+
+            # Exit if path does not exist
+            if (-not (Test-Path -LiteralPath $targetPath))
+            { 
+                return ""
+            }
+    
+            # Check if inside git work tree
+            git -C "$targetPath" rev-parse --is-inside-work-tree > $null 2>&1
+            if ($LASTEXITCODE -ne 0)
+            { 
+                return ""
+            }
+
+            # Get branch name
+            $branch = git -C "$targetPath" branch --show-current 2>$null
+            if (-not $branch)
+            { 
+                $branch = (git -C "$targetPath" rev-parse --short HEAD 2>$null) 
+            }
+        
+            # Check dirty status
+            $status = git -C "$targetPath" status --porcelain 2>$null
+            $symbol = if ($status)
+            { "*" 
+            } else
+            { "" 
+            }
+
+            return "$branch$symbol"
+        }).AddArgument($CurrentPath) | Out-Null
+
+    # Begin asynchronous execution
+    $Global:GitPromptState.AsyncResult = $Global:GitPromptState.PowerShell.BeginInvoke()
+    $Global:GitPromptTimer.Start()
+}
+
+function Get-GitPrompt
+{
+    return $Global:GitPromptState.Prompt
+}
