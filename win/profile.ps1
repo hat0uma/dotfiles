@@ -4,6 +4,7 @@
 # Install-Module -name PSReadLine -AllowClobber -Force -Scope CurrentUser
 Set-PSReadLineOption -BellStyle None -EditMode Emacs
 Set-PSReadlineKeyHandler -Chord Tab -Function Complete
+# Set-PSReadLineKeyHandler -Chord Tab -Function MenuComplete
 
 # Encoding
 $PSDefaultParameterValues["Out-File:Encoding"] = "utf8"
@@ -258,13 +259,35 @@ function Start-UpdateGitPrompt
         
             # Check dirty status
             $status = git -C "$targetPath" status --porcelain 2>$null
-            $symbol = if ($status)
+            $dirty = if ($status)
             { "*" 
             } else
             { "" 
             }
 
-            return "$branch$symbol"
+            $counts = git -C "$targetPath" rev-list --left-right --count HEAD...@`{u`} 2>$null
+            $aheadBehind = ""
+            if ($counts)
+            {
+                # split ahead/behind
+                $parts = $counts -split '\s+'
+                $aheadCount = [int]$parts[0]
+                $behindCount = [int]$parts[1]
+
+                # Ahead(push waiting)
+                if ($aheadCount -gt 0)
+                {
+                    $aheadBehind += " ↑$aheadCount"
+                }
+
+                # Behind(pull waiting)
+                if ($behindCount -gt 0)
+                {
+                    $aheadBehind += " ↓$behindCount"
+                }
+            }
+
+            return "$branch$dirty$aheadBehind"
         }).AddArgument($CurrentPath) | Out-Null
 
     # Begin asynchronous execution
