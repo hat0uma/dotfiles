@@ -55,6 +55,17 @@ function nv()
     Remove-Item env:NVIM_RESTART_ENABLE
 }
 
+# # Git completion
+# # Lazy load posh-git
+# Register-ArgumentCompleter -CommandName git -Native -ScriptBlock {
+#     param($wordToComplete, $commandAst, $cursorPosition)
+#     # Install-Module posh-git -Scope CurrentUser
+#     Import-Module posh-git
+#     $GitPromptSettings.EnablePromptConnection = $false
+#     $realCompleter = Get-ArgumentCompleter -Native -CommandName git
+#     & $realCompleter.ScriptBlock $wordToComplete $commandAst $cursorPosition
+# }
+
 # ==============================================================================
 # Prompt Function
 # ==============================================================================
