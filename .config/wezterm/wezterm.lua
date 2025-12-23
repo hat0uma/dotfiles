@@ -64,9 +64,18 @@ config.color_scheme = "Catppuccin Frappe"
 ------------------------------------
 -- Fonts
 ------------------------------------
-config.font = wezterm.font_with_fallback({ "UDEV Gothic NF", "Twemoji Mozilla" })
+config.font = wezterm.font_with_fallback({
+  { family = "UDEV Gothic", weight = "Regular" },
+  -- { family = "Sarasa Term J" },
+  -- { family = "Symbols Nerd Font", scale = 1.3 },
+  { family = "Twemoji Mozilla" },
+})
 config.font_size = 11
 config.harfbuzz_features = { "calt=0", "clig=0", "liga=0" }
+config.allow_square_glyphs_to_overflow_width = "WhenFollowedBySpace"
+-- config.cell_widths = {
+--   { first = 0xf08c0, last = 0xf08c0, width = 2 },
+-- }
 
 --------------------------------------------------------------------------------
 -- Keybindings
@@ -190,5 +199,84 @@ wezterm.on(
     os.remove(name)
   end
 )
+
+local distro_cache = {} ---@type string[]
+local function get_wsl_distro_name(guid)
+  if distro_cache[guid] then
+    -- wezterm.log_info("Use Cache Entry! GUID: " .. guid .. " -> Name: " .. distro_cache[guid])
+    return distro_cache[guid]
+  end
+
+  local cmd = {
+    "reg.exe",
+    "query",
+    "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Lxss\\" .. guid,
+    "/v",
+    "DistributionName",
+  }
+
+  local success, stdout = wezterm.run_child_process(cmd)
+
+  if success then
+    -- Output Example: "    DistributionName    REG_SZ    Ubuntu-20.04"
+    local name = stdout:match("DistributionName%s+REG_SZ%s+([^\r\n]+)")
+    if name then
+      -- wezterm.log_info("New Cache Entry! GUID: " .. guid .. " -> Name: " .. name)
+      distro_cache[guid] = name
+      return name
+    end
+  end
+
+  return guid
+end
+
+---@param proc LocalProcessInfo
+---@return string?
+local function get_wsl_distro_guid(proc)
+  for i, arg in ipairs(proc.argv) do
+    if arg == "--distro-id" and proc.argv[i + 1] then
+      local guid = proc.argv[i + 1]
+      return guid
+    end
+  end
+end
+
+wezterm.on("update-right-status", function(window, pane)
+  local domain = pane:get_domain_name()
+  local cmd = pane:get_foreground_process_name() or ""
+  local proc = pane:get_foreground_process_info()
+
+  local function insert_ssh_format(items, text)
+    table.insert(items, { Background = { Color = "#764ABC" } })
+    table.insert(items, { Foreground = { Color = "#ffffff" } })
+    table.insert(items, { Text = string.format("  %s ", text) })
+  end
+  local function insert_wsl_format(items, text)
+    table.insert(items, { Background = { Color = "#0078D4" } })
+    table.insert(items, { Foreground = { Color = "#ffffff" } })
+    table.insert(items, { Text = string.format("  %s ", text) })
+  end
+
+  local items = {} ---@type FormatItemSpec[]
+  if cmd:lower():find("ssh") then
+    insert_ssh_format(items, "SSH")
+  elseif domain:lower():find("ssh") then
+    insert_ssh_format(items, domain)
+  elseif domain:lower():find("wsl") then
+    insert_wsl_format(items, domain)
+  elseif cmd:find("wslhost.exe") then
+    local distro_id = proc and get_wsl_distro_guid(proc) or nil
+    local distro_name = distro_id and get_wsl_distro_name(distro_id) or nil
+    local display = distro_name and string.format("WSL:%s", distro_name) or "WSL"
+    insert_wsl_format(items, display)
+  else
+  end
+
+  if #items > 0 then
+    window:set_right_status(wezterm.format(items))
+  else
+    window:set_right_status("")
+  end
+end)
 
 return config
