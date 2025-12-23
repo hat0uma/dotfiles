@@ -1,23 +1,113 @@
-local wezterm = require("wezterm")
+local wezterm = require("wezterm") --- @type Wezterm
 local act = wezterm.action
+local config = wezterm.config_builder()
 local is_windows = wezterm.target_triple == "x86_64-pc-windows-msvc"
-local home = is_windows and os.getenv("UserProfile") or os.getenv("HOME")
-local dotfiles = home .. "/dotfiles"
+-- local home = is_windows and os.getenv("UserProfile") or os.getenv("HOME")
+-- local dotfiles = home .. "/dotfiles"
 
+--------------------------------------------------------------------------------
+-- Launch Menu
+--------------------------------------------------------------------------------
 local pwsh = { label = "pwsh", args = { "pwsh", "-NoLogo" } }
 local zsh = { label = "zsh", args = { "zsh", "-l" } }
 local neovim = { label = "neovim", args = { "nvim" } }
-local neovim_terminal = {
-  label = "neovim-terminal",
-  args = is_windows and { dotfiles .. "/win/nvim_terminal.cmd" } or { dotfiles .. "/scripts/nvim_terminal.sh" },
-}
-local launch_menu = {
+config.launch_menu = {
   is_windows and pwsh or zsh,
-  neovim_terminal,
   neovim,
 }
+config.default_prog = is_windows and pwsh.args or zsh.args
 
-wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_width)
+--------------------------------------------------------------------------------
+-- General
+--------------------------------------------------------------------------------
+config.audible_bell = "Disabled"
+-- config.exit_behavior = "Hold"
+
+-- keybords
+-- config.debug_key_events = true
+-- config.xim_im_name = "fcitx"
+config.use_ime = true
+config.allow_win32_input_mode = false
+config.enable_kitty_keyboard = false
+config.enable_csi_u_key_encoding = true
+
+--------------------------------------------------------------------------------
+-- Stylings
+--------------------------------------------------------------------------------
+
+------------------------------------
+-- Tab bars
+------------------------------------
+config.enable_tab_bar = true
+-- config.use_fancy_tab_bar = false
+config.hide_tab_bar_if_only_one_tab = false
+config.tab_bar_at_bottom = false
+config.show_close_tab_button_in_tabs = false
+
+------------------------------------
+-- Window
+------------------------------------
+config.window_decorations = "RESIZE"
+config.window_padding = {
+  left = 0,
+  right = 0,
+  top = 0,
+  bottom = 0,
+}
+------------------------------------
+-- Colors
+------------------------------------
+-- config.window_background_opacity = 0.85
+-- config.win32_system_backdrop = "Acrylic"
+config.color_scheme = "Catppuccin Frappe"
+
+------------------------------------
+-- Fonts
+------------------------------------
+config.font = wezterm.font_with_fallback({ "UDEV Gothic NF", "Twemoji Mozilla" })
+config.font_size = 11
+config.harfbuzz_features = { "calt=0", "clig=0", "liga=0" }
+
+--------------------------------------------------------------------------------
+-- Keybindings
+--------------------------------------------------------------------------------
+config.leader = {
+  key = "t",
+  mods = "CTRL",
+  timeout_milliseconds = 5000,
+}
+config.keys = {
+  { key = "q", mods = "LEADER", action = act.CloseCurrentPane({ confirm = false }) },
+  { key = "0", mods = "LEADER", action = act.QuitApplication },
+  { key = "Enter", mods = "LEADER", action = act.ShowLauncher },
+  { key = "f", mods = "LEADER", action = act.ToggleFullScreen },
+  { key = "1", mods = "LEADER", action = act.ActivateTab(0) },
+  { key = "2", mods = "LEADER", action = act.ActivateTab(1) },
+  { key = "3", mods = "LEADER", action = act.ActivateTab(2) },
+  { key = "4", mods = "LEADER", action = act.ActivateTab(3) },
+  { key = "\\", mods = "LEADER", action = act.SplitHorizontal({}) },
+  { key = "-", mods = "LEADER", action = act.SplitVertical({}) },
+  { key = "r", mods = "LEADER", action = act.ReloadConfiguration },
+  { key = "h", mods = "LEADER", action = act({ ActivatePaneDirection = "Left" }) },
+  { key = "j", mods = "LEADER", action = act({ ActivatePaneDirection = "Down" }) },
+  { key = "k", mods = "LEADER", action = act({ ActivatePaneDirection = "Up" }) },
+  { key = "l", mods = "LEADER", action = act({ ActivatePaneDirection = "Right" }) },
+  {
+    key = "e",
+    mods = "LEADER",
+    action = act.EmitEvent("trigger-neovim-with-scrollback"),
+  },
+  {
+    key = "E",
+    mods = "LEADER",
+    action = act.EmitEvent("trigger-neovim-with-ansi-scrollback"),
+  },
+}
+
+--------------------------------------------------------------------------------
+-- Events
+--------------------------------------------------------------------------------
+wezterm.on("format-tab-title", function(tab, tabs, panes, cfg, hover, max_width)
   local item = {}
   if tab.is_active then
     table.insert(item, { Background = { Color = "#8caaee" } })
@@ -33,121 +123,72 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_wid
   return item
 end)
 
-wezterm.on("trigger-neovim-with-scrollback", function(window, pane)
-  -- Retrieve the text from the pane
-  local text = pane:get_lines_as_text(pane:get_dimensions().scrollback_rows)
+wezterm.on(
+  "trigger-neovim-with-scrollback",
 
-  -- Create a temporary file to pass to neovim
-  local name = os.tmpname()
-  local f = assert(io.open(name, "w+"))
-  f:write(text)
-  f:flush()
-  f:close()
+  --- @param window Window
+  --- @param pane Pane
+  function(window, pane)
+    -- Retrieve the text from the pane
+    local text = pane:get_lines_as_text(pane:get_dimensions().scrollback_rows)
 
-  window:perform_action(
-    act.SpawnCommandInNewTab({
-      args = { "nvim", name },
-      domain = { DomainName = "local" },
-    }),
-    pane
-  )
+    -- Create a temporary file to pass to neovim
+    local name = os.tmpname()
+    local f = assert(io.open(name, "w+"))
+    f:write(text)
+    f:flush()
+    f:close()
 
-  -- Wait "enough" time for vim to read the file before we remove it.
-  -- The window creation and process spawn are asynchronous wrt. running
-  -- this script and are not awaitable, so we just pick a number.
-  wezterm.sleep_ms(1000)
-  os.remove(name)
-end)
+    window:perform_action(
+      act.SpawnCommandInNewTab({
+        args = { "nvim", name },
+        domain = { DomainName = "local" },
+      }),
+      pane
+    )
 
-wezterm.on("trigger-neovim-with-ansi-scrollback", function(window, pane)
-  -- Retrieve the current pane's text
-  local text = pane:get_lines_as_escapes(pane:get_dimensions().scrollback_rows)
+    -- Wait "enough" time for vim to read the file before we remove it.
+    -- The window creation and process spawn are asynchronous wrt. running
+    -- this script and are not awaitable, so we just pick a number.
+    wezterm.sleep_ms(1000)
+    os.remove(name)
+  end
+)
 
-  -- Create a temporary file to pass to the pager
-  local name = os.tmpname()
-  local f = assert(io.open(name, "w+"))
-  f:write(text)
-  f:flush()
-  f:close()
+wezterm.on(
+  "trigger-neovim-with-ansi-scrollback",
 
-  -- Open a new window running less and tell it to open the file
-  window:perform_action(
-    act.SpawnCommandInNewTab({
-      -- args = { "nvim", "-c", "e ++ff=unix", name },
-      -- args = { "nvim", "-c", "set ff=unix", name },
-      args = { "nvim", "-c", "DeansiEnable", name },
-      domain = { DomainName = "local" },
-    }),
-    pane
-  )
+  --- @param window Window
+  --- @param pane Pane
+  function(window, pane)
+    -- Retrieve the current pane's text
+    local text = pane:get_lines_as_escapes(pane:get_dimensions().scrollback_rows)
 
-  -- Wait "enough" time for less to read the file before we remove it.
-  -- The window creation and process spawn are asynchronous wrt. running
-  -- this script and are not awaitable, so we just pick a number.
-  --
-  -- Note: We don't strictly need to remove this file, but it is nice
-  -- to avoid cluttering up the temporary directory.
-  wezterm.sleep_ms(1000)
-  os.remove(name)
-end)
+    -- Create a temporary file to pass to the pager
+    local name = os.tmpname()
+    local f = assert(io.open(name, "w+"))
+    f:write(text)
+    f:flush()
+    f:close()
 
-return {
-  launch_menu = launch_menu,
-  audible_bell = "Disabled",
-  use_ime = true,
-  enable_tab_bar = true,
-  -- use_fancy_tab_bar = false,
-  hide_tab_bar_if_only_one_tab = false,
-  tab_bar_at_bottom = false,
-  show_close_tab_button_in_tabs = false,
-  window_decorations = "RESIZE",
-  window_padding = {
-    left = 0,
-    right = 0,
-    top = 0,
-    bottom = 0,
-  },
-  color_scheme = "Catppuccin Frappe",
-  -- debug_key_events = true,
-  -- exit_behavior = "Hold",
-  -- xim_im_name = "fcitx",
-  font = wezterm.font_with_fallback({ "UDEV Gothic NF", "Twemoji Mozilla" }),
-  font_size = 11,
-  harfbuzz_features = { "calt=0", "clig=0", "liga=0" },
-  default_prog = is_windows and pwsh.args or zsh.args,
-  leader = {
-    key = "t",
-    mods = "CTRL",
-    timeout_milliseconds = 5000,
-  },
-  allow_win32_input_mode = false,
-  enable_kitty_keyboard = false,
-  enable_csi_u_key_encoding = true,
-  keys = {
-    { key = "q", mods = "LEADER", action = act.CloseCurrentPane({ confirm = false }) },
-    { key = "0", mods = "LEADER", action = act.QuitApplication },
-    { key = "Enter", mods = "LEADER", action = act.ShowLauncher },
-    { key = "f", mods = "LEADER", action = act.ToggleFullScreen },
-    { key = "1", mods = "LEADER", action = act.ActivateTab(0) },
-    { key = "2", mods = "LEADER", action = act.ActivateTab(1) },
-    { key = "3", mods = "LEADER", action = act.ActivateTab(2) },
-    { key = "4", mods = "LEADER", action = act.ActivateTab(3) },
-    { key = "\\", mods = "LEADER", action = act.SplitHorizontal({}) },
-    { key = "-", mods = "LEADER", action = act.SplitVertical({}) },
-    { key = "r", mods = "LEADER", action = act.ReloadConfiguration },
-    { key = "h", mods = "LEADER", action = act({ ActivatePaneDirection = "Left" }) },
-    { key = "j", mods = "LEADER", action = act({ ActivatePaneDirection = "Down" }) },
-    { key = "k", mods = "LEADER", action = act({ ActivatePaneDirection = "Up" }) },
-    { key = "l", mods = "LEADER", action = act({ ActivatePaneDirection = "Right" }) },
-    {
-      key = "e",
-      mods = "LEADER",
-      action = act.EmitEvent("trigger-neovim-with-scrollback"),
-    },
-    {
-      key = "E",
-      mods = "LEADER",
-      action = act.EmitEvent("trigger-neovim-with-ansi-scrollback"),
-    },
-  },
-}
+    -- Open a new window running less and tell it to open the file
+    window:perform_action(
+      act.SpawnCommandInNewTab({
+        args = { "nvim", "-c", "DeansiEnable", name },
+        domain = { DomainName = "local" },
+      }),
+      pane
+    )
+
+    -- Wait "enough" time for less to read the file before we remove it.
+    -- The window creation and process spawn are asynchronous wrt. running
+    -- this script and are not awaitable, so we just pick a number.
+    --
+    -- Note: We don't strictly need to remove this file, but it is nice
+    -- to avoid cluttering up the temporary directory.
+    wezterm.sleep_ms(1000)
+    os.remove(name)
+  end
+)
+
+return config
