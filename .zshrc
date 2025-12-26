@@ -97,24 +97,9 @@ alias ip='ip --color=auto'
 alias ll='ls -alFh'
 alias edit='nvim'
 alias open='xdg-open'
-function nv ()
-{
-    export NVIM_RESTART_ENABLE=1
-    nvim $@
-    while [ $? -eq 1 ]; do nvim +RestoreSession; done 
-    unset NVIM_RESTART_ENABLE
-}
 
 if [[ $NVIM ]]; then
     source _nvim_hooks.zsh
-#     NVIM_CMD=$(which nvim)
-#     function nvim () {
-#         if [[ $@ =~ "--headless" ]]; then
-#             $NVIM_CMD $@
-#         else
-#             $NVIM_CMD --server $PARENT_NVIM_ADDRESS --remote-tab $@
-#         fi
-#     }
 fi
 
 if [[ -v HYPRLAND_INSTANCE_SIGNATURE ]]; then

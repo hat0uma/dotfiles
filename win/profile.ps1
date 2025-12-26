@@ -42,19 +42,6 @@ if ( Test-Path env:NVIM )
     . _nvim_hooks.ps1
 }
 
-# Remove-Alias -Force -Name nv
-Remove-Item -Force Alias:\nv -ErrorAction SilentlyContinue
-function nv()
-{
-    $env:NVIM_RESTART_ENABLE = 1
-    nvim $args
-    while( $LASTEXITCODE -eq 1 )
-    {
-        nvim +RestoreSession
-    }
-    Remove-Item env:NVIM_RESTART_ENABLE
-}
-
 # # Git completion
 # # Lazy load posh-git
 # Register-ArgumentCompleter -CommandName git -Native -ScriptBlock {
