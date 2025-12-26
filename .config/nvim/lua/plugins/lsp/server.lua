@@ -8,6 +8,9 @@ M.configurations = {
   lua_ls = {
     settings = {
       Lua = {
+        hint = {
+          arrayIndex = "Disable",
+        },
         diagnostics = {
           -- globals = { "vim" },
           groupFileStatus = {

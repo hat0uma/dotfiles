@@ -67,16 +67,12 @@ config.color_scheme = "Catppuccin Frappe"
 config.font = wezterm.font_with_fallback({
   { family = "UDEV Gothic", weight = "Regular" },
   -- { family = "Sarasa Term J" },
-  -- { family = "Symbols Nerd Font", scale = 1.3 },
+  { family = "Symbols Nerd Font Mono" },
   { family = "Twemoji Mozilla" },
 })
 config.font_size = 11
 config.harfbuzz_features = { "calt=0", "clig=0", "liga=0" }
 config.allow_square_glyphs_to_overflow_width = "Always"
--- config.allow_square_glyphs_to_overflow_width = "WhenFollowedBySpace"
--- config.cell_widths = {
---   { first = 0xf08c0, last = 0xf08c0, width = 2 },
--- }
 
 --------------------------------------------------------------------------------
 -- Keybindings
