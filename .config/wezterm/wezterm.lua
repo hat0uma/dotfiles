@@ -122,9 +122,11 @@ config.keys = {
 wezterm.on("format-tab-title", function(tab, tabs, panes, cfg, hover, max_width)
   local item = {}
   if tab.is_active then
+    table.insert(item, { Foreground = { Color = colors.background } })
     table.insert(item, { Background = { Color = "#8caaee" } })
     table.insert(item, { Attribute = { Intensity = "Bold" } })
   elseif hover then
+    table.insert(item, { Foreground = { Color = colors.background } })
     table.insert(item, { Background = { Color = "#414559" } })
   else
     table.insert(item, { Background = { Color = "#292c3c" } })
@@ -209,17 +211,20 @@ wezterm.on("update-right-status", function(window, pane)
   local proc = pane:get_foreground_process_info()
 
   local function insert_ssh_format(items, text)
+    table.insert(items, { Attribute = { Intensity = "Bold" } })
     table.insert(items, { Background = { Color = "#764ABC" } })
     table.insert(items, { Foreground = { Color = "#ffffff" } })
-    table.insert(items, { Text = string.format("  %s ", text) })
+    table.insert(items, { Text = string.format("   %s ", text) })
   end
   local function insert_wsl_format(items, text)
+    table.insert(items, { Attribute = { Intensity = "Bold" } })
     table.insert(items, { Background = { Color = "#0078D4" } })
     table.insert(items, { Foreground = { Color = "#ffffff" } })
-    table.insert(items, { Text = string.format("  %s ", text) })
+    table.insert(items, { Text = string.format("   %s ", text) })
   end
 
-  local items = {} ---@type FormatItemSpec[]
+  ---@type FormatItemSpec[]
+  local items = {}
   if cmd:lower():find("ssh") then
     insert_ssh_format(items, "SSH")
   elseif domain:lower():find("ssh") then
