@@ -1,4 +1,5 @@
 local wezterm = require("wezterm") --- @type Wezterm
+local winutils = require("winutils") --- @type winutils
 local act = wezterm.action
 local config = wezterm.config_builder()
 local is_windows = wezterm.target_triple == "x86_64-pc-windows-msvc"
@@ -202,48 +203,6 @@ wezterm.on(
   end
 )
 
-local distro_cache = {} ---@type string[]
-
---- Get registry value
----@param path string
----@param item string
----@return string?
-local function get_reg_value(path, item)
-  local cmd = { "reg.exe", "query", path, "/v", item }
-  local success, stdout = wezterm.run_child_process(cmd)
-  if not success then
-    return nil
-  end
-
-  local value = stdout:match("REG_%w+%s+(.-)[\r\n]")
-  return value and value:match("^%s*(.-)%s*$")
-end
-
---- @param guid string
---- @return string?
-local function get_wsl_distro_name(guid)
-  if distro_cache[guid] then
-    return distro_cache[guid]
-  end
-
-  local name = get_reg_value("HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Lxss\\" .. guid, "DistributionName")
-  if name then
-    distro_cache[guid] = name
-    return name
-  end
-end
-
----@param proc LocalProcessInfo
----@return string?
-local function get_wsl_distro_guid(proc)
-  for i, arg in ipairs(proc.argv) do
-    if arg == "--distro-id" and proc.argv[i + 1] then
-      local guid = proc.argv[i + 1]
-      return guid
-    end
-  end
-end
-
 wezterm.on("update-right-status", function(window, pane)
   local domain = pane:get_domain_name()
   local cmd = pane:get_foreground_process_name() or ""
@@ -268,8 +227,8 @@ wezterm.on("update-right-status", function(window, pane)
   elseif domain:lower():find("wsl") then
     insert_wsl_format(items, domain)
   elseif cmd:find("wslhost.exe") then
-    local distro_id = proc and get_wsl_distro_guid(proc) or nil
-    local distro_name = distro_id and get_wsl_distro_name(distro_id) or nil
+    local distro_id = proc and winutils.get_wsl_distro_guid(proc) or nil
+    local distro_name = distro_id and winutils.get_wsl_distro_name(distro_id) or nil
     local display = distro_name and string.format("WSL:%s", distro_name) or "WSL"
     insert_wsl_format(items, display)
   else
