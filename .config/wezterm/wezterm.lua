@@ -59,7 +59,12 @@ config.window_padding = {
 ------------------------------------
 -- config.window_background_opacity = 0.85
 -- config.win32_system_backdrop = "Acrylic"
-config.color_scheme = "Catppuccin Frappe"
+local color_scheme = "Catppuccin Frappe"
+config.color_scheme = color_scheme
+
+local colors = wezterm.color.get_builtin_schemes()[color_scheme]
+config.command_palette_fg_color = colors.background
+config.command_palette_bg_color = colors.foreground
 
 ------------------------------------
 -- Fonts
