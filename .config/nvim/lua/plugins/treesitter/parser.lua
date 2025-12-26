@@ -77,7 +77,7 @@ function M.local_parser_packages()
   M.setup()
 
   local parser_packages = {}
-  local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
+  local parser_config = require("nvim-treesitter.parsers")
   local lazy_root = require("lazy.core.config").options.root
 
   for _, lang in pairs(parsers) do
@@ -98,7 +98,7 @@ function M.setup()
     return
   end
 
-  default_parser_config = vim.deepcopy(require("nvim-treesitter.parsers").get_parser_configs())
+  default_parser_config = vim.deepcopy(require("nvim-treesitter.parsers"))
   vim.api.nvim_create_user_command("TSUpdateMyParsers", function()
     M.install()
   end, {})

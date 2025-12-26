@@ -4,6 +4,7 @@
 # Install-Module -name PSReadLine -AllowClobber -Force -Scope CurrentUser
 Set-PSReadLineOption -BellStyle None -EditMode Emacs
 Set-PSReadlineKeyHandler -Chord Tab -Function Complete
+Set-PSReadLineOption -PredictionSource HistoryAndPlugin -PredictionViewStyle ListView
 # Set-PSReadLineKeyHandler -Chord Tab -Function MenuComplete
 
 # Encoding
