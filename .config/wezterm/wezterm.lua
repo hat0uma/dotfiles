@@ -203,33 +203,34 @@ wezterm.on(
 )
 
 local distro_cache = {} ---@type string[]
+
+--- Get registry value
+---@param path string
+---@param item string
+---@return string?
+local function get_reg_value(path, item)
+  local cmd = { "reg.exe", "query", path, "/v", item }
+  local success, stdout = wezterm.run_child_process(cmd)
+  if not success then
+    return nil
+  end
+
+  local value = stdout:match("REG_%w+%s+(.-)[\r\n]")
+  return value and value:match("^%s*(.-)%s*$")
+end
+
+--- @param guid string
+--- @return string?
 local function get_wsl_distro_name(guid)
   if distro_cache[guid] then
-    -- wezterm.log_info("Use Cache Entry! GUID: " .. guid .. " -> Name: " .. distro_cache[guid])
     return distro_cache[guid]
   end
 
-  local cmd = {
-    "reg.exe",
-    "query",
-    "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Lxss\\" .. guid,
-    "/v",
-    "DistributionName",
-  }
-
-  local success, stdout = wezterm.run_child_process(cmd)
-
-  if success then
-    -- Output Example: "    DistributionName    REG_SZ    Ubuntu-20.04"
-    local name = stdout:match("DistributionName%s+REG_SZ%s+([^\r\n]+)")
-    if name then
-      -- wezterm.log_info("New Cache Entry! GUID: " .. guid .. " -> Name: " .. name)
-      distro_cache[guid] = name
-      return name
-    end
+  local name = get_reg_value("HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Lxss\\" .. guid, "DistributionName")
+  if name then
+    distro_cache[guid] = name
+    return name
   end
-
-  return guid
 end
 
 ---@param proc LocalProcessInfo
