@@ -8,9 +8,9 @@ local is_windows = wezterm.target_triple == "x86_64-pc-windows-msvc"
 --------------------------------------------------------------------------------
 -- Launch Menu
 --------------------------------------------------------------------------------
-local pwsh = { label = "pwsh", args = { "pwsh", "-NoLogo" } }
-local zsh = { label = "zsh", args = { "zsh", "-l" } }
-local neovim = { label = "neovim", args = { "nvim" } }
+local pwsh = { label = "pwsh", args = { "pwsh", "-NoLogo" } } ---@type SpawnCommand
+local zsh = { label = "zsh", args = { "zsh", "-l" } } ---@type SpawnCommand
+local neovim = { label = "neovim", args = { "nvim" } } ---@type SpawnCommand
 config.launch_menu = {
   is_windows and pwsh or zsh,
   neovim,
@@ -72,7 +72,8 @@ config.font = wezterm.font_with_fallback({
 })
 config.font_size = 11
 config.harfbuzz_features = { "calt=0", "clig=0", "liga=0" }
-config.allow_square_glyphs_to_overflow_width = "WhenFollowedBySpace"
+config.allow_square_glyphs_to_overflow_width = "Always"
+-- config.allow_square_glyphs_to_overflow_width = "WhenFollowedBySpace"
 -- config.cell_widths = {
 --   { first = 0xf08c0, last = 0xf08c0, width = 2 },
 -- }

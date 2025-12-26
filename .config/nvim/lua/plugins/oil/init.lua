@@ -46,7 +46,7 @@ return {
         max_height = math.floor(vim.o.lines * 0.7),
         border = "rounded",
         win_options = {
-          winblend = 10,
+          -- winblend = 10,
         },
       },
       view_options = {

@@ -373,6 +373,7 @@ return {
     formatters = {
       file = {
         filename_first = true,
+        icon_width = 3,
       },
     },
     sources = {
