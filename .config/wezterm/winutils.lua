@@ -1,3 +1,4 @@
+---Windows utilities
 ---@class winutils
 local M = {}
 local wezterm = require("wezterm") --- @type Wezterm
