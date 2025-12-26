@@ -12,7 +12,7 @@ function M.get_reg_value(path, item)
   local cmd = { "reg.exe", "query", path, "/v", item }
   local success, stdout = wezterm.run_child_process(cmd)
   if not success then
-    return stdout
+    return nil
   end
 
   local value = stdout:match("REG_%w+%s+(.-)[\r\n]")
