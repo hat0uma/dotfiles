@@ -179,3 +179,21 @@ rc.ambiwidth.setup()
 rc.curcenter.setup()
 -- rc.git.autofetch.enable()
 -- rc.projectrc.setup()
+
+--- Wezterm
+local function set_wezterm_user_var(key, value)
+  io.write(string.format("\027]1337;SetUserVar=%s=%s\a", key, vim.base64.encode(tostring(value))))
+end
+
+vim.api.nvim_create_autocmd("VimEnter", {
+  callback = function()
+    set_wezterm_user_var("IS_NVIM", true)
+  end,
+})
+
+-- Reset variable when exiting Neovim
+vim.api.nvim_create_autocmd("VimLeave", {
+  callback = function()
+    set_wezterm_user_var("IS_NVIM", false)
+  end,
+})
