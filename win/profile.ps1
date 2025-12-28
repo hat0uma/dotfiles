@@ -134,6 +134,12 @@ Set-PSReadLineKeyHandler -Key Enter -ScriptBlock {
     [Microsoft.PowerShell.PSConsoleReadLine]::AcceptLine()
 }
 
+Set-PSReadLineKeyHandler -Key Ctrl+l -ScriptBlock {
+    $Global:IsClearScreenRunning = $true
+    [Microsoft.PowerShell.PSConsoleReadLine]::ClearScreen()
+    $Global:IsClearScreenRunning = $false
+}
+
 function prompt
 {
     $__savedLastPromptExitCode = Get-DetailedExitCode
@@ -255,6 +261,12 @@ function Initialize-GitBackend
 
     # Action when timer fires
     $OnTimerElapsed = {
+        # Wait ClearScreen
+        if ($Global:IsClearScreenRunning)
+        {
+            return
+        }
+
         # Wait Event Completion
         if (-not $Global:GitPromptState.AsyncResult -or -not( $Global:GitPromptState.AsyncResult.IsCompleted ))
         {
@@ -311,12 +323,9 @@ function Start-UpdateGitPrompt
         $Global:GitPromptInitialized = $true
     }
 
-    if($Global:GitPromptTimer)
-    {
-        $Global:GitPromptTimer.Stop()
-    }
+    $Global:GitPromptTimer.Stop()
 
-    # Path chnaged
+    # Refresh state
     $Global:GitPromptState.Path = $CurrentPath
     $Global:GitPromptState.Prompt = "" # Clear display while calculating
 
