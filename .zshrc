@@ -134,6 +134,17 @@ zmodload -i zsh/mathfunc
 
 zmodload zsh/zpty
 
+# ----------------------------------------
+# OSC 7: change working directory
+# ----------------------------------------
+function _osc7(){
+    local url_path="${PWD}"
+    url_path="${url_path// /%20}"
+    print -Pn "\e]7;file://${HOST}${url_path}\e\\"
+}
+
+add-zsh-hook chpwd _osc7
+
 fpath+=${ZDOTDIR:-~}/.zsh_functions
 
 # if (which zprof > /dev/null 2>&1) ;then

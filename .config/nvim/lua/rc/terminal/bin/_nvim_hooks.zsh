@@ -1,12 +1,5 @@
 #!/usr/bin/env zsh
 
-# change terminal buffer pwd
-function _nvim_autocd(){
-    nvim --server "$PARENT_NVIM_ADDRESS" --remote-send "<Cmd>lua require('rc.terminal.dir').notify_cwd_changed('$PWD')<CR>"
-}
-
-add-zsh-hook chpwd _nvim_autocd
-
 # notify long command finished
 function _notify (){
     local last_command="$1"

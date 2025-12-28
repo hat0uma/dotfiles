@@ -85,6 +85,18 @@ function prompt
     $currentPath = $PWD.ProviderPath
     $displayPath = $currentPath.Replace($HOME, "~")
 
+    # ----------------------------------------
+    # OSC 7: change working directory
+    # ----------------------------------------
+    $p = $executionContext.SessionState.Path.CurrentLocation
+    $osc7 = ""
+    if ($p.Provider.Name -eq "FileSystem") # ignore HKLM:\, Env:\, Cert:\ and others.
+    {
+        $esc = [char]27
+        $uri = ([System.Uri]$p.ProviderPath).AbsoluteUri
+        $osc7 = "${esc}]7;${uri}${esc}\"
+    }
+
     # Color settings
     $esc = [char]27
     $colorPath      = "$esc[36m" # cyan
@@ -123,6 +135,7 @@ function prompt
     # Write-Host "$($env:USERNAME)@$($env:COMPUTERNAME))-" -NoNewline -ForegroundColor Yellow
 
     return (
+        "$osc7"+
         "$colorBorder╭─[$colorPath$displayPath$colorBorder]$gitPart$colorReset`n"+
         "$colorBorder╰──$faceColor$face$colorReset < "
     )
