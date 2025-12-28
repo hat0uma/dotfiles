@@ -72,7 +72,7 @@ function Format-WeztermUserVar ($key, $val)
 
 function Get-DetailedExitCode
 {
-    if ($? -eq $True)
+    if ($? -eq $true)
     {
         return 0
     }
@@ -112,22 +112,17 @@ function Get-CommandNameFromLine($line)
 
 $Global:StatusUpdateAllowed = $true
 $Global:LastPromptExitCode = 0
+$Global:IsClearScreenRunning = $false
 
 Set-PSReadLineKeyHandler -Key Enter -ScriptBlock {
     $line = $null
     $cursor = $null
     [Microsoft.PowerShell.PSConsoleReadLine]::GetBufferState([ref]$line, [ref]$cursor)
 
-    # ---------------------------------
-    # WEZTERM_PROG
-    # ---------------------------------
+    # OSC Sequences
     $cmdName = Get-CommandNameFromLine $line
     $WEZTERM_PROG = Format-WeztermUserVar "WEZTERM_PROG" "${cmdName}"
-
-    # ---------------------------------
-    # OSC 133;C: FTCS_COMMAND_EXECUTED
-    # ---------------------------------
-    $OSC133C = "$esc]133;C$bel"
+    $OSC133C = "$esc]133;C$bel" # FTCS_COMMAND_EXECUTED
 
     Write-Host -NoNewline "${WEZTERM_PROG}${OSC133C}"
     $Global:StatusUpdateAllowed = $true
@@ -161,6 +156,7 @@ function prompt
     }
 
     # OSC Sequences
+    $WEZTERM_PROG = Format-WeztermUserVar "WEZTERM_PROG" ""
     $OSC133A = "$esc]133;A$bel" # FTCS_PROMPT
     $OSC133B = "$esc]133;B$bel" # FTCS_COMMAND_START
     $OSC133D = "$esc]133;D;$Global:LastPromptExitCode$bel" # FTCS_COMMAND_FINISHED
@@ -171,11 +167,6 @@ function prompt
         $uri = ([System.Uri]$PWD.ProviderPath).AbsoluteUri
         $OSC7 = "${esc}]7;${uri}${esc}\"
     }
-
-    # ----------------------------------------
-    # WEZTERM_PROG
-    # ----------------------------------------
-    $WEZTERM_PROG = Format-WeztermUserVar "WEZTERM_PROG" ""
 
     # Color settings
     $esc = [char]27
@@ -261,7 +252,7 @@ function Initialize-GitBackend
 
     # Action when timer fires
     $OnTimerElapsed = {
-        # Wait ClearScreen
+        # Wait ClearScreen ends
         if ($Global:IsClearScreenRunning)
         {
             return
