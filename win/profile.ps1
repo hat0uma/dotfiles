@@ -4,7 +4,7 @@
 # Install-Module -name PSReadLine -AllowClobber -Force -Scope CurrentUser
 Set-PSReadLineOption -BellStyle None -EditMode Emacs
 Set-PSReadlineKeyHandler -Chord Tab -Function Complete
-Set-PSReadLineOption -PredictionSource HistoryAndPlugin -PredictionViewStyle ListView
+# Set-PSReadLineOption -PredictionSource HistoryAndPlugin -PredictionViewStyle ListView
 # Set-PSReadLineKeyHandler -Chord Tab -Function MenuComplete
 
 # Encoding
@@ -25,7 +25,7 @@ function open($file)
 
 function settings
 {
-    start-process ms-setttings:
+    start-process ms-settings:
 }
 
 function ln($target, $link)
@@ -57,23 +57,96 @@ if ( Test-Path env:NVIM )
 # ==============================================================================
 # Prompt Function
 # ==============================================================================
+$esc = [char]0x1b
+$bel = [char]0x07
+
 # Prompt Lines
 Set-PSReadLineOption -ExtraPromptLineCount 1
 
+function Format-WeztermUserVar ($key, $val)
+{
+    $bytes = [System.Text.Encoding]::UTF8.GetBytes($val)
+    $b64 = [System.Convert]::ToBase64String($bytes)
+    return "$esc]1337;SetUserVar=$key=$b64$bel" # OSC 1337
+}
+
+function Get-DetailedExitCode
+{
+    if ($? -eq $True)
+    {
+        return 0
+    }
+
+    $LastHistoryEntry = $(Get-History -Count 1)
+    if (-not $LastHistoryEntry)
+    { 
+        return 1 
+    }
+    
+    # powershell error
+    $IsPowerShellError = $Error.Count -gt 0 -and $Error[0].InvocationInfo.HistoryId -eq $LastHistoryEntry.Id
+    if ($IsPowerShellError)
+    {
+        return -1
+    }
+    # exit code of external command
+    return $LastExitCode
+}
+
+function Get-CommandNameFromLine($line)
+{
+    # remove whitespaces
+    $line = $line.Trim()
+    
+    # Get command
+    if ([string]::IsNullOrEmpty($line))
+    {
+        $cmdName = ""
+    } else
+    {
+        # Get first element splitted by whitespace ("git commit" -> "git")
+        $cmdName = $line -split '\s+', 2 | Select-Object -First 1
+    }
+    return $cmdName
+}
+
 $Global:StatusUpdateAllowed = $true
+$Global:LastPromptExitCode = 0
+
 Set-PSReadLineKeyHandler -Key Enter -ScriptBlock {
+    $line = $null
+    $cursor = $null
+    [Microsoft.PowerShell.PSConsoleReadLine]::GetBufferState([ref]$line, [ref]$cursor)
+
+    # ---------------------------------
+    # WEZTERM_PROG
+    # ---------------------------------
+    $cmdName = Get-CommandNameFromLine $line
+    $WEZTERM_PROG = Format-WeztermUserVar "WEZTERM_PROG" "${cmdName}"
+
+    # ---------------------------------
+    # OSC 133;C: FTCS_COMMAND_EXECUTED
+    # ---------------------------------
+    $OSC133C = "$esc]133;C$bel"
+
+    Write-Host -NoNewline "${WEZTERM_PROG}${OSC133C}"
     $Global:StatusUpdateAllowed = $true
     [Microsoft.PowerShell.PSConsoleReadLine]::AcceptLine()
 }
 
-$Global:LastPromptStatus = $true
 function prompt
 {
+    $__savedLastPromptExitCode = Get-DetailedExitCode
+
+    # Path
+    $currentPath = $PWD.ProviderPath
+    $displayPath = $currentPath.Replace($HOME, "~")
+
     # Error status
     if ($Global:StatusUpdateAllowed)
     {
         # Save Exit status
-        $Global:LastPromptStatus = $?
+        $Global:LastPromptExitCode = $__savedLastPromptExitCode
 
         # Start update git status
         Start-UpdateGitPrompt $PWD.ProviderPath
@@ -81,21 +154,22 @@ function prompt
         $Global:StatusUpdateAllowed = $false
     }
 
-    # Path
-    $currentPath = $PWD.ProviderPath
-    $displayPath = $currentPath.Replace($HOME, "~")
-
-    # ----------------------------------------
-    # OSC 7: change working directory
-    # ----------------------------------------
-    $p = $executionContext.SessionState.Path.CurrentLocation
-    $osc7 = ""
-    if ($p.Provider.Name -eq "FileSystem") # ignore HKLM:\, Env:\, Cert:\ and others.
+    # OSC Sequences
+    $OSC133A = "$esc]133;A$bel" # FTCS_PROMPT
+    $OSC133B = "$esc]133;B$bel" # FTCS_COMMAND_START
+    $OSC133D = "$esc]133;D;$Global:LastPromptExitCode$bel" # FTCS_COMMAND_FINISHED
+    $OSC7 = "" # change working directory
+    if ($PWD.Provider.Name -eq "FileSystem") # ignore HKLM:\, Env:\, Cert:\ and others.
     {
         $esc = [char]27
-        $uri = ([System.Uri]$p.ProviderPath).AbsoluteUri
-        $osc7 = "${esc}]7;${uri}${esc}\"
+        $uri = ([System.Uri]$PWD.ProviderPath).AbsoluteUri
+        $OSC7 = "${esc}]7;${uri}${esc}\"
     }
+
+    # ----------------------------------------
+    # WEZTERM_PROG
+    # ----------------------------------------
+    $WEZTERM_PROG = Format-WeztermUserVar "WEZTERM_PROG" ""
 
     # Color settings
     $esc = [char]27
@@ -115,7 +189,7 @@ function prompt
     }
 
     # Face
-    $isSuccess = $Global:LastPromptStatus
+    $isSuccess = $Global:LastPromptExitCode -eq 0
     if($isSuccess)
     {
         #$face="(*'▽')"
@@ -135,9 +209,10 @@ function prompt
     # Write-Host "$($env:USERNAME)@$($env:COMPUTERNAME))-" -NoNewline -ForegroundColor Yellow
 
     return (
-        "$osc7"+
-        "$colorBorder╭─[$colorPath$displayPath$colorBorder]$gitPart$colorReset`n"+
-        "$colorBorder╰──$faceColor$face$colorReset < "
+        "${OSC133D}${WEZTERM_PROG}${OSC7}${OSC133A}"+
+        "${colorBorder}╭─[${colorPath}${displayPath}${colorBorder}]${gitPart}${colorReset}`n"+
+        "${colorBorder}╰──${faceColor}${face}${colorReset} < "+
+        "${OSC133B}"
     )
 }
 
@@ -161,10 +236,19 @@ $Global:GitPromptState = [hashtable]::Synchronized(@{
 function Initialize-GitBackend
 {
     # Create Runspace
+    if ($Global:GitPromptRunspace)
+    {
+        $Global:GitPromptRunspace.Dispose()
+    }
     $Global:GitPromptRunspace = [runspacefactory]::createRunspace()
     $Global:GitPromptRunspace.Open()
 
     # create timer
+    if ($Global:GitPromptTimer)
+    {
+        $Global:GitPromptTimer.Stop()
+        $Global:GitPromptTimer.Dispose()
+    }
     $Global:GitPromptTimer = New-Object System.Timers.Timer
     $Global:GitPromptTimer.Interval = 50
     $Global:GitPromptTimer.AutoReset = $true
@@ -205,6 +289,8 @@ function Initialize-GitBackend
         [Microsoft.PowerShell.PSConsoleReadLine]::InvokePrompt()
     }
 
+    # Unregister previous timer callback for safely
+    Unregister-Event -SourceIdentifier "GitPromptTimer" -ErrorAction SilentlyContinue
 
     # Register timer callback
     Register-ObjectEvent `
@@ -223,6 +309,11 @@ function Start-UpdateGitPrompt
     {
         Initialize-GitBackend
         $Global:GitPromptInitialized = $true
+    }
+
+    if($Global:GitPromptTimer)
+    {
+        $Global:GitPromptTimer.Stop()
     }
 
     # Path chnaged

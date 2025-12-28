@@ -6,6 +6,13 @@ local is_windows = wezterm.target_triple == "x86_64-pc-windows-msvc"
 -- local home = is_windows and os.getenv("UserProfile") or os.getenv("HOME")
 -- local dotfiles = home .. "/dotfiles"
 
+-- Equivalent to POSIX basename(3)
+-- Given "/foo/bar" returns "bar"
+-- Given "c:\\foo\\bar" returns "bar"
+local function basename(s)
+  return string.gsub(s, "(.*[/\\])(.*)", "%2")
+end
+
 --------------------------------------------------------------------------------
 -- Launch Menu
 --------------------------------------------------------------------------------
@@ -116,6 +123,14 @@ config.keys = {
   },
 }
 
+config.mouse_bindings = {
+  {
+    event = { Down = { streak = 3, button = "Left" } },
+    action = wezterm.action.SelectTextAtMouseCursor("SemanticZone"),
+    mods = "NONE",
+  },
+}
+
 --------------------------------------------------------------------------------
 -- Events
 --------------------------------------------------------------------------------
@@ -132,7 +147,15 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, cfg, hover, max_width)
     table.insert(item, { Background = { Color = "#292c3c" } })
   end
 
-  local title = string.format(" %d ", tab.tab_index + 1)
+  local pane = tab.active_pane
+  local proc = basename(pane.foreground_process_name)
+  if pane.user_vars["IS_NVIM"] == "true" then
+    proc = " "
+  elseif proc == "pwsh.exe" or proc == "powershell.exe" then
+    proc = " "
+  end
+
+  local title = string.format(" %d: %s (%s)", tab.tab_index + 1, proc, pane.domain_name)
   table.insert(item, { Text = title })
   return item
 end)
@@ -204,6 +227,10 @@ wezterm.on(
     os.remove(name)
   end
 )
+
+wezterm.on("augment-command-palette", function(window, pane)
+  return {}
+end)
 
 wezterm.on("update-right-status", function(window, pane)
   local domain = pane:get_domain_name()
