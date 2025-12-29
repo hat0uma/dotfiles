@@ -2,21 +2,37 @@ local M = {
   {
     "nvim-treesitter/nvim-treesitter",
     branch = "main",
+    lazy = false,
     config = function()
       require("plugins.treesitter.parser").setup()
       require("nvim-treesitter").setup({})
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = "*",
+        callback = function(ev)
+          local ft = ev.match
+          local buf = ev.buf
+          local lang = vim.treesitter.language.get_lang(ft)
+          if not lang then
+            return
+          end
+
+          local parsers = require("nvim-treesitter.parsers")
+          if not parsers[lang] then
+            return
+          end
+
+          local ok = pcall(vim.treesitter.start, buf, lang)
+          if not ok then
+            vim.notify(string.format("Failed to attach treesitter parser lang %s", lang))
+            return
+          end
+        end,
+
+        group = vim.api.nvim_create_augroup("rc.treesitter", {}),
+      })
     end,
-    dependencies = require("plugins.treesitter.parser").local_parser_packages(),
-    event = "BufReadPost",
-    cmd = {
-      "TSUpdate",
-      "TSUpdateSync",
-      "TSInstall",
-      "TSInstallSync",
-      "TSInstallInfo",
-      "TSUninstall",
-    },
   },
+  require("plugins.treesitter.parser").local_parser_packages(),
   {
     "nvim-treesitter/nvim-treesitter-textobjects",
     branch = "main",
