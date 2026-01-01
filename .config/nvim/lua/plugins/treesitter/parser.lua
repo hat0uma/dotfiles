@@ -55,13 +55,13 @@ local function parser_to_lazy_package(lang)
   --- @type LazyPluginSpec
   return {
     parser.install_info.url,
-    virtual = true,
     lazy = true,
     build = function(plugin)
-      if is_headless() then
-        vim.cmd(string.format("TSInstallSync! %s", lang))
-      else
-        vim.cmd(string.format("TSInstall! %s", lang))
+      --- @type async.Task
+      local task = require("nvim-treesitter.install").install(lang, { summary = true })
+      local ok, err_or_ok = task:pwait(1800000)
+      if not ok then
+        error(task:traceback(err_or_ok))
       end
     end,
     submodules = false,
@@ -85,11 +85,11 @@ function M.local_parser_packages()
 end
 
 function M.setup()
-  vim.api.nvim_create_user_command("TSUpdateMyParsers", function()
-    M.install({ update = true })
+  vim.api.nvim_create_user_command("TSUpdate", function()
+    M.install({ update = true, sync = is_headless() })
   end, {})
-  vim.api.nvim_create_user_command("TSBuildMyParsers", function()
-    M.install({ update = false })
+  vim.api.nvim_create_user_command("TSBuild", function()
+    M.install({ update = false, sync = is_headless() })
   end, {})
 
   vim.api.nvim_create_autocmd("User", {
