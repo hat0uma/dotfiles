@@ -151,6 +151,8 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, cfg, hover, max_width)
   local proc = basename(pane.foreground_process_name)
   if pane.user_vars["IS_NVIM"] == "true" then
     proc = " "
+  elseif pane.user_vars["WEZTERM_PROG"] and pane.user_vars["WEZTERM_PROG"] ~= "" then
+    proc = pane.user_vars["WEZTERM_PROG"]
   elseif proc == "pwsh.exe" or proc == "powershell.exe" then
     proc = " "
   end

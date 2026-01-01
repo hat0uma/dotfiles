@@ -69,8 +69,8 @@ end
 -- local adapter = "deepseek"
 -- local adapter = "gemma3"
 -- local adapter = "gemini"
--- local adapter = "claude_code"
-local adapter = "gemini_cli"
+local adapter = "claude_code"
+-- local adapter = "gemini_cli"
 
 return {
   "olimorris/codecompanion.nvim",

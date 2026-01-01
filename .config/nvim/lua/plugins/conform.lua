@@ -109,7 +109,7 @@ M.config = function()
       scss = { "prettierd", "prettier", stop_after_first = true },
       json = { "fixjson" },
       yaml = { "prettierd", "prettier", stop_after_first = true },
-      markdown = { "markdownlint-cli2" },
+      markdown = { "markdownlint-cli2", "prettierd" },
       sh = { "shfmt" },
     },
   })

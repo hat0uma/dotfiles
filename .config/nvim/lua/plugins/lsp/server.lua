@@ -70,6 +70,9 @@ M.configurations = {
     },
   },
   powershell_es = {
+    on_attach = function(client, bufnr)
+      client.server_capabilities.semanticTokensProvider = nil
+    end,
     bundle_path = vim.fs.joinpath(
       vim.fn.stdpath("data"),
       "mason/packages/powershell-editor-services"
