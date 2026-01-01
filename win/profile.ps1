@@ -156,7 +156,8 @@ function prompt
     }
 
     # OSC Sequences
-    $WEZTERM_PROG = Format-WeztermUserVar "WEZTERM_PROG" ""
+    $shellName = (Get-Process -Id $PID).ProcessName
+    $WEZTERM_PROG = Format-WeztermUserVar "WEZTERM_PROG" "${shellName}"
     $OSC133A = "$esc]133;A$bel" # FTCS_PROMPT
     $OSC133B = "$esc]133;B$bel" # FTCS_COMMAND_START
     $OSC133D = "$esc]133;D;$Global:LastPromptExitCode$bel" # FTCS_COMMAND_FINISHED
