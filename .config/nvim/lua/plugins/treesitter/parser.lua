@@ -28,6 +28,7 @@ local parsers = {
   "vim",
   "vimdoc",
   "yaml",
+  "gitcommit",
 }
 
 local function get_repo_name(lang)
@@ -59,7 +60,7 @@ local function parser_to_lazy_package(lang)
     build = function(plugin)
       --- @type async.Task
       local task = require("nvim-treesitter.install").install(lang, { summary = true })
-      local ok, err_or_ok = task:pwait(1800000)
+      local ok, err_or_ok = task:pwait(30 * 60 * 100)
       if not ok then
         error(task:traceback(err_or_ok))
       end
