@@ -46,9 +46,16 @@ return {
     build = function()
       -- require("go.install").update_all_sync()
     end,
+    ft = { "go", "gomod" },
     dependencies = {
       "ray-x/guihua.lua",
     },
+  },
+  {
+    -- F# support
+    "ionide/Ionide-vim",
+    ft = { "fsharp", "fsharp_project" },
+    config = function() end,
   },
   {
     "smjonas/inc-rename.nvim",
@@ -134,9 +141,7 @@ return {
       "mason.nvim",
       "neoconf.nvim",
       "clangd_extensions.nvim",
-      "go.nvim",
       "typescript-tools.nvim",
-      "ionide/Ionide-vim",
       "conform.nvim",
     },
     cond = not vim.g.vscode,
