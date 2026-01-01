@@ -12,18 +12,22 @@ function M.setup()
       return "restart" -- perfetct match
     end
 
-    if vim.fn.has("gui_running") == 1 then
-      return "lua rc.restart.gui()"
-    end
-
-    return "lua rc.restart.cli()"
+    return "lua rc.editor.restart()"
   end, { expr = true })
+end
+
+function M.exec()
+  if vim.fn.has("gui_running") == 1 then
+    M._gui_restart()
+  else
+    M._cli_restart()
+  end
 end
 
 ----------------------------------------------------------
 -- for CLI
 ----------------------------------------------------------
-function M.cli()
+function M._cli_restart()
   if vim.fn.isdirectory(SESSION_DIR) ~= 1 then
     vim.uv.fs_mkdir(SESSION_DIR, 493) -- 755
   end
@@ -35,7 +39,7 @@ end
 -- for GUI
 ----------------------------------------------------------
 --- startup handler for new gui instance.
-function M.on_gui_startup()
+function M._on_gui_startup()
   -- notify startup completion to old instance
   local channel = vim.fn.sockconnect("pipe", vim.env.NVIM, { rpc = true })
   vim.rpcrequest(channel, "nvim_exec_lua", "vim.g.restart_completed = true", {})
@@ -69,7 +73,7 @@ local function get_restart_cmd()
 
   local start_cmd = vim.list_extend(gui_cmd, {
     "--cmd",
-    "autocmd VimEnter * ++once lua require('rc.restart').on_gui_startup()",
+    "autocmd VimEnter * ++once lua require('rc.editor')._on_gui_startup()",
   })
 
   return start_cmd
@@ -99,8 +103,8 @@ local function can_restart()
 end
 
 --- Restart neovim GUI.
----@param opts { force: boolean }
-function M.gui(opts)
+---@param opts? { force: boolean }
+function M._gui_restart(opts)
   opts = opts or { force = false }
   -- get restart command
   local restart_cmd = get_restart_cmd()

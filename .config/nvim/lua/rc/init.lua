@@ -43,7 +43,7 @@ return {
   img = require("rc.img"),
   path = require("rc.path"),
   projectrc = require("rc.projectrc"),
-  restart = require("rc.restart"),
+  editor = require("rc.editor"),
   scratch = require("rc.scratch"),
   sys = require("rc.sys"),
   curcenter = require("rc.curcenter"),

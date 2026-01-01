@@ -54,9 +54,8 @@ end
 
 function M.setup()
   vim.o.scrolloff = 0
-  vim.api.nvim_create_augroup("rc.curcenter", { clear = true })
   vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI", "CursorMoved" }, {
-    group = "rc.curcenter",
+    group = vim.api.nvim_create_augroup("rc.curcenter", { clear = true }),
     pattern = "*",
     callback = curcenter,
   })
