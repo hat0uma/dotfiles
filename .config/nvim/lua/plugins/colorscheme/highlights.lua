@@ -32,15 +32,14 @@ local function setup_trouble_winbar_hl()
     Blue = get_hl("Blue"),
     Grey = get_hl("Grey"),
   }
-  local highlights = {
+  local highlights = { ---@type table<string, vim.api.keyset.highlight>
     TroubleWinBarActiveMode = {
       bg = palette.Blue.bg,
       fg = palette.Blue.fg,
       underline = true,
     },
     TroubleWinBarInactiveMode = {
-      bg = palette.Grey.bg,
-      fg = palette.Grey.fg,
+      link = "Conceal",
     },
   }
   for name, hl in pairs(highlights) do

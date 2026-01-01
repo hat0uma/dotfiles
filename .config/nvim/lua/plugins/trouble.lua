@@ -1,5 +1,5 @@
 --- @type { name:string , opts:trouble.Mode }[]
-local MODE_CYCLE = {
+local MODES = {
   {
     name = "document_diagnostics",
     opts = {
@@ -27,11 +27,8 @@ local MODE_CYCLE = {
     },
   },
 }
-local current_mode = MODE_CYCLE[1]
 
-local function toggle()
-  require("trouble").toggle(current_mode.opts)
-end
+vim.g.trouble_current_mode_index = 1
 
 local M = {
   "folke/trouble.nvim",
@@ -41,22 +38,27 @@ local M = {
     "todo-comments.nvim",
   },
   keys = {
-    { "<leader>q", toggle, "n" },
+    {
+      "<leader>q",
+      function()
+        require("trouble").toggle(MODES[vim.g.trouble_current_mode_index].opts)
+      end,
+      "n",
+    },
   },
 }
 
 local function cycle_mode()
-  for index, mode in ipairs(MODE_CYCLE) do
-    if mode == current_mode then
-      local next_index = (index % #MODE_CYCLE) + 1
-      current_mode = MODE_CYCLE[next_index]
+  for index in ipairs(MODES) do
+    if index == vim.g.trouble_current_mode_index then
+      vim.g.trouble_current_mode_index = (index % #MODES) + 1
       break
     end
   end
   if require("trouble").is_open() then
     require("trouble").close()
   end
-  require("trouble").open(current_mode.opts)
+  require("trouble").open(MODES[vim.g.trouble_current_mode_index].opts)
 end
 
 --- @param item WinbarItem
@@ -67,9 +69,9 @@ end
 
 function M.winbar()
   local items = {}
-  for _, mode in ipairs(MODE_CYCLE) do
-    local hl = mode == current_mode and "TroubleWinBarActiveMode" or "TroubleWinBarInactiveMode"
-    table.insert(items, winbar_item({ hlgroup = hl, text = mode.name }))
+  for index in ipairs(MODES) do
+    local hl = index == vim.g.trouble_current_mode_index and "TroubleWinBarActiveMode" or "TroubleWinBarInactiveMode"
+    table.insert(items, winbar_item({ hlgroup = hl, text = MODES[index].name }))
   end
   return " " .. table.concat(items, " ")
 end
