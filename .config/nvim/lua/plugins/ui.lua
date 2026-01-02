@@ -66,26 +66,8 @@ return {
         end
       end, { silent = true, expr = true })
     end,
-    dependencies = {
-      "MunifTanjim/nui.nvim",
-      "rcarriga/nvim-notify",
-    },
+    dependencies = { "MunifTanjim/nui.nvim" },
     event = "VeryLazy",
-  },
-  {
-    "rcarriga/nvim-notify",
-    event = "VeryLazy",
-    enabled = false,
-    config = function()
-      local notify = require("notify")
-      vim.notify = notify
-      notify.setup({
-        -- render = "minimal",
-        minimum_width = 15,
-        max_width = 50,
-        -- stages = stages,
-      })
-    end,
   },
   {
     "stevearc/dressing.nvim",

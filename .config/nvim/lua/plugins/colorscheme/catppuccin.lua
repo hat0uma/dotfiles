@@ -7,14 +7,13 @@ return {
   config = function()
     require("catppuccin").setup({
       flavour = "frappe",
+      default_integrations = false,
       integrations = {
         aerial = true,
         cmp = true,
         flash = true,
         gitsigns = true,
-        hop = true,
         illuminate = true,
-        lightspeed = true,
         lsp_trouble = false,
         markdown = true,
         mason = true,
@@ -23,10 +22,9 @@ return {
         overseer = true,
         noice = true,
         notify = true,
-        semantic_tokens = true,
-        telescope = true,
         treesitter = true,
-        mini = { enabled = true },
+        mini = { enabled = false },
+        snacks = { enabled = true },
         native_lsp = {
           enabled = true,
           virtual_text = {
@@ -45,11 +43,6 @@ return {
         navic = {
           enabled = false,
           custom_bg = "NONE",
-        },
-        indent_blankline = {
-          enabled = true,
-          scope_color = "overlay1",
-          colored_indent_levels = false,
         },
       },
       dim_inactive = {

@@ -3,6 +3,7 @@ local M = {}
 --- @class WinbarItem
 --- @field hlgroup string
 --- @field text string
+
 --- @param item WinbarItem
 --- @return string
 local function winbar_item(item)
