@@ -1,6 +1,6 @@
 -- font
--- vim.o.guifont = "UDEV Gothic NF,Segoe UI Emoji:h11"
-vim.o.guifont = "UDEV Gothic,Symbols Nerd Font Mono,Segoe UI Emoji:h11"
+-- vim.o.guifont = "UDEV Gothic,Symbols Nerd Font Mono,Twemoji Mozilla:h11"
+vim.o.guifont = "Sarasa Term J,Symbols Nerd Font Mono,Twemoji Mozilla:h11"
 vim.o.guifontwide = vim.o.guifont
 
 -- enable mouse
