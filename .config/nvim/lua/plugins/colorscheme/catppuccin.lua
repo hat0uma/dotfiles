@@ -3,10 +3,11 @@ return {
   name = "catppuccin",
   cond = not vim.g.vscode,
   lazy = false,
-  priority = 999,
+  priority = 1000,
   config = function()
     require("catppuccin").setup({
       flavour = "frappe",
+      no_italic = true,
       default_integrations = false,
       integrations = {
         aerial = true,
