@@ -21,9 +21,9 @@ local M = {
             return
           end
 
-          local ok = pcall(vim.treesitter.start, buf, lang)
+          local ok, reason = pcall(vim.treesitter.start, buf, lang)
           if not ok then
-            vim.notify(string.format("Failed to attach treesitter parser lang %s", lang))
+            vim.notify(string.format("Failed to attach treesitter parser lang %s: %s", lang, reason))
             return
           end
         end,

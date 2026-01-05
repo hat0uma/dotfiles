@@ -44,6 +44,10 @@ M.configurations = {
   dockerls = {},
   pyright = {
     on_init = function(client) ---@param client vim.lsp.Client
+      if not client.config.root_dir then
+        return
+      end
+
       local venv = vim.fs.joinpath(client.config.root_dir, ".venv")
       if vim.uv.fs_access(venv, "R") then
         client.config.settings.venv = venv
@@ -82,6 +86,7 @@ M.configurations = {
   },
   denols = {
     -- single_file_support = true,
+    workspace_required = true,
     root_markers = {
       "deno.json",
     },
@@ -108,6 +113,10 @@ M.configurations = {
       ".venv",
     },
     on_init = function(client) ---@param client vim.lsp.Client
+      if not client.config.root_dir then
+        return
+      end
+
       client.config.settings.interpreter = {
         rc.sys.is_windows
           and vim.fs.joinpath(client.config.root_dir, ".venv/Scripts/python.exe")

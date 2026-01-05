@@ -53,10 +53,15 @@ local function parser_to_lazy_package(lang)
     return nil
   end
 
+  local rev = parser.install_info.revision
+  local rev_is_commit_hash = #rev == 40
+
   --- @type LazyPluginSpec
   return {
     parser.install_info.url,
     lazy = true,
+    commit = rev_is_commit_hash and rev or nil,
+    tag = rev_is_commit_hash and nil or rev,
     build = function(plugin)
       --- @type async.Task
       local task = require("nvim-treesitter.install").install(lang, { summary = true })
