@@ -1,9 +1,16 @@
 local M = {}
 
 function M.setup()
-  vim.api.nvim_create_user_command("Scratch", function()
-    M.open()
-  end, {})
+  vim.api.nvim_create_user_command("Scratch", function(opts)
+    M.open(opts.fargs[1])
+  end, {
+    nargs = 1,
+    complete = function(arg_lead, _, _)
+      return vim.tbl_filter(function(item)
+        return vim.startswith(item, arg_lead)
+      end, { "md", "lua" })
+    end,
+  })
 end
 
 ---@type number?
@@ -19,13 +26,20 @@ local function notify(msg, level)
   })
 end
 
-function M.open()
-  local bufname = vim.fn.tempname() .. ".lua"
+--- Open scratch buffer
+---@param lang string
+function M.open(lang)
+  local bufname = vim.fn.tempname() .. "." .. lang
 
   -- create scratch buffer
-  local buf = vim.api.nvim_create_buf(false, true)
+  local buf = vim.api.nvim_create_buf(false, false)
   vim.api.nvim_buf_set_name(buf, bufname)
-  vim.api.nvim_set_option_value("filetype", "lua", { buf = buf })
+  vim.bo[buf].bufhidden = "hide"
+  vim.bo[buf].swapfile = false
+  local ft = vim.filetype.match({ buf = buf })
+  if ft then
+    vim.bo[buf].filetype = ft
+  end
 
   -- load lazydev
   local ok, _ = pcall(require, "lazydev")

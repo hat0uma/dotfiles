@@ -34,7 +34,7 @@ local double = {
   -- 0x2167 [Ⅷ]
   -- 0x2168 [Ⅸ]
   -- 0x2169 [Ⅹ]
-  { low = 0x2160, high = 0x2169 },
+  -- { low = 0x2160, high = 0x2169 },
 
   -- -------------
   -- 0x2170 [ⅰ]
@@ -47,27 +47,27 @@ local double = {
   -- 0x2177 [ⅷ]
   -- 0x2178 [ⅸ]
   -- 0x2179 [ⅹ]
-  { low = 0x2170, high = 0x2179 },
+  -- { low = 0x2170, high = 0x2179 },
 
   -- -------------
   -- 0x2190 [←]
   -- 0x2191 [↑]
   -- 0x2192 [→]
   -- 0x2193 [↓]
-  -- { low = 0x2190, high = 0x2193 },
+  { low = 0x2190, high = 0x2193 },
 
   -- -------------
   -- 0x21D2 [⇒]
-  -- { low = 0x21d2, high = 0x21d2 },
+  { low = 0x21d2, high = 0x21d2 },
 
   -- -------------
   -- 0x21D4 [⇔]
-  -- { low = 0x21d4, high = 0x21d4 },
+  { low = 0x21d4, high = 0x21d4 },
 
   -- -------------
   -- 0x2266 [≦]
   -- 0x2267 [≧]
-  { low = 0x2266, high = 0x2267 },
+  -- { low = 0x2266, high = 0x2267 },
 
   -- -------------
   -- 0x2460 [①]
@@ -234,30 +234,30 @@ local double = {
   -- -------------
   -- 0x25A0 [■]
   -- 0x25A1 [□]
-  -- { low = 0x25a0, high = 0x25a1 },
+  { low = 0x25a0, high = 0x25a1 },
 
   -- -------------
   -- 0x25B2 [▲]
   -- 0x25B3 [△]
-  -- { low = 0x25b2, high = 0x25b3 },
+  { low = 0x25b2, high = 0x25b3 },
 
   -- -------------
   -- 0x25BC [▼]
   -- 0x25BD [▽]
-  -- { low = 0x25bc, high = 0x25bd },
+  { low = 0x25bc, high = 0x25bd },
 
   -- -------------
   -- 0x25C6 [◆]
   -- 0x25C7 [◇]
-  -- { low = 0x25c6, high = 0x25c7 },
+  { low = 0x25c6, high = 0x25c7 },
 
   -- -------------
   -- 0x25CB [○]
-  -- { low = 0x25cb, high = 0x25cb },
+  { low = 0x25cb, high = 0x25cb },
 
   -- -------------
   -- 0x25CF [●]
-  -- { low = 0x25cf, high = 0x25cf },
+  { low = 0x25cf, high = 0x25cf },
 
   -- -------------
   -- 0x2600 [☀]
@@ -456,13 +456,13 @@ local double = {
 
   -- -------------
   -- 0x2713 [✓]
-  -- { low = 0x2713, high = 0x2713 },
+  { low = 0x2713, high = 0x2713 },
 
   -- 0x2714 [✔]
   { low = 0x2714, high = 0x2714 },
 
   -- 0x2715 [✕]
-  -- { low = 0x2715, high = 0x2715 },
+  { low = 0x2715, high = 0x2715 },
 
   -- 0x2716 [✖]
   -- 0x2717 [✗]
@@ -543,7 +543,7 @@ local double = {
   -- 0x275C [❜]
   -- 0x275D [❝]
   -- 0x275E [❞]
-  -- { low = 0x2758, high = 0x275e },
+  { low = 0x2758, high = 0x275e },
 
   -- -------------
   -- 0x2761 [❡]
@@ -633,7 +633,7 @@ local double = {
 
   -- -------------
   -- 0x2B0D [⬍]
-  -- { low = 0x2b0d, high = 0x2b0d },
+  { low = 0x2b0d, high = 0x2b0d },
 
   -- -------------
   -- 0x303F [〿]
@@ -683,6 +683,22 @@ function M.show()
     table.insert(message, "-------------")
   end
   vim.notify(table.concat(message, "\n"))
+end
+
+function M.generate_wezterm()
+  local template = "  { first = 0x%04x, last = 0x%04x, width = 2 },"
+  local lines = {}
+  table.insert(lines, "return {")
+  for i, point in pairs(double) do
+    table.insert(lines, string.format(template, point.low, point.high))
+  end
+  table.insert(lines, "}")
+
+  local fname = vim.fs.joinpath(vim.env.XDG_CONFIG_HOME, "wezterm", "cellwidths.lua")
+  vim.fn.writefile(lines, fname)
+  -- local fd = assert(vim.uv.fs_open(fname, "w+", tonumber("644", 8)))
+  -- vim.uv.fs_write(fd, lines)
+  -- vim.uv.fs_close(fd)
 end
 
 return M
