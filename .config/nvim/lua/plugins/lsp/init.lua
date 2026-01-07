@@ -15,7 +15,6 @@ return {
     ft = "lua", -- only load on lua files
     opts = {
       library = {
-        { path = "luvit-meta/library", words = { "vim%.uv" } },
         { path = "wezterm-types", mods = { "wezterm" } },
         "plenary.nvim",
         { path = vim.fn.stdpath("config") .. "/lua/rc", words = { "rc" } },

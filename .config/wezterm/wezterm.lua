@@ -79,8 +79,8 @@ config.command_palette_bg_color = colors.foreground
 ------------------------------------
 config.font = wezterm.font_with_fallback({
   -- { family = "UDEV Gothic", weight = "Regular" },
-  -- { family = "Sarasa Mono J", weight = "Regular" },
-  { family = "PlemolJP", weight = "Regular" },
+  -- { family = "Sarasa Term J", weight = "Regular" },
+  { family = "PlemolJP Console", weight = "Regular" },
   { family = "Symbols Nerd Font Mono" },
   { family = "Twemoji Mozilla" },
 })
