@@ -193,12 +193,12 @@ function prompt
         #$face="(*'▽')"
         #$face="(o^~^o)"
         #$face="(o・∇・o)"
-        $face="(o·∇·o)"
+        $face="(o·∇ ·o)"
         $faceColor=$colorSuccess
     } else
     {
         $face=# "(=>_<)"
-        $face="(*>△<)"
+        $face="(*>Δ <) "
         $faceColor=$colorError
     }
 

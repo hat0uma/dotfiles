@@ -45,8 +45,11 @@ local function is_headless()
   return #vim.api.nvim_list_uis() == 0
 end
 
+--- @class rc.plugins.treesitter.ParserPackage: LazyPluginSpec
+--- @field langs string[]
+
 ---@param lang string
----@return LazyPluginSpec?
+---@return rc.plugins.treesitter.ParserPackage?
 local function parser_to_lazy_package(lang)
   local parser = require("nvim-treesitter.parsers")[lang]
   if not parser then
@@ -56,21 +59,22 @@ local function parser_to_lazy_package(lang)
   local rev = parser.install_info.revision
   local rev_is_commit_hash = #rev == 40
 
-  --- @type LazyPluginSpec
-  return {
+  local langs = { lang }
+  return { --- @type rc.plugins.treesitter.ParserPackage
     parser.install_info.url,
     lazy = true,
     commit = rev_is_commit_hash and rev or nil,
     tag = rev_is_commit_hash and nil or rev,
+    submodules = false,
+    langs = langs,
     build = function(plugin)
       --- @type async.Task
-      local task = require("nvim-treesitter.install").install(lang, { summary = true })
-      local ok, err_or_ok = task:pwait(30 * 60 * 1000)
+      local task = require("nvim-treesitter.install").install(langs, { summary = true })
+      local ok, err_or_ok = task:pwait(30 * 1000 * 60)
       if not ok then
         error(task:traceback(err_or_ok))
       end
     end,
-    submodules = false,
   }
 end
 
@@ -80,14 +84,19 @@ function M.local_parser_packages()
     return {}
   end
 
-  local parser_packages = {}
+  local parser_packages = {} ---@type table<string, rc.plugins.treesitter.ParserPackage>
   for _, lang in pairs(parsers) do
-    -- Add parsers from nvim-treesitter
-    local spec = parser_to_lazy_package(lang)
-    table.insert(parser_packages, spec)
+    local parser = require("nvim-treesitter.parsers")[lang]
+    if parser then
+      if not parser_packages[parser.install_info.url] then
+        parser_packages[parser.install_info.url] = parser_to_lazy_package(lang)
+      else
+        table.insert(parser_packages[parser.install_info.url].langs, lang)
+      end
+    end
   end
 
-  return parser_packages
+  return vim.tbl_values(parser_packages)
 end
 
 function M.setup()

@@ -79,7 +79,8 @@ config.command_palette_bg_color = colors.foreground
 ------------------------------------
 config.font = wezterm.font_with_fallback({
   -- { family = "UDEV Gothic", weight = "Regular" },
-  { family = "Sarasa Mono J", weight = "Regular" },
+  -- { family = "Sarasa Mono J", weight = "Regular" },
+  { family = "PlemolJP", weight = "Regular" },
   { family = "Symbols Nerd Font Mono" },
   { family = "Twemoji Mozilla" },
 })
@@ -87,6 +88,7 @@ config.font_size = 11
 config.harfbuzz_features = { "calt=1", "clig=0", "liga=0" }
 config.allow_square_glyphs_to_overflow_width = "Always"
 config.cell_widths = require("cellwidths")
+config.treat_east_asian_ambiguous_width_as_wide = false
 
 --------------------------------------------------------------------------------
 -- Keybindings
