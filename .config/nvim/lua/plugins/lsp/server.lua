@@ -3,6 +3,7 @@ local M = {}
 ---@type table<string,vim.lsp.Config>
 M.configurations = {
   astro = {},
+  bashls = {},
   biome = {},
   jdtls = {},
   lua_ls = {

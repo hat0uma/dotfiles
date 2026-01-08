@@ -111,6 +111,7 @@ M.config = function()
       yaml = { "prettierd", "prettier", stop_after_first = true },
       markdown = { "markdownlint-cli2", "prettierd" },
       sh = { "shfmt" },
+      bash = { "shfmt" },
     },
   })
 
