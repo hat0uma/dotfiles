@@ -113,7 +113,10 @@ setup_common() {
     rm "$tempfile"
 
     log "Installing global npm packages (SDK)..."
-    sudo npm install -g vscode-langservers-extracted typescript
+    sudo npm install -g \
+        tree-sitter-cli \
+        vscode-langservers-extracted \
+        typescript
 }
 
 # ------------------------------------------------------------------------------
