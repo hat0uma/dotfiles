@@ -113,6 +113,8 @@ dev() {
         return 1
     fi
 
+    shift
+
     local dotfiles_url="https://github.com/hat0uma/dotfiles"
     local term_val="${TERM:-xterm-256color}"
     case "$subcommand" in
