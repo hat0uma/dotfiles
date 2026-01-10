@@ -23,6 +23,9 @@ setup_links() {
     mkdir -p "${CONFIG_DEST_DIR}"
     mkdir -p "${BIN_DIR}"
 
+    # add Path
+    export PATH="${BIN_DIR}:${PATH}"
+
     # .config
     for dir in "${CONFIG_SRC_DIR}"/*/; do
         dirname=$(basename "${dir}")
@@ -89,6 +92,35 @@ install_debian() {
 }
 
 # ------------------------------------------------------------------------------
+# Helper: Install tree-sitter-cli (Binary)
+# ------------------------------------------------------------------------------
+install_tree_sitter() {
+    log "Checking tree-sitter-cli..."
+
+    if command -v tree-sitter &>/dev/null; then
+        log "tree-sitter is already installed."
+        return
+    fi
+
+    local ARCH="x64"
+    if [ "$(uname -m)" = "aarch64" ]; then
+        ARCH="arm64"
+    fi
+
+    local URL="https://github.com/tree-sitter/tree-sitter/releases/latest/download/tree-sitter-linux-${ARCH}.gz"
+
+    log "Downloading tree-sitter latest (${ARCH}) to ${BIN_DIR}..."
+
+    if curl -fL "${URL}" | gzip -d >"${BIN_DIR}/tree-sitter"; then
+        chmod +x "${BIN_DIR}/tree-sitter"
+        log "Successfully installed tree-sitter."
+    else
+        error "Failed to download tree-sitter."
+        exit 1
+    fi
+}
+
+# ------------------------------------------------------------------------------
 # Common Setup
 # ------------------------------------------------------------------------------
 setup_common() {
@@ -102,6 +134,7 @@ setup_common() {
     log "Installing Rust (rustup)..."
     if ! command -v rustup &>/dev/null; then
         curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+        export PATH="${HOME}/.cargo/bin:${PATH}"
     else
         log "Rust is already installed."
     fi
@@ -117,8 +150,8 @@ setup_common() {
         vscode-langservers-extracted \
         typescript
 
-    log "Installing cargo packages..."
-    cargo install --locked tree-sitter-cli
+    log "Installing tree-sitter"
+    install_tree_sitter
 }
 
 # ------------------------------------------------------------------------------
