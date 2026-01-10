@@ -86,9 +86,9 @@ install_debian() {
         tmux \
         nodejs \
         npm \
-        golang \
         zsh \
-        git
+        git \
+        libclang-dev
 }
 
 # ------------------------------------------------------------------------------
