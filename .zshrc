@@ -105,6 +105,33 @@ fi
 if [[ -v HYPRLAND_INSTANCE_SIGNATURE ]]; then
     alias hyprlisten='socat -U - UNIX-CONNECT:/tmp/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock'
 fi
+
+dev() {
+    local subcommand="$1"
+    if [ -z "$subcommand" ]; then
+        echo "Usage: dev [up|exec|...] [args]"
+        return 1
+    fi
+
+    local dotfiles_url="https://github.com/hat0uma/dotfiles"
+    case "$subcommand" in
+        up)
+            devcontainer up \
+                --workspace-folder . \
+                --dotfiles-repository "$dotfiles_url" \
+                "$@"
+            ;;
+        exec)
+            devcontainer exec \
+                --workspace-folder . \
+                "$@"
+            ;;
+        *)
+            devcontainer "$subcommand" "$@"
+            ;;
+    esac
+}
+
 #####################################################################
 # others
 #####################################################################
