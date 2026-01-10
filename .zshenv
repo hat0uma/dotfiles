@@ -18,3 +18,11 @@ export PATH="$HOME/.local/bin:$HOME/.deno/bin:$HOME/.cargo/bin:$PATH:$HOME/go/bi
 [ -f "$HOME/.ghcup/env" ] && source "$HOME/.ghcup/env"
 [ -f "$HOME/.cargo/env" ] && source "$HOME/.cargo/env"
 [ -f "$HOME/.rye/env" ] && source "$HOME/.rye/env"
+
+if [[ $COLORTERM = gnome-* && $TERM = xterm ]] && infocmp gnome-256color >/dev/null 2>&1; then
+	export TERM='gnome-256color';
+elif infocmp rxvt-unicode-256color >/dev/null 2>&1; then
+	export TERM='rxvt-unicode';
+elif infocmp xterm-256color >/dev/null 2>&1; then
+	export TERM='xterm-256color';
+fi;
