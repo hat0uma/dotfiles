@@ -114,16 +114,19 @@ dev() {
     fi
 
     local dotfiles_url="https://github.com/hat0uma/dotfiles"
+    local term_val="${TERM:-xterm-256color}"
     case "$subcommand" in
         up)
             devcontainer up \
                 --workspace-folder . \
                 --dotfiles-repository "$dotfiles_url" \
+                --remote-env "TERM=${term_val}" \
                 "$@"
             ;;
         exec)
             devcontainer exec \
                 --workspace-folder . \
+                --remote-env "TERM=${term_val}" \
                 "$@"
             ;;
         *)
