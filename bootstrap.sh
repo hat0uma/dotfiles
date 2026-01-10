@@ -151,7 +151,8 @@ setup_common() {
         typescript
 
     log "Installing tree-sitter"
-    install_tree_sitter
+    cargo install --locked tree-sitter-cli
+    # install_tree_sitter
 }
 
 # ------------------------------------------------------------------------------
