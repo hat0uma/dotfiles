@@ -114,9 +114,11 @@ setup_common() {
 
     log "Installing global npm packages (SDK)..."
     sudo npm install -g \
-        tree-sitter-cli \
         vscode-langservers-extracted \
         typescript
+
+    log "Installing cargo packages..."
+    cargo install --locked tree-sitter-cli
 }
 
 # ------------------------------------------------------------------------------
