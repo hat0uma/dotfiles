@@ -126,10 +126,17 @@ dev() {
                 "$@"
             ;;
         exec)
-            devcontainer exec \
-                --workspace-folder . \
-                --remote-env "TERM=${term_val}" \
-                "$@"
+            if [ $# -eq 0 ]; then
+                devcontainer exec \
+                    --workspace-folder . \
+                    env TERM="${term_val}" \
+                    zsh
+            else
+                devcontainer exec \
+                    --workspace-folder . \
+                    env TERM="${term_val}" \
+                    "$@"
+            fi
             ;;
         *)
             devcontainer "$subcommand" "$@"
