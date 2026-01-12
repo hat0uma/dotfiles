@@ -22,7 +22,6 @@ return {
     },
   },
   { "DrKJeff16/wezterm-types", lazy = true },
-  { "Bilal2453/luvit-meta", lazy = true },
   {
     "folke/neoconf.nvim",
     config = function()
