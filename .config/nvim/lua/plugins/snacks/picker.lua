@@ -352,14 +352,23 @@ return {
           box = "vertical",
           border = "rounded",
           title = "{title} {live} {flags}",
-          { win = "input", height = 1, border = "bottom" },
-          { win = "list", border = "none" },
+          min_height = 10,
+          {
+            win = "input",
+            height = 1,
+            border = "bottom",
+          },
+          {
+            win = "list",
+            border = "none",
+            -- height = 5,
+          },
         },
         {
           win = "preview",
           title = "{preview}",
           border = "rounded",
-          height = 0.8,
+          height = 0.75,
         },
       },
 
@@ -498,6 +507,17 @@ return {
           ["K"] = { "history_back", mode = { "n" } },
           ["gv"] = { "vsplit", mode = { "n" } },
           ["gs"] = { "split", mode = { "n" } },
+          ["<C-j>"] = { "cycle_win", mode = { "n", "i" } },
+        },
+      },
+      list = {
+        keys = {
+          ["<C-j>"] = "cycle_win",
+        },
+      },
+      preview = {
+        keys = {
+          ["<C-j>"] = "cycle_win",
         },
       },
     },

@@ -402,6 +402,7 @@ return {
         callback = function()
           vim.keymap.set("n", "<leader>up", "<Cmd>Unity playmode toggle<CR>", { buffer = true })
           vim.keymap.set("n", "<leader>ur", "<Cmd>Unity refresh<CR>", { buffer = true })
+          vim.keymap.set("n", "<leader>ul", "<Cmd>lua Snacks.picker.unity_logs({})<CR>", { buffer = true })
         end,
       })
     end,
