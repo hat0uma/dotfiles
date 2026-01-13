@@ -84,7 +84,7 @@ config.font = wezterm.font_with_fallback({
   { family = "Symbols Nerd Font Mono" },
   { family = "Twemoji Mozilla" },
 })
-config.font_size = 11
+config.font_size = 14
 config.harfbuzz_features = { "calt=1", "clig=0", "liga=0" }
 config.allow_square_glyphs_to_overflow_width = "Always"
 config.cell_widths = require("cellwidths")

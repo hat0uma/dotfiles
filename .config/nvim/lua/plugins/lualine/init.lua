@@ -122,6 +122,29 @@ return {
                 hint = { fg = palette.blue },
               },
             },
+            -- {
+            --   "filetype",
+            --   color = { fg = palette.fg },
+            -- },
+            -- {
+            --   "encoding",
+            --   fmt = string.lower,
+            --   color = { fg = palette.fg },
+            -- },
+            -- {
+            --   "fileformat",
+            --   fmt = function()
+            --     local ff = vim.bo.fileformat
+            --     local name_tbl = {
+            --       unix = "lf",
+            --       dos = "crlf",
+            --       mac = "cr",
+            --     }
+            --     return name_tbl[ff] or ""
+            --   end,
+            --   color = { fg = palette.fg },
+            --   cond = buffer_not_empty,
+            -- },
           },
           lualine_z = {
             {
