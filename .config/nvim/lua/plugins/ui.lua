@@ -1,5 +1,9 @@
 return {
   {
+    "j-hui/fidget.nvim",
+    opts = {},
+  },
+  {
     "folke/noice.nvim",
     cond = not vim.g.vscode,
     config = function()

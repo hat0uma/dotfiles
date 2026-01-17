@@ -191,7 +191,10 @@ return {
         acp = {
           claude_code = function()
             return require("codecompanion.adapters").extend("claude_code", {
-              env = { CLAUDE_CODE_OAUTH_TOKEN = "cmd:op read op://Personal/claude_pro/credential --no-newline" },
+              env = {
+                -- EXTREMELY SLOW
+                -- CLAUDE_CODE_OAUTH_TOKEN = "cmd:op read op://Personal/claude_pro/credential --no-newline",
+              },
             })
           end,
           gemini_cli = function()
