@@ -141,4 +141,6 @@ function M.install(opts)
   require("lazy").build(manager_opts)
 end
 
+M.ignored_parsers = { "csv" }
+
 return M

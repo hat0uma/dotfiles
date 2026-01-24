@@ -21,6 +21,10 @@ local M = {
             return
           end
 
+          if vim.list_contains(require("plugins.treesitter.parser").ignored_parsers, lang) then
+            return
+          end
+
           local ok, reason = pcall(vim.treesitter.start, buf, lang)
           if not ok then
             vim.notify(string.format("Failed to attach treesitter parser lang %s: %s", lang, reason))
