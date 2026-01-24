@@ -17,17 +17,18 @@ function M.setup()
 end
 
 function M.exec()
-  if vim.fn.has("gui_running") == 1 then
-    M._gui_restart()
+  local gui_running = vim.fn.has("gui_running") == 1
+  if not gui_running or vim.g.neovide then
+    M._builtin_restart()
   else
-    M._cli_restart()
+    M._gui_restart()
   end
 end
 
 ----------------------------------------------------------
--- for CLI
+-- builtin
 ----------------------------------------------------------
-function M._cli_restart()
+function M._builtin_restart()
   if vim.fn.isdirectory(SESSION_DIR) ~= 1 then
     vim.uv.fs_mkdir(SESSION_DIR, 493) -- 755
   end
