@@ -1,6 +1,14 @@
 -- font
 -- vim.o.guifont = "UDEV Gothic,Symbols Nerd Font Mono,Twemoji Mozilla:h11"
-vim.o.guifont = "Sarasa Term J,Symbols Nerd Font Mono,Twemoji Mozilla:h11"
+-- vim.o.guifont = "Sarasa Term J,Symbols Nerd Font Mono,Twemoji Mozilla:h11"
+vim.o.guifont = table.concat({
+  "PlemolJP",
+  -- "PlemolJP Console",
+  -- "Sarasa Term J"
+  -- "UDEV Gothic"
+  "Symbols Nerd Font Mono",
+  "Twemoji Mozilla",
+}, ",") .. ":h14"
 vim.o.guifontwide = vim.o.guifont
 
 -- enable mouse
