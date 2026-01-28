@@ -62,6 +62,7 @@ $bel = [char]0x07
 
 # Prompt Lines
 Set-PSReadLineOption -ExtraPromptLineCount 1
+$env:VIRTUAL_ENV_DISABLE_PROMPT = 1
 
 function Format-WeztermUserVar ($key, $val)
 {
@@ -177,6 +178,15 @@ function prompt
     $colorSuccess   = "$esc[32m" # green
     $colorError     = "$esc[31m" # red
     $colorReset     = "$esc[0m"
+    $colorVenv      = "$esc[33m" # yellow
+
+    # venv
+    $venv = ""
+    if ($env:VIRTUAL_ENV)
+    {
+        $venvName = Split-Path $env:VIRTUAL_ENV -Leaf
+        $venv = "$colorVenv ($venvName)$colorReset"
+    }
 
     # Git
     $gitBranch = Get-GitPrompt $currentPath
@@ -193,13 +203,13 @@ function prompt
         #$face="(*'▽')"
         #$face="(o^~^o)"
         #$face="(o・∇・o)"
-        $face="(o·∇ ·o)"
+        $face="(o·∇·o)"
         $faceColor=$colorSuccess
     } else
     {
         $face=# "(=>_<)"
-        # $face=" (*>△<)"
-        $face=" (*>∆<)"
+        $face=" (*>△<)"
+        # $face=" (*>∆<)"
         $faceColor=$colorError
     }
 
@@ -209,7 +219,7 @@ function prompt
 
     return (
         "${OSC133D}${WEZTERM_PROG}${OSC7}${OSC133A}"+
-        "${colorBorder}╭─[${colorPath}${displayPath}${colorBorder}]${gitPart}${colorReset}`n"+
+        "${colorBorder}╭─[${colorPath}${displayPath}${colorBorder}]${gitPart} ${venv}`n"+
         "${colorBorder}╰──${faceColor}${face}${colorReset} < "+
         "${OSC133B}"
     )
