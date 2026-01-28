@@ -33,6 +33,13 @@ function ln($target, $link)
     New-Item -ItemType SymbolicLink -Path $link -Value $target
 }
 
+# Add ~/.local/bin to PATH
+$localBinPath = Join-Path $HOME ".local\bin"
+if ((Test-Path $localBinPath) -and ($env:PATH -split ';' -notcontains $localBinPath))
+{
+    $env:PATH = "$localBinPath;" + $env:PATH
+}
+
 # ==============================================================================
 # Neovim
 # ==============================================================================
