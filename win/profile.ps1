@@ -185,7 +185,7 @@ function prompt
     if ($env:VIRTUAL_ENV)
     {
         $venvName = Split-Path $env:VIRTUAL_ENV -Leaf
-        $venv = "$colorVenv ($venvName)$colorReset"
+        $venv = " $colorVenv ($venvName)$colorReset"
     }
 
     # Git
@@ -219,7 +219,7 @@ function prompt
 
     return (
         "${OSC133D}${WEZTERM_PROG}${OSC7}${OSC133A}"+
-        "${colorBorder}╭─[${colorPath}${displayPath}${colorBorder}]${gitPart} ${venv}`n"+
+        "${colorBorder}╭─[${colorPath}${displayPath}${colorBorder}]${venv}${gitPart}`n"+
         "${colorBorder}╰──${faceColor}${face}${colorReset} < "+
         "${OSC133B}"
     )
