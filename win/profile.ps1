@@ -207,18 +207,19 @@ function prompt
     $isSuccess = $Global:LastPromptExitCode -eq 0
     if($isSuccess)
     {
-        #$face="(*'▽')"
-        #$face="(o^~^o)"
-        #$face="(o・∇・o)"
-        $face="(o·∇·o)"
+        # $faceChar="(*'▽')"
+        # $faceChar="(o^~^o)"
+        # $faceChar="(o・∇・o)"
+        $faceChar="(o·∇·o)"
         $faceColor=$colorSuccess
     } else
     {
-        $face=# "(=>_<)"
-        $face=" (*>△<)"
-        # $face=" (*>∆<)"
+        # $faceChar="(=>_<)"
+        # $faceChar=" (*>△<)"
+        $faceChar=" (*>∆<)"
         $faceColor=$colorError
     }
+    $face = "${faceColor}${faceChar}${colorReset}"
 
     # User & Computer
     # Write-Host "(" -NoNewline -ForegroundColor Blue
@@ -227,7 +228,7 @@ function prompt
     return (
         "${OSC133D}${WEZTERM_PROG}${OSC7}${OSC133A}"+
         "${colorBorder}╭─[${colorPath}${displayPath}${colorBorder}]${venv}${gitPart}`n"+
-        "${colorBorder}╰──${faceColor}${face}${colorReset} < "+
+        "${colorBorder}╰──${face} < "+
         "${OSC133B}"
     )
 }

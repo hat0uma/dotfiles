@@ -17,8 +17,10 @@ local double = {
   -- { low = 0x2031, high = 0x203A },
 
   -- 0x203B [※]
+  -- { low = 0x203B, high = 0x203B },
+
   -- 0x203C [‼]
-  -- { low = 0x203B, high = 0x203C },
+  -- { low = 0x203C, high = 0x203C },
 
   -- 0x203D [‽]
   -- 0x203E [‾]
