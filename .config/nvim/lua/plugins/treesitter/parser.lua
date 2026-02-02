@@ -69,7 +69,7 @@ local function parser_to_lazy_package(lang)
     langs = langs,
     build = function(plugin)
       --- @type async.Task
-      local task = require("nvim-treesitter.install").install(langs, { summary = true })
+      local task = require("nvim-treesitter.install").install(langs, { summary = true, force = true })
       local ok, err_or_ok = task:pwait(30 * 1000 * 60)
       if not ok then
         error(task:traceback(err_or_ok))
