@@ -19,29 +19,36 @@ return {
     end,
   },
   {
-    "hat0uma/radare2.nvim",
+    "hat0uma/ghidra.nvim",
     config = function()
-      require("radare2").setup({})
-      vim.api.nvim_create_autocmd("FileType", {
-        pattern = "r2asm",
-        callback = function()
-          local actions = require("radare2.ui.disasm_actions")
-
-          vim.keymap.set("n", "<CR>", actions.follow, { buffer = true, desc = "Follow call/jump" })
-          vim.keymap.set("n", "<C-o>", actions.back, { buffer = true, desc = "Go back" })
-          vim.keymap.set("n", "<C-i>", actions.forward, { buffer = true, desc = "Go forward" })
-          vim.keymap.set("n", "gx", actions.xrefs_to, { buffer = true, desc = "Xrefs to" })
-          vim.keymap.set("n", "gX", actions.xrefs_from, { buffer = true, desc = "Xrefs from" })
-          vim.keymap.set("n", "gd", actions.decompile, { buffer = true, desc = "Decompile" })
-          vim.keymap.set("n", "gr", actions.rename, { buffer = true, desc = "Rename" })
-          vim.keymap.set("n", "K", actions.show_op_info, { buffer = true, desc = "Op info" })
-          vim.keymap.set("n", "gb", actions.toggle_bytes, { buffer = true, desc = "Toggle bytes" })
-          vim.keymap.set("n", "gc", actions.toggle_cursor_highlight, { buffer = true, desc = "Cursor highlight" })
-        end,
-      })
+      require("ghidra").setup()
     end,
-    lazy = false,
+    cmd = { "Ghidra" },
   },
+  -- {
+  --   "hat0uma/radare2.nvim",
+  --   config = function()
+  --     require("radare2").setup({})
+  --     vim.api.nvim_create_autocmd("FileType", {
+  --       pattern = "r2asm",
+  --       callback = function()
+  --         local actions = require("radare2.ui.disasm_actions")
+  --
+  --         vim.keymap.set("n", "<CR>", actions.follow, { buffer = true, desc = "Follow call/jump" })
+  --         vim.keymap.set("n", "<C-o>", actions.back, { buffer = true, desc = "Go back" })
+  --         vim.keymap.set("n", "<C-i>", actions.forward, { buffer = true, desc = "Go forward" })
+  --         vim.keymap.set("n", "gx", actions.xrefs_to, { buffer = true, desc = "Xrefs to" })
+  --         vim.keymap.set("n", "gX", actions.xrefs_from, { buffer = true, desc = "Xrefs from" })
+  --         vim.keymap.set("n", "gd", actions.decompile, { buffer = true, desc = "Decompile" })
+  --         vim.keymap.set("n", "gr", actions.rename, { buffer = true, desc = "Rename" })
+  --         vim.keymap.set("n", "K", actions.show_op_info, { buffer = true, desc = "Op info" })
+  --         vim.keymap.set("n", "gb", actions.toggle_bytes, { buffer = true, desc = "Toggle bytes" })
+  --         vim.keymap.set("n", "gc", actions.toggle_cursor_highlight, { buffer = true, desc = "Cursor highlight" })
+  --       end,
+  --     })
+  --   end,
+  --   lazy = false,
+  -- },
   {
     "hat0uma/deansi.nvim",
     opts = {},
