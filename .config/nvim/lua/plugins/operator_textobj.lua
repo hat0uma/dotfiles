@@ -31,25 +31,40 @@ local M = {
   {
     "kylechui/nvim-surround",
     config = function()
+      vim.g.nvim_surround_no_normal_mappings = true
+      vim.g.nvim_surround_no_visual_mappings = true
+      vim.g.nvim_surround_no_insert_mappings = true
       require("nvim-surround").setup({
-        keymaps = {
-          insert = "<C-g>s",
-          insert_line = "<C-g>S",
-          normal = "sa",
-          normal_cur = "sasa",
-          normal_line = false,
-          normal_cur_line = false,
-          visual = "sa",
-          visual_line = "sasa",
-          delete = "sd",
-          change = "sr",
-        },
         aliases = {
           ["b"] = { "}", "]", ")", ">", '"', "'", "`" },
         },
       })
       vim.keymap.set("n", "sdd", "<Plug>(nvim-surround-delete)b", { silent = true })
       vim.keymap.set("n", "srr", "<Plug>(nvim-surround-change)b", { silent = true })
+      vim.keymap.set("i", "<C-g>s", "<Plug>(nvim-surround-insert)", {
+        desc = "Add a surrounding pair around the cursor (insert mode)",
+      })
+      vim.keymap.set("i", "<C-g>S", "<Plug>(nvim-surround-insert-line)", {
+        desc = "Add a surrounding pair around the cursor, on new lines (insert mode)",
+      })
+      vim.keymap.set("n", "sa", "<Plug>(nvim-surround-normal)", {
+        desc = "Add a surrounding pair around a motion (normal mode)",
+      })
+      vim.keymap.set("n", "sasa", "<Plug>(nvim-surround-normal-cur)", {
+        desc = "Add a surrounding pair around the current line (normal mode)",
+      })
+      vim.keymap.set("x", "sa", "<Plug>(nvim-surround-visual)", {
+        desc = "Add a surrounding pair around a visual selection",
+      })
+      vim.keymap.set("x", "sasa", "<Plug>(nvim-surround-visual-line)", {
+        desc = "Add a surrounding pair around a visual selection, on new lines",
+      })
+      vim.keymap.set("n", "sd", "<Plug>(nvim-surround-delete)", {
+        desc = "Delete a surrounding pair",
+      })
+      vim.keymap.set("n", "sr", "<Plug>(nvim-surround-change)", {
+        desc = "Change a surrounding pair",
+      })
     end,
     event = "VeryLazy",
   },
