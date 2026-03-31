@@ -143,6 +143,32 @@ Set-PSReadLineKeyHandler -Key Ctrl+l -ScriptBlock {
     $Global:IsClearScreenRunning = $false
 }
 
+#=-----------------
+# Color settings
+#=-----------------
+class AnsiColor
+{
+    static [string]$Reset       = "$esc[0m"
+    static [string]$Black       = "$esc[30m"
+    static [string]$Red         = "$esc[31m"
+    static [string]$Green       = "$esc[32m"
+    static [string]$Yellow      = "$esc[33m"
+    static [string]$Blue        = "$esc[34m"
+    static [string]$Magenta     = "$esc[35m"
+    static [string]$Cyan        = "$esc[36m"
+    static [string]$White       = "$esc[37m"
+    static [string]$BrightBlack = "$esc[90m"
+}
+
+$colorPath      = [AnsiColor]::Cyan
+$colorGitBranch = [AnsiColor]::BrightBlack
+$colorGitDirty = [AnsiColor]::Magenta
+$colorBorder    = [AnsiColor]::Blue
+$colorSuccess   = [AnsiColor]::Green
+$colorError     = [AnsiColor]::Red
+$colorReset     = [AnsiColor]::Reset
+$colorVenv      = [AnsiColor]::Yellow
+
 function prompt
 {
     $__savedLastPromptExitCode = Get-DetailedExitCode
@@ -177,16 +203,6 @@ function prompt
         $OSC7 = "${esc}]7;${uri}${esc}\"
     }
 
-    # Color settings
-    $esc = [char]27
-    $colorPath      = "$esc[36m" # cyan
-    $colorGit       = "$esc[90m" # black(bright)
-    $colorBorder    = "$esc[34m" # blue
-    $colorSuccess   = "$esc[32m" # green
-    $colorError     = "$esc[31m" # red
-    $colorReset     = "$esc[0m"
-    $colorVenv      = "$esc[33m" # yellow
-
     # venv
     $venv = ""
     if ($env:VIRTUAL_ENV)
@@ -196,11 +212,10 @@ function prompt
     }
 
     # Git
-    $gitBranch = Get-GitPrompt $currentPath
-    $gitPart = ""
-    if ($gitBranch)
+    $gitPart = Get-GitPrompt $currentPath
+    if ($gitPart)
     {
-        $gitPart = " $colorGit" + $gitBranch
+        $gitPart = " $gitPart"
     }
 
     # Face
@@ -245,7 +260,7 @@ $Global:GitPromptRunspace = $null
 # Initialize global state
 $Global:GitPromptState = [hashtable]::Synchronized(@{
         Path          = ""
-        Prompt        = ""
+        Data          = $null
         PowerShell    = $null
         AsyncResult   = $null # IAsyncResult from BeginInvoke()
     })
@@ -289,17 +304,16 @@ function Initialize-GitBackend
         {
             # Get results (returns a collection, so get the first element)
             $results = $Global:GitPromptState.PowerShell.EndInvoke($Global:GitPromptState.AsyncResult)
-            if ($results -and $results.Count -gt 0)
+            if ($results -and $results.Count -gt 0 -and $results[0])
             {
-                $Global:GitPromptState.Prompt = $results[0]
+                $Global:GitPromptState.Data = $results[0]
             } else
             {
-                $Global:GitPromptState.Prompt = ""
+                $Global:GitPromptState.Data = $null
             }
         } catch
         {
-            # Write-Host "$_"
-            $Global:GitPromptState.Prompt = ""
+            $Global:GitPromptState.Data = $null
         } finally
         {
             # Resource cleanup
@@ -338,7 +352,7 @@ function Start-UpdateGitPrompt
 
     # Refresh state
     $Global:GitPromptState.Path = $CurrentPath
-    $Global:GitPromptState.Prompt = "" # Clear display while calculating
+    $Global:GitPromptState.Data = $null # Clear display while calculating
 
     # Dispose old instances
     if ($Global:GitPromptState.PowerShell)
@@ -356,61 +370,51 @@ function Start-UpdateGitPrompt
 
             # Exit if git missing
             if (-not (Get-Command git -ErrorAction SilentlyContinue))
-            { 
-                return ""
+            {
+                return $null
             }
 
             # Exit if path does not exist
             if (-not (Test-Path -LiteralPath $targetPath))
-            { 
-                return ""
+            {
+                return $null
             }
-    
+
             # Check if inside git work tree
             git -C "$targetPath" rev-parse --is-inside-work-tree > $null 2>&1
             if ($LASTEXITCODE -ne 0)
-            { 
-                return ""
+            {
+                return $null
             }
 
             # Get branch name
             $branch = git -C "$targetPath" branch --show-current 2>$null
             if (-not $branch)
-            { 
-                $branch = (git -C "$targetPath" rev-parse --short HEAD 2>$null) 
+            {
+                $branch = (git -C "$targetPath" rev-parse --short HEAD 2>$null)
             }
-        
+
             # Check dirty status
             $status = git -C "$targetPath" status --porcelain 2>$null
-            $dirty = if ($status)
-            { "*" 
-            } else
-            { "" 
-            }
+            $dirty = [bool]$status
 
+            # Get ahead/behind counts
+            $ahead = 0
+            $behind = 0
             $counts = git -C "$targetPath" rev-list --left-right --count HEAD...@`{u`} 2>$null
-            $aheadBehind = ""
             if ($counts)
             {
-                # split ahead/behind
                 $parts = $counts -split '\s+'
-                $aheadCount = [int]$parts[0]
-                $behindCount = [int]$parts[1]
-
-                # Ahead(push waiting)
-                if ($aheadCount -gt 0)
-                {
-                    $aheadBehind += " ↑$aheadCount"
-                }
-
-                # Behind(pull waiting)
-                if ($behindCount -gt 0)
-                {
-                    $aheadBehind += " ↓$behindCount"
-                }
+                $ahead = [int]$parts[0]
+                $behind = [int]$parts[1]
             }
 
-            return "$branch$dirty$aheadBehind"
+            return @{
+                Branch = $branch
+                Dirty  = $dirty
+                Ahead  = $ahead
+                Behind = $behind
+            }
         }).AddArgument($CurrentPath) | Out-Null
 
     # Begin asynchronous execution
@@ -418,9 +422,30 @@ function Start-UpdateGitPrompt
     $Global:GitPromptTimer.Start()
 }
 
-function Get-GitPrompt
+function Get-GitPrompt($baseColor, $DirtyColor)
 {
-    return $Global:GitPromptState.Prompt
+    $data = $Global:GitPromptState.Data
+    if (-not $data -or -not $data.Branch)
+    {
+        return ""
+    }
+
+    $result = "$colorGitBranch$($data.Branch)$colorReset"
+    if ($data.Dirty)
+    {
+        $result += "$colorGitDirty*$colorReset"
+    }
+    if ($data.Ahead -gt 0)
+    {
+        # $result += " $colorPath⇡$($data.Ahead)$colorReset"
+        $result += " $colorPath⇡$colorReset"
+    }
+    if ($data.Behind -gt 0)
+    {
+        # $result += " $colorPath⇣$($data.Behind)$colorReset"
+        $result += " $colorPath⇣$colorReset"
+    }
+    return $result
 }
 
 $sw.Stop()
