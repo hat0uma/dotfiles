@@ -74,6 +74,14 @@ return {
     event = "VeryLazy",
   },
   {
+    dir = "/mnt/c/Users/hat0uma/AppData/Local/nvim-data/lazy/image.nvim",
+    build = false, -- so that it doesn't build the rock https://github.com/3rd/image.nvim/issues/91#issuecomment-2453430239
+    lazy = false,
+    opts = {
+      processor = "magick_cli",
+    },
+  },
+  {
     "stevearc/dressing.nvim",
     init = function()
       ---@diagnostic disable-next-line: duplicate-set-field
