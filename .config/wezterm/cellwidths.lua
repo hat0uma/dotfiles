@@ -8,8 +8,6 @@ return {
   { first = 0x26b9, last = 0x26b9, width = 2 },
   { first = 0x2701, last = 0x2709, width = 2 },
   { first = 0x270c, last = 0x2712, width = 2 },
-  { first = 0x2716, last = 0x2727, width = 2 },
-  { first = 0x2729, last = 0x274d, width = 2 },
   { first = 0x274f, last = 0x2752, width = 2 },
   { first = 0x2763, last = 0x2763, width = 2 },
   { first = 0x2764, last = 0x2767, width = 2 },
