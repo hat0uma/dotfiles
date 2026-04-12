@@ -96,7 +96,11 @@ alias ls='ls --color=auto'
 alias ip='ip --color=auto'
 alias ll='ls -alFh'
 alias edit='nvim'
-alias open='xdg-open'
+if [[ $(systemd-detect-virt) = "wsl" ]]; then
+    alias open='/mnt/c/Windows/explorer.exe'
+else
+    alias open='xdg-open'
+fi
 
 if [[ $NVIM ]]; then
     source _nvim_hooks.zsh
