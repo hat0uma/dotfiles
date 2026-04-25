@@ -1,6 +1,7 @@
 local M = {}
 
 local parsers = {
+  "astro",
   "bash",
   "c",
   "c_sharp",
