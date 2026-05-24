@@ -47,10 +47,22 @@ config.enable_csi_u_key_encoding = true
 -- Tab bars
 ------------------------------------
 config.enable_tab_bar = true
--- config.use_fancy_tab_bar = false
+config.use_fancy_tab_bar = false
 config.hide_tab_bar_if_only_one_tab = false
 config.tab_bar_at_bottom = false
 config.show_close_tab_button_in_tabs = false
+
+------------------------------------
+-- Colors
+------------------------------------
+-- config.window_background_opacity = 0.85
+-- config.win32_system_backdrop = "Acrylic"
+local color_scheme = "rose-pine-dawn"
+config.color_scheme = color_scheme
+
+local colors = wezterm.color.get_builtin_schemes()[color_scheme]
+config.command_palette_fg_color = colors.background
+config.command_palette_bg_color = colors.foreground
 
 ------------------------------------
 -- Window
@@ -62,17 +74,15 @@ config.window_padding = {
   top = 0,
   bottom = 0,
 }
-------------------------------------
--- Colors
-------------------------------------
--- config.window_background_opacity = 0.85
--- config.win32_system_backdrop = "Acrylic"
-local color_scheme = "Catppuccin Frappe"
-config.color_scheme = color_scheme
-
-local colors = wezterm.color.get_builtin_schemes()[color_scheme]
-config.command_palette_fg_color = colors.background
-config.command_palette_bg_color = colors.foreground
+config.window_frame = {
+  active_titlebar_bg = "#f4ede8", -- highlight low
+  inactive_titlebar_bg = "#f4ede8",
+}
+config.colors = {
+  tab_bar = {
+    background = "#f4ede8",
+  },
+}
 
 ------------------------------------
 -- Fonts
@@ -81,12 +91,13 @@ config.font = wezterm.font_with_fallback({
   -- { family = "UDEV Gothic", weight = "Regular" },
   -- { family = "Sarasa Term J", weight = "Regular" },
   -- { family = "PlemolJP", weight = "Regular" },
-  { family = "PlemolJP Console", weight = "Regular" },
-  -- { family = "Moralerspace Neon JPDOC", weight = "Regular" },
+  -- { family = "PlemolJP Console", weight = "Regular" },
+  -- { family = "Moralerspace Krypton JPDOC", weight = "Regular" },
+  { family = "Moralerspace Neon JPDOC", weight = "Regular" },
   { family = "Symbols Nerd Font Mono" },
   { family = "Twemoji Mozilla" },
 })
-config.font_size = 14
+config.font_size = 15
 config.harfbuzz_features = { "calt=1", "clig=0", "liga=0" }
 config.allow_square_glyphs_to_overflow_width = "Always"
 config.cell_widths = require("cellwidths")
@@ -143,7 +154,7 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, cfg, hover, max_width)
   local item = {}
   if tab.is_active then
     table.insert(item, { Foreground = { Color = colors.background } })
-    table.insert(item, { Background = { Color = "#8caaee" } })
+    table.insert(item, { Background = { Color = colors.foreground } })
     table.insert(item, { Attribute = { Intensity = "Bold" } })
   elseif hover then
     table.insert(item, { Foreground = { Color = colors.background } })

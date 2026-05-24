@@ -16,4 +16,6 @@
 --- @field separator_highlight string
 --- @field vimode_override table?
 
-return require("plugins.colorscheme.catppuccin")
+-- return require("plugins.colorscheme.catppuccin")
+return require("plugins.colorscheme.rosepine")
+-- return require("plugins.colorscheme.everforest")
