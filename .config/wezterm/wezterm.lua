@@ -47,10 +47,11 @@ config.enable_csi_u_key_encoding = true
 -- Tab bars
 ------------------------------------
 config.enable_tab_bar = true
-config.use_fancy_tab_bar = false
+-- config.use_fancy_tab_bar = false
 config.hide_tab_bar_if_only_one_tab = false
 config.tab_bar_at_bottom = false
-config.show_close_tab_button_in_tabs = false
+config.show_new_tab_button_in_tab_bar = true
+config.show_close_tab_button_in_tabs = true
 
 ------------------------------------
 -- Colors
@@ -71,16 +72,22 @@ config.window_decorations = "RESIZE"
 config.window_padding = {
   left = 0,
   right = 0,
-  top = 0,
+  top = 2,
   bottom = 0,
 }
+local tab_bar_color = "#f8f4ee"
 config.window_frame = {
-  active_titlebar_bg = "#f4ede8", -- highlight low
-  inactive_titlebar_bg = "#f4ede8",
+  font_size = 10,
+  active_titlebar_bg = tab_bar_color,
+  inactive_titlebar_bg = tab_bar_color,
 }
 config.colors = {
   tab_bar = {
-    background = "#f4ede8",
+    background = tab_bar_color,
+    new_tab = {
+      bg_color = tab_bar_color,
+      fg_color = colors.foreground,
+    },
   },
 }
 
@@ -97,7 +104,7 @@ config.font = wezterm.font_with_fallback({
   { family = "Symbols Nerd Font Mono" },
   { family = "Twemoji Mozilla" },
 })
-config.font_size = 15
+config.font_size = 10
 config.harfbuzz_features = { "calt=1", "clig=0", "liga=0" }
 config.allow_square_glyphs_to_overflow_width = "Always"
 config.cell_widths = require("cellwidths")
@@ -153,14 +160,14 @@ config.mouse_bindings = {
 wezterm.on("format-tab-title", function(tab, tabs, panes, cfg, hover, max_width)
   local item = {}
   if tab.is_active then
-    table.insert(item, { Foreground = { Color = colors.background } })
-    table.insert(item, { Background = { Color = colors.foreground } })
+    table.insert(item, { Foreground = { Color = colors.foreground } })
+    table.insert(item, { Background = { Color = "#fdfaf4" } })
     table.insert(item, { Attribute = { Intensity = "Bold" } })
   elseif hover then
-    table.insert(item, { Foreground = { Color = colors.background } })
-    table.insert(item, { Background = { Color = "#414559" } })
+    table.insert(item, { Foreground = { Color = colors.foreground } })
+    table.insert(item, { Background = { Color = "#dedad9" } })
   else
-    table.insert(item, { Background = { Color = "#292c3c" } })
+    table.insert(item, { Background = { Color = tab_bar_color } })
   end
 
   local pane = tab.active_pane
