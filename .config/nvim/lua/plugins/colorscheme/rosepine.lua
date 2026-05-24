@@ -26,31 +26,31 @@ return {
 
   --- @return rc.StatuslinePalette
   get_statusline_palette = function()
-    local frappe = require("rose-pine.palette").base("frappe")
+    local rosepine = require("rose-pine.palette")
     --- @type table <string,string>
     local palette = {
-      bg = frappe.base,
-      bg2 = frappe.mantle,
-      fg = frappe.text,
+      bg = rosepine.base,
+      bg2 = rosepine.surface,
+      fg = rosepine.text,
       -- other colors
-      yellow = frappe.yellow,
-      cyan = frappe.sapphire,
-      darkblue = frappe.lavender,
-      green = frappe.green,
-      orange = frappe.peach,
-      purple = frappe.mauve,
-      magenta = frappe.pink,
-      grey = frappe.overlay1,
-      blue = frappe.blue,
-      red = frappe.red,
+      yellow = rosepine.gold,
+      cyan = rosepine.foam,
+      darkblue = rosepine.pine,
+      green = rosepine.leaf,
+      orange = rosepine.rose,
+      purple = rosepine.iris,
+      magenta = rosepine.rose,
+      grey = rosepine.muted,
+      blue = rosepine.foam,
+      red = rosepine.love,
     }
     palette.separator_highlight = { palette.fg, palette.bg }
-    palette.vimode_fg = frappe.base
+    palette.vimode_fg = rosepine.base
     palette.vimode_override = {
-      n = { color = palette.blue },
-      v = { color = palette.green },
-      [""] = { color = palette.green },
-      V = { color = palette.green },
+      n = { color = rosepine.rose },
+      v = { color = rosepine.iris },
+      [""] = { color = rosepine.iris },
+      V = { color = rosepine.iris },
     }
     return palette
   end,
