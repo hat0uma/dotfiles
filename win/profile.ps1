@@ -1,5 +1,9 @@
 ﻿$sw = [System.Diagnostics.Stopwatch]::StartNew()
 
+$esc = [char]0x1b
+$bel = [char]0x07
+
+
 # Keybinds
 # Install-Module -name PSReadLine -AllowClobber -Force -Scope CurrentUser
 Set-PSReadLineOption -BellStyle None -EditMode Emacs
@@ -12,6 +16,13 @@ $PSDefaultParameterValues["Out-File:Encoding"] = "utf8"
 $OutputEncoding = [System.Text.Encoding]::UTF8
 [System.Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 [System.Console]::InputEncoding = [System.Text.Encoding]::UTF8
+
+# Colors
+# if ($PSStyle)
+# {
+#     $PSStyle.FileInfo.Directory = "$esc[34;1m"
+#     $PSStyle.FileInfo.SymbolicLink = "$esc[36;1m"
+# }
 
 # Others
 $MaximumHistoryCount = 10000;
@@ -64,9 +75,6 @@ if ( Test-Path env:NVIM )
 # ==============================================================================
 # Prompt Function
 # ==============================================================================
-$esc = [char]0x1b
-$bel = [char]0x07
-
 # Prompt Lines
 Set-PSReadLineOption -ExtraPromptLineCount 1
 $env:VIRTUAL_ENV_DISABLE_PROMPT = 1

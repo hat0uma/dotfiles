@@ -59,11 +59,54 @@ config.show_close_tab_button_in_tabs = true
 -- config.window_background_opacity = 0.85
 -- config.win32_system_backdrop = "Acrylic"
 local color_scheme = "rose-pine-dawn"
-config.color_scheme = color_scheme
+-- config.color_scheme = color_scheme
 
 local colors = wezterm.color.get_builtin_schemes()[color_scheme]
 config.command_palette_fg_color = colors.background
 config.command_palette_bg_color = colors.foreground
+
+local rosepine = require("rosepine")
+local colors = rosepine.dawn.colors()
+config.colors = colors
+config.window_frame = rosepine.dawn.window_frame()
+local tab_bar_color = "#f8f4ee"
+-- config.window_frame = {
+--   font_size = 10,
+--   active_titlebar_bg = tab_bar_color,
+--   inactive_titlebar_bg = tab_bar_color,
+-- }
+-- config.colors = {
+--   selection_fg = "#fffaf3",
+--   selection_bg = readable_blue,
+--   ansi = {
+--     colors.ansi[1],
+--     colors.ansi[2],
+--     colors.ansi[3],
+--     readable_blue,
+--     colors.ansi[5],
+--     colors.ansi[6],
+--     colors.ansi[7],
+--     colors.ansi[8],
+--   },
+--   brights = {
+--     colors.brights[1],
+--     colors.brights[2],
+--     colors.brights[3],
+--     readable_bright_blue,
+--     colors.brights[5],
+--     colors.brights[6],
+--     colors.brights[7],
+--     colors.brights[8],
+--   },
+--   tab_bar = {
+--     background = tab_bar_color,
+--     new_tab = {
+--       bg_color = tab_bar_color,
+--       fg_color = colors.foreground,
+--     },
+--   },
+-- }
+config.text_background_opacity = 0.5
 
 ------------------------------------
 -- Window
@@ -74,21 +117,6 @@ config.window_padding = {
   right = 0,
   top = 2,
   bottom = 0,
-}
-local tab_bar_color = "#f8f4ee"
-config.window_frame = {
-  font_size = 10,
-  active_titlebar_bg = tab_bar_color,
-  inactive_titlebar_bg = tab_bar_color,
-}
-config.colors = {
-  tab_bar = {
-    background = tab_bar_color,
-    new_tab = {
-      bg_color = tab_bar_color,
-      fg_color = colors.foreground,
-    },
-  },
 }
 
 ------------------------------------
