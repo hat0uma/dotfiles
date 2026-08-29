@@ -4,6 +4,9 @@ import $ from "https://deno.land/x/dax@0.35.0/mod.ts";
 import { HyprlandEvent, HyprlandEventListener, listenHyprlandSocketEvent } from "/lib/event.ts";
 import * as hyprctl from "/lib/hyprctl.ts";
 
+const hyprDispatch = (expression: string) => $`hyprctl dispatch ${expression}`;
+const luaString = (value: string): string => JSON.stringify(value) ?? '""';
+
 /**
  * fix 1password quick access window position.
  */
@@ -14,7 +17,7 @@ function opWindowFixer(): HyprlandEventListener {
       if (timer === -1 && ev.windowClass === "1Password" && ev.windowTitle === "クイックアクセス — 1Password") {
         // console.log("1password window activated");
         timer = setInterval(async () => {
-          await $`hyprctl dispatch centerwindow`;
+          await hyprDispatch("hl.dsp.window.center()");
         }, 100);
       }
     } else {
@@ -37,7 +40,7 @@ function urgentOnSpecial(): HyprlandEventListener {
     if (ev.eventType === "activespecial") {
       inSpecial = ev.workspaceName !== "";
     } else if (ev.eventType === "urgent" && inSpecial) {
-      await $`hyprctl dispatch togglespecialworkspace`;
+      await hyprDispatch('hl.dsp.workspace.toggle_special("")');
     }
   };
 }
@@ -83,7 +86,12 @@ async function isolateWorkspace(
       ev.workspaceName === workspaceName &&
       !isIsolationCandidate(ev)
     ) {
-      await $`hyprctl dispatch movetoworkspace ${activeWorkspace},address:0x${ev.windowAddress}`;
+      if (activeWorkspace) {
+        const expression = `hl.dsp.window.move({ workspace = ${luaString(activeWorkspace)}, window = ${luaString(
+          `address:0x${ev.windowAddress}`,
+        )} })`;
+        await hyprDispatch(expression);
+      }
     }
   };
 }

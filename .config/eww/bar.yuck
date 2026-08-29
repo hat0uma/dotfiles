@@ -25,7 +25,7 @@
       (for WORKSPACE in WORKSPACES
         (eventbox 
           :class "workspace ${WORKSPACE.id == CURRENT_WORKSPACE ? "current" : ""} ${WORKSPACE.windows > 0 ? "" : "empty"} ${WORKSPACE.id < 0 ? "special" : ""}"
-          :onclick "hyprctl dispatch workspace ${WORKSPACE.id}"
+          :onclick "hyprctl dispatch 'hl.dsp.focus({ workspace = \"${WORKSPACE.id}\" })'"
           (label 
              :style "padding: 0px 8px;"
              :justify "center"

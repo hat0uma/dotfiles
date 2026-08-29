@@ -45,7 +45,7 @@
 
 (defwidget power []
   (eventbox
-    :onclick "eww close sysmenu closer; eww open powermenu; hyprctl dispatch submap powermenu"
+    :onclick "eww close sysmenu closer; eww open powermenu; hyprctl dispatch 'hl.dsp.submap(\"powermenu\")'"
     :tooltip "Open power menu"
     (icon-medium
       :class "icon-menu"

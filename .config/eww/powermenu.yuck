@@ -68,5 +68,5 @@
         :label "Logout"
         :sublabel "Shift+q"
         :icon "system-log-out-symbolic"
-        :onclick "hyprctl dispatch exit"))))
+        :onclick "hyprctl dispatch 'hl.dsp.exit()'"))))
 
