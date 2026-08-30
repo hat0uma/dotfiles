@@ -34,7 +34,7 @@ window {
   min-height: 28px;
   padding: 0 5px;
   border: 1px solid alpha(@highlight_high, 0.7);
-  /* border-radius: 999px; */
+  border-radius: 999px;
   background: alpha(@surface, 0.96);
   box-shadow: 0 4px 18px alpha(@text, 0.13);
 }
