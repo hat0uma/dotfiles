@@ -43,8 +43,11 @@ AddPackage pop-icon-theme
 AddPackage ttf-nerd-fonts-symbols # High number of extra glyphs from popular 'iconic fonts'
 AddLocalPackage ttf-plemoljp
 
+AddPackage gnome-keyring # Stores passwords and encryption keys
+
 # applications
 AddPackage --foreign 1password
+AddPackage --foreign 1password-cli # 1Password command line tool
 AddPackage --foreign google-chrome
 AddPackage --foreign visual-studio-code-insiders-bin
 AddPackage --foreign webcord-bin

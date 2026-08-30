@@ -8,6 +8,7 @@ AddPackage unzip
 AddPackage vim
 AddPackage xsel
 AddPackage zsh
+AddPackage jq # Command-line JSON processor
 
 # Build and development toolchain
 AddPackage cmake

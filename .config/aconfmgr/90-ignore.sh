@@ -22,6 +22,9 @@ IgnorePath '/usr/local/share/*'
 IgnorePath '/usr/local/lib/**'
 IgnorePath '/usr/local/man/**'
 
+# 1password cli integration
+IgnorePath '/usr/bin/op'
+
 # pacman
 IgnorePath '/etc/pacman.d/gnupg/**'
 IgnorePath '/etc/pacman.d/mirrorlist'
