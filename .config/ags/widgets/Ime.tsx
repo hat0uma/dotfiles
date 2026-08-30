@@ -11,8 +11,8 @@ function getSessionBus() {
 }
 
 function fcitxToggle() {
-  getSessionBus()
-    .call(
+  try {
+    getSessionBus().call_sync(
       "org.fcitx.Fcitx5",
       "/controller",
       "org.fcitx.Fcitx.Controller1",
@@ -22,8 +22,10 @@ function fcitxToggle() {
       Gio.DBusCallFlags.NONE,
       -1,
       null,
-    )
-    .catch((error: unknown) => console.error(error));
+    );
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 function imeState(iconName: string) {
@@ -72,7 +74,7 @@ export default function Ime() {
   // Keep a stable widget in the bar. Returning a dynamic widget directly from
   // With makes a late-arriving SNI item get appended at the end of the parent.
   return (
-    <box cssClasses={["ime-slot"]}>
+    <box cssClasses={["ime-slot"]} valign={Gtk.Align.CENTER}>
       <With value={fcitx}>{(item) => item && <ImeChip item={item} />}</With>
     </box>
   );

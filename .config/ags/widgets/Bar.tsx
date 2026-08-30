@@ -62,8 +62,14 @@ const PERSISTENT_WORKSPACES = 5;
 function Workspaces({ connector }: { connector: string }) {
   const monitor = hyprland.get_monitor_by_name(connector);
   const activeId = monitor
-    ? createBinding(monitor, "activeWorkspace")((workspace) => workspace?.id ?? -1)
-    : createBinding(hyprland, "focusedWorkspace")((workspace) => workspace?.id ?? -1);
+    ? createBinding(
+      monitor,
+      "activeWorkspace",
+    )((workspace) => workspace?.id ?? -1)
+    : createBinding(
+      hyprland,
+      "focusedWorkspace",
+    )((workspace) => workspace?.id ?? -1);
 
   const workspaces = createBinding(hyprland, "workspaces");
   const clients = createBinding(hyprland, "clients");
@@ -95,10 +101,12 @@ function Workspaces({ connector }: { connector: string }) {
                 "workspace",
                 slot.occupied ? "occupied" : "empty",
                 id === slot.id ? "active" : "",
-              ].filter(Boolean)
+              ].filter(Boolean),
             )}
             tooltipText={`Workspace ${slot.name}`}
-            onClicked={() => hyprland.dispatch("workspace", `${slot.id}`)}
+            onClicked={() =>
+              hyprland.dispatch(`hl.dsp.focus({ workspace = ${slot.id} })`, "")
+            }
           >
             <label label={slot.name} />
           </button>
@@ -142,14 +150,13 @@ function ActiveWindow({ connector }: { connector: string }) {
 
 function Battery() {
   const battery = AstalBattery.get_default();
-  const low = createBinding(
-    battery,
-    "percentage",
-  )((value) => value < 0.2);
+  const low = createBinding(battery, "percentage")((value) => value < 0.2);
 
   return (
     <box
-      cssClasses={low((value) => ["battery", value ? "low" : ""].filter(Boolean))}
+      cssClasses={low((value) =>
+        ["battery", value ? "low" : ""].filter(Boolean),
+      )}
       visible={createBinding(battery, "isPresent")}
       tooltipText={createBinding(battery, "state")((state) => `${state}`)}
     >
@@ -173,7 +180,10 @@ function StatusIcons({ connector }: { connector: string }) {
   return (
     <menubutton
       cssClasses={["status"]}
-      $={(self) => { statusButtons.set(connector, self); }}
+      valign={Gtk.Align.CENTER}
+      $={(self) => {
+        statusButtons.set(connector, self);
+      }}
     >
       <box spacing={6}>
         <With value={wifi}>
@@ -186,6 +196,7 @@ function StatusIcons({ connector }: { connector: string }) {
             iconName={createBinding(wireplumber.defaultSpeaker, "volumeIcon")}
           />
         )}
+        <Battery />
       </box>
       <popover>
         <QuickSettings />
@@ -196,10 +207,15 @@ function StatusIcons({ connector }: { connector: string }) {
 
 function Clock({ connector }: { connector: string }) {
   const notifd = AstalNotifd.get_default();
-  const hasUnread = createBinding(notifd, "notifications")((list) => list.length > 0);
+  const hasUnread = createBinding(
+    notifd,
+    "notifications",
+  )((list) => list.length > 0);
   const time = createPoll("", 1000, () => {
     const now = GLib.DateTime.new_now_local();
-    const weekday = ["月", "火", "水", "木", "金", "土", "日"][now.get_day_of_week() - 1];
+    const weekday = ["月", "火", "水", "木", "金", "土", "日"][
+      now.get_day_of_week() - 1
+    ];
     return `${now.format("%-m月%-d日")!} (${weekday}) ${now.format("%H:%M")!}`;
   });
   onCleanup(() => notificationButtons.delete(connector));
@@ -207,11 +223,18 @@ function Clock({ connector }: { connector: string }) {
   return (
     <menubutton
       cssClasses={["clock"]}
-      $={(self) => { notificationButtons.set(connector, self); }}
+      valign={Gtk.Align.CENTER}
+      $={(self) => {
+        notificationButtons.set(connector, self);
+      }}
     >
       <box spacing={6}>
         <label label={time} />
-        <box cssClasses={["dot"]} visible={hasUnread} valign={Gtk.Align.CENTER} />
+        <box
+          cssClasses={["dot"]}
+          visible={hasUnread}
+          valign={Gtk.Align.CENTER}
+        />
       </box>
       <popover>
         <NotificationCenter />
@@ -250,10 +273,11 @@ export default function Bar({ gdkmonitor }: { gdkmonitor: Gdk.Monitor }) {
           <Separator />
           <ActiveWindow connector={connector} />
           <Separator />
-          <Battery />
-          <StatusIcons connector={connector} />
-          <Ime />
-          <Clock connector={connector} />
+          <box cssClasses={["chips"]} valign={Gtk.Align.CENTER} spacing={0}>
+            <Ime />
+            <StatusIcons connector={connector} />
+            <Clock connector={connector} />
+          </box>
         </box>
       </box>
     </window>
