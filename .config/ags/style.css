@@ -23,88 +23,140 @@ window {
 }
 
 .bar {
-  margin: 4px 6px 0;
+  margin: 5px 6px 4px;
 }
 
-.module {
-  min-height: 30px;
-  padding: 0 10px;
-  border: 1px solid alpha(@highlight_high, 0.9);
-  border-radius: 10px;
-  background: alpha(@surface, 0.94);
-  box-shadow: 0 2px 8px alpha(@text, 0.12);
+.capsule image {
+  -gtk-icon-size: 16px;
 }
 
-.module image {
-  color: @pine;
+.capsule {
+  min-height: 28px;
+  padding: 0 5px;
+  border: 1px solid alpha(@highlight_high, 0.7);
+  border-radius: 999px;
+  background: alpha(@surface, 0.96);
+  box-shadow: 0 4px 18px alpha(@text, 0.13);
+}
+
+.sep {
+  min-width: 1px;
+  margin: 6px 5px;
+  background: @highlight_med;
 }
 
 .workspaces {
-  padding: 0 3px;
+  padding: 3px;
+  border-radius: 999px;
+  background: @highlight_low;
 }
 
-.workspace {
-  min-width: 28px;
-  min-height: 24px;
-  padding: 0 7px;
-  margin: 2px 1px;
-  border-radius: 8px;
+.capsule button {
+  border: none;
+  outline: none;
+  box-shadow: none;
+  background-image: none;
+  text-shadow: none;
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+}
+
+.capsule .workspace {
+  min-width: 12px;
+  min-height: 22px;
+  padding: 0 5px;
+  border-radius: 999px;
   background: transparent;
+  font-size: 13px;
+}
+
+.capsule .workspace.empty {
   color: @muted;
 }
 
-.workspace:hover {
-  background: @highlight_low;
+.capsule .workspace.occupied {
+  color: @subtle;
+}
+
+.capsule .workspace:hover {
+  background: @overlay;
   color: @text;
 }
 
-.workspace.active {
-  background: @text;
+.capsule .workspace.active {
+  background: @iris;
   color: @surface;
   font-weight: 700;
 }
 
 .active-window {
-  min-width: 120px;
-  padding: 0 14px;
+  padding: 0 10px;
 }
 
 .active-window image {
-  margin-right: 7px;
+  margin-right: 8px;
   color: @foam;
 }
 
+.active-window label {
+  font-weight: 500;
+}
+
+.battery {
+  padding: 0 9px;
+  font-size: 13px;
+}
+
 .battery image {
-  margin-right: 5px;
+  margin-right: 6px;
+  color: @pine;
 }
 
-.status {
-  padding: 0;
+.battery.low,
+.battery.low image {
+  color: @love;
 }
 
-.status>button {
-  min-height: 30px;
-  padding: 0 10px;
-  border-radius: 10px;
+.capsule .status>button {
+  min-height: 22px;
+  padding: 0 8px;
+  border-radius: 999px;
   background: transparent;
+}
+
+.capsule .status>button:hover {
+  background: @overlay;
+}
+
+.status image {
+  color: @pine;
 }
 
 .tray {
-  padding: 0 3px;
+  padding: 0 2px;
 }
 
-.tray button {
-  min-width: 28px;
-  min-height: 28px;
-  padding: 0 4px;
+.capsule .tray button {
+  min-height: 22px;
+  padding: 0 5px;
+  border-radius: 999px;
   background: transparent;
 }
 
+.capsule .tray button:hover {
+  background: @overlay;
+}
+
+.tray image {
+  color: @pine;
+}
+
 .clock {
-  background: @text;
-  color: @surface;
-  border-color: @iris;
-  font-weight: 700;
+  padding: 0 13px 0 9px;
+  color: @text;
+  font-size: 13px;
+  font-weight: 600;
 }
 
 popover>contents {

@@ -37,44 +37,54 @@ function appIcon(client: AstalHyprland.Client | null | undefined) {
   return application?.iconName || "application-x-executable-symbolic";
 }
 
+// Workspaces 1..N are always shown, even when empty; any occupied
+// workspace beyond that is appended.
+const PERSISTENT_WORKSPACES = 5;
+
 function Workspaces({ connector }: { connector: string }) {
-  const workspaces = createBinding(
-    hyprland,
-    "workspaces",
-  )((items) =>
-    items
-      .filter(
-        (workspace) =>
-          workspace.id > 0 && workspace.monitor?.name === connector,
-      )
-      .sort((a, b) => a.id - b.id),
-  );
+  const monitor = hyprland.get_monitor_by_name(connector);
+  const activeId = monitor
+    ? createBinding(monitor, "activeWorkspace")((workspace) => workspace?.id ?? -1)
+    : createBinding(hyprland, "focusedWorkspace")((workspace) => workspace?.id ?? -1);
+
+  const workspaces = createBinding(hyprland, "workspaces");
+  const clients = createBinding(hyprland, "clients");
+
+  const slots = createComputed(() => {
+    const own = workspaces().filter(
+      (workspace) => workspace.id > 0 && workspace.monitor?.name === connector,
+    );
+    const windows = clients();
+    const ids = new Set(own.map((workspace) => workspace.id));
+    for (let id = 1; id <= PERSISTENT_WORKSPACES; id++) ids.add(id);
+
+    return [...ids]
+      .sort((a, b) => a - b)
+      .map((id) => ({
+        id,
+        name: own.find((workspace) => workspace.id === id)?.name || `${id}`,
+        occupied: windows.some((client) => client.workspace?.id === id),
+      }));
+  });
 
   return (
-    <box cssClasses={["module", "workspaces"]}>
-      <For each={workspaces}>
-        {(workspace) => {
-          const active = workspace.monitor
-            ? createBinding(
-              workspace.monitor,
-              "activeWorkspace",
-            )((current) => current?.id === workspace.id)
-            : false;
-          const classes =
-            typeof active === "boolean"
-              ? ["workspace"]
-              : active((value) => ["workspace", value ? "active" : ""]);
-
-          return (
-            <button
-              cssClasses={classes}
-              tooltipText={`Workspace ${workspace.name}`}
-              onClicked={() => workspace.focus()}
-            >
-              <label label={workspace.name} />
-            </button>
-          );
-        }}
+    <box cssClasses={["workspaces"]}>
+      <For each={slots}>
+        {(slot) => (
+          <button
+            cssClasses={activeId((id) =>
+              [
+                "workspace",
+                slot.occupied ? "occupied" : "empty",
+                id === slot.id ? "active" : "",
+              ].filter(Boolean)
+            )}
+            tooltipText={`Workspace ${slot.name}`}
+            onClicked={() => hyprland.dispatch("workspace", `${slot.id}`)}
+          >
+            <label label={slot.name} />
+          </button>
+        )}
       </For>
     </box>
   );
@@ -99,10 +109,12 @@ function ActiveWindow({ connector }: { connector: string }) {
     : focusedClient;
 
   return (
-    <box cssClasses={["module", "active-window"]}>
+    <box cssClasses={["active-window"]} widthRequest={380}>
       <image iconName={client(appIcon)} />
       <label
-        maxWidthChars={56}
+        hexpand
+        xalign={0}
+        maxWidthChars={1}
         ellipsize={3}
         label={client((item) => item?.title || "Desktop")}
       />
@@ -112,9 +124,14 @@ function ActiveWindow({ connector }: { connector: string }) {
 
 function Battery() {
   const battery = AstalBattery.get_default();
+  const low = createBinding(
+    battery,
+    "percentage",
+  )((value) => value < 0.2);
+
   return (
     <box
-      cssClasses={["module", "battery"]}
+      cssClasses={low((value) => ["battery", value ? "low" : ""].filter(Boolean))}
       visible={createBinding(battery, "isPresent")}
       tooltipText={createBinding(battery, "state")((state) => `${state}`)}
     >
@@ -135,7 +152,7 @@ function StatusIcons() {
   const wifi = createBinding(network, "wifi");
 
   return (
-    <menubutton cssClasses={["module", "status"]}>
+    <menubutton cssClasses={["status"]}>
       <box spacing={6}>
         <With value={wifi}>
           {(device) =>
@@ -169,7 +186,7 @@ function Tray() {
 
   return (
     <box
-      cssClasses={["module", "tray"]}
+      cssClasses={["tray"]}
       visible={items((value) => value.length > 0)}
     >
       <For each={items}>
@@ -190,7 +207,11 @@ function Clock() {
   const time = createPoll("", 1000, () =>
     GLib.DateTime.new_now_local().format("%b%d日 %H:%M")!,
   );
-  return <label cssClasses={["module", "clock"]} label={time} />;
+  return <label cssClasses={["clock"]} label={time} />;
+}
+
+function Separator() {
+  return <box cssClasses={["sep"]} />;
 }
 
 export default function Bar({ gdkmonitor }: { gdkmonitor: Gdk.Monitor }) {
@@ -213,20 +234,18 @@ export default function Bar({ gdkmonitor }: { gdkmonitor: Gdk.Monitor }) {
       anchor={TOP | LEFT | RIGHT}
       application={app}
     >
-      <centerbox cssClasses={["bar"]}>
-        <box $type="start" halign={Gtk.Align.START}>
+      <box cssClasses={["bar"]} halign={Gtk.Align.CENTER}>
+        <box cssClasses={["capsule"]}>
           <Workspaces connector={connector} />
-        </box>
-        <box $type="center" halign={Gtk.Align.CENTER}>
+          <Separator />
           <ActiveWindow connector={connector} />
-        </box>
-        <box $type="end" halign={Gtk.Align.END} spacing={6}>
+          <Separator />
           <Battery />
           <StatusIcons />
           <Tray />
           <Clock />
         </box>
-      </centerbox>
+      </box>
     </window>
   );
 }
