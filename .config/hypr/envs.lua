@@ -5,7 +5,7 @@ hl.env("XMODIFIERS", "@im=fcitx")
 hl.env("XDG_SESSION_DESKTOP", "Hyprland")
 hl.env("XDG_CURRENT_DESKTOP", "Hyprland")
 
-hl.env("GDK_SCALE", "2")
+-- hl.env("GDK_SCALE", "2")
 hl.env("XCURSOR_SIZE", "24")
 
 hl.env("GTK_THEME", "Catppuccin-Frappe-Standard-Lavender-Dark:dark")

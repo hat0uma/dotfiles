@@ -7,12 +7,11 @@ import { linkScripts } from "./setup_link.ts";
 
 const packages = {
   base: [
-    "acpi",
-    "brightnessctl",
-    "eww-hyprland-tray",
+    "aylurs-gtk-shell-git",
     "gobject-introspection",
     "hyprland-git",
     "network-manager-applet",
+    "libastal-meta",
     "otf-font-awesome",
     "papirus-icon-theme",
     "pop-icon-theme",

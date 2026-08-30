@@ -1,6 +1,6 @@
 # Hyprland session
 AddPackage acpi
-AddPackage brightnessctl
+AddPackage brightnessctl # Lightweight brightness control tool
 AddPackage gobject-introspection
 AddPackage hyprland
 AddPackage network-manager-applet
@@ -10,6 +10,11 @@ AddPackage swaybg
 AddPackage swaylock
 AddPackage swaync
 AddPackage xdg-desktop-portal-hyprland
+
+# Astal/AGS desktop shell
+AddPackage --foreign aylurs-gtk-shell-git
+AddPackage --foreign libastal-meta
+AddPackage --foreign libastal-brightness-git
 
 # Input method
 AddPackage fcitx5

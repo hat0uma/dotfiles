@@ -5,12 +5,12 @@
 ########################
 # install wm,dm
 yay -S --noconfirm \
-	acpi \
-	brightnessctl \
-	eww-hyprland-tray \
+	aylurs-gtk-shell-git \
 	gobject-introspection \
 	hyprland-git \
 	network-manager-applet \
+	libastal-meta \
+	libastal-brightness-git \
 	otf-font-awesome \
 	qt5-wayland \
 	qt6-wayland \

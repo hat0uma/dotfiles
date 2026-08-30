@@ -1,0 +1,232 @@
+@define-color base #faf4ed;
+@define-color surface #fffaf3;
+@define-color overlay #f2e9e1;
+@define-color muted #9893a5;
+@define-color subtle #797593;
+@define-color text #575279;
+@define-color love #b4637a;
+@define-color pine #286983;
+@define-color foam #56949f;
+@define-color iris #907aa9;
+@define-color highlight_low #f4ede8;
+@define-color highlight_med #dfdad9;
+@define-color highlight_high #cecacd;
+
+* {
+  font-family: "PlemolJP", "Noto Sans CJK JP", sans-serif;
+  font-size: 14px;
+}
+
+window {
+  background: transparent;
+  color: @text;
+}
+
+.bar {
+  margin: 4px 6px 0;
+}
+
+.module {
+  min-height: 30px;
+  padding: 0 10px;
+  border: 1px solid alpha(@highlight_high, 0.9);
+  border-radius: 10px;
+  background: alpha(@surface, 0.94);
+  box-shadow: 0 2px 8px alpha(@text, 0.12);
+}
+
+.module image {
+  color: @pine;
+}
+
+.workspaces {
+  padding: 0 3px;
+}
+
+.workspace {
+  min-width: 28px;
+  min-height: 24px;
+  padding: 0 7px;
+  margin: 2px 1px;
+  border-radius: 8px;
+  background: transparent;
+  color: @muted;
+}
+
+.workspace:hover {
+  background: @highlight_low;
+  color: @text;
+}
+
+.workspace.active {
+  background: @text;
+  color: @surface;
+  font-weight: 700;
+}
+
+.active-window {
+  min-width: 120px;
+  padding: 0 14px;
+}
+
+.active-window image {
+  margin-right: 7px;
+  color: @foam;
+}
+
+.battery image {
+  margin-right: 5px;
+}
+
+.status {
+  padding: 0;
+}
+
+.status>button {
+  min-height: 30px;
+  padding: 0 10px;
+  border-radius: 10px;
+  background: transparent;
+}
+
+.tray {
+  padding: 0 3px;
+}
+
+.tray button {
+  min-width: 28px;
+  min-height: 28px;
+  padding: 0 4px;
+  background: transparent;
+}
+
+.clock {
+  background: @text;
+  color: @surface;
+  border-color: @iris;
+  font-weight: 700;
+}
+
+popover>contents {
+  margin: 8px;
+  border: 1px solid @highlight_high;
+  border-radius: 14px;
+  background: @base;
+  color: @text;
+  box-shadow: 0 8px 28px alpha(@text, 0.22);
+}
+
+.quick-settings {
+  min-width: 330px;
+  padding: 18px;
+}
+
+.quick-time {
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.quick-date {
+  color: @subtle;
+  font-size: 12px;
+}
+
+.round-button,
+.icon-button {
+  min-width: 36px;
+  min-height: 36px;
+  border-radius: 999px;
+  background: @overlay;
+  color: @pine;
+}
+
+.round-button:hover,
+.icon-button:hover {
+  background: @highlight_med;
+}
+
+.round-button.danger {
+  color: @love;
+}
+
+.control {
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: @surface;
+}
+
+.control>image {
+  color: @pine;
+}
+
+.control>label {
+  min-width: 42px;
+  color: @subtle;
+}
+
+scale trough {
+  min-height: 6px;
+  border-radius: 999px;
+  background: @highlight_med;
+}
+
+scale highlight {
+  border-radius: 999px;
+  background: @foam;
+}
+
+scale slider {
+  min-width: 16px;
+  min-height: 16px;
+  border-radius: 999px;
+  background: @pine;
+}
+
+.status-chip {
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: @overlay;
+}
+
+.status-chip image {
+  margin-right: 6px;
+  color: @pine;
+}
+
+.power-backdrop {
+  background: alpha(@text, 0.16);
+}
+
+.power-card {
+  padding: 10px;
+  border: 1px solid @highlight_high;
+  border-radius: 16px;
+  background: alpha(@base, 0.97);
+  box-shadow: 0 12px 40px alpha(@text, 0.28);
+}
+
+.power-button {
+  min-width: 112px;
+  padding: 18px 10px;
+  border-radius: 12px;
+  background: transparent;
+  color: @text;
+}
+
+.power-button:hover {
+  background: @overlay;
+}
+
+.power-button image {
+  color: @iris;
+}
+
+.power-label {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.power-shortcut {
+  color: @muted;
+  font-size: 11px;
+}

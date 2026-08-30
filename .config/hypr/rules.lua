@@ -53,6 +53,6 @@ hl.window_rule({
 })
 
 hl.layer_rule({
-  match = { namespace = "powermenu" },
+  match = { namespace = "ags-power-menu" },
   blur = true,
 })
