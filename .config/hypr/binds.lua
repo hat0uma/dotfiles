@@ -8,7 +8,7 @@ hl.bind(mod .. " + F2", hl.dsp.exec_cmd("google-chrome-stable"))
 hl.bind(mod .. " + D", hl.dsp.exec_cmd("wofi --show drun"))
 hl.bind(mod .. " + SHIFT + D", hl.dsp.exec_cmd("wofi --show run"))
 hl.bind(mod .. " + O", hl.dsp.exec_cmd("1password --quick-access"))
-hl.bind(mod .. " + N", hl.dsp.exec_cmd("swaync-client -t -sw"))
+hl.bind(mod .. " + N", hl.dsp.exec_cmd("ags request toggle-notifications"))
 hl.bind(mod .. " + E", hl.dsp.exec_cmd("pcmanfm-qt"))
 
 hl.bind(mod .. " + P", hl.dsp.window.pseudo())

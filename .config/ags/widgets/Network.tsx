@@ -42,6 +42,11 @@ function AccessPointRow({
 
   const isActive = createBinding(wifi, "ssid")((ssid) => !!ssid && ssid === ap.ssid);
   const isOpen = createComputed(() => openSsid() === ap.ssid);
+  const rowClasses = createComputed(() => [
+    "ap",
+    isActive() ? "current" : "",
+    openSsid() !== null && openSsid() !== ap.ssid ? "dim" : "",
+  ].filter(Boolean));
 
   function connect(password: string | null) {
     setConnecting(true);
@@ -81,20 +86,20 @@ function AccessPointRow({
 
   return (
     <box orientation={Gtk.Orientation.VERTICAL}>
-      <button cssClasses={["ap"]} onClicked={onRowClicked}>
+      <button cssClasses={rowClasses} onClicked={onRowClicked}>
         <box spacing={11}>
           <image iconName={createBinding(ap, "iconName")} />
           <box orientation={Gtk.Orientation.VERTICAL} hexpand valign={Gtk.Align.CENTER}>
             <label
-              cssClasses={isActive((active) => ["ap-name", active ? "current" : ""].filter(Boolean))}
+              cssClasses={["ap-name"]}
               xalign={0}
               label={ap.ssid ?? ""}
             />
             <label
               cssClasses={["ap-sub"]}
               xalign={0}
-              visible={isActive}
-              label="接続済み"
+              visible={isActive((active) => active || ap.get_connections().length > 0)}
+              label={isActive((active) => active ? "接続済み" : "保存済み")}
             />
           </box>
           <With value={isActive}>
@@ -113,8 +118,10 @@ function AccessPointRow({
             <box cssClasses={["pwd"]} orientation={Gtk.Orientation.VERTICAL} spacing={9}>
               <label cssClasses={["pwd-label"]} xalign={0} label={`${ap.ssid} のパスワード`} />
               <entry
+                cssClasses={["password-field"]}
                 $={(self) => (passwordEntry = self)}
                 visibility={false}
+                secondaryIconName="view-reveal-symbolic"
                 placeholderText="パスワード"
                 onActivate={() => connect(passwordEntry.get_text())}
               />
@@ -123,7 +130,7 @@ function AccessPointRow({
                   message && <label cssClasses={["pwd-error"]} xalign={0} label={message} />
                 }
               </With>
-              <box spacing={8} halign={Gtk.Align.END}>
+              <box cssClasses={["btns"]} spacing={8} halign={Gtk.Align.END}>
                 <button cssClasses={["btn", "ghost"]} onClicked={() => setOpenSsid(null)}>
                   <label label="キャンセル" />
                 </button>
@@ -172,10 +179,12 @@ export function WifiPage({ onBack }: { onBack: () => void }) {
   const enabled = createBinding(wifi, "enabled");
   const ssid = createBinding(wifi, "ssid");
   const scanning = createBinding(wifi, "scanning");
+  const showScanning = createComputed(() => enabled() && scanning());
   const accessPoints = createBinding(wifi, "accessPoints");
   const wired = createBinding(network, "wired");
 
   const apRows = createComputed(() => {
+    if (!enabled()) return [];
     const points = accessPoints();
     const active = ssid();
     const bySsid = new Map<string, AstalNetwork.AccessPoint>();
@@ -192,31 +201,47 @@ export function WifiPage({ onBack }: { onBack: () => void }) {
   });
 
   return (
-    <box orientation={Gtk.Orientation.VERTICAL} spacing={10}>
+    <box cssClasses={["wifi-page"]} orientation={Gtk.Orientation.VERTICAL} spacing={10}>
       <box cssClasses={["pop-head"]} spacing={10}>
         <button cssClasses={["back"]} onClicked={onBack}>
           <image iconName="go-previous-symbolic" />
         </button>
         <label cssClasses={["pop-title"]} hexpand xalign={0} label="Wi-Fi" />
-        <With value={scanning}>
-          {(isScanning) => isScanning && <label cssClasses={["scanning"]} label="検索中" />}
-        </With>
-        <switch active={enabled} onNotifyActive={(self: Gtk.Switch) => wifi.set_enabled(self.active)} />
+        <label
+          cssClasses={["scanning"]}
+          label="検索中"
+          opacity={showScanning((visible) => visible ? 1 : 0)}
+        />
+        <switch
+          cssClasses={["compact-switch"]}
+          active={enabled}
+          onNotifyActive={(self: Gtk.Switch) => {
+            wifi.set_enabled(self.active);
+            if (self.active) wifi.scan();
+          }}
+        />
       </box>
 
-      <box cssClasses={["ap-list"]} orientation={Gtk.Orientation.VERTICAL} spacing={2}>
-        <With value={wired}>{(w) => w && <WiredRow wired={w} />}</With>
-        <For each={apRows}>
-          {(ap) => (
-            <AccessPointRow ap={ap} wifi={wifi} openSsid={openSsid} setOpenSsid={setOpenSsid} />
-          )}
-        </For>
-      </box>
+      <scrolledwindow
+        minContentHeight={320}
+        maxContentHeight={320}
+        propagateNaturalHeight={false}
+      >
+        <box cssClasses={["ap-list"]} orientation={Gtk.Orientation.VERTICAL} spacing={2}>
+          <With value={wired}>{(w) => w && <WiredRow wired={w} />}</With>
+          <For each={apRows}>
+            {(ap) => (
+              <AccessPointRow ap={ap} wifi={wifi} openSsid={openSsid} setOpenSsid={setOpenSsid} />
+            )}
+          </For>
+        </box>
+      </scrolledwindow>
 
       <button cssClasses={["pop-foot"]} onClicked={() => run(["nm-connection-editor"])}>
         <box spacing={8}>
           <image iconName="preferences-system-symbolic" />
           <label hexpand xalign={0} label="詳細設定" />
+          <label cssClasses={["mono"]} label="nm-connection-editor" />
         </box>
       </button>
     </box>
@@ -254,6 +279,7 @@ export function WifiRow({
         </box>
       </button>
       <switch
+        cssClasses={["compact-switch"]}
         valign={Gtk.Align.CENTER}
         active={enabled}
         onNotifyActive={(self: Gtk.Switch) => wifi.set_enabled(self.active)}

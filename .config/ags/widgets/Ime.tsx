@@ -69,5 +69,11 @@ export default function Ime() {
   const items = createBinding(tray, "items");
   const fcitx = createComputed(() => items().find((item) => item.id === "Fcitx") ?? null);
 
-  return <With value={fcitx}>{(item) => item && <ImeChip item={item} />}</With>;
+  // Keep a stable widget in the bar. Returning a dynamic widget directly from
+  // With makes a late-arriving SNI item get appended at the end of the parent.
+  return (
+    <box cssClasses={["ime-slot"]}>
+      <With value={fcitx}>{(item) => item && <ImeChip item={item} />}</With>
+    </box>
+  );
 }

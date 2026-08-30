@@ -5,7 +5,7 @@ import app from "ags/gtk4/app";
 import AstalHyprland from "gi://AstalHyprland";
 import AstalNotifd from "gi://AstalNotifd";
 import style from "./style.css";
-import Bar from "./widgets/Bar";
+import Bar, { toggleNotifications, toggleStatus } from "./widgets/Bar";
 import NotificationPopups from "./widgets/NotificationPopups";
 import PowerMenu, {
   closePowerMenu,
@@ -30,6 +30,18 @@ app.start({
         break;
       case "close-power":
         closePowerMenu();
+        response("ok");
+        break;
+      case "toggle-notifications":
+        toggleNotifications(hyprland.focusedMonitor?.name);
+        response("ok");
+        break;
+      case "toggle-status":
+        toggleStatus(hyprland.focusedMonitor?.name);
+        response("ok");
+        break;
+      case "clear-notifications":
+        AstalNotifd.get_default().get_notifications().forEach((item) => item.dismiss());
         response("ok");
         break;
       default:

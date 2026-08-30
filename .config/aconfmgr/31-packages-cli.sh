@@ -17,7 +17,10 @@ AddPackage nodejs
 AddPackage npm
 AddPackage tree-sitter
 AddPackage tree-sitter-cli # CLI tool for developing, testing, and using Tree-sitter parsers
+
+# AI
 AddPackage openai-codex
+AddPackage --foreign claude-code # An agentic coding tool that lives in your terminal
 
 # Miscellaneous
 AddPackage fastfetch # A feature-rich and performance oriented neofetch like system information tool

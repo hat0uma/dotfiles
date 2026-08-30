@@ -37,6 +37,7 @@ AddPackage swappy
 AddPackage wezterm
 AddPackage wl-clipboard
 AddPackage wofi
+AddPackage xorg-xlsclients # List client applications running on a display
 
 # Fonts and icons
 AddPackage noto-fonts-cjk

@@ -7,7 +7,6 @@ import AstalBattery from "gi://AstalBattery";
 import AstalHyprland from "gi://AstalHyprland";
 import AstalNetwork from "gi://AstalNetwork";
 import AstalNotifd from "gi://AstalNotifd";
-import AstalTray from "gi://AstalTray";
 import AstalWp from "gi://AstalWp";
 import Gdk from "gi://Gdk?version=4.0";
 import GLib from "gi://GLib";
@@ -18,6 +17,22 @@ import QuickSettings from "./QuickSettings";
 
 const hyprland = AstalHyprland.get_default();
 const apps = AstalApps.Apps.new();
+const notificationButtons = new Map<string, Gtk.MenuButton>();
+const statusButtons = new Map<string, Gtk.MenuButton>();
+
+export function toggleNotifications(connector?: string) {
+  const button = connector
+    ? notificationButtons.get(connector)
+    : notificationButtons.values().next().value;
+  if (button) button.active = !button.active;
+}
+
+export function toggleStatus(connector?: string) {
+  const button = connector
+    ? statusButtons.get(connector)
+    : statusButtons.values().next().value;
+  if (button) button.active = !button.active;
+}
 
 function appIcon(client: AstalHyprland.Client | null | undefined) {
   if (!client) return "application-x-executable-symbolic";
@@ -149,13 +164,17 @@ function Battery() {
   );
 }
 
-function StatusIcons() {
+function StatusIcons({ connector }: { connector: string }) {
   const network = AstalNetwork.get_default();
   const wireplumber = AstalWp.get_default();
   const wifi = createBinding(network, "wifi");
+  onCleanup(() => statusButtons.delete(connector));
 
   return (
-    <menubutton cssClasses={["status"]}>
+    <menubutton
+      cssClasses={["status"]}
+      $={(self) => { statusButtons.set(connector, self); }}
+    >
       <box spacing={6}>
         <With value={wifi}>
           {(device) =>
@@ -175,51 +194,24 @@ function StatusIcons() {
   );
 }
 
-function Tray() {
-  const tray = AstalTray.get_default();
-  const items = createBinding(tray, "items")((list) =>
-    list.filter((item) => item.id !== "Fcitx"),
-  );
-
-  const setup = (button: Gtk.MenuButton, item: AstalTray.TrayItem) => {
-    button.menuModel = item.menuModel;
-    button.insert_action_group("dbusmenu", item.actionGroup);
-    item.connect("notify::action-group", () =>
-      button.insert_action_group("dbusmenu", item.actionGroup),
-    );
-  };
-
-  return (
-    <box
-      cssClasses={["tray"]}
-      visible={items((value) => value.length > 0)}
-    >
-      <For each={items}>
-        {(item) => (
-          <menubutton
-            tooltipText={createBinding(item, "tooltipMarkup")}
-            $={(self) => setup(self, item)}
-          >
-            <image gicon={createBinding(item, "gicon")} />
-          </menubutton>
-        )}
-      </For>
-    </box>
-  );
-}
-
-function Clock() {
+function Clock({ connector }: { connector: string }) {
   const notifd = AstalNotifd.get_default();
   const hasUnread = createBinding(notifd, "notifications")((list) => list.length > 0);
-  const time = createPoll("", 1000, () =>
-    GLib.DateTime.new_now_local().format("%-m月%-d日 (%a) %H:%M")!,
-  );
+  const time = createPoll("", 1000, () => {
+    const now = GLib.DateTime.new_now_local();
+    const weekday = ["月", "火", "水", "木", "金", "土", "日"][now.get_day_of_week() - 1];
+    return `${now.format("%-m月%-d日")!} (${weekday}) ${now.format("%H:%M")!}`;
+  });
+  onCleanup(() => notificationButtons.delete(connector));
 
   return (
-    <menubutton cssClasses={["clock"]}>
+    <menubutton
+      cssClasses={["clock"]}
+      $={(self) => { notificationButtons.set(connector, self); }}
+    >
       <box spacing={6}>
         <label label={time} />
-        <box cssClasses={["dot"]} visible={hasUnread} />
+        <box cssClasses={["dot"]} visible={hasUnread} valign={Gtk.Align.CENTER} />
       </box>
       <popover>
         <NotificationCenter />
@@ -259,10 +251,9 @@ export default function Bar({ gdkmonitor }: { gdkmonitor: Gdk.Monitor }) {
           <ActiveWindow connector={connector} />
           <Separator />
           <Battery />
-          <StatusIcons />
+          <StatusIcons connector={connector} />
           <Ime />
-          <Tray />
-          <Clock />
+          <Clock connector={connector} />
         </box>
       </box>
     </window>

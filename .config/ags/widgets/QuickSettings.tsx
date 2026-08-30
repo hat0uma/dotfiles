@@ -1,4 +1,4 @@
-import { createBinding, createState, With } from "ags";
+import { createBinding, createComputed, createState, With } from "ags";
 import { execAsync } from "ags/process";
 import { createPoll } from "ags/time";
 import AstalBluetooth from "gi://AstalBluetooth";
@@ -17,10 +17,18 @@ function run(command: string[]) {
 function BluetoothRow() {
   const bluetooth = AstalBluetooth.get_default();
   const powered = createBinding(bluetooth, "isPowered");
+  const connected = createBinding(bluetooth, "isConnected");
+  const subtitle = createComputed(() => {
+    if (!powered()) return "オフ";
+    return connected() ? "接続済み" : "接続なし";
+  });
 
   return (
-    <box cssClasses={["conn-row"]} spacing={10}>
-      <box spacing={11} hexpand>
+    <box
+      cssClasses={powered((on) => ["conn-row", on ? "" : "off"].filter(Boolean))}
+      spacing={10}
+    >
+      <box cssClasses={["conn-row-main"]} spacing={11} hexpand>
         <image
           iconName={powered((on) =>
             on ? "bluetooth-active-symbolic" : "bluetooth-disabled-symbolic"
@@ -31,11 +39,12 @@ function BluetoothRow() {
           <label
             cssClasses={["conn-sub"]}
             xalign={0}
-            label={createBinding(bluetooth, "isConnected")((on) => (on ? "接続済み" : "オフ"))}
+            label={subtitle}
           />
         </box>
       </box>
       <switch
+        cssClasses={["compact-switch"]}
         valign={Gtk.Align.CENTER}
         active={powered}
         onNotifyActive={(self: Gtk.Switch) => (bluetooth.isPowered = self.active)}
@@ -78,7 +87,9 @@ function Controls() {
           value > 0
         )}
       >
-        <image iconName="display-brightness-symbolic" />
+        <box cssClasses={["control-icon-slot"]}>
+          <image iconName="display-brightness-symbolic" />
+        </box>
         <slider
           hexpand
           value={createBinding(brightness, "brightness")}
@@ -105,17 +116,23 @@ function QuickMain({ onOpenWifi }: { onOpenWifi: () => void }) {
   const date = createPoll(
     "",
     60_000,
-    () => GLib.DateTime.new_now_local().format("%Y年%m月%d日 %A")!,
+    () => {
+      const now = GLib.DateTime.new_now_local();
+      const weekday = ["月曜日", "火曜日", "水曜日", "木曜日", "金曜日", "土曜日", "日曜日"][
+        now.get_day_of_week() - 1
+      ];
+      return `${now.format("%Y年%m月%d日")!} ${weekday}`;
+    },
   );
 
   return (
-    <box orientation={Gtk.Orientation.VERTICAL} spacing={14}>
-      <box>
+    <box cssClasses={["quick-main"]} orientation={Gtk.Orientation.VERTICAL} spacing={14}>
+      <box cssClasses={["quick-head"]}>
         <box hexpand orientation={Gtk.Orientation.VERTICAL}>
           <label cssClasses={["quick-time"]} xalign={0} label={time} />
           <label cssClasses={["quick-date"]} xalign={0} label={date} />
         </box>
-        <box spacing={6} valign={Gtk.Align.CENTER}>
+        <box cssClasses={["quick-actions"]} spacing={6} valign={Gtk.Align.CENTER}>
           <button
             cssClasses={["round-button"]}
             tooltipText="Take a screenshot"
@@ -137,7 +154,7 @@ function QuickMain({ onOpenWifi }: { onOpenWifi: () => void }) {
         </box>
       </box>
       <Controls />
-      <box orientation={Gtk.Orientation.VERTICAL} spacing={8}>
+      <box cssClasses={["connections"]} orientation={Gtk.Orientation.VERTICAL} spacing={8}>
         <With value={wifi}>
           {(device) => device && <WifiRow wifi={device} onOpen={onOpenWifi} />}
         </With>
@@ -149,18 +166,25 @@ function QuickMain({ onOpenWifi }: { onOpenWifi: () => void }) {
 
 export default function QuickSettings() {
   const [page, setPage] = createState<"main" | "wifi">("main");
+  const showPage = (next: "main" | "wifi") => setPage(next);
 
   return (
     <box cssClasses={["quick-settings"]}>
-      <With value={page}>
-        {(current) =>
-          current === "wifi" ? (
-            <WifiPage onBack={() => setPage("main")} />
-          ) : (
-            <QuickMain onOpenWifi={() => setPage("wifi")} />
-          )
-        }
-      </With>
+      <Gtk.Stack
+        cssClasses={["quick-pages"]}
+        visibleChildName={page}
+        transitionType={Gtk.StackTransitionType.SLIDE_LEFT_RIGHT}
+        transitionDuration={160}
+        hhomogeneous
+        vhomogeneous
+      >
+        <box $type="named" name="main">
+          <QuickMain onOpenWifi={() => showPage("wifi")} />
+        </box>
+        <box $type="named" name="wifi">
+          <WifiPage onBack={() => showPage("main")} />
+        </box>
+      </Gtk.Stack>
     </box>
   );
 }

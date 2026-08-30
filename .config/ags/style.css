@@ -60,6 +60,7 @@ window {
   min-width: 0;
   min-height: 0;
   padding: 0;
+  color: @text;
 }
 
 .capsule .workspace {
@@ -133,23 +134,8 @@ window {
   color: @pine;
 }
 
-.tray {
-  padding: 0 2px;
-}
-
-.capsule .tray button {
-  min-height: 22px;
-  padding: 0 5px;
-  border-radius: 999px;
-  background: transparent;
-}
-
-.capsule .tray button:hover {
-  background: @overlay;
-}
-
-.tray image {
-  color: @pine;
+.ime-slot {
+  min-width: 0;
 }
 
 .capsule .ime {
@@ -187,6 +173,7 @@ window {
   padding: 0 13px 0 9px;
   border-radius: 999px;
   background: transparent;
+  color: @text;
 }
 
 .capsule .clock>button:hover {
@@ -209,14 +196,32 @@ popover>contents {
   box-shadow: 0 8px 28px alpha(@text, 0.22);
 }
 
+popover button,
+.toast-stack button {
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+  background-image: none;
+  box-shadow: none;
+  text-shadow: none;
+}
+
 .quick-settings {
   min-width: 330px;
   padding: 18px;
 }
 
+.quick-main,
+.wifi-page {
+  min-width: 330px;
+}
+
 .quick-time {
   font-size: 30px;
   font-weight: 700;
+  line-height: 1.15;
 }
 
 .quick-date {
@@ -252,6 +257,15 @@ popover>contents {
   color: @pine;
 }
 
+.control-icon-slot {
+  min-width: 36px;
+  min-height: 36px;
+}
+
+.control-icon-slot image {
+  color: @pine;
+}
+
 .control>label {
   min-width: 42px;
   color: @subtle;
@@ -273,6 +287,60 @@ scale slider {
   min-height: 16px;
   border-radius: 999px;
   background: @pine;
+}
+
+.connections .conn-row {
+  min-height: 52px;
+  padding: 0 12px;
+  border-radius: 10px;
+  background: @surface;
+}
+
+.connections .conn-row.off image,
+.connections .conn-row.off .conn-name {
+  color: @subtle;
+}
+
+.conn-row-main {
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  color: @text;
+}
+
+.conn-row-main:hover {
+  background: transparent;
+}
+
+.conn-row-main image,
+.conn-row>image {
+  color: @pine;
+}
+
+.compact-switch {
+  min-width: 36px;
+  min-height: 20px;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  outline: none;
+  background: @highlight_med;
+  background-image: none;
+  box-shadow: none;
+}
+
+.compact-switch:checked {
+  background: @foam;
+}
+
+.compact-switch slider {
+  min-width: 16px;
+  min-height: 16px;
+  margin: 2px;
+  border: none;
+  border-radius: 999px;
+  background: @surface;
+  box-shadow: none;
 }
 
 .status-chip {
@@ -327,12 +395,14 @@ scale slider {
 /* --- network / wifi page --- */
 
 .pop-head {
-  padding: 2px 0 4px;
+  min-height: 26px;
+  margin-bottom: 4px;
 }
 
 .back {
   min-width: 26px;
   min-height: 26px;
+  margin-left: -4px;
   border-radius: 999px;
   background: @overlay;
   color: @pine;
@@ -353,13 +423,26 @@ scale slider {
 }
 
 .ap {
-  padding: 8px 6px;
+  padding: 9px 10px;
   border-radius: 10px;
   background: transparent;
+  color: @text;
 }
 
 .ap:hover {
   background: @surface;
+}
+
+.ap.current {
+  background: @overlay;
+}
+
+.ap.current .ap-name {
+  font-weight: 700;
+}
+
+.ap.dim {
+  opacity: 0.45;
 }
 
 .ap image {
@@ -368,10 +451,6 @@ scale slider {
 
 .ap-name {
   font-size: 13px;
-}
-
-.ap-name.current {
-  font-weight: 700;
 }
 
 .ap-sub {
@@ -395,6 +474,7 @@ scale slider {
   padding: 12px 10px 11px;
   border-radius: 10px;
   background: @surface;
+  box-shadow: inset 0 0 0 1px @highlight_med;
 }
 
 .pwd-label {
@@ -405,6 +485,22 @@ scale slider {
 .pwd-error {
   color: @love;
   font-size: 11px;
+}
+
+.password-field {
+  min-height: 30px;
+  padding: 0 10px;
+  border: 1px solid @iris;
+  border-radius: 8px;
+  outline: none;
+  background: @base;
+  color: @text;
+  box-shadow: none;
+}
+
+.password-field:focus {
+  border-color: @iris;
+  box-shadow: none;
 }
 
 .btn {
@@ -433,35 +529,30 @@ scale slider {
 }
 
 .pop-foot {
-  margin-top: 4px;
-  padding: 8px 6px;
-  border-radius: 10px;
+  margin-top: 2px;
+  padding: 12px 0 0;
+  border-top: 1px solid @highlight_med;
+  border-radius: 0;
+  background: transparent;
   color: @pine;
   font-size: 12px;
   font-weight: 600;
 }
 
 .pop-foot:hover {
-  background: @surface;
+  color: @foam;
+}
+
+.mono {
+  color: @muted;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 11px;
+  font-weight: 400;
 }
 
 .cap {
   color: @subtle;
   font-size: 11px;
-}
-
-.conn-row-main {
-  padding: 8px 10px;
-  border-radius: 10px;
-  background: @surface;
-}
-
-.conn-row-main:hover {
-  background: @highlight_low;
-}
-
-.conn-row-main image {
-  color: @pine;
 }
 
 .conn-name {
@@ -482,7 +573,8 @@ scale slider {
 /* --- notification center --- */
 
 .notif-center {
-  min-width: 300px;
+  min-width: 330px;
+  padding: 18px;
 }
 
 .calendar {
@@ -491,14 +583,83 @@ scale slider {
   font-size: 12px;
 }
 
+.cal-head {
+  margin-bottom: 8px;
+}
+
+.cal-month {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.cal-nav {
+  min-width: 22px;
+  min-height: 22px;
+  border-radius: 999px;
+  background: transparent;
+  color: @subtle;
+}
+
+.cal-nav:hover {
+  background: @overlay;
+  color: @text;
+}
+
+.cal-nav image {
+  -gtk-icon-size: 13px;
+}
+
+.cal-weekday {
+  min-height: 22px;
+  color: @subtle;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.cal-weekday.sun,
+.cal-day.sun:not(.out) {
+  color: @love;
+}
+
+.cal-weekday.sat,
+.cal-day.sat:not(.out) {
+  color: @foam;
+}
+
+.cal-day-slot {
+  min-width: 46px;
+  min-height: 30px;
+}
+
+.cal-day {
+  min-width: 28px;
+  min-height: 28px;
+  border-radius: 999px;
+  font-size: 12px;
+}
+
+.cal-day.out {
+  color: @highlight_high;
+}
+
+.cal-day.today {
+  background: @iris;
+  color: @surface;
+  font-weight: 700;
+}
+
+.cal-day.mark:not(.today) {
+  box-shadow: inset 0 -3px 0 -1px @foam;
+}
+
 .divider {
   min-height: 1px;
-  margin: 12px 0 10px;
+  margin: 14px 0 12px;
   background: @highlight_med;
 }
 
 .nc-head {
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
 .nc-title {
@@ -524,6 +685,10 @@ scale slider {
   color: @subtle;
 }
 
+.nc-tool:disabled {
+  opacity: 0.35;
+}
+
 .nc-tool:hover {
   background: @overlay;
   color: @text;
@@ -538,6 +703,10 @@ scale slider {
   padding: 30px 0 26px;
   color: @muted;
   font-size: 11px;
+}
+
+.empty-sub {
+  font-size: 10px;
 }
 
 /* shared between the notification-center list and toast popups */
@@ -583,6 +752,11 @@ scale slider {
 .note-body {
   color: @subtle;
   font-size: 11px;
+  line-height: 1.6;
+}
+
+.note-actions {
+  margin-top: 6px;
 }
 
 .note-act {
@@ -601,18 +775,75 @@ scale slider {
 /* --- toast popups --- */
 
 .toast-stack {
+  min-width: 366px;
   padding: 6px 6px 0 0;
 }
 
 .toast {
-  min-width: 320px;
-  padding: 12px 14px 13px;
+  min-width: 336px;
+  padding: 0;
   border: 1px solid @highlight_high;
   border-radius: 14px;
   background: @base;
   box-shadow: 0 8px 28px alpha(@text, 0.22), inset 4px 0 0 @foam;
 }
 
+.toast-content {
+  padding: 12px 14px 11px;
+}
+
+.toast .note-sum {
+  font-size: 13px;
+}
+
+.toast .note-body {
+  margin-top: 2px;
+}
+
 .toast.urgent {
   box-shadow: 0 8px 28px alpha(@text, 0.22), inset 4px 0 0 @love;
+}
+
+.toast-progress {
+  min-height: 2px;
+}
+
+.toast-progress trough {
+  min-height: 2px;
+  border: none;
+  border-radius: 999px;
+  background: @highlight_med;
+}
+
+.toast-progress progress {
+  min-height: 2px;
+  border: none;
+  border-radius: 999px;
+  background: @foam;
+}
+
+.toast-under {
+  min-height: 9px;
+  margin: -1px 12px 0;
+  border: 1px solid @highlight_high;
+  border-top: none;
+  border-radius: 0 0 12px 12px;
+  background: @surface;
+  box-shadow: 0 4px 10px alpha(@text, 0.12);
+}
+
+.toast-under.deep {
+  min-height: 8px;
+  margin: 0 26px;
+  background: @overlay;
+}
+
+.toast-more {
+  margin-top: 7px;
+  padding: 3px 12px;
+  border-radius: 999px;
+  background: @overlay;
+  color: @subtle;
+  font-size: 10px;
+  font-weight: 600;
 }
