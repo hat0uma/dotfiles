@@ -1,0 +1,22 @@
+pkgname=ttf-plemoljp
+pkgver=3.1.0
+pkgrel=1
+pkgdesc="Japanese programming font based on IBM Plex Mono and IBM Plex Sans JP"
+arch=('any')
+url='https://github.com/yuru7/PlemolJP'
+license=('OFL-1.1')
+
+source=(
+    "PlemolJP_v${pkgver}.zip::https://github.com/yuru7/PlemolJP/releases/download/v${pkgver}/PlemolJP_v${pkgver}.zip"
+)
+
+sha256sums=(
+    'f1a65b539ed8979f211ceaa6c7ad1123b7e0cc2eb00ab0df02fb2dcb0d6e7157'
+)
+
+package() {
+    while IFS= read -r -d '' font; do
+        install -Dm644 "$font" \
+            "$pkgdir/usr/share/fonts/TTF/$(basename "$font")"
+    done < <(find "$srcdir" -type f -name '*.ttf' -print0)
+}
