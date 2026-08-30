@@ -16,6 +16,7 @@ AddPackage ninja
 AddPackage nodejs
 AddPackage npm
 AddPackage tree-sitter
+AddPackage tree-sitter-cli # CLI tool for developing, testing, and using Tree-sitter parsers
 AddPackage openai-codex
 
 # Miscellaneous
