@@ -3,12 +3,11 @@ AddPackage acpi
 AddPackage brightnessctl # Lightweight brightness control tool
 AddPackage gobject-introspection
 AddPackage hyprland
-AddPackage network-manager-applet
+AddPackage network-manager-applet # provides nm-connection-editor, used from the AGS bar's Wi-Fi panel
 AddPackage qt5-wayland
 AddPackage qt6-wayland
 AddPackage swaybg
 AddPackage swaylock
-AddPackage swaync
 AddPackage xdg-desktop-portal-hyprland
 
 # Astal/AGS desktop shell

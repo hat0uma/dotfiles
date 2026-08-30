@@ -3,14 +3,20 @@
 import { createBinding, For, This } from "ags";
 import app from "ags/gtk4/app";
 import AstalHyprland from "gi://AstalHyprland";
+import AstalNotifd from "gi://AstalNotifd";
 import style from "./style.css";
 import Bar from "./widgets/Bar";
+import NotificationPopups from "./widgets/NotificationPopups";
 import PowerMenu, {
   closePowerMenu,
   togglePowerMenu,
 } from "./widgets/PowerMenu";
 
 const hyprland = AstalHyprland.get_default();
+
+// Claim org.freedesktop.Notifications before anything opens a popover that
+// would otherwise trigger this lazily.
+AstalNotifd.get_default();
 
 app.start({
   css: style,
@@ -33,6 +39,10 @@ app.start({
 
   main() {
     const monitors = createBinding(app, "monitors");
+
+    // Mounted once, independent of the per-monitor bar/power-menu tree below.
+    const notifications = <NotificationPopups />;
+    void notifications;
 
     return (
       <For each={monitors}>

@@ -152,11 +152,52 @@ window {
   color: @pine;
 }
 
+.capsule .ime {
+  min-width: 24px;
+  min-height: 22px;
+  margin: 0 2px;
+  padding: 0 6px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.ime.en {
+  color: @subtle;
+}
+
+.ime.en:hover {
+  background: @overlay;
+  color: @text;
+}
+
+.ime.jp {
+  background: @iris;
+  color: @surface;
+}
+
 .clock {
-  padding: 0 13px 0 9px;
   color: @text;
   font-size: 13px;
   font-weight: 600;
+}
+
+.capsule .clock>button {
+  min-height: 22px;
+  padding: 0 13px 0 9px;
+  border-radius: 999px;
+  background: transparent;
+}
+
+.capsule .clock>button:hover {
+  background: @overlay;
+}
+
+.dot {
+  min-width: 5px;
+  min-height: 5px;
+  border-radius: 999px;
+  background: @love;
 }
 
 popover>contents {
@@ -281,4 +322,297 @@ scale slider {
 .power-shortcut {
   color: @muted;
   font-size: 11px;
+}
+
+/* --- network / wifi page --- */
+
+.pop-head {
+  padding: 2px 0 4px;
+}
+
+.back {
+  min-width: 26px;
+  min-height: 26px;
+  border-radius: 999px;
+  background: @overlay;
+  color: @pine;
+}
+
+.back:hover {
+  background: @highlight_med;
+}
+
+.pop-title {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.scanning {
+  color: @muted;
+  font-size: 11px;
+}
+
+.ap {
+  padding: 8px 6px;
+  border-radius: 10px;
+  background: transparent;
+}
+
+.ap:hover {
+  background: @surface;
+}
+
+.ap image {
+  color: @pine;
+}
+
+.ap-name {
+  font-size: 13px;
+}
+
+.ap-name.current {
+  font-weight: 700;
+}
+
+.ap-sub {
+  color: @subtle;
+  font-size: 10px;
+}
+
+.ap .link {
+  color: @pine;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.ap .lock {
+  color: @muted;
+  -gtk-icon-size: 13px;
+}
+
+.pwd {
+  margin: 2px 0;
+  padding: 12px 10px 11px;
+  border-radius: 10px;
+  background: @surface;
+}
+
+.pwd-label {
+  color: @subtle;
+  font-size: 11px;
+}
+
+.pwd-error {
+  color: @love;
+  font-size: 11px;
+}
+
+.btn {
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.btn.ghost {
+  color: @subtle;
+  background: @overlay;
+}
+
+.btn.ghost:hover {
+  background: @highlight_med;
+}
+
+.btn.primary {
+  color: @surface;
+  background: @iris;
+}
+
+.btn.primary:hover {
+  background: @foam;
+}
+
+.pop-foot {
+  margin-top: 4px;
+  padding: 8px 6px;
+  border-radius: 10px;
+  color: @pine;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.pop-foot:hover {
+  background: @surface;
+}
+
+.cap {
+  color: @subtle;
+  font-size: 11px;
+}
+
+.conn-row-main {
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: @surface;
+}
+
+.conn-row-main:hover {
+  background: @highlight_low;
+}
+
+.conn-row-main image {
+  color: @pine;
+}
+
+.conn-name {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.conn-sub {
+  color: @subtle;
+  font-size: 11px;
+}
+
+.chev {
+  color: @muted;
+  -gtk-icon-size: 13px;
+}
+
+/* --- notification center --- */
+
+.notif-center {
+  min-width: 300px;
+}
+
+.calendar {
+  background: transparent;
+  color: @text;
+  font-size: 12px;
+}
+
+.divider {
+  min-height: 1px;
+  margin: 12px 0 10px;
+  background: @highlight_med;
+}
+
+.nc-head {
+  margin-bottom: 8px;
+}
+
+.nc-title {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.nc-count {
+  min-width: 18px;
+  min-height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: @love;
+  color: @surface;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.nc-tool {
+  min-width: 26px;
+  min-height: 26px;
+  border-radius: 999px;
+  color: @subtle;
+}
+
+.nc-tool:hover {
+  background: @overlay;
+  color: @text;
+}
+
+.nc-tool.on {
+  background: @overlay;
+  color: @love;
+}
+
+.empty {
+  padding: 30px 0 26px;
+  color: @muted;
+  font-size: 11px;
+}
+
+/* shared between the notification-center list and toast popups */
+
+.note {
+  padding: 10px 12px 11px;
+  border-radius: 10px;
+  background: @surface;
+  box-shadow: inset 2px 0 0 @foam;
+}
+
+.note.urgent {
+  box-shadow: inset 2px 0 0 @love;
+}
+
+.note-meta {
+  color: @muted;
+  font-size: 10px;
+}
+
+.note-app {
+  color: @pine;
+  font-weight: 700;
+}
+
+.note-close {
+  min-width: 20px;
+  min-height: 20px;
+  border-radius: 999px;
+  color: @muted;
+}
+
+.note-close:hover {
+  background: @overlay;
+  color: @text;
+}
+
+.note-sum {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.note-body {
+  color: @subtle;
+  font-size: 11px;
+}
+
+.note-act {
+  padding: 4px 11px;
+  border-radius: 999px;
+  background: @overlay;
+  color: @pine;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.note-act:hover {
+  background: @highlight_med;
+}
+
+/* --- toast popups --- */
+
+.toast-stack {
+  padding: 6px 6px 0 0;
+}
+
+.toast {
+  min-width: 320px;
+  padding: 12px 14px 13px;
+  border: 1px solid @highlight_high;
+  border-radius: 14px;
+  background: @base;
+  box-shadow: 0 8px 28px alpha(@text, 0.22), inset 4px 0 0 @foam;
+}
+
+.toast.urgent {
+  box-shadow: 0 8px 28px alpha(@text, 0.22), inset 4px 0 0 @love;
 }

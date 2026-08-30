@@ -1,4 +1,4 @@
-import { createBinding, With } from "ags";
+import { createBinding, createState, With } from "ags";
 import { execAsync } from "ags/process";
 import { createPoll } from "ags/time";
 import AstalBluetooth from "gi://AstalBluetooth";
@@ -7,47 +7,39 @@ import AstalNetwork from "gi://AstalNetwork";
 import AstalWp from "gi://AstalWp";
 import GLib from "gi://GLib";
 import Gtk from "gi://Gtk?version=4.0";
+import { WifiPage, WifiRow } from "./Network";
 import { togglePowerMenu } from "./PowerMenu";
 
 function run(command: string[]) {
   execAsync(command).catch((error) => console.error(error));
 }
 
-function StatusRow() {
-  const network = AstalNetwork.get_default();
+function BluetoothRow() {
   const bluetooth = AstalBluetooth.get_default();
-  const wifi = createBinding(network, "wifi");
+  const powered = createBinding(bluetooth, "isPowered");
 
   return (
-    <box cssClasses={["status-row"]} spacing={8}>
-      <With value={wifi}>
-        {(device) =>
-          device && (
-            <box
-              cssClasses={["status-chip"]}
-              tooltipText={createBinding(device, "ssid")}
-            >
-              <image iconName={createBinding(device, "iconName")} />
-              <label
-                label={createBinding(device, "ssid")((ssid) =>
-                  ssid || "Offline"
-                )}
-              />
-            </box>
-          )}
-      </With>
-      <box cssClasses={["status-chip"]}>
+    <box cssClasses={["conn-row"]} spacing={10}>
+      <box spacing={11} hexpand>
         <image
-          iconName={createBinding(bluetooth, "isPowered")((on) =>
+          iconName={powered((on) =>
             on ? "bluetooth-active-symbolic" : "bluetooth-disabled-symbolic"
           )}
         />
-        <label
-          label={createBinding(bluetooth, "isConnected")((on) =>
-            on ? "Connected" : "Bluetooth"
-          )}
-        />
+        <box orientation={Gtk.Orientation.VERTICAL} hexpand valign={Gtk.Align.CENTER}>
+          <label cssClasses={["conn-name"]} xalign={0} label="Bluetooth" />
+          <label
+            cssClasses={["conn-sub"]}
+            xalign={0}
+            label={createBinding(bluetooth, "isConnected")((on) => (on ? "接続済み" : "オフ"))}
+          />
+        </box>
       </box>
+      <switch
+        valign={Gtk.Align.CENTER}
+        active={powered}
+        onNotifyActive={(self: Gtk.Switch) => (bluetooth.isPowered = self.active)}
+      />
     </box>
   );
 }
@@ -102,7 +94,9 @@ function Controls() {
   );
 }
 
-export default function QuickSettings() {
+function QuickMain({ onOpenWifi }: { onOpenWifi: () => void }) {
+  const network = AstalNetwork.get_default();
+  const wifi = createBinding(network, "wifi");
   const time = createPoll(
     "",
     1000,
@@ -115,11 +109,7 @@ export default function QuickSettings() {
   );
 
   return (
-    <box
-      cssClasses={["quick-settings"]}
-      orientation={Gtk.Orientation.VERTICAL}
-      spacing={14}
-    >
+    <box orientation={Gtk.Orientation.VERTICAL} spacing={14}>
       <box>
         <box hexpand orientation={Gtk.Orientation.VERTICAL}>
           <label cssClasses={["quick-time"]} xalign={0} label={time} />
@@ -147,7 +137,30 @@ export default function QuickSettings() {
         </box>
       </box>
       <Controls />
-      <StatusRow />
+      <box orientation={Gtk.Orientation.VERTICAL} spacing={8}>
+        <With value={wifi}>
+          {(device) => device && <WifiRow wifi={device} onOpen={onOpenWifi} />}
+        </With>
+        <BluetoothRow />
+      </box>
+    </box>
+  );
+}
+
+export default function QuickSettings() {
+  const [page, setPage] = createState<"main" | "wifi">("main");
+
+  return (
+    <box cssClasses={["quick-settings"]}>
+      <With value={page}>
+        {(current) =>
+          current === "wifi" ? (
+            <WifiPage onBack={() => setPage("main")} />
+          ) : (
+            <QuickMain onOpenWifi={() => setPage("wifi")} />
+          )
+        }
+      </With>
     </box>
   );
 }

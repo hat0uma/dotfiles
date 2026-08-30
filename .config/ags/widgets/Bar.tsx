@@ -6,11 +6,14 @@ import AstalApps from "gi://AstalApps";
 import AstalBattery from "gi://AstalBattery";
 import AstalHyprland from "gi://AstalHyprland";
 import AstalNetwork from "gi://AstalNetwork";
+import AstalNotifd from "gi://AstalNotifd";
 import AstalTray from "gi://AstalTray";
 import AstalWp from "gi://AstalWp";
 import Gdk from "gi://Gdk?version=4.0";
 import GLib from "gi://GLib";
 import Gtk from "gi://Gtk?version=4.0";
+import Ime from "./Ime";
+import NotificationCenter from "./Notifications";
 import QuickSettings from "./QuickSettings";
 
 const hyprland = AstalHyprland.get_default();
@@ -174,7 +177,9 @@ function StatusIcons() {
 
 function Tray() {
   const tray = AstalTray.get_default();
-  const items = createBinding(tray, "items");
+  const items = createBinding(tray, "items")((list) =>
+    list.filter((item) => item.id !== "Fcitx"),
+  );
 
   const setup = (button: Gtk.MenuButton, item: AstalTray.TrayItem) => {
     button.menuModel = item.menuModel;
@@ -204,10 +209,23 @@ function Tray() {
 }
 
 function Clock() {
+  const notifd = AstalNotifd.get_default();
+  const hasUnread = createBinding(notifd, "notifications")((list) => list.length > 0);
   const time = createPoll("", 1000, () =>
-    GLib.DateTime.new_now_local().format("%b%d日 %H:%M")!,
+    GLib.DateTime.new_now_local().format("%-m月%-d日 (%a) %H:%M")!,
   );
-  return <label cssClasses={["clock"]} label={time} />;
+
+  return (
+    <menubutton cssClasses={["clock"]}>
+      <box spacing={6}>
+        <label label={time} />
+        <box cssClasses={["dot"]} visible={hasUnread} />
+      </box>
+      <popover>
+        <NotificationCenter />
+      </popover>
+    </menubutton>
+  );
 }
 
 function Separator() {
@@ -242,6 +260,7 @@ export default function Bar({ gdkmonitor }: { gdkmonitor: Gdk.Monitor }) {
           <Separator />
           <Battery />
           <StatusIcons />
+          <Ime />
           <Tray />
           <Clock />
         </box>
