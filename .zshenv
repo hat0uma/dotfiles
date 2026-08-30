@@ -6,7 +6,7 @@ export EDITOR=${EDITOR:="nvim"}
 if [[ $(systemd-detect-virt) = "wsl" ]]; then
     export BROWSER=wslview
 else
-    export BROWSER=/usr/bin/firefox
+    export BROWSER=/usr/bin/google-chrome-stable
 fi
 
 # --- xdg ---#
@@ -19,3 +19,4 @@ export PATH="$HOME/.local/bin:$HOME/.deno/bin:$HOME/.cargo/bin:$PATH:$HOME/go/bi
 [ -f "$HOME/.cargo/env" ] && source "$HOME/.cargo/env"
 [ -f "$HOME/.rye/env" ] && source "$HOME/.rye/env"
 
+. "$HOME/.cargo/env"

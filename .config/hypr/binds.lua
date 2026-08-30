@@ -1,8 +1,10 @@
 local mod = "SUPER"
 
+hl.bind(mod .. " + Escape", hl.dsp.exit())
+
 hl.bind(mod .. " + Return", hl.dsp.exec_cmd("footclient"))
 hl.bind(mod .. " + SHIFT + Q", hl.dsp.window.close())
-hl.bind(mod .. " + F2", hl.dsp.exec_cmd("firefox"))
+hl.bind(mod .. " + F2", hl.dsp.exec_cmd("google-chrome-stable"))
 hl.bind(mod .. " + D", hl.dsp.exec_cmd("wofi --show drun"))
 hl.bind(mod .. " + SHIFT + D", hl.dsp.exec_cmd("wofi --show run"))
 hl.bind(mod .. " + O", hl.dsp.exec_cmd("1password --quick-access"))

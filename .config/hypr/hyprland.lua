@@ -1,14 +1,8 @@
 -- Hyprland 0.55+ Lua config.
 -- The legacy .conf files are kept next to this file as a rollback path.
 
-hl.monitor({
-  output = "",
-  mode = "preferred",
-  position = "auto",
-  scale = "auto",
-})
-
 require("envs")
+require("monitor")
 
 hl.config({
   xwayland = {
@@ -23,7 +17,7 @@ hl.config({
     follow_mouse = 1,
     sensitivity = 0,
     touchpad = {
-      natural_scroll = false,
+      natural_scroll = true,
     },
   },
   cursor = {
@@ -59,7 +53,7 @@ hl.config({
     enabled = true,
   },
   dwindle = {
-    pseudotile = true,
+    -- pseudotile = true,
     preserve_split = true,
     special_scale_factor = 0.96,
   },

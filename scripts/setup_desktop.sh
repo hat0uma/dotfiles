@@ -53,7 +53,7 @@ yay -S --noconfirm \
 # install applications
 yay -S --noconfirm \
 	wl-clipboard \
-	firefox \
+	google-chrome-stable \
 	foot \
 	wezterm \
 	wofi \
@@ -91,8 +91,8 @@ sed "${flags}" /usr/share/applications/visual-studio-code-insiders.desktop | tee
 ########################
 # nvidia
 ########################
-yay -S --noconfirm \
-	nvidia-dkms
+# yay -S --noconfirm \
+# 	nvidia-dkms
 
 # steam
 # yay -S steam
