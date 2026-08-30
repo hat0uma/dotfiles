@@ -16,3 +16,7 @@ CreateLink /etc/localtime /usr/share/zoneinfo/Asia/Tokyo
 # Package manager and local policy
 CopyFile /etc/pacman.conf
 CopyFile /etc/systemd/zram-generator.conf
+
+# power management
+CopyFile /etc/tlp.conf
+CopyFile /etc/systemd/system/battery-threshold.service

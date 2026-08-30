@@ -8,6 +8,7 @@ AddPackage linux-firmware
 AddPackage mkinitcpio
 AddPackage sof-firmware
 AddPackage sudo
+AddPackage man-db # A utility for reading man pages
 
 # Hardware, networking, and audio
 AddPackage bluez
@@ -24,6 +25,11 @@ AddPackage vulkan-intel
 AddPackage wireplumber
 AddPackage wpa_supplicant
 AddPackage zram-generator
+
+# power management
+AddPackage thermald # The Linux Thermal Daemon program from 01.org
+AddPackage tlp      # Linux Advanced Power Management
+AddPackage tlp-rdw  # Linux Advanced Power Management - Radio Device Wizard
 
 # This repository manages aconfmgr itself.
 AddPackage --foreign aconfmgr-git

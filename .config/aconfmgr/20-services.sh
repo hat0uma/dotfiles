@@ -12,6 +12,13 @@ SystemdEnable /usr/lib/systemd/system/NetworkManager.service
 SystemdEnable /usr/lib/systemd/system/NetworkManager-dispatcher.service
 SystemdEnable /usr/lib/systemd/system/NetworkManager-wait-online.service
 
+# Power management
+SystemdEnable /usr/lib/systemd/system/thermald.service
+SystemdEnable /usr/lib/systemd/system/tlp.service
+SystemdEnable /etc/systemd/system/battery-threshold.service
+SystemdMask systemd-rfkill.service
+SystemdMask systemd-rfkill.socket
+
 # User session services and sockets
 SystemdEnable --type user /usr/lib/systemd/user/wireplumber.service
 SystemdEnable --type user /usr/lib/systemd/user/p11-kit-server.socket
