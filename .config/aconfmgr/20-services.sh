@@ -25,3 +25,4 @@ SystemdEnable --type user /usr/lib/systemd/user/p11-kit-server.socket
 SystemdEnable --type user /usr/lib/systemd/user/pipewire-pulse.socket
 SystemdEnable --type user /usr/lib/systemd/user/pipewire.socket
 SystemdEnable --type user /usr/lib/systemd/user/gnome-keyring-daemon.socket
+SystemdEnable --type user /usr/lib/systemd/user/xdg-user-dirs.service

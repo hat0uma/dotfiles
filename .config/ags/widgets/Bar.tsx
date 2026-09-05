@@ -14,6 +14,7 @@ import Gtk from "gi://Gtk?version=4.0";
 import Ime from "./Ime";
 import NotificationCenter from "./Notifications";
 import QuickSettings from "./QuickSettings";
+import { toggleScreenshotMenu } from "./ScreenshotMenu";
 
 const hyprland = AstalHyprland.get_default();
 const apps = AstalApps.Apps.new();
@@ -199,7 +200,13 @@ function StatusIcons({ connector }: { connector: string }) {
         <Battery />
       </box>
       <popover>
-        <QuickSettings />
+        <QuickSettings
+          onTakeScreenshot={() => {
+            const button = statusButtons.get(connector);
+            if (button) button.active = false;
+            toggleScreenshotMenu(connector);
+          }}
+        />
       </popover>
     </menubutton>
   );

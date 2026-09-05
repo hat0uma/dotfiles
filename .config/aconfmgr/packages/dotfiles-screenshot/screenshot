@@ -1,0 +1,130 @@
+#!/usr/bin/env bash
+
+set -o errexit
+set -o nounset
+set -o pipefail
+
+usage() {
+  echo "Usage: screenshot {full|window|region}" >&2
+}
+
+notify_error() {
+  notify-send --app-name=screenshot --urgency=critical \
+    "Screenshot failed" "$1" >/dev/null 2>&1 || true
+}
+
+require_command() {
+  if ! command -v "$1" >/dev/null 2>&1; then
+    notify_error "Missing dependency: $1"
+    echo "Missing dependency: $1" >&2
+    exit 1
+  fi
+}
+
+if (( $# != 1 )); then
+  usage
+  exit 2
+fi
+
+mode="$1"
+case "$mode" in
+  full | window | region) ;;
+  *)
+    usage
+    exit 2
+    ;;
+esac
+
+for dependency in grim notify-send satty wl-copy xdg-open; do
+  require_command "$dependency"
+done
+
+if [[ "$mode" == "window" ]]; then
+  require_command hyprctl
+  require_command jq
+elif [[ "$mode" == "region" ]]; then
+  require_command slurp
+fi
+
+if command -v xdg-user-dir >/dev/null 2>&1; then
+  pictures_dir="$(xdg-user-dir PICTURES)"
+else
+  pictures_dir="${HOME}/Pictures"
+fi
+
+save_dir="${pictures_dir}/Screenshots"
+mkdir -p -- "$save_dir"
+
+timestamp="$(date +%Y%m%d_%H%M%S)"
+suffix=""
+geometry=""
+label="Full screen"
+
+case "$mode" in
+  window)
+    window_json="$(hyprctl activewindow -j)"
+    geometry="$(jq -er '"\(.at[0]),\(.at[1]) \(.size[0])x\(.size[1])"' <<<"$window_json")" || {
+      notify_error "Could not determine the active window geometry"
+      exit 1
+    }
+    window_class="$(jq -r '.class // "window"' <<<"$window_json")"
+    safe_class="$(tr -cs '[:alnum:]._-' '_' <<<"$window_class" | sed 's/^_*//; s/_*$//')"
+    suffix="_${safe_class:-window}"
+    label="Active window"
+    ;;
+  region)
+    if ! geometry="$(slurp)" || [[ -z "$geometry" ]]; then
+      exit 0
+    fi
+    label="Region"
+    ;;
+esac
+
+destination="${save_dir}/Screenshot_${timestamp}${suffix}.png"
+counter=1
+while [[ -e "$destination" ]]; do
+  destination="${save_dir}/Screenshot_${timestamp}${suffix}_${counter}.png"
+  ((counter += 1))
+done
+
+if [[ -n "$geometry" ]]; then
+  captured=false
+  grim -g "$geometry" "$destination" && captured=true
+else
+  captured=false
+  grim "$destination" && captured=true
+fi
+
+if [[ "$captured" != true ]]; then
+  rm -f -- "$destination"
+  notify_error "grim could not capture the ${mode} screenshot"
+  exit 1
+fi
+
+if ! satty --filename "$destination" --output-filename "$destination"; then
+  notify_error "Satty could not edit the screenshot"
+  exit 1
+fi
+
+if ! wl-copy --type image/png <"$destination"; then
+  notify_error "Saved the screenshot, but could not copy it to the clipboard"
+  exit 1
+fi
+
+choice="$(
+  notify-send \
+    --app-name=screenshot \
+    --icon="$destination" \
+    --expire-time=10000 \
+    --transient \
+    --wait \
+    --action=open_folder="Open Folder" \
+    --action=edit="Edit" \
+    "Screenshot (${label})" \
+    "Saved to ${destination}" 2>/dev/null || true
+)"
+
+case "$choice" in
+  open_folder) xdg-open "$save_dir" >/dev/null 2>&1 & ;;
+  edit) satty --filename "$destination" --output-filename "$destination" >/dev/null 2>&1 & ;;
+esac

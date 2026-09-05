@@ -32,12 +32,15 @@ AddPackage kvantum
 AddPackage libnotify
 AddPackage mpv
 AddPackage pcmanfm-qt
+AddPackage satty
 AddPackage slurp
-AddPackage swappy
 AddPackage wezterm
 AddPackage wl-clipboard
 AddPackage wofi
+AddPackage xdg-user-dirs
 AddPackage xorg-xlsclients # List client applications running on a display
+
+AddLocalPackage dotfiles-screenshot
 
 # Fonts and icons
 AddPackage noto-fonts-cjk

@@ -53,6 +53,7 @@ IgnorePath '/etc/subgid'
 IgnorePath '/etc/NetworkManager/system-connections/**'
 IgnorePath '/etc/resolv.conf'
 IgnorePath '/etc/shells'
+IgnorePath '/etc/xml/catalog'
 
 # Known package/runtime artifacts which are not useful configuration
 IgnorePath '/etc/audisp'

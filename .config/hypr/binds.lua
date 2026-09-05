@@ -21,9 +21,9 @@ hl.bind(mod .. " + C", hl.dsp.window.center())
 hl.bind(mod .. " + SHIFT + N", hl.dsp.group.next())
 hl.bind(mod .. " + SHIFT + P", hl.dsp.group.prev())
 
-hl.bind("Print", hl.dsp.exec_cmd("screenshot --activewindow"))
-hl.bind(mod .. " + Print", hl.dsp.exec_cmd("screenshot --fullscreen"))
-hl.bind(mod .. " + SHIFT + Print", hl.dsp.exec_cmd("screenshot --regionedit"))
+hl.bind("Print", hl.dsp.exec_cmd("ags request toggle-screenshot"))
+hl.bind(mod .. " + Print", hl.dsp.exec_cmd("screenshot full"))
+hl.bind(mod .. " + SHIFT + Print", hl.dsp.exec_cmd("screenshot region"))
 
 hl.bind(mod .. " + H", hl.dsp.focus({ direction = "left" }))
 hl.bind(mod .. " + L", hl.dsp.focus({ direction = "right" }))

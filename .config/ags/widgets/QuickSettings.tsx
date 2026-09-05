@@ -105,7 +105,13 @@ function Controls() {
   );
 }
 
-function QuickMain({ onOpenWifi }: { onOpenWifi: () => void }) {
+function QuickMain({
+  onOpenWifi,
+  onTakeScreenshot,
+}: {
+  onOpenWifi: () => void;
+  onTakeScreenshot: () => void;
+}) {
   const network = AstalNetwork.get_default();
   const wifi = createBinding(network, "wifi");
   const time = createPoll(
@@ -136,8 +142,7 @@ function QuickMain({ onOpenWifi }: { onOpenWifi: () => void }) {
           <button
             cssClasses={["round-button"]}
             tooltipText="Take a screenshot"
-            onClicked={() =>
-              run(["screenshot", "--fullscreen", "--delay", "0.5"])}
+            onClicked={onTakeScreenshot}
           >
             <image iconName="camera-photo-symbolic" />
           </button>
@@ -164,7 +169,11 @@ function QuickMain({ onOpenWifi }: { onOpenWifi: () => void }) {
   );
 }
 
-export default function QuickSettings() {
+export default function QuickSettings({
+  onTakeScreenshot,
+}: {
+  onTakeScreenshot: () => void;
+}) {
   const [page, setPage] = createState<"main" | "wifi">("main");
   const showPage = (next: "main" | "wifi") => setPage(next);
 
@@ -179,7 +188,10 @@ export default function QuickSettings() {
         vhomogeneous
       >
         <box $type="named" name="main">
-          <QuickMain onOpenWifi={() => showPage("wifi")} />
+          <QuickMain
+            onOpenWifi={() => showPage("wifi")}
+            onTakeScreenshot={onTakeScreenshot}
+          />
         </box>
         <box $type="named" name="wifi">
           <WifiPage onBack={() => showPage("main")} />

@@ -1,0 +1,26 @@
+pkgname=dotfiles-screenshot
+pkgver=1.0.0
+pkgrel=3
+pkgdesc="Hyprland screenshot helper with save, clipboard, and edit actions"
+arch=('any')
+url='https://github.com/hat0uma/dotfiles'
+license=('custom')
+depends=(
+    'bash'
+    'grim'
+    'hyprland'
+    'jq'
+    'libnotify'
+    'satty'
+    'slurp'
+    'wl-clipboard'
+    'xdg-user-dirs'
+    'xdg-utils'
+)
+
+source=('screenshot')
+sha256sums=('913ca9c7eff1895159284f20d32262c3f1e02996876e7e5dacffc10b9997dae6')
+
+package() {
+    install -Dm755 "$srcdir/screenshot" "$pkgdir/usr/bin/screenshot"
+}

@@ -11,6 +11,10 @@ import PowerMenu, {
   closePowerMenu,
   togglePowerMenu,
 } from "./widgets/PowerMenu";
+import ScreenshotMenu, {
+  closeScreenshotMenu,
+  toggleScreenshotMenu,
+} from "./widgets/ScreenshotMenu";
 
 const hyprland = AstalHyprland.get_default();
 
@@ -44,6 +48,14 @@ app.start({
         AstalNotifd.get_default().get_notifications().forEach((item) => item.dismiss());
         response("ok");
         break;
+      case "toggle-screenshot":
+        toggleScreenshotMenu(hyprland.focusedMonitor?.name);
+        response("ok");
+        break;
+      case "close-screenshot":
+        closeScreenshotMenu();
+        response("ok");
+        break;
       default:
         response(`unknown request: ${argv.join(" ")}`);
     }
@@ -62,6 +74,7 @@ app.start({
           <This this={app}>
             <Bar gdkmonitor={monitor} />
             <PowerMenu gdkmonitor={monitor} />
+            <ScreenshotMenu gdkmonitor={monitor} />
           </This>
         )}
       </For>

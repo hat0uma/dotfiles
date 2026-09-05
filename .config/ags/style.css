@@ -399,6 +399,60 @@ scale slider {
   font-size: 11px;
 }
 
+/* --- screenshot menu --- */
+
+.screenshot-bar {
+  margin-top: 12px;
+}
+
+.screenshot-card {
+  padding: 6px;
+  border: 1px solid @highlight_high;
+  border-radius: 14px;
+  background: alpha(@base, 0.97);
+  box-shadow: 0 8px 28px alpha(@text, 0.22);
+}
+
+.screenshot-button {
+  min-width: 88px;
+  padding: 9px 8px 7px;
+  border-radius: 10px;
+  background: transparent;
+  color: @text;
+}
+
+.screenshot-button:hover {
+  background: @overlay;
+}
+
+.screenshot-button image {
+  color: @iris;
+}
+
+.screenshot-label {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.screenshot-shortcut {
+  color: @muted;
+  font-size: 10px;
+}
+
+.screenshot-close {
+  min-width: 28px;
+  min-height: 28px;
+  margin: 3px;
+  border-radius: 999px;
+  background: transparent;
+  color: @muted;
+}
+
+.screenshot-close:hover {
+  background: @overlay;
+  color: @love;
+}
+
 /* --- network / wifi page --- */
 
 .pop-head {
