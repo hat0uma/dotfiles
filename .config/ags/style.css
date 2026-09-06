@@ -1,16 +1,51 @@
+/* Rose Pine Dawn */
 @define-color base #faf4ed;
 @define-color surface #fffaf3;
 @define-color overlay #f2e9e1;
 @define-color muted #9893a5;
 @define-color subtle #797593;
-@define-color text #575279;
+@define-color text #464261;
 @define-color love #b4637a;
+@define-color gold #ea9d34;
+@define-color rose #d7827e;
 @define-color pine #286983;
 @define-color foam #56949f;
 @define-color iris #907aa9;
+@define-color leaf #6d8f89;
 @define-color highlight_low #f4ede8;
 @define-color highlight_med #dfdad9;
 @define-color highlight_high #cecacd;
+
+/* Theme: backgrounds */
+@define-color bg_base @base;
+@define-color bg_surface @surface;
+@define-color bg_hover @overlay;
+@define-color bg_elevated alpha(@base, 0.97);
+@define-color bg_backdrop alpha(@text, 0.16);
+@define-color bg_panel alpha(@base, 0.85);
+
+/* Theme: foregrounds */
+@define-color fg_primary @text;
+@define-color fg_secondary @subtle;
+@define-color fg_muted @muted;
+@define-color fg_on_accent @surface;
+@define-color fg_disabled @highlight_high;
+
+/* Theme: accents and states */
+@define-color accent_primary @pine;
+@define-color accent_secondary @foam;
+@define-color accent_focus @iris;
+@define-color accent_active @rose;
+@define-color state_danger @love;
+
+/* Theme: borders and shadows */
+@define-color border_default @highlight_high;
+@define-color border_muted @highlight_med;
+@define-color border_strong @text;
+@define-color shadow_subtle alpha(@text, 0.12);
+@define-color shadow_soft alpha(@text, 0.22);
+@define-color shadow_strong alpha(@text, 0.28);
+@define-color shadow_solid @text;
 
 * {
   font-family: "PlemolJP", "Noto Sans CJK JP", sans-serif;
@@ -19,7 +54,7 @@
 
 window {
   background: transparent;
-  color: @text;
+  color: @fg_primary;
 }
 
 .bar {
@@ -32,23 +67,24 @@ window {
 
 .capsule {
   min-height: 28px;
-  padding: 0 5px;
-  border: 1px solid alpha(@highlight_high, 0.7);
-  border-radius: 999px;
-  background: alpha(@surface, 0.96);
-  box-shadow: 0 4px 18px alpha(@text, 0.13);
+  padding: 4px;
+  border: 2px solid @border_strong;
+  border-radius: 8px;
+  background: @bg_panel;
+  box-shadow: 4px 4px 0 @shadow_solid;
+  color: @fg_primary;
 }
 
 .sep {
   min-width: 1px;
   margin: 6px 5px;
-  background: @highlight_med;
+  background: @border_muted;
 }
 
 .workspaces {
   padding: 3px;
   border-radius: 999px;
-  background: @highlight_low;
+  background: transparent;
 }
 
 .capsule button {
@@ -56,38 +92,38 @@ window {
   outline: none;
   box-shadow: none;
   background-image: none;
+  color: @fg_primary;
   text-shadow: none;
   min-width: 0;
   min-height: 0;
   padding: 0;
-  color: @text;
 }
 
 .capsule .workspace {
   min-width: 12px;
   min-height: 22px;
   padding: 0 5px;
-  border-radius: 999px;
+  border-radius: 6px;
   background: transparent;
 }
 
 .capsule .workspace.empty {
-  color: @muted;
+  color: @fg_muted;
 }
 
 .capsule .workspace.occupied {
-  color: @subtle;
+  color: @fg_secondary;
   font-weight: 700;
 }
 
 .capsule .workspace:hover {
-  background: @overlay;
-  color: @text;
+  background: @bg_hover;
+  color: @fg_primary;
 }
 
 .capsule .workspace.active {
-  background: @iris;
-  color: @surface;
+  background: @accent_active;
+  color: @fg_on_accent;
   font-weight: 700;
 }
 
@@ -97,7 +133,7 @@ window {
 
 .active-window image {
   margin-right: 8px;
-  color: @foam;
+  color: @accent_secondary;
 }
 
 .active-window label {
@@ -110,12 +146,12 @@ window {
 
 .battery image {
   margin-right: 6px;
-  color: @pine;
+  color: @accent_primary;
 }
 
 .battery.low,
 .battery.low image {
-  color: @love;
+  color: @state_danger;
 }
 
 .status .battery {
@@ -130,11 +166,11 @@ window {
 }
 
 .capsule .status>button:hover {
-  background: @overlay;
+  background: @bg_hover;
 }
 
 .status image {
-  color: @pine;
+  color: @accent_primary;
 }
 
 .chips {
@@ -158,20 +194,20 @@ window {
 }
 
 .ime.en {
-  color: @subtle;
+  color: @fg_secondary;
 }
 
 .ime:hover {
-  background: @overlay;
-  color: @text;
+  background: @bg_hover;
+  color: @fg_primary;
 }
 
 .ime.jp {
-  color: @subtle;
+  color: @fg_secondary;
 }
 
 .clock {
-  color: @text;
+  color: @fg_primary;
   font-weight: 600;
 }
 
@@ -180,27 +216,27 @@ window {
   padding: 0 13px 0 9px;
   /* border-radius: 999px; */
   background: transparent;
-  color: @text;
+  color: @fg_primary;
 }
 
 .capsule .clock>button:hover {
-  background: @overlay;
+  background: @bg_hover;
 }
 
 .dot {
   min-width: 5px;
   min-height: 5px;
   border-radius: 999px;
-  background: @love;
+  background: @state_danger;
 }
 
 popover>contents {
   margin: 8px;
-  border: 1px solid @highlight_high;
+  border: 1px solid @border_default;
   border-radius: 14px;
-  background: @base;
-  color: @text;
-  box-shadow: 0 8px 28px alpha(@text, 0.22);
+  background: @bg_base;
+  color: @fg_primary;
+  box-shadow: 0 8px 28px @shadow_soft;
 }
 
 popover button,
@@ -232,7 +268,7 @@ popover button,
 }
 
 .quick-date {
-  color: @subtle;
+  color: @fg_secondary;
   font-size: 12px;
 }
 
@@ -241,27 +277,27 @@ popover button,
   min-width: 36px;
   min-height: 36px;
   border-radius: 999px;
-  background: @overlay;
-  color: @pine;
+  background: @bg_hover;
+  color: @accent_primary;
 }
 
 .round-button:hover,
 .icon-button:hover {
-  background: @highlight_med;
+  background: @border_muted;
 }
 
 .round-button.danger {
-  color: @love;
+  color: @state_danger;
 }
 
 .control {
   padding: 8px 10px;
   border-radius: 10px;
-  background: @surface;
+  background: @bg_surface;
 }
 
 .control>image {
-  color: @pine;
+  color: @accent_primary;
 }
 
 .control-icon-slot {
@@ -270,49 +306,49 @@ popover button,
 }
 
 .control-icon-slot image {
-  color: @pine;
+  color: @accent_primary;
 }
 
 .control>label {
   min-width: 42px;
-  color: @subtle;
+  color: @fg_secondary;
 }
 
 scale trough {
   min-height: 6px;
   border-radius: 999px;
-  background: @highlight_med;
+  background: @border_muted;
 }
 
 scale highlight {
   border-radius: 999px;
-  background: @foam;
+  background: @accent_secondary;
 }
 
 scale slider {
   min-width: 16px;
   min-height: 16px;
   border-radius: 999px;
-  background: @pine;
+  background: @accent_primary;
 }
 
 .connections .conn-row {
   min-height: 52px;
   padding: 0 12px;
   border-radius: 10px;
-  background: @surface;
+  background: @bg_surface;
 }
 
 .connections .conn-row.off image,
 .connections .conn-row.off .conn-name {
-  color: @subtle;
+  color: @fg_secondary;
 }
 
 .conn-row-main {
   padding: 0;
   border-radius: 0;
   background: transparent;
-  color: @text;
+  color: @fg_primary;
 }
 
 .conn-row-main:hover {
@@ -321,7 +357,7 @@ scale slider {
 
 .conn-row-main image,
 .conn-row>image {
-  color: @pine;
+  color: @accent_primary;
 }
 
 .compact-switch {
@@ -331,13 +367,13 @@ scale slider {
   border: none;
   border-radius: 999px;
   outline: none;
-  background: @highlight_med;
+  background: @border_muted;
   background-image: none;
   box-shadow: none;
 }
 
 .compact-switch:checked {
-  background: @foam;
+  background: @accent_secondary;
 }
 
 .compact-switch slider {
@@ -346,31 +382,31 @@ scale slider {
   margin: 2px;
   border: none;
   border-radius: 999px;
-  background: @surface;
+  background: @bg_surface;
   box-shadow: none;
 }
 
 .status-chip {
   padding: 8px 10px;
   border-radius: 10px;
-  background: @overlay;
+  background: @bg_hover;
 }
 
 .status-chip image {
   margin-right: 6px;
-  color: @pine;
+  color: @accent_primary;
 }
 
 .power-backdrop {
-  background: alpha(@text, 0.16);
+  background: @bg_backdrop;
 }
 
 .power-card {
   padding: 10px;
-  border: 1px solid @highlight_high;
+  border: 1px solid @border_default;
   border-radius: 16px;
-  background: alpha(@base, 0.97);
-  box-shadow: 0 12px 40px alpha(@text, 0.28);
+  background: @bg_elevated;
+  box-shadow: 0 12px 40px @shadow_strong;
 }
 
 .power-button {
@@ -378,15 +414,15 @@ scale slider {
   padding: 18px 10px;
   border-radius: 12px;
   background: transparent;
-  color: @text;
+  color: @fg_primary;
 }
 
 .power-button:hover {
-  background: @overlay;
+  background: @bg_hover;
 }
 
 .power-button image {
-  color: @iris;
+  color: @accent_focus;
 }
 
 .power-label {
@@ -395,7 +431,7 @@ scale slider {
 }
 
 .power-shortcut {
-  color: @muted;
+  color: @fg_muted;
   font-size: 11px;
 }
 
@@ -407,10 +443,10 @@ scale slider {
 
 .screenshot-card {
   padding: 6px;
-  border: 1px solid @highlight_high;
+  border: 1px solid @border_default;
   border-radius: 14px;
-  background: alpha(@base, 0.97);
-  box-shadow: 0 8px 28px alpha(@text, 0.22);
+  background: @bg_elevated;
+  box-shadow: 0 8px 28px @shadow_soft;
 }
 
 .screenshot-button {
@@ -418,15 +454,15 @@ scale slider {
   padding: 9px 8px 7px;
   border-radius: 10px;
   background: transparent;
-  color: @text;
+  color: @fg_primary;
 }
 
 .screenshot-button:hover {
-  background: @overlay;
+  background: @bg_hover;
 }
 
 .screenshot-button image {
-  color: @iris;
+  color: @accent_focus;
 }
 
 .screenshot-label {
@@ -435,7 +471,7 @@ scale slider {
 }
 
 .screenshot-shortcut {
-  color: @muted;
+  color: @fg_muted;
   font-size: 10px;
 }
 
@@ -445,12 +481,12 @@ scale slider {
   margin: 3px;
   border-radius: 999px;
   background: transparent;
-  color: @muted;
+  color: @fg_muted;
 }
 
 .screenshot-close:hover {
-  background: @overlay;
-  color: @love;
+  background: @bg_hover;
+  color: @state_danger;
 }
 
 /* --- network / wifi page --- */
@@ -465,12 +501,12 @@ scale slider {
   min-height: 26px;
   margin-left: -4px;
   border-radius: 999px;
-  background: @overlay;
-  color: @pine;
+  background: @bg_hover;
+  color: @accent_primary;
 }
 
 .back:hover {
-  background: @highlight_med;
+  background: @border_muted;
 }
 
 .pop-title {
@@ -479,7 +515,7 @@ scale slider {
 }
 
 .scanning {
-  color: @muted;
+  color: @fg_muted;
   font-size: 11px;
 }
 
@@ -487,15 +523,15 @@ scale slider {
   padding: 9px 10px;
   border-radius: 10px;
   background: transparent;
-  color: @text;
+  color: @fg_primary;
 }
 
 .ap:hover {
-  background: @surface;
+  background: @bg_surface;
 }
 
 .ap.current {
-  background: @overlay;
+  background: @bg_hover;
 }
 
 .ap.current .ap-name {
@@ -507,7 +543,7 @@ scale slider {
 }
 
 .ap image {
-  color: @pine;
+  color: @accent_primary;
 }
 
 .ap-name {
@@ -515,18 +551,18 @@ scale slider {
 }
 
 .ap-sub {
-  color: @subtle;
+  color: @fg_secondary;
   font-size: 10px;
 }
 
 .ap .link {
-  color: @pine;
+  color: @accent_primary;
   font-size: 11px;
   font-weight: 600;
 }
 
 .ap .lock {
-  color: @muted;
+  color: @fg_muted;
   -gtk-icon-size: 13px;
 }
 
@@ -534,33 +570,33 @@ scale slider {
   margin: 2px 0;
   padding: 12px 10px 11px;
   border-radius: 10px;
-  background: @surface;
-  box-shadow: inset 0 0 0 1px @highlight_med;
+  background: @bg_surface;
+  box-shadow: inset 0 0 0 1px @border_muted;
 }
 
 .pwd-label {
-  color: @subtle;
+  color: @fg_secondary;
   font-size: 11px;
 }
 
 .pwd-error {
-  color: @love;
+  color: @state_danger;
   font-size: 11px;
 }
 
 .password-field {
   min-height: 30px;
   padding: 0 10px;
-  border: 1px solid @iris;
+  border: 1px solid @accent_focus;
   border-radius: 8px;
   outline: none;
-  background: @base;
-  color: @text;
+  background: @bg_base;
+  color: @fg_primary;
   box-shadow: none;
 }
 
 .password-field:focus {
-  border-color: @iris;
+  border-color: @accent_focus;
   box-shadow: none;
 }
 
@@ -572,47 +608,47 @@ scale slider {
 }
 
 .btn.ghost {
-  color: @subtle;
-  background: @overlay;
+  color: @fg_secondary;
+  background: @bg_hover;
 }
 
 .btn.ghost:hover {
-  background: @highlight_med;
+  background: @border_muted;
 }
 
 .btn.primary {
-  color: @surface;
-  background: @iris;
+  color: @fg_on_accent;
+  background: @accent_focus;
 }
 
 .btn.primary:hover {
-  background: @foam;
+  background: @accent_secondary;
 }
 
 .pop-foot {
   margin-top: 2px;
   padding: 12px 0 0;
-  border-top: 1px solid @highlight_med;
+  border-top: 1px solid @border_muted;
   border-radius: 0;
   background: transparent;
-  color: @pine;
+  color: @accent_primary;
   font-size: 12px;
   font-weight: 600;
 }
 
 .pop-foot:hover {
-  color: @foam;
+  color: @accent_secondary;
 }
 
 .mono {
-  color: @muted;
+  color: @fg_muted;
   font-family: "IBM Plex Mono", monospace;
   font-size: 11px;
   font-weight: 400;
 }
 
 .cap {
-  color: @subtle;
+  color: @fg_secondary;
   font-size: 11px;
 }
 
@@ -622,12 +658,12 @@ scale slider {
 }
 
 .conn-sub {
-  color: @subtle;
+  color: @fg_secondary;
   font-size: 11px;
 }
 
 .chev {
-  color: @muted;
+  color: @fg_muted;
   -gtk-icon-size: 13px;
 }
 
@@ -640,7 +676,7 @@ scale slider {
 
 .calendar {
   background: transparent;
-  color: @text;
+  color: @fg_primary;
   font-size: 12px;
 }
 
@@ -658,12 +694,12 @@ scale slider {
   min-height: 22px;
   border-radius: 999px;
   background: transparent;
-  color: @subtle;
+  color: @fg_secondary;
 }
 
 .cal-nav:hover {
-  background: @overlay;
-  color: @text;
+  background: @bg_hover;
+  color: @fg_primary;
 }
 
 .cal-nav image {
@@ -672,19 +708,19 @@ scale slider {
 
 .cal-weekday {
   min-height: 22px;
-  color: @subtle;
+  color: @fg_secondary;
   font-size: 10px;
   font-weight: 700;
 }
 
 .cal-weekday.sun,
 .cal-day.sun:not(.out) {
-  color: @love;
+  color: @state_danger;
 }
 
 .cal-weekday.sat,
 .cal-day.sat:not(.out) {
-  color: @foam;
+  color: @accent_secondary;
 }
 
 .cal-day-slot {
@@ -700,23 +736,23 @@ scale slider {
 }
 
 .cal-day.out {
-  color: @highlight_high;
+  color: @fg_disabled;
 }
 
 .cal-day.today {
-  background: @iris;
-  color: @surface;
+  background: @accent_focus;
+  color: @fg_on_accent;
   font-weight: 700;
 }
 
 .cal-day.mark:not(.today) {
-  box-shadow: inset 0 -3px 0 -1px @foam;
+  box-shadow: inset 0 -3px 0 -1px @accent_secondary;
 }
 
 .divider {
   min-height: 1px;
   margin: 14px 0 12px;
-  background: @highlight_med;
+  background: @border_muted;
 }
 
 .nc-head {
@@ -733,8 +769,8 @@ scale slider {
   min-height: 18px;
   padding: 0 5px;
   border-radius: 999px;
-  background: @love;
-  color: @surface;
+  background: @state_danger;
+  color: @fg_on_accent;
   font-size: 10px;
   font-weight: 700;
 }
@@ -743,7 +779,7 @@ scale slider {
   min-width: 26px;
   min-height: 26px;
   border-radius: 999px;
-  color: @subtle;
+  color: @fg_secondary;
 }
 
 .nc-tool:disabled {
@@ -751,18 +787,18 @@ scale slider {
 }
 
 .nc-tool:hover {
-  background: @overlay;
-  color: @text;
+  background: @bg_hover;
+  color: @fg_primary;
 }
 
 .nc-tool.on {
-  background: @overlay;
-  color: @love;
+  background: @bg_hover;
+  color: @state_danger;
 }
 
 .empty {
   padding: 30px 0 26px;
-  color: @muted;
+  color: @fg_muted;
   font-size: 11px;
 }
 
@@ -775,21 +811,21 @@ scale slider {
 .note {
   padding: 10px 12px 11px;
   border-radius: 10px;
-  background: @surface;
-  box-shadow: inset 2px 0 0 @foam;
+  background: @bg_surface;
+  box-shadow: inset 2px 0 0 @accent_secondary;
 }
 
 .note.urgent {
-  box-shadow: inset 2px 0 0 @love;
+  box-shadow: inset 2px 0 0 @state_danger;
 }
 
 .note-meta {
-  color: @muted;
+  color: @fg_muted;
   font-size: 10px;
 }
 
 .note-app {
-  color: @pine;
+  color: @accent_primary;
   font-weight: 700;
 }
 
@@ -797,12 +833,12 @@ scale slider {
   min-width: 20px;
   min-height: 20px;
   border-radius: 999px;
-  color: @muted;
+  color: @fg_muted;
 }
 
 .note-close:hover {
-  background: @overlay;
-  color: @text;
+  background: @bg_hover;
+  color: @fg_primary;
 }
 
 .note-sum {
@@ -811,7 +847,7 @@ scale slider {
 }
 
 .note-body {
-  color: @subtle;
+  color: @fg_secondary;
   font-size: 11px;
   line-height: 1.6;
 }
@@ -823,14 +859,14 @@ scale slider {
 .note-act {
   padding: 4px 11px;
   border-radius: 999px;
-  background: @overlay;
-  color: @pine;
+  background: @bg_hover;
+  color: @accent_primary;
   font-size: 11px;
   font-weight: 600;
 }
 
 .note-act:hover {
-  background: @highlight_med;
+  background: @border_muted;
 }
 
 /* --- toast popups --- */
@@ -843,12 +879,12 @@ scale slider {
 .toast {
   min-width: 336px;
   padding: 0;
-  border: 1px solid @highlight_high;
+  border: 1px solid @border_default;
   border-radius: 14px;
-  background: @base;
+  background: @bg_base;
   box-shadow:
-    0 8px 28px alpha(@text, 0.22),
-    inset 4px 0 0 @foam;
+    0 8px 28px @shadow_soft,
+    inset 4px 0 0 @accent_secondary;
 }
 
 .toast-content {
@@ -865,8 +901,8 @@ scale slider {
 
 .toast.urgent {
   box-shadow:
-    0 8px 28px alpha(@text, 0.22),
-    inset 4px 0 0 @love;
+    0 8px 28px @shadow_soft,
+    inset 4px 0 0 @state_danger;
 }
 
 .toast-progress {
@@ -877,38 +913,38 @@ scale slider {
   min-height: 2px;
   border: none;
   border-radius: 999px;
-  background: @highlight_med;
+  background: @border_muted;
 }
 
 .toast-progress progress {
   min-height: 2px;
   border: none;
   border-radius: 999px;
-  background: @foam;
+  background: @accent_secondary;
 }
 
 .toast-under {
   min-height: 9px;
   margin: -1px 12px 0;
-  border: 1px solid @highlight_high;
+  border: 1px solid @border_default;
   border-top: none;
   border-radius: 0 0 12px 12px;
-  background: @surface;
-  box-shadow: 0 4px 10px alpha(@text, 0.12);
+  background: @bg_surface;
+  box-shadow: 0 4px 10px @shadow_subtle;
 }
 
 .toast-under.deep {
   min-height: 8px;
   margin: 0 26px;
-  background: @overlay;
+  background: @bg_hover;
 }
 
 .toast-more {
   margin-top: 7px;
   padding: 3px 12px;
   border-radius: 999px;
-  background: @overlay;
-  color: @subtle;
+  background: @bg_hover;
+  color: @fg_secondary;
   font-size: 10px;
   font-weight: 600;
 }

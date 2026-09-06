@@ -7,8 +7,10 @@ local parsers = {
   "c_sharp",
   "comment",
   "cpp",
+  "css",
   "dockerfile",
   "fsharp",
+  "gitcommit",
   "go",
   "html",
   "javascript",
@@ -29,7 +31,6 @@ local parsers = {
   "vim",
   "vimdoc",
   "yaml",
-  "gitcommit",
 }
 
 local function get_repo_name(lang)

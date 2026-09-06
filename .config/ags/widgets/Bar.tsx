@@ -274,7 +274,11 @@ export default function Bar({ gdkmonitor }: { gdkmonitor: Gdk.Monitor }) {
       anchor={TOP | LEFT | RIGHT}
       application={app}
     >
-      <box cssClasses={["bar"]} halign={Gtk.Align.CENTER}>
+      <box
+        cssClasses={["bar"]}
+        halign={Gtk.Align.CENTER}
+        orientation={Gtk.Orientation.VERTICAL}
+      >
         <box cssClasses={["capsule"]}>
           <Workspaces connector={connector} />
           <Separator />
@@ -286,6 +290,7 @@ export default function Bar({ gdkmonitor }: { gdkmonitor: Gdk.Monitor }) {
             <Clock connector={connector} />
           </box>
         </box>
+        <box cssClasses={["accent-line"]} />
       </box>
     </window>
   );
