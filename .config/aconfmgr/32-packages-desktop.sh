@@ -49,7 +49,7 @@ AddPackage otf-font-awesome
 AddPackage papirus-icon-theme
 AddPackage pop-icon-theme
 AddPackage ttf-nerd-fonts-symbols # High number of extra glyphs from popular 'iconic fonts'
-AddLocalPackage ttf-plemoljp
+AddLocalPackage dotfiles-ttf-plemoljp
 
 AddPackage gnome-keyring # Stores passwords and encryption keys
 

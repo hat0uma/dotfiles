@@ -1,4 +1,4 @@
-pkgname=ttf-plemoljp
+pkgname=dotfiles-ttf-plemoljp
 pkgver=3.1.0
 pkgrel=1
 pkgdesc="Japanese programming font based on IBM Plex Mono and IBM Plex Sans JP"

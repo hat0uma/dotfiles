@@ -1,6 +1,6 @@
 pkgname=dotfiles-screenshot
 pkgver=1.0.0
-pkgrel=3
+pkgrel=4
 pkgdesc="Hyprland screenshot helper with save, clipboard, and edit actions"
 arch=('any')
 url='https://github.com/hat0uma/dotfiles'
@@ -19,7 +19,7 @@ depends=(
 )
 
 source=('screenshot')
-sha256sums=('913ca9c7eff1895159284f20d32262c3f1e02996876e7e5dacffc10b9997dae6')
+sha256sums=('3d4b46e1903850062ff404e0b2af8c01d70225bed5fa9dd3c66648fb0f7745ff')
 
 package() {
     install -Dm755 "$srcdir/screenshot" "$pkgdir/usr/bin/screenshot"

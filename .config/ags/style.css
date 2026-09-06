@@ -149,7 +149,6 @@ window {
   color: @accent_primary;
 }
 
-.battery.low,
 .battery.low image {
   color: @state_danger;
 }

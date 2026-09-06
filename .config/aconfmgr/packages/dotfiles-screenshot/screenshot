@@ -101,11 +101,6 @@ if [[ "$captured" != true ]]; then
   exit 1
 fi
 
-if ! satty --filename "$destination" --output-filename "$destination"; then
-  notify_error "Satty could not edit the screenshot"
-  exit 1
-fi
-
 if ! wl-copy --type image/png <"$destination"; then
   notify_error "Saved the screenshot, but could not copy it to the clipboard"
   exit 1
@@ -121,7 +116,7 @@ choice="$(
     --action=open_folder="Open Folder" \
     --action=edit="Edit" \
     "Screenshot (${label})" \
-    "Saved to ${destination}" 2>/dev/null || true
+    "Saved and copied to clipboard\n${destination}" 2>/dev/null || true
 )"
 
 case "$choice" in

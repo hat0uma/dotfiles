@@ -97,7 +97,7 @@ function ToastCard({ toast, now }: { toast: Toast; now: () => number }) {
           </box>
         )}
       </box>
-      {!urgent && <progressbar cssClasses={["toast-progress"]} fraction={progress} />}
+      {!urgent && <Gtk.ProgressBar cssClasses={["toast-progress"]} fraction={progress} />}
     </box>
   );
 }
