@@ -871,79 +871,142 @@ scale slider {
 /* --- toast popups --- */
 
 .toast-stack {
-  min-width: 366px;
-  padding: 6px 6px 0 0;
+  min-width: 316px;
+  padding: 5px 6px 0 0;
 }
 
 .toast {
-  min-width: 336px;
+  min-width: 302px;
   padding: 0;
-  border: 1px solid @border_default;
-  border-radius: 14px;
-  background: @bg_base;
-  box-shadow:
-    0 8px 28px @shadow_soft,
-    inset 4px 0 0 @accent_secondary;
+  border: 2px solid @border_strong;
+  border-radius: 8px;
+  background: @base;
+  box-shadow: 4px 4px 0 @shadow_solid;
 }
 
 .toast-content {
-  padding: 12px 14px 11px;
+  padding: 9px 11px 10px;
+}
+
+.toast-head {
+  margin-bottom: 2px;
+  color: @muted;
+  font-size: 11px;
+}
+
+.toast-icon {
+  min-width: 22px;
+  min-height: 22px;
+  border: 2px solid @border_strong;
+  border-radius: 6px;
+  background: @foam;
+  color: @base;
+}
+
+.toast-icon image {
+  color: @base;
+}
+
+.toast .note-app,
+.toast-time {
+  color: @subtle;
+  font-size: 11px;
+  font-weight: 400;
+}
+
+.toast-close {
+  min-width: 16px;
+  min-height: 16px;
+  color: @muted;
+  font-size: 12px;
+}
+
+.toast-close:hover {
+  color: @text;
 }
 
 .toast .note-sum {
-  font-size: 13px;
+  font-size: 14px;
+  font-weight: 500;
 }
 
 .toast .note-body {
-  margin-top: 2px;
+  margin-top: 1px;
+  color: @subtle;
+  font-size: 13px;
+  line-height: 1.4;
 }
 
 .toast.urgent {
-  box-shadow:
-    0 8px 28px @shadow_soft,
-    inset 4px 0 0 @state_danger;
+  background: @love;
+  color: @base;
+}
+
+.toast.urgent .note-app,
+.toast.urgent .toast-time,
+.toast.urgent .toast-close,
+.toast.urgent .note-body {
+  color: @base;
+}
+
+.toast .note-actions {
+  margin-top: 7px;
+}
+
+.toast .note-act {
+  padding: 3px 10px;
+  border: 2px solid @border_strong;
+  border-radius: 5px;
+  background: @surface;
+  box-shadow: 2px 2px 0 @shadow_solid;
+  color: @text;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.toast .note-act:first-child {
+  background: @gold;
+}
+
+.toast .note-act:hover {
+  background: @highlight_med;
+}
+
+.toast .note-act:first-child:hover {
+  background: shade(@gold, 0.94);
+}
+
+.toast .note-act:active {
+  box-shadow: 1px 1px 0 @shadow_solid;
+  transform: translate(1px, 1px);
 }
 
 .toast-progress {
-  min-height: 2px;
+  min-height: 4px;
 }
 
 .toast-progress trough {
-  min-height: 2px;
+  min-height: 4px;
   border: none;
-  border-radius: 999px;
-  background: @border_muted;
+  border-radius: 0 0 5px 5px;
+  background: @highlight_med;
 }
 
 .toast-progress progress {
-  min-height: 2px;
+  min-height: 4px;
   border: none;
+  border-radius: 0 0 0 5px;
+  background: @pine;
+}
+
+.toast-count {
+  min-width: 22px;
+  min-height: 22px;
+  border: 2px solid @border_strong;
   border-radius: 999px;
-  background: @accent_secondary;
-}
-
-.toast-under {
-  min-height: 9px;
-  margin: -1px 12px 0;
-  border: 1px solid @border_default;
-  border-top: none;
-  border-radius: 0 0 12px 12px;
-  background: @bg_surface;
-  box-shadow: 0 4px 10px @shadow_subtle;
-}
-
-.toast-under.deep {
-  min-height: 8px;
-  margin: 0 26px;
-  background: @bg_hover;
-}
-
-.toast-more {
-  margin-top: 7px;
-  padding: 3px 12px;
-  border-radius: 999px;
-  background: @bg_hover;
-  color: @fg_secondary;
-  font-size: 10px;
-  font-weight: 600;
+  background: @love;
+  color: @base;
+  font-size: 12px;
+  font-weight: 500;
+  transform: translate(5px, -5px);
 }

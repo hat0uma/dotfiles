@@ -7,11 +7,14 @@ import Gdk from "gi://Gdk?version=4.0";
 import GLib from "gi://GLib";
 import Gtk from "gi://Gtk?version=4.0";
 
-const TOAST_DURATION = 6000;
+const DEFAULT_TOAST_DURATION = 10_000;
+
 type Toast = {
   id: number;
   notification: AstalNotifd.Notification;
-  expiresAt: number | null;
+  duration: number;
+  expiresAt: number;
+  showProgress: boolean;
 };
 
 const [toasts, setToasts] = createState<Toast[]>([]);
@@ -32,23 +35,28 @@ function dismissToast(id: number) {
 
 function pushToast(notification: AstalNotifd.Notification) {
   const id = notification.id;
-  const expiresAt = notification.urgency === AstalNotifd.Urgency.CRITICAL
-    ? null
-    : Date.now() + TOAST_DURATION;
+  const showProgress = notification.expireTimeout > 0;
+  const duration = showProgress
+    ? notification.expireTimeout
+    : DEFAULT_TOAST_DURATION;
   setToasts((current) => [
-    { id, notification, expiresAt },
+    {
+      id,
+      notification,
+      duration,
+      expiresAt: Date.now() + duration,
+      showProgress,
+    },
     ...current.filter((toast) => toast.id !== id),
   ]);
 
   clearTimer(id);
-  if (expiresAt !== null) {
-    const source = GLib.timeout_add(GLib.PRIORITY_DEFAULT, TOAST_DURATION, () => {
-      timers.delete(id);
-      dismissToast(id);
-      return GLib.SOURCE_REMOVE;
-    });
-    timers.set(id, source);
-  }
+  const source = GLib.timeout_add(GLib.PRIORITY_DEFAULT, duration, () => {
+    timers.delete(id);
+    dismissToast(id);
+    return GLib.SOURCE_REMOVE;
+  });
+  timers.set(id, source);
 }
 
 const notifd = AstalNotifd.get_default();
@@ -66,20 +74,38 @@ function connectorOf(monitor: Gdk.Monitor) {
 function ToastCard({ toast, now }: { toast: Toast; now: () => number }) {
   const { notification } = toast;
   const urgent = notification.urgency === AstalNotifd.Urgency.CRITICAL;
-  const progress = createComputed(() => toast.expiresAt === null
-    ? 0
-    : Math.max(0, Math.min(1, (toast.expiresAt - now()) / TOAST_DURATION)));
+  const icon = notification.appIcon || notification.desktopEntry || "dialog-information-symbolic";
+  const progress = createComputed(() =>
+    Math.max(0, Math.min(1, (toast.expiresAt - now()) / toast.duration)));
 
   return (
-    <box cssClasses={["toast", urgent ? "urgent" : ""].filter(Boolean)} orientation={Gtk.Orientation.VERTICAL}>
-      <box cssClasses={["toast-content"]} orientation={Gtk.Orientation.VERTICAL} spacing={4}>
-        <box cssClasses={["note-meta"]} spacing={6}>
+    <box
+      cssClasses={["toast", urgent ? "urgent" : ""].filter(Boolean)}
+      orientation={Gtk.Orientation.VERTICAL}
+      $={(self) => {
+        const click = new Gtk.GestureClick();
+        click.connect("released", () => dismissToast(notification.id));
+        self.add_controller(click);
+      }}
+    >
+      <box cssClasses={["toast-content"]} orientation={Gtk.Orientation.VERTICAL} spacing={3}>
+        <box cssClasses={["toast-head"]} spacing={6}>
+          <centerbox cssClasses={["toast-icon"]} valign={Gtk.Align.CENTER}>
+            <image
+              $type="center"
+              iconName={icon}
+              pixelSize={12}
+            />
+          </centerbox>
           <label cssClasses={["note-app"]} label={notification.appName || "通知"} />
-          <label label="·" />
-          <label label="今" />
           <box hexpand />
-          <button cssClasses={["note-close"]} onClicked={() => dismissToast(notification.id)}>
-            <image iconName="window-close-symbolic" />
+          <label cssClasses={["toast-time"]} label="今" />
+          <button
+            cssClasses={["toast-close"]}
+            tooltipText="閉じる"
+            onClicked={() => dismissToast(notification.id)}
+          >
+            <label label="✕" />
           </button>
         </box>
         <label cssClasses={["note-sum"]} xalign={0} wrap label={notification.summary} />
@@ -97,7 +123,7 @@ function ToastCard({ toast, now }: { toast: Toast; now: () => number }) {
           </box>
         )}
       </box>
-      {!urgent && <Gtk.ProgressBar cssClasses={["toast-progress"]} fraction={progress} />}
+      {toast.showProgress && <Gtk.ProgressBar cssClasses={["toast-progress"]} fraction={progress} />}
     </box>
   );
 }
@@ -124,6 +150,8 @@ export default function NotificationPopups() {
 
   onCleanup(() => {
     GLib.source_remove(ticker);
+    timers.forEach((source) => GLib.source_remove(source));
+    timers.clear();
     hyprland.disconnect(handler);
     window.destroy();
   });
@@ -135,23 +163,25 @@ export default function NotificationPopups() {
       name="notification-popups"
       namespace="ags-notifications"
       gdkmonitor={initial}
-      exclusivity={Astal.Exclusivity.NORMAL}
+      exclusivity={Astal.Exclusivity.IGNORE}
       anchor={TOP | RIGHT}
       keymode={Astal.Keymode.NONE}
       application={app}
     >
       <box cssClasses={["toast-stack"]} orientation={Gtk.Orientation.VERTICAL}>
-        <box cssClasses={["toast-slot"]}>
-          <With value={top}>{(toast) => toast && <ToastCard toast={toast} now={now} />}</With>
-        </box>
-        <box cssClasses={["toast-under"]} visible={count((value) => value > 1)} />
-        <box cssClasses={["toast-under", "deep"]} visible={count((value) => value > 2)} />
-        <label
-          cssClasses={["toast-more"]}
-          halign={Gtk.Align.CENTER}
-          visible={count((value) => value > 1)}
-          label={count((value) => `ほか ${value - 1} 件`)}
-        />
+        <overlay>
+          <box cssClasses={["toast-slot"]}>
+            <With value={top}>{(toast) => toast && <ToastCard toast={toast} now={now} />}</With>
+          </box>
+          <label
+            $type="overlay"
+            cssClasses={["toast-count"]}
+            halign={Gtk.Align.END}
+            valign={Gtk.Align.START}
+            visible={count((value) => value > 1)}
+            label={count((value) => `${value}`)}
+          />
+        </overlay>
       </box>
     </window>
   );
