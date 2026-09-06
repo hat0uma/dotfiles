@@ -26,6 +26,7 @@ AddPackage vulkan-intel
 AddPackage wireplumber
 AddPackage wpa_supplicant
 AddPackage zram-generator
+AddPackage nftables # Netfilter tables userspace tools
 
 # power management
 AddPackage thermald # The Linux Thermal Daemon program from 01.org

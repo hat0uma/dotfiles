@@ -20,3 +20,5 @@ CopyFile /etc/systemd/zram-generator.conf
 # power management
 CopyFile /etc/tlp.conf
 CopyFile /etc/systemd/system/battery-threshold.service
+
+CopyFile /etc/nftables.conf

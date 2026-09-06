@@ -4,6 +4,7 @@ SystemdEnable /usr/lib/systemd/system/remote-fs.target
 SystemdEnable /usr/lib/systemd/system/systemd-userdbd.socket
 SystemdEnable /usr/lib/systemd/system/systemd-timesyncd.service
 SystemdEnable /usr/lib/systemd/system/fstrim.timer
+SystemdEnable /usr/lib/systemd/system/nftables.service
 
 # Networking and Bluetooth
 SystemdEnable /usr/lib/systemd/system/bluetooth.service
