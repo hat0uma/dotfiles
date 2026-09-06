@@ -1,62 +1,97 @@
-hl.window_rule({
-  match = { xwayland = false, float = true },
-  center = true,
-})
+---@type HL.WindowRuleSpec[]
+local window_rules = {
+  -- Generic rules
+  {
+    match = { xwayland = false, float = true },
+    center = true,
+  },
+  -- pcmanfm
+  {
+    match = { class = "pcmanfm", title = "設定" },
+    float = true,
+  },
+  {
+    match = { class = "pcmanfm", title = "リムーバブルメディアが接続されました" },
+    float = true,
+  },
+  -- 1password
+  {
+    match = { class = "1Password" },
+    float = true,
+  },
+  {
+    match = { class = "1Password", float = true },
+    center = true,
+  },
+  {
+    match = { class = "1Password", title = "クイックアクセス — 1Password", float = true },
+    no_anim = true,
+  },
+  -- Unity
+  {
+    match = { class = "Unity", title = "Starting Unity\\.\\.\\." },
+    maximize = true,
+  },
+  {
+    match = { class = "Unity", title = ".* - Unity \\d+\\.\\d+\\.\\d+", float = false },
+    maximize = true,
+  },
+  {
+    match = { class = "Unity", title = "negative:Unity", float = true },
+    center = true,
+  },
+  -- Steam
+  {
+    match = { class = "steam", title = "^(Steam Settings)$" },
+    float = true,
+  },
+  {
+    match = { class = "steam", title = "negative:^$", float = true },
+    center = true,
+  },
+  -- Network Manager
+  {
+    match = { class = "nm-connection-editor" },
+    float = true,
+  },
+  -- fcitx5
+  {
+    match = { class = "org\\.fcitx\\.fcitx5-config-qt" },
+    float = true,
+  },
+  -- satty
+  {
+    match = { class = "org\\.satty\\.satty" },
+    float = true,
+  },
+  -- Discord
+  {
+    match = { class = "^(FFPWA-.*)$", title = "^(Discord)$" },
+    workspace = "special",
+  },
+  {
+    match = { class = "webcord", float = true },
+    center = true,
+  },
+  -- pavucontrol
+  {
+    match = { class = "org.pulseaudio.pavucontrol" },
+    float = true,
+  },
+}
 
-hl.window_rule({
-  match = { class = "pcmanfm", title = "設定" },
-  float = true,
-})
-hl.window_rule({
-  match = { class = "pcmanfm", title = "リムーバブルメディアが接続されました" },
-  float = true,
-})
+--- @type HL.LayerRuleSpec[]
+local layer_rules = {
+  {
+    match = { namespace = "ags-power-menu" },
+    blur = true,
+  },
+}
 
-hl.window_rule({ match = { class = "1Password" }, float = true })
-hl.window_rule({ match = { class = "1Password", float = true }, center = true })
-hl.window_rule({
-  match = { class = "1Password", title = "クイックアクセス — 1Password", float = true },
-  no_anim = true,
-})
+for _, rule in ipairs(window_rules) do
+  hl.window_rule(rule)
+end
 
-hl.window_rule({
-  match = { class = "Unity", title = "Starting Unity\\.\\.\\." },
-  maximize = true,
-})
-hl.window_rule({
-  match = { class = "Unity", title = ".* - Unity \\d+\\.\\d+\\.\\d+", float = false },
-  maximize = true,
-})
-hl.window_rule({
-  match = { class = "Unity", title = "negative:Unity", float = true },
-  center = true,
-})
-
-hl.window_rule({
-  match = { class = "steam", title = "^(Steam Settings)$" },
-  float = true,
-})
-hl.window_rule({
-  match = { class = "steam", title = "negative:^$", float = true },
-  center = true,
-})
-
-hl.window_rule({ match = { class = "nm-connection-editor" }, float = true })
-hl.window_rule({ match = { class = "org\\.fcitx\\.fcitx5-config-qt" }, float = true })
-hl.window_rule({ match = { class = "org\\.satty\\.satty" }, float = true })
-hl.window_rule({
-  match = { class = "^(FFPWA-.*)$", title = "^(Discord)$" },
-  workspace = "special",
-})
-hl.window_rule({
-  match = { class = "webcord", float = true },
-  center = true,
-})
-hl.window_rule({ match = {
-  class = "org.pulseaudio.pavucontrol",
-}, float = true })
-
-hl.layer_rule({
-  match = { namespace = "ags-power-menu" },
-  blur = true,
-})
+for _, rule in ipairs(layer_rules) do
+  hl.layer_rule(rule)
+end
