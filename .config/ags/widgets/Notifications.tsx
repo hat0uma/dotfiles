@@ -100,6 +100,7 @@ function Calendar({ notifications }: { notifications: () => AstalNotifd.Notifica
 
 function NotificationRow({ notification }: { notification: AstalNotifd.Notification }) {
   const urgent = notification.urgency === AstalNotifd.Urgency.CRITICAL;
+  const icon = notification.appIcon || notification.desktopEntry || "dialog-information-symbolic";
   return (
     <box
       cssClasses={["note", urgent ? "urgent" : ""].filter(Boolean)}
@@ -107,12 +108,14 @@ function NotificationRow({ notification }: { notification: AstalNotifd.Notificat
       spacing={3}
     >
       <box cssClasses={["note-meta"]} spacing={6}>
+        <centerbox cssClasses={["note-icon"]} valign={Gtk.Align.CENTER}>
+          <image $type="center" iconName={icon} pixelSize={12} />
+        </centerbox>
         <label cssClasses={["note-app"]} label={notification.appName || "通知"} />
-        <label label="·" />
-        <label label={timeAgo(notification.time)} />
         <box hexpand />
+        <label cssClasses={["note-time"]} label={timeAgo(notification.time)} />
         <button cssClasses={["note-close"]} onClicked={() => notification.dismiss()}>
-          <image iconName="window-close-symbolic" />
+          <label label="✕" />
         </button>
       </box>
       <label cssClasses={["note-sum"]} xalign={0} wrap label={notification.summary} />
@@ -120,7 +123,10 @@ function NotificationRow({ notification }: { notification: AstalNotifd.Notificat
       {notification.actions.length > 0 && (
         <box cssClasses={["note-actions"]} spacing={6}>
           {notification.actions.map((action) => (
-            <button cssClasses={["note-act"]} onClicked={() => action.invoke()}>
+            <button cssClasses={["note-act"]} onClicked={() => {
+              action.invoke();
+              notification.dismiss();
+            }}>
               <label label={action.label} />
             </button>
           ))}
@@ -142,9 +148,11 @@ export default function NotificationCenter() {
       <Calendar notifications={notifications} />
       <box cssClasses={["divider"]} />
       <box cssClasses={["nc-head"]} spacing={8}>
-        <label cssClasses={["nc-title"]} label="通知" />
+        <box orientation={Gtk.Orientation.VERTICAL} hexpand>
+          <label cssClasses={["nc-kicker"]} xalign={0} label="NOTIFICATION CENTER" />
+          <label cssClasses={["nc-title"]} xalign={0} label="通知" />
+        </box>
         <With value={count}>{(n) => n > 0 && <label cssClasses={["nc-count"]} label={`${n}`} />}</With>
-        <box hexpand />
         <button
           cssClasses={dnd((on) => ["nc-tool", on ? "on" : ""].filter(Boolean))}
           tooltipText="通知を一時停止"
@@ -153,7 +161,7 @@ export default function NotificationCenter() {
           <image iconName={dnd((on) => on ? "notifications-disabled-symbolic" : "preferences-system-notifications-symbolic")} />
         </button>
         <button
-          cssClasses={["nc-tool"]}
+          cssClasses={["nc-tool", "danger"]}
           sensitive={count((n) => n > 0)}
           tooltipText="すべて消去"
           onClicked={() => notifd.get_notifications().forEach((item) => item.dismiss())}

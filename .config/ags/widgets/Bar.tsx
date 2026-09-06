@@ -243,7 +243,7 @@ function Clock({ connector }: { connector: string }) {
           valign={Gtk.Align.CENTER}
         />
       </box>
-      <popover>
+      <popover cssClasses={["notification-popover"]}>
         <NotificationCenter />
       </popover>
     </menubutton>
