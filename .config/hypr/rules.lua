@@ -16,15 +16,15 @@ local window_rules = {
   },
   -- 1password
   {
-    match = { class = "1Password" },
+    match = { class = "1password" },
     float = true,
   },
   {
-    match = { class = "1Password", float = true },
+    match = { class = "1password", float = true },
     center = true,
   },
   {
-    match = { class = "1Password", title = "クイックアクセス — 1Password", float = true },
+    match = { class = "1password", title = "クイックアクセス — 1Password", float = true },
     no_anim = true,
   },
   -- Unity
