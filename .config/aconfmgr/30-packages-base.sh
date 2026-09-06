@@ -21,6 +21,7 @@ AddPackage pipewire
 AddPackage pipewire-alsa
 AddPackage pipewire-jack
 AddPackage pipewire-pulse
+AddPackage pavucontrol # PulseAudio Volume Control
 AddPackage vulkan-intel
 AddPackage wireplumber
 AddPackage wpa_supplicant

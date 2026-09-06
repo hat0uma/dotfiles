@@ -52,6 +52,9 @@ hl.window_rule({
   match = { class = "webcord", float = true },
   center = true,
 })
+hl.window_rule({ match = {
+  class = "org.pulseaudio.pavucontrol",
+}, float = true })
 
 hl.layer_rule({
   match = { namespace = "ags-power-menu" },
