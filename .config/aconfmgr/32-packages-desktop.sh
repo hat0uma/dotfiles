@@ -31,7 +31,6 @@ AddPackage grim
 AddPackage kvantum
 AddPackage libnotify
 AddPackage mpv
-AddPackage pcmanfm-qt
 AddPackage satty
 AddPackage slurp
 AddPackage wezterm
@@ -40,6 +39,7 @@ AddPackage wofi
 AddPackage xdg-user-dirs
 AddPackage xorg-xlsclients # List client applications running on a display
 AddPackage nemo            # File manager for Cinnamon (Nautilus fork)
+AddPackage nemo-fileroller # File archiver extension for Nemo
 
 AddLocalPackage dotfiles-screenshot
 

@@ -78,6 +78,19 @@ local window_rules = {
     match = { class = "org.pulseaudio.pavucontrol" },
     float = true,
   },
+  -- nemo
+  {
+    name = "nemo-scratchpad",
+    match = { class = "nemo" },
+    workspace = "special:file-manager",
+    -- float = true,
+    -- center = true,
+    -- size = { "75%", "80%" },
+  },
+  {
+    match = { class = "org.gnome.FileRoller" },
+    float = true,
+  },
 }
 
 --- @type HL.LayerRuleSpec[]

@@ -56,6 +56,9 @@ hl.config({
     -- pseudotile = true,
     preserve_split = true,
     special_scale_factor = 0.96,
+
+    use_active_for_splits = true,
+    force_split = 2,
   },
   master = {
     new_status = "master",

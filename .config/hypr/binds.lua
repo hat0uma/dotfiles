@@ -1,5 +1,28 @@
 local mod = "SUPER"
 
+local function toggle_file_manager()
+  local special = hl.get_active_special_workspace()
+  -- if special.config_name
+  if special and special.name == "special:file-manager" then
+    hl.dispatch(hl.dsp.workspace.toggle_special("file-manager"))
+    return
+  end
+
+  local fm = { class = "nemo", cmd = "nemo" }
+  local fm_exists = false
+  local wins = hl.get_workspace_windows("special:file-manager")
+  for _, win in ipairs(wins) do
+    if win.class == fm.class then
+      fm_exists = true
+    end
+  end
+
+  hl.dispatch(hl.dsp.workspace.toggle_special("file-manager"))
+  if not fm_exists then
+    hl.exec_cmd(fm.cmd)
+  end
+end
+
 local binds = {
   { lhs = "Escape", rhs = hl.dsp.exit() },
 
@@ -10,7 +33,7 @@ local binds = {
   { lhs = "SHIFT + D", rhs = "wofi --show run" },
   { lhs = "O", rhs = "1password --quick-access" },
   { lhs = "N", rhs = "ags request toggle-notifications" },
-  { lhs = "E", rhs = "nemo" },
+  { lhs = "E", rhs = toggle_file_manager },
 
   { lhs = "P", rhs = hl.dsp.window.pseudo() },
   { lhs = "F", rhs = hl.dsp.window.fullscreen({ mode = "fullscreen" }) },

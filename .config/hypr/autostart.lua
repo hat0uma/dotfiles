@@ -6,8 +6,8 @@ hl.on("hyprland.start", function()
 
   hl.exec_cmd("swaybg -m fill -i ~/.local/share/wallpapers/home.png")
 
+  hl.exec_cmd("nemo --no-default-window")
   hl.exec_cmd("foot --server")
-  hl.exec_cmd("pcmanfm-qt -d")
   hl.exec_cmd("fcitx5")
   hl.exec_cmd("ags run")
   hl.exec_cmd("1password --silent")
