@@ -266,6 +266,7 @@ export default function Bar({ gdkmonitor }: { gdkmonitor: Gdk.Monitor }) {
   return (
     <window
       $={(self) => (window = self)}
+      layer={Astal.Layer.BOTTOM}
       visible
       name={`bar-${connector}`}
       namespace="ags-bar"
