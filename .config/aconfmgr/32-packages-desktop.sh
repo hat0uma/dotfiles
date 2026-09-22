@@ -39,6 +39,7 @@ AddPackage wl-clipboard
 AddPackage wofi
 AddPackage xdg-user-dirs
 AddPackage xorg-xlsclients # List client applications running on a display
+AddPackage nemo            # File manager for Cinnamon (Nautilus fork)
 
 AddLocalPackage dotfiles-screenshot
 
