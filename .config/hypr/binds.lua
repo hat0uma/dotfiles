@@ -1,28 +1,5 @@
 local mod = "SUPER"
 
---- Bind
----@param opts {
----  mod?: boolean,
----  lhs: string,
----  rhs: HL.Dispatcher | function | string,
----  repeating?: boolean,
----  mouse?: boolean,
---- }
-local function bind(opts)
-  local use_mod = opts.mod ~= false
-  local lhs = use_mod and mod .. " + " .. opts.lhs or opts.lhs
-
-  local rhs = opts.rhs
-  if type(rhs) == "string" then
-    rhs = hl.dsp.exec_cmd(rhs)
-  end
-
-  hl.bind(lhs, rhs, {
-    repeating = opts.repeating,
-    mouse = opts.mouse,
-  })
-end
-
 local binds = {
   { lhs = "Escape", rhs = hl.dsp.exit() },
 
@@ -33,7 +10,7 @@ local binds = {
   { lhs = "SHIFT + D", rhs = "wofi --show run" },
   { lhs = "O", rhs = "1password --quick-access" },
   { lhs = "N", rhs = "ags request toggle-notifications" },
-  { lhs = "E", rhs = "pcmanfm-qt" },
+  { lhs = "E", rhs = "nemo" },
 
   { lhs = "P", rhs = hl.dsp.window.pseudo() },
   { lhs = "F", rhs = hl.dsp.window.fullscreen({ mode = "fullscreen" }) },
@@ -98,17 +75,13 @@ local binds = {
   },
 }
 
-for _, opts in ipairs(binds) do
-  bind(opts)
-end
-
 for i = 1, 9 do
-  bind({ lhs = tostring(i), rhs = hl.dsp.focus({ workspace = i }) })
-  bind({ lhs = "SHIFT + " .. i, rhs = hl.dsp.window.move({ workspace = i }) })
+  table.insert(binds, { lhs = tostring(i), rhs = hl.dsp.focus({ workspace = i }) })
+  table.insert(binds, { lhs = "SHIFT + " .. i, rhs = hl.dsp.window.move({ workspace = i }) })
 end
 
-hl.define_submap("powermenu", function()
-  local powermenu_binds = {
+local submaps = {
+  powermenu = {
     { mod = false, lhs = "SHIFT + S", rhs = "systemctl poweroff", repeating = true },
     { mod = false, lhs = "SHIFT + R", rhs = "systemctl reboot", repeating = true },
     { mod = false, lhs = "SHIFT + Z", rhs = "systemctl suspend", repeating = true },
@@ -122,9 +95,40 @@ hl.define_submap("powermenu", function()
         hl.dispatch(hl.dsp.submap("reset"))
       end,
     },
-  }
+  },
+}
 
-  for _, opts in ipairs(powermenu_binds) do
-    bind(opts)
+--- Bind
+---@param opts {
+---  mod?: boolean,
+---  lhs: string,
+---  rhs: HL.Dispatcher | function | string,
+---  repeating?: boolean,
+---  mouse?: boolean,
+--- }
+local function bind(opts)
+  local use_mod = opts.mod ~= false
+  local lhs = use_mod and mod .. " + " .. opts.lhs or opts.lhs
+
+  local rhs = opts.rhs
+  if type(rhs) == "string" then
+    rhs = hl.dsp.exec_cmd(rhs)
   end
-end)
+
+  hl.bind(lhs, rhs, {
+    repeating = opts.repeating,
+    mouse = opts.mouse,
+  })
+end
+
+for _, opts in ipairs(binds) do
+  bind(opts)
+end
+
+for name, submap in pairs(submaps) do
+  hl.define_submap(name, function()
+    for _, opts in ipairs(submap) do
+      bind(opts)
+    end
+  end)
+end
