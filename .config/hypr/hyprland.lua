@@ -3,7 +3,6 @@
 
 require("envs")
 require("monitor")
-require("workspaces")
 
 hl.config({
   xwayland = {

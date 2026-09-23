@@ -1,85 +1,4 @@
 local mod = "SUPER"
-local ws = require("workspaces")
-
---- @param local_id integer
-local function bind_focus(local_id)
-  return function()
-    local mon = hl.get_active_monitor()
-    if not mon then
-      return
-    end
-    local gid = ws.resolve_global(local_id, mon.name)
-    if not gid then
-      return
-    end
-    hl.dispatch(hl.dsp.focus({ workspace = gid }))
-  end
-end
-
---- @param local_id integer
-local function bind_move(local_id)
-  return function()
-    local mon = hl.get_active_monitor()
-    if not mon then
-      return
-    end
-    local gid = ws.resolve_global(local_id, mon.name)
-    if not gid then
-      return
-    end
-    hl.dispatch(hl.dsp.window.move({ workspace = gid }))
-  end
-end
-
---- @param delta integer 1 for next, -1 for prev
-local function bind_scroll(delta)
-  return function()
-    local mon = hl.get_active_monitor()
-    if not mon then
-      return
-    end
-
-    if not ws.is_multi_monitor() then
-      hl.dispatch(hl.dsp.focus({ workspace = delta > 0 and "e+1" or "e-1" }))
-      return
-    end
-
-    local group = ws.group_for_monitor(mon.name)
-    if not group then
-      return
-    end
-    local active = hl.get_active_workspace(mon)
-    if not active then
-      return
-    end
-
-    local candidates = {}
-    for _, w in ipairs(hl.get_workspaces()) do
-      -- Include overflow workspaces that remain on this monitor when all
-      -- local slots are occupied. They are still selectable by scrolling.
-      if w.id > 0 and w.monitor and w.monitor.name == mon.name then
-        table.insert(candidates, w.id)
-      end
-    end
-    table.sort(candidates)
-
-    local idx
-    for i, gid in ipairs(candidates) do
-      if gid == active.id then
-        idx = i
-      end
-    end
-    if not idx then
-      return
-    end
-
-    local target = candidates[idx + delta]
-    if not target then
-      return
-    end
-    hl.dispatch(hl.dsp.focus({ workspace = target }))
-  end
-end
 
 local function toggle_file_manager()
   local special = hl.get_active_special_workspace()
@@ -162,10 +81,10 @@ local binds = {
   },
 
   { lhs = "0", rhs = hl.dsp.workspace.toggle_special("") },
-  { lhs = "SHIFT + 0", rhs = bind_move(10) },
+  { lhs = "SHIFT + 0", rhs = hl.dsp.window.move({ workspace = 10 }) },
 
-  { lhs = "mouse_down", rhs = bind_scroll(1) },
-  { lhs = "mouse_up", rhs = bind_scroll(-1) },
+  { lhs = "mouse_down", rhs = hl.dsp.focus({ workspace = "e+1" }) },
+  { lhs = "mouse_up", rhs = hl.dsp.focus({ workspace = "e-1" }) },
 
   { lhs = "mouse:272", rhs = hl.dsp.window.drag(), mouse = true },
   { lhs = "mouse:273", rhs = hl.dsp.window.resize(), mouse = true },
@@ -180,8 +99,8 @@ local binds = {
 }
 
 for i = 1, 9 do
-  table.insert(binds, { lhs = tostring(i), rhs = bind_focus(i) })
-  table.insert(binds, { lhs = "SHIFT + " .. i, rhs = bind_move(i) })
+  table.insert(binds, { lhs = tostring(i), rhs = hl.dsp.focus({ workspace = i }) })
+  table.insert(binds, { lhs = "SHIFT + " .. i, rhs = hl.dsp.window.move({ workspace = i }) })
 end
 
 local submaps = {

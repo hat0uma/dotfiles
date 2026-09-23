@@ -60,49 +60,6 @@ function appIcon(client: AstalHyprland.Client | null | undefined) {
 // workspace beyond that is appended.
 const PERSISTENT_WORKSPACES = 5;
 
-// Monitor-local workspace grouping. Global workspace ids are split into
-// fixed-size blocks, one block per monitor, so each bar can show a
-// per-monitor-local number (1..GROUP_SIZE) instead of the raw global id.
-// With only one monitor connected, grouping is dropped (flatten mode).
-//
-// Keep GROUP_SIZE and MONITOR_PRIORITY in sync with the copies in
-// .config/hypr/workspaces.lua (native Lua and AGS/GJS are separate
-// processes; there is no code sharing between them).
-// eDP-1 is omitted: the Hyprland-side config always disables it while any
-// external is connected, so it never coexists with DP-2/HDMI-A-1.
-const GROUP_SIZE = 5;
-const MONITOR_PRIORITY: Record<string, number> = {
-  "DP-2": 1,
-  "HDMI-A-1": 2,
-};
-
-function computeGroupAssignment(monitors: AstalHyprland.Monitor[]) {
-  const assignment = new Map<string, number>();
-  if (monitors.length <= 1) return assignment;
-
-  const sorted = [...monitors].sort((a, b) => a.id - b.id);
-  const used = new Set<number>();
-  const unassigned: AstalHyprland.Monitor[] = [];
-  for (const m of sorted) {
-    const want = MONITOR_PRIORITY[m.name];
-    if (want !== undefined && !used.has(want)) {
-      assignment.set(m.name, want);
-      used.add(want);
-    } else {
-      unassigned.push(m);
-    }
-  }
-
-  let next = 1;
-  for (const m of unassigned) {
-    while (used.has(next)) next++;
-    assignment.set(m.name, next);
-    used.add(next);
-  }
-
-  return assignment;
-}
-
 function Workspaces({ connector }: { connector: string }) {
   const monitor = hyprland.get_monitor_by_name(connector);
   const activeId = monitor
@@ -115,48 +72,24 @@ function Workspaces({ connector }: { connector: string }) {
       "focusedWorkspace",
     )((workspace) => workspace?.id ?? -1);
 
-  const isFocusedMonitor = createBinding(
-    hyprland,
-    "focusedMonitor",
-  )((focused) => focused?.name === connector);
-
-  const monitors = createBinding(hyprland, "monitors");
   const workspaces = createBinding(hyprland, "workspaces");
   const clients = createBinding(hyprland, "clients");
 
   const slots = createComputed(() => {
-    const multi = monitors().length > 1;
-    const group = computeGroupAssignment(monitors()).get(connector);
-    const base = multi && group !== undefined ? (group - 1) * GROUP_SIZE : 0;
-    const localCount = multi ? GROUP_SIZE : PERSISTENT_WORKSPACES;
-
     const own = workspaces().filter(
       (workspace) => workspace.id > 0 && workspace.monitor?.name === connector,
     );
     const windows = clients();
+    const ids = new Set(own.map((workspace) => workspace.id));
+    for (let id = 1; id <= PERSISTENT_WORKSPACES; id++) ids.add(id);
 
-    const localIds = new Set<number>();
-    for (const workspace of own) {
-      const localId = workspace.id - base;
-      // Flatten mode has no ceiling. In multi-monitor mode, keep any
-      // overflow workspace that could not fit in the monitor's group visible
-      // as well; topology changes must never strand an existing workspace.
-      if (localId >= 1 && (!multi || localId <= GROUP_SIZE || workspace.monitor?.name === connector)) {
-        localIds.add(localId);
-      }
-    }
-    for (let id = 1; id <= localCount; id++) localIds.add(id);
-
-    return [...localIds]
+    return [...ids]
       .sort((a, b) => a - b)
-      .map((localId) => {
-        const globalId = base + localId;
-        return {
-          id: globalId,
-          label: `${localId}`,
-          occupied: windows.some((client) => client.workspace?.id === globalId),
-        };
-      });
+      .map((id) => ({
+        id,
+        name: own.find((workspace) => workspace.id === id)?.name || `${id}`,
+        occupied: windows.some((client) => client.workspace?.id === id),
+      }));
   });
 
   return (
@@ -169,15 +102,14 @@ function Workspaces({ connector }: { connector: string }) {
                 "workspace",
                 slot.occupied ? "occupied" : "empty",
                 id === slot.id ? "active" : "",
-                id === slot.id && !isFocusedMonitor() ? "active-unfocused" : "",
               ].filter(Boolean),
             )}
-            tooltipText={`Workspace ${slot.label}`}
+            tooltipText={`Workspace ${slot.name}`}
             onClicked={() =>
               hyprland.dispatch(`hl.dsp.focus({ workspace = ${slot.id} })`, "")
             }
           >
-            <label label={slot.label} />
+            <label label={slot.name} />
           </button>
         )}
       </For>
