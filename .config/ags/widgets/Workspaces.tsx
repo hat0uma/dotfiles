@@ -1,7 +1,8 @@
 import { onCleanup } from "ags";
 import AstalHyprland from "gi://AstalHyprland";
 import Gtk from "gi://Gtk?version=4.0";
-import { HEIGHT, PAD, layoutPanes, minimapWidth, tooltip } from "../workspaces/layout";
+import { HEIGHT, PAD, layoutPanes, minimapWidth, paneIconSize, tooltip } from "../workspaces/layout";
+import { iconFor } from "../ws-icons/src/icon";
 import { subscribe } from "../workspaces/store";
 
 const hyprland = AstalHyprland.get_default();
@@ -61,7 +62,7 @@ export default function Workspaces({ connector }: { connector: string }) {
         slot.id = id;
         slot.button.set_sensitive(true);
       }
-      const panes = layoutPanes(clients, monitor, id);
+      const panes = layoutPanes(clients, monitor, id, iconFor);
       const active = monitor.activeWorkspace?.id === id;
       const focused = hyprland.focusedMonitor?.name === connector;
       const empty = !panes.length;
@@ -91,7 +92,7 @@ export default function Workspaces({ connector }: { connector: string }) {
           const widget = new Gtk.Box({ cssClasses: ["pane"], overflow: Gtk.Overflow.HIDDEN });
           widget.set_size_request(pane.w, pane.h);
           if (pane.icon) widget.append(new Gtk.Image({
-            iconName: pane.icon, pixelSize: 12, hexpand: true, vexpand: true,
+            iconName: pane.icon, pixelSize: paneIconSize(pane.w, pane.h), hexpand: true, vexpand: true,
             halign: Gtk.Align.CENTER, valign: Gtk.Align.CENTER,
           }));
           slot.fixed.put(widget, pane.x, pane.y);

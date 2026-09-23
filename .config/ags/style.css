@@ -151,10 +151,6 @@ window {
   color: @mm_accent_deep;
 }
 
-.capsule .minimap image {
-  -gtk-icon-size: 12px;
-}
-
 .active-window {
   padding: 0 10px;
 }

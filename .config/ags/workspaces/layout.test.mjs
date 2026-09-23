@@ -1,6 +1,10 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { layoutPanes, minimapWidth, tooltip } from './layout.ts';
+import { layoutPanes as resolveLayoutPanes, minimapWidth, paneIconSize, tooltip } from './layout.ts';
+import { readFileSync } from 'node:fs';
+import { createResolver } from '../ws-icons/src/icon-core.ts';
+const { iconFor } = createResolver(JSON.parse(readFileSync(new URL('../ws-icons/dist/resolver.json', import.meta.url), 'utf8')));
+const layoutPanes = (clients, monitor, wsId) => resolveLayoutPanes(clients, monitor, wsId, iconFor);
 const mon = { width: 1920, height: 1080, scale: 1, transform: 0, x: 0, y: 0, reservedLeft: 0, reservedTop: 0, reservedRight: 0, reservedBottom: 0 };
 const client = (values = {}) => ({ address: '1', workspace: { id: 1 }, mapped: true, hidden: false, x: 0, y: 0, width: 1920, height: 1080, floating: false, fullscreen: 0, focusHistoryId: 0, class: 'kitty', title: '', ...values });
 test('monitor aspect is independent of reserved space, scale and rotation are applied', () => {
@@ -21,20 +25,23 @@ test('two, three and four tiles have 2px shared gaps', () => {
       const upper = panes.find(p => p.x > 0 && p.y === 0);
       const lower = panes.find(p => p.x > 0 && p.y > 0);
       assert.equal(lower.y - (upper.y + upper.h), 2);
-      assert.equal(lower.icon, null);
+      for (const pane of [upper, lower]) {
+        assert.equal(pane.icon, 'fa-solid-terminal-symbolic');
+        assert.equal(paneIconSize(pane.w, pane.h), 10);
+      }
     }
   }
 });
 test('logical origin includes reserved area on a negative-origin fractional-scale monitor', () => {
   const m = { ...mon, x: -1536, y: -20, scale: 1.25, reservedTop: 40 };
-  assert.deepEqual(layoutPanes([client({ x: -1536, y: 20, width: 1536, height: 824 })], m, 1), [{ x: 0, y: 0, w: 45, h: 22, icon: 'ws-terminal-symbolic' }]);
+  assert.deepEqual(layoutPanes([client({ x: -1536, y: 20, width: 1536, height: 824 })], m, 1), [{ x: 0, y: 0, w: 45, h: 22, icon: 'fa-solid-terminal-symbolic' }]);
 });
 test('fullscreen, floating-only, hidden and workspace filtering', () => {
   const tiled = client();
   const floating = client({ address: '2', floating: true, class: 'firefox', focusHistoryId: 1 });
-  assert.equal(layoutPanes([tiled, floating], mon, 1)[0].icon, 'ws-terminal-symbolic');
-  assert.equal(layoutPanes([tiled, { ...floating, fullscreen: 1 }], mon, 1)[0].icon, 'ws-browser-symbolic');
-  assert.equal(layoutPanes([floating, client({ floating: true })], mon, 1)[0].icon, 'ws-terminal-symbolic');
+  assert.equal(layoutPanes([tiled, floating], mon, 1)[0].icon, 'fa-solid-terminal-symbolic');
+  assert.equal(layoutPanes([tiled, { ...floating, fullscreen: 1 }], mon, 1)[0].icon, 'fa-brands-firefox-symbolic');
+  assert.equal(layoutPanes([floating, client({ floating: true })], mon, 1)[0].icon, 'fa-solid-terminal-symbolic');
   assert.deepEqual(layoutPanes([client({ hidden: true }), client({ workspace: { id: -1 } })], mon, 1), []);
 });
 test('small clipped tiles remain in bounds and recent client is drawn last', () => {
@@ -44,8 +51,26 @@ test('small clipped tiles remain in bounds and recent client is drawn last', () 
 });
 test('glyph thresholds and terminal title mapping', () => {
   const panes = layoutPanes([client({ title: 'nvim file.ts' })], mon, 1);
-  assert.equal(panes[0].icon, 'ws-code-symbolic');
+  assert.equal(panes[0].icon, 'fa-brands-vim-symbolic');
+  assert.equal(paneIconSize(panes[0].w, panes[0].h), 14);
+  assert.equal(paneIconSize(20, 9), 9);
+  assert.equal(paneIconSize(20, 7), 0);
+  assert.equal(paneIconSize(9, 20), 0);
   assert.equal(layoutPanes([client()], { ...mon, transform: 1 }, 1)[0].icon, null);
+});
+test('two-row desktop with bar and window gaps still displays icons in 8–9px panes', () => {
+  // Astal reports reservedTop=0 here, while the windows start below the 51px bar.
+  const monitor = { ...mon, width: 3840, height: 2160, scale: 2, x: 1920 };
+  const clients = [[2886, 57, 948, 503], [2886, 572, 948, 502], [1926, 57, 948, 1017]]
+    .map(([x, y, width, height], i) => client({ address: String(i), x, y, width, height }));
+  const panes = layoutPanes(clients, monitor, 1);
+  const rows = panes.filter(p => p.x > 0);
+  assert.equal(rows.length, 2);
+  for (const pane of rows) {
+    assert.ok(pane.h >= 8 && pane.h <= 9);
+    assert.equal(pane.icon, 'fa-solid-terminal-symbolic');
+    assert.equal(paneIconSize(pane.w, pane.h), pane.h);
+  }
 });
 test('tooltip includes hidden and floating clients, uses recent order and Unicode truncation', () => {
   const text = tooltip([client({ hidden: true, title: '😀'.repeat(41) }), client({ floating: true, focusHistoryId: 1, class: 'firefox', title: 'page' })], 1, 3);

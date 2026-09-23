@@ -16,6 +16,8 @@ import ScreenshotMenu, {
   toggleScreenshotMenu,
 } from "./widgets/ScreenshotMenu";
 
+import { initIcons } from "./ws-icons/src/icon";
+
 const hyprland = AstalHyprland.get_default();
 
 // Claim org.freedesktop.Notifications before anything opens a popover that
@@ -24,7 +26,7 @@ AstalNotifd.get_default();
 
 app.start({
   css: style,
-  icons: `${SRC}/icons`,
+  icons: `${SRC}/ws-icons/dist/icons`,
   gtkTheme: "Adwaita",
 
   requestHandler(argv, response) {
@@ -63,6 +65,7 @@ app.start({
   },
 
   main() {
+    initIcons(`${SRC}/ws-icons/dist`);
     const monitors = createBinding(app, "monitors");
 
     // Mounted once, independent of the per-monitor bar/power-menu tree below.

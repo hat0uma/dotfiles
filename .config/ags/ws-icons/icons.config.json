@@ -1,0 +1,79 @@
+// ワークスペース・ミニマップのアイコン設定
+// 行頭が // の行はコメントとして無視される
+//
+// アイコンは "名前" (スタイルは prefer に従う) か "スタイル:名前" (solid / regular / brands)
+// 正規表現はすべて大文字小文字を区別しない。{NAME} は vars の値に置き換わる
+{
+  // Font Awesome の取得元。更新するときは `python tools/icons.py pin <タグ>` で書き換える
+  "source": {
+    "ref": "7.3.1",
+    "sha256": "8b825be9cbe4a782a18343d912d24f7332cc2e297e62d0cad2203f8f4dd6bbca"
+  },
+
+  // ブランド以外で優先するスタイル。無ければ solid → regular の順で探す
+  "prefer": "solid",
+
+  // グリフ周りの余白 (一辺に対する比率)
+  "pad": 0.06,
+
+  // どれにも当たらないときのアイコン
+  "fallback": "window-maximize",
+
+  "vars": {
+    "TERMINALS": "(kitty|alacritty|foot|footclient|ghostty|com\\.mitchellh\\.ghostty|org\\.wezfurlong\\.wezterm|wezterm)",
+    "BROWSERS": "(firefox|firefox-developer-edition|zen|zen-browser|librewolf|floorp|chromium|google-chrome|brave-browser|vivaldi-stable)"
+  },
+
+  // title の区切りごとにブランドを探す class
+  "titleBrands": "^{BROWSERS}$",
+
+  // class やサイト名から、ブランド名を直接引けないもの (左は小文字の class / サイト名)
+  "brandAliases": {
+    "google-chrome": "chrome",
+    "vesktop": "discord",
+    "webcord": "discord",
+    "chatgpt": "openai",
+    "chatgpt-desktop": "openai",
+    "claude-desktop": "claude"
+  },
+
+  // 書いた条件をすべて満たせば icon を使う
+  // class: class / title: title 全体 / site: title を " - " " — " " | " " · " " / " で区切った各部分のどれか
+  // title か site を持つルールは、class だけのルールより先に評価される
+  "rules": [
+    { "class": "^{TERMINALS}$", "title": "^n?vim?\\b", "icon": "brands:vim" },
+    { "class": "^{TERMINALS}$", "title": "^(btop|htop|top)\\b", "icon": "chart-line" },
+    { "class": "^{TERMINALS}$", "title": "^(yazi|lf|ranger)\\b", "icon": "folder" },
+    { "class": "^{TERMINALS}$", "title": "^lazygit\\b", "icon": "brands:git-alt" },
+    { "class": "^{TERMINALS}$", "title": "^(yay|paru|pacman)\\b", "icon": "brands:arch-linux" },
+
+    { "class": "^{BROWSERS}$", "site": "^X$", "icon": "brands:x-twitter" },
+    { "class": "^{BROWSERS}$", "site": "^Gmail$", "icon": "envelope" },
+    { "class": "^{BROWSERS}$", "site": "^Google (Calendar|カレンダー)$", "icon": "calendar" },
+
+    { "class": "^{TERMINALS}$", "icon": "terminal" },
+    { "class": "^(zen|zen-browser|librewolf|floorp|vivaldi-stable|chromium)$", "icon": "globe" },
+    { "class": "^(code|code-oss|vscodium|cursor|zed|dev\\.zed\\.zed|neovide|jetbrains-.*)$", "icon": "code" },
+    { "class": "^(org\\.gnome\\.nautilus|thunar|pcmanfm|pcmanfm-qt|org\\.kde\\.dolphin|nemo)$", "icon": "folder" },
+    { "class": "^(feishin|rhythmbox|strawberry|io\\.bassi\\.amberol)$", "icon": "music" },
+    { "class": "^(mpv|vlc|io\\.github\\.celluloid_player\\.celluloid|org\\.gnome\\.showtime|org\\.gnome\\.totem)$", "icon": "circle-play" },
+    { "class": "^(imv|org\\.gnome\\.loupe|eog|feh|swayimg|qimgv)$", "icon": "image" },
+    { "class": "^(logseq|joplin)$", "icon": "note-sticky" },
+    { "class": "^(thunderbird|betterbird|geary|org\\.gnome\\.evolution)$", "icon": "envelope" },
+    { "class": "^(org\\.pulseaudio\\.pavucontrol|pavucontrol)$", "icon": "volume-high" },
+    { "class": "^blueman-manager$", "icon": "brands:bluetooth-b" },
+    { "class": "^nm-connection-editor$", "icon": "wifi" },
+    { "class": "^(nwg-look|gnome-control-center)$", "icon": "sliders" },
+    { "class": "^(lutris|heroic|com\\.heroicgameslauncher\\.hgl|org\\.prismlauncher\\.prismlauncher)$", "icon": "gamepad" },
+    { "class": "^(org\\.pwmt\\.zathura|zathura|org\\.kde\\.okular|okular|org\\.gnome\\.papers|evince)$", "icon": "file-pdf" },
+    { "class": "^libreoffice-writer$", "icon": "file-word" },
+    { "class": "^libreoffice-calc$", "icon": "file-excel" },
+    { "class": "^libreoffice-impress$", "icon": "file-powerpoint" },
+    { "class": "^(gimp|gimp-.*|krita|pinta)$", "icon": "paintbrush" },
+    { "class": "^(org\\.inkscape\\.inkscape|inkscape)$", "icon": "pen-nib" },
+    { "class": "^(org\\.keepassxc\\.keepassxc|keepassxc|bitwarden)$", "icon": "key" },
+    { "class": "^(io\\.missioncenter\\.missioncenter|gnome-system-monitor|net\\.nokyan\\.resources)$", "icon": "chart-line" },
+    { "class": "^(org\\.qbittorrent\\.qbittorrent|qbittorrent|transmission-gtk|de\\.haeckerfelix\\.fragments)$", "icon": "download" },
+    { "class": "^(com\\.obsproject\\.studio|obs)$", "icon": "circle-dot" }
+  ]
+}

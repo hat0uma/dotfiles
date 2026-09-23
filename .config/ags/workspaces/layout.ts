@@ -1,4 +1,4 @@
-import { appIcon } from "./app-icon.ts";
+import type { WindowInfo } from "../ws-icons/src/icon-core.ts";
 
 export const HEIGHT = 30;
 export const PAD = 4;
@@ -7,13 +7,17 @@ export interface Monitor {
   x: number; y: number;
   reservedLeft: number; reservedTop: number; reservedRight: number; reservedBottom: number;
 }
-export interface Client {
+export interface Client extends WindowInfo {
   address: string; workspace: { id: number }; mapped: boolean; hidden: boolean;
   x: number; y: number; width: number; height: number;
   floating: boolean; fullscreen: number; focusHistoryId: number;
-  class: string; title: string;
 }
 export interface Pane { x: number; y: number; w: number; h: number; icon: string | null }
+
+export function paneIconSize(w: number, h: number) {
+  const size = Math.min(14, w - 2, h);
+  return size >= 8 ? size : 0;
+}
 
 export function logicalSize(mon: Monitor) {
   const rotated = mon.transform % 2 === 1;
@@ -29,7 +33,7 @@ export function minimapWidth(mon: Monitor) {
 const recent = (a: Client, b: Client) =>
   a.focusHistoryId - b.focusHistoryId || a.address.localeCompare(b.address);
 
-export function layoutPanes(clients: Client[], mon: Monitor, wsId: number): Pane[] {
+export function layoutPanes(clients: Client[], mon: Monitor, wsId: number, iconFor: (client: WindowInfo) => string): Pane[] {
   const size = logicalSize(mon);
   const uw = size.width - mon.reservedLeft - mon.reservedRight;
   const uh = size.height - mon.reservedTop - mon.reservedBottom;
@@ -57,7 +61,7 @@ export function layoutPanes(clients: Client[], mon: Monitor, wsId: number): Pane
     const h = Math.min(ih, Math.max(3, y1 - y0));
     return {
       x: Math.max(0, Math.min(x0, iw - w)), y: Math.max(0, Math.min(y0, ih - h)), w, h,
-      icon: w >= 14 && h >= 12 ? appIcon(c.class, c.title).icon : null,
+      icon: paneIconSize(w, h) ? iconFor(c) : null,
     };
   });
 }
