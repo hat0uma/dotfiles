@@ -115,6 +115,11 @@ function Workspaces({ connector }: { connector: string }) {
       "focusedWorkspace",
     )((workspace) => workspace?.id ?? -1);
 
+  const isFocusedMonitor = createBinding(
+    hyprland,
+    "focusedMonitor",
+  )((focused) => focused?.name === connector);
+
   const monitors = createBinding(hyprland, "monitors");
   const workspaces = createBinding(hyprland, "workspaces");
   const clients = createBinding(hyprland, "clients");
@@ -164,6 +169,7 @@ function Workspaces({ connector }: { connector: string }) {
                 "workspace",
                 slot.occupied ? "occupied" : "empty",
                 id === slot.id ? "active" : "",
+                id === slot.id && !isFocusedMonitor() ? "active-unfocused" : "",
               ].filter(Boolean),
             )}
             tooltipText={`Workspace ${slot.label}`}

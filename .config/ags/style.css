@@ -127,6 +127,14 @@ window {
   font-weight: 700;
 }
 
+/* Active workspace on a monitor that doesn't currently have input focus. */
+.capsule .workspace.active.active-unfocused {
+  background: transparent;
+  box-shadow: inset 0px 0px 0px 2px @accent_active;
+  color: @accent_active;
+  font-weight: 700;
+}
+
 .active-window {
   padding: 0 10px;
 }
