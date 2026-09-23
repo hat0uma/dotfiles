@@ -4,6 +4,7 @@ import Gtk from "gi://Gtk?version=4.0";
 import { HEIGHT, PAD, layoutPanes, minimapWidth, paneIconSize, tooltip } from "../workspaces/layout";
 import { iconFor } from "../ws-icons/src/icon";
 import { subscribe } from "../workspaces/store";
+import { subscribeNumbers } from "../workspaces/numbers";
 
 const hyprland = AstalHyprland.get_default();
 const COUNT = 5;
@@ -11,17 +12,24 @@ const COUNT = 5;
 export default function Workspaces({ connector }: { connector: string }) {
   const box = new Gtk.Box({ spacing: 8, cssClasses: ["workspaces"] });
   const slots = Array.from({ length: COUNT }, (_, index) => {
-    const fixed = new Gtk.Fixed({ overflow: Gtk.Overflow.HIDDEN, hexpand: false, vexpand: false });
+    const fixed = new Gtk.Fixed({ cssClasses: ["minimap-content"], overflow: Gtk.Overflow.HIDDEN, hexpand: false, vexpand: false });
     const frame = new Gtk.Box({
       cssClasses: ["minimap", "mm-empty"], valign: Gtk.Align.CENTER, halign: Gtk.Align.CENTER,
       hexpand: false, vexpand: false,
       overflow: Gtk.Overflow.HIDDEN,
     });
     frame.append(fixed);
-    const button = new Gtk.Button({
-      cssClasses: ["ws-slot"], heightRequest: HEIGHT, child: frame, hexpand: false, vexpand: false,
+    const number = new Gtk.Label({
+      cssClasses: ["ws-number"], visible: false, canTarget: false,
+      halign: Gtk.Align.CENTER, valign: Gtk.Align.CENTER,
     });
-    const slot = { button, frame, fixed, id: 0, panesKey: "", stateKey: "", tooltip: "", width: 0 };
+    const overlay = new Gtk.Overlay({ child: frame });
+    overlay.add_overlay(number);
+    overlay.set_measure_overlay(number, false);
+    const button = new Gtk.Button({
+      cssClasses: ["ws-slot"], heightRequest: HEIGHT, child: overlay, hexpand: false, vexpand: false,
+    });
+    const slot = { button, frame, fixed, number, id: 0, panesKey: "", stateKey: "", tooltip: "", width: 0 };
     button.connect("clicked", () => {
       if (slot.id > 0) hyprland.dispatch(`hl.dsp.focus({ workspace = ${slot.id} })`, "");
     });
@@ -30,6 +38,12 @@ export default function Workspaces({ connector }: { connector: string }) {
     box.append(button);
     return slot;
   });
+
+  onCleanup(subscribeNumbers(visible => {
+    if (visible) box.add_css_class("show-numbers");
+    else box.remove_css_class("show-numbers");
+    slots.forEach(slot => slot.number.set_visible(visible));
+  }));
 
   const scroll = new Gtk.EventControllerScroll({
     flags: Gtk.EventControllerScrollFlags.VERTICAL | Gtk.EventControllerScrollFlags.DISCRETE,
@@ -60,6 +74,7 @@ export default function Workspaces({ connector }: { connector: string }) {
       const id = base + index + 1;
       if (slot.id !== id) {
         slot.id = id;
+        slot.number.set_label(String(id));
         slot.button.set_sensitive(true);
       }
       const panes = layoutPanes(clients, monitor, id, iconFor);

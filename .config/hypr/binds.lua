@@ -1,5 +1,23 @@
 local mod = "SUPER"
 
+-- Observe both Super keys without consuming their normal shortcuts.
+for _, key in ipairs({ { "Super_L", "left" }, { "Super_R", "right" } }) do
+  for _, action in ipairs({ "down", "up" }) do
+    hl.bind(key[1], function()
+      -- Compositor CPU time is monotonic across config reloads. Include it so
+      -- asynchronously launched requests cannot restore stale key state.
+      hl.exec_cmd(string.format("ags request workspace-numbers %s %s %.9f", key[2], action, os.clock()))
+    end, {
+      release = action == "up",
+      ignore_mods = true,
+      non_consuming = true,
+      transparent = true,
+      submap_universal = true,
+      locked = true,
+    })
+  end
+end
+
 local function toggle_file_manager()
   local special = hl.get_active_special_workspace()
   -- if special.config_name

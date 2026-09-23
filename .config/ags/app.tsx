@@ -17,6 +17,7 @@ import ScreenshotMenu, {
 } from "./widgets/ScreenshotMenu";
 
 import { initIcons } from "./ws-icons/src/icon";
+import { updateNumbers } from "./workspaces/numbers";
 
 const hyprland = AstalHyprland.get_default();
 
@@ -31,6 +32,9 @@ app.start({
 
   requestHandler(argv, response) {
     switch (argv[0]) {
+      case "workspace-numbers":
+        response(updateNumbers(argv.slice(1)) ? "ok" : "usage: workspace-numbers <left|right> <down|up> [order]");
+        break;
       case "toggle-power":
         togglePowerMenu(hyprland.focusedMonitor?.name);
         response("ok");

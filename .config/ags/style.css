@@ -151,6 +151,19 @@ window {
   color: @mm_accent_deep;
 }
 
+.workspaces.show-numbers .minimap-content {
+  filter: blur(1.5px);
+}
+
+.ws-number {
+  padding: 0 3px;
+  border-radius: 4px;
+  background: @text;
+  color: @base;
+  font-size: 12px;
+  font-weight: 700;
+}
+
 .active-window {
   padding: 0 10px;
 }
