@@ -60,6 +60,7 @@ AddPackage --foreign 1password-cli # 1Password command line tool
 AddPackage --foreign google-chrome
 AddPackage --foreign visual-studio-code-insiders-bin
 AddPackage --foreign webcord-bin
+AddLocalPackage dotfiles-chatgpt-desktop
 
 # Appearance
 AddPackage --foreign catppuccin-cursors-frappe

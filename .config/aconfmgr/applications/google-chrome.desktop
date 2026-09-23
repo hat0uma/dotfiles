@@ -106,7 +106,7 @@ Comment[zh_CN]=访问互联网
 Comment[zh_HK]=連線到網際網路
 Comment[zh_TW]=連線到網際網路
 StartupWMClass=Google-chrome
-Exec=/usr/bin/google-chrome-stable %U
+Exec=/usr/bin/env LIBVA_DRIVER_NAME=iHD /usr/bin/google-chrome-stable %U
 StartupNotify=true
 StartupWMClass=google-chrome
 Terminal=false
@@ -223,4 +223,4 @@ Name[vi]=Cửa sổ ẩn danh mới
 Name[zh_CN]=新建隐身窗口
 Name[zh_TW]=新增無痕式視窗
 StartupWMClass=Google-chrome
-Exec=/usr/bin/google-chrome-stable --incognito
+Exec=/usr/bin/env LIBVA_DRIVER_NAME=iHD /usr/bin/google-chrome-stable --incognito

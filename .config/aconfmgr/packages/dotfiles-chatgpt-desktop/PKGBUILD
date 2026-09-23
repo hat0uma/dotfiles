@@ -1,0 +1,65 @@
+pkgname=dotfiles-chatgpt-desktop
+pkgver=26.917.61114
+pkgrel=1
+pkgdesc="ChatGPT desktop application for Linux (repackaged from the official binary)"
+arch=('x86_64')
+url='https://chatgpt.com/download'
+license=('LicenseRef-custom')
+options=('!strip' '!debug')
+depends=(
+    'alsa-lib'
+    'at-spi2-core'
+    'cairo'
+    'dbus'
+    'expat'
+    'gdk-pixbuf2'
+    'glib2'
+    'glibc'
+    'gtk3'
+    'libcanberra'
+    'libcups'
+    'libdrm'
+    'libgcc'
+    'libglvnd'
+    'libnotify'
+    'libpulse'
+    'libstdc++'
+    'libusb'
+    'libx11'
+    'libxcb'
+    'libxcomposite'
+    'libxdamage'
+    'libxext'
+    'libxfixes'
+    'libxkbcommon'
+    'libxrandr'
+    'mesa'
+    'nspr'
+    'nss'
+    'openssl'
+    'pango'
+    'systemd-libs'
+    'sh'
+    'tpm2-tss'
+    'vulkan-driver'
+    'xdg-utils'
+)
+
+source=(
+    'codex-launcher'
+    "chatgpt_${pkgver}_amd64.deb::https://persistent.oaistatic.com/codex-app-prod/linux/deb/pool/main/c/chatgpt/chatgpt_${pkgver}_amd64.deb"
+)
+noextract=("chatgpt_${pkgver}_amd64.deb")
+sha256sums=('6eb5bc91e9e6ce2c1ba378709366be0b8e65cfbbac58e51f50bf6b36d9c61f4f'
+            '7bea2eff4a46abe0f28e39ec65eb6e6e51c97bbcdad89d25abe5bec4318955c9')
+
+package() {
+    bsdtar -xOf "$srcdir/chatgpt_${pkgver}_amd64.deb" data.tar.xz |
+        bsdtar --no-same-owner -xJf - -C "$pkgdir"
+
+    # usr/bin/chatgpt (from the .deb) is a symlink to this launcher; it runs
+    # ChatGPT with --ozone-platform=wayland when a Wayland session is detected.
+    install -Dm755 "$srcdir/codex-launcher" "$pkgdir/usr/lib/chatgpt/codex-launcher"
+
+    rm -rf "$pkgdir/usr/share/doc" "$pkgdir/usr/share/lintian"
+}

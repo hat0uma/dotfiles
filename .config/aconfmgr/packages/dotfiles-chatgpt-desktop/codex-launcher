@@ -1,0 +1,9 @@
+#!/bin/sh
+
+launcher_dir="$(dirname "$(readlink -f "$0")")"
+
+if [ -n "$WAYLAND_DISPLAY" ]; then
+    set -- --ozone-platform=wayland "$@"
+fi
+
+exec "${launcher_dir}/ChatGPT" "$@"
