@@ -12,6 +12,7 @@ import Gdk from "gi://Gdk?version=4.0";
 import GLib from "gi://GLib";
 import Gtk from "gi://Gtk?version=4.0";
 import Ime from "./Ime";
+import Workspaces from "./Workspaces";
 import NotificationCenter from "./Notifications";
 import QuickSettings from "./QuickSettings";
 import { toggleScreenshotMenu } from "./ScreenshotMenu";
@@ -54,81 +55,6 @@ function appIcon(client: AstalHyprland.Client | null | undefined) {
     }) || classes.flatMap((name) => apps.fuzzy_query(name))[0];
 
   return application?.iconName || "application-x-executable-symbolic";
-}
-
-// Workspaces 1..N are always shown, even when empty; any occupied
-// workspace beyond that is appended.
-const PERSISTENT_WORKSPACES = 5;
-
-function Workspaces({ connector }: { connector: string }) {
-  const monitor = hyprland.get_monitor_by_name(connector);
-  const activeId = monitor
-    ? createBinding(
-      monitor,
-      "activeWorkspace",
-    )((workspace) => workspace?.id ?? -1)
-    : createBinding(
-      hyprland,
-      "focusedWorkspace",
-    )((workspace) => workspace?.id ?? -1);
-
-  const monitors = createBinding(hyprland, "monitors");
-  const workspaces = createBinding(hyprland, "workspaces");
-  const clients = createBinding(hyprland, "clients");
-
-  const slots = createComputed(() => {
-    const own = workspaces().filter(
-      (workspace) => workspace.id > 0 && workspace.monitor?.name === connector,
-    );
-    const ownIds = own.map((workspace) => workspace.id);
-
-    // Multi-monitor setups pin each monitor to a fixed-size block of
-    // workspace ids (see .config/hypr/workspaces.lua, the only place that
-    // knows the monitor-to-block assignment). Derive this monitor's block
-    // from the ids it's already been pinned to instead of duplicating that
-    // assignment here - with no ids yet (or a single monitor), fall back to
-    // the flat 1..PERSISTENT_WORKSPACES range.
-    const multi = monitors().length > 1;
-    const base = multi && ownIds.length > 0
-      ? Math.floor((Math.min(...ownIds) - 1) / PERSISTENT_WORKSPACES) * PERSISTENT_WORKSPACES
-      : 0;
-
-    const windows = clients();
-    const ids = new Set(ownIds);
-    for (let i = 1; i <= PERSISTENT_WORKSPACES; i++) ids.add(base + i);
-
-    return [...ids]
-      .sort((a, b) => a - b)
-      .map((id) => ({
-        id,
-        name: own.find((workspace) => workspace.id === id)?.name || `${id}`,
-        occupied: windows.some((client) => client.workspace?.id === id),
-      }));
-  });
-
-  return (
-    <box cssClasses={["workspaces"]}>
-      <For each={slots}>
-        {(slot) => (
-          <button
-            cssClasses={activeId((id) =>
-              [
-                "workspace",
-                slot.occupied ? "occupied" : "empty",
-                id === slot.id ? "active" : "",
-              ].filter(Boolean),
-            )}
-            tooltipText={`Workspace ${slot.name}`}
-            onClicked={() =>
-              hyprland.dispatch(`hl.dsp.focus({ workspace = ${slot.id} })`, "")
-            }
-          >
-            <label label={slot.name} />
-          </button>
-        )}
-      </For>
-    </box>
-  );
 }
 
 function ActiveWindow({ connector }: { connector: string }) {

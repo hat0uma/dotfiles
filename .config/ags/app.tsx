@@ -24,6 +24,7 @@ AstalNotifd.get_default();
 
 app.start({
   css: style,
+  icons: `${SRC}/icons`,
   gtkTheme: "Adwaita",
 
   requestHandler(argv, response) {
