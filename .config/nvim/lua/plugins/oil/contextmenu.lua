@@ -41,7 +41,7 @@ local function run_in_terminal(dir, cmd)
     close_on_exit = false,
     dir = dir,
     direction = "float",
-    cmd = table.concat(cmd, " "),
+    cmd = vim.iter(cmd):map(vim.fn.shellescape):join(" "),
     on_exit = function(t, job, exit_code, _name)
       if exit_code == 0 then
         t:close()

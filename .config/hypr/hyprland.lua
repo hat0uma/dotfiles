@@ -16,6 +16,7 @@ hl.config({
     kb_options = "ctrl:nocaps",
     kb_rules = "",
     follow_mouse = 2,
+    float_switch_override_focus = 0,
     sensitivity = 0,
     touchpad = {
       natural_scroll = true,
