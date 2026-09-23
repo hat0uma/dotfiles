@@ -72,6 +72,7 @@ function Workspaces({ connector }: { connector: string }) {
       "focusedWorkspace",
     )((workspace) => workspace?.id ?? -1);
 
+  const monitors = createBinding(hyprland, "monitors");
   const workspaces = createBinding(hyprland, "workspaces");
   const clients = createBinding(hyprland, "clients");
 
@@ -79,9 +80,22 @@ function Workspaces({ connector }: { connector: string }) {
     const own = workspaces().filter(
       (workspace) => workspace.id > 0 && workspace.monitor?.name === connector,
     );
+    const ownIds = own.map((workspace) => workspace.id);
+
+    // Multi-monitor setups pin each monitor to a fixed-size block of
+    // workspace ids (see .config/hypr/workspaces.lua, the only place that
+    // knows the monitor-to-block assignment). Derive this monitor's block
+    // from the ids it's already been pinned to instead of duplicating that
+    // assignment here - with no ids yet (or a single monitor), fall back to
+    // the flat 1..PERSISTENT_WORKSPACES range.
+    const multi = monitors().length > 1;
+    const base = multi && ownIds.length > 0
+      ? Math.floor((Math.min(...ownIds) - 1) / PERSISTENT_WORKSPACES) * PERSISTENT_WORKSPACES
+      : 0;
+
     const windows = clients();
-    const ids = new Set(own.map((workspace) => workspace.id));
-    for (let id = 1; id <= PERSISTENT_WORKSPACES; id++) ids.add(id);
+    const ids = new Set(ownIds);
+    for (let i = 1; i <= PERSISTENT_WORKSPACES; i++) ids.add(base + i);
 
     return [...ids]
       .sort((a, b) => a - b)
