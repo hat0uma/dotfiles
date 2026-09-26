@@ -1,0 +1,142 @@
+/* --- toast popups --- */
+
+.toast-stack {
+  min-width: 316px;
+  padding: 5px 6px 0 0;
+}
+
+.toast {
+  min-width: 302px;
+  padding: 0;
+  border: 2px solid @border_strong;
+  border-radius: 8px;
+  background: @base;
+  box-shadow: 4px 4px 0 @shadow_solid;
+}
+
+.toast-content {
+  padding: 9px 11px 10px;
+}
+
+.toast-head {
+  margin-bottom: 2px;
+  color: @muted;
+  font-size: 11px;
+}
+
+.toast-icon {
+  min-width: 22px;
+  min-height: 22px;
+  border: 2px solid @border_strong;
+  border-radius: 6px;
+  background: @foam;
+  color: @base;
+}
+
+.toast-icon image {
+  color: @base;
+}
+
+.toast .note-app,
+.toast-time {
+  color: @subtle;
+  font-size: 11px;
+  font-weight: 400;
+}
+
+.toast-close {
+  min-width: 16px;
+  min-height: 16px;
+  color: @muted;
+  font-size: 12px;
+}
+
+.toast-close:hover {
+  color: @text;
+}
+
+.toast .note-sum {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.toast .note-body {
+  margin-top: 1px;
+  color: @subtle;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.toast.urgent {
+  background: @love;
+  color: @base;
+}
+
+.toast.urgent .note-app,
+.toast.urgent .toast-time,
+.toast.urgent .toast-close,
+.toast.urgent .note-body {
+  color: @base;
+}
+
+.toast .note-actions {
+  margin-top: 7px;
+}
+
+.toast .note-act {
+  padding: 3px 10px;
+  border: 2px solid @border_strong;
+  border-radius: 5px;
+  background: @surface;
+  box-shadow: 2px 2px 0 @shadow_solid;
+  color: @text;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.toast .note-act:first-child {
+  background: @gold;
+}
+
+.toast .note-act:hover {
+  background: @highlight_med;
+}
+
+.toast .note-act:first-child:hover {
+  background: shade(@gold, 0.94);
+}
+
+.toast .note-act:active {
+  box-shadow: 1px 1px 0 @shadow_solid;
+  transform: translate(1px, 1px);
+}
+
+.toast-progress {
+  min-height: 4px;
+}
+
+.toast-progress trough {
+  min-height: 4px;
+  border: none;
+  border-radius: 0 0 5px 5px;
+  background: @highlight_med;
+}
+
+.toast-progress progress {
+  min-height: 4px;
+  border: none;
+  border-radius: 0 0 0 5px;
+  background: @pine;
+}
+
+.toast-count {
+  min-width: 22px;
+  min-height: 22px;
+  border: 2px solid @border_strong;
+  border-radius: 999px;
+  background: @love;
+  color: @base;
+  font-size: 12px;
+  font-weight: 500;
+  transform: translate(5px, -5px);
+}

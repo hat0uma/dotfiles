@@ -1,0 +1,54 @@
+/* --- screenshot menu --- */
+
+.screenshot-bar {
+  margin-top: 12px;
+}
+
+.screenshot-card {
+  padding: 6px;
+  border: 1px solid @border_default;
+  border-radius: 14px;
+  background: @bg_elevated;
+  box-shadow: 0 8px 28px @shadow_soft;
+}
+
+.screenshot-button {
+  min-width: 88px;
+  padding: 9px 8px 7px;
+  border-radius: 10px;
+  background: transparent;
+  color: @fg_primary;
+}
+
+.screenshot-button:hover {
+  background: @bg_hover;
+}
+
+.screenshot-button image {
+  color: @accent_focus;
+}
+
+.screenshot-label {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.screenshot-shortcut {
+  color: @fg_muted;
+  font-size: 10px;
+}
+
+.screenshot-close {
+  min-width: 28px;
+  min-height: 28px;
+  margin: 3px;
+  border-radius: 999px;
+  background: transparent;
+  color: @fg_muted;
+}
+
+.screenshot-close:hover {
+  background: @bg_hover;
+  color: @state_danger;
+}
+

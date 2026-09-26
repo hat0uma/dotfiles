@@ -1,0 +1,10 @@
+* {
+  font-family: "PlemolJP", "Noto Sans CJK JP", sans-serif;
+  font-size: 14px;
+}
+
+window {
+  background: transparent;
+  color: @fg_primary;
+}
+

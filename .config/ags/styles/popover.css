@@ -1,0 +1,21 @@
+popover>contents {
+  margin: 8px;
+  border: 1px solid @border_default;
+  border-radius: 14px;
+  background: @bg_base;
+  color: @fg_primary;
+  box-shadow: 0 8px 28px @shadow_soft;
+}
+
+popover button,
+.toast-stack button {
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+  background-image: none;
+  box-shadow: none;
+  text-shadow: none;
+}
+

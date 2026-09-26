@@ -1,0 +1,146 @@
+.quick-settings {
+  min-width: 330px;
+  padding: 18px;
+}
+
+.quick-main,
+.wifi-page {
+  min-width: 330px;
+}
+
+.quick-time {
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.quick-date {
+  color: @fg_secondary;
+  font-size: 12px;
+}
+
+.round-button,
+.icon-button {
+  min-width: 36px;
+  min-height: 36px;
+  border-radius: 999px;
+  background: @bg_hover;
+  color: @accent_primary;
+}
+
+.round-button:hover,
+.icon-button:hover {
+  background: @border_muted;
+}
+
+.round-button.danger {
+  color: @state_danger;
+}
+
+.control {
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: @bg_surface;
+}
+
+.control>image {
+  color: @accent_primary;
+}
+
+.control-icon-slot {
+  min-width: 36px;
+  min-height: 36px;
+}
+
+.control-icon-slot image {
+  color: @accent_primary;
+}
+
+.control>label {
+  min-width: 42px;
+  color: @fg_secondary;
+}
+
+scale trough {
+  min-height: 6px;
+  border-radius: 999px;
+  background: @border_muted;
+}
+
+scale highlight {
+  border-radius: 999px;
+  background: @accent_secondary;
+}
+
+scale slider {
+  min-width: 16px;
+  min-height: 16px;
+  border-radius: 999px;
+  background: @accent_primary;
+}
+
+.connections .conn-row {
+  min-height: 52px;
+  padding: 0 12px;
+  border-radius: 10px;
+  background: @bg_surface;
+}
+
+.connections .conn-row.off image,
+.connections .conn-row.off .conn-name {
+  color: @fg_secondary;
+}
+
+.conn-row-main {
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  color: @fg_primary;
+}
+
+.conn-row-main:hover {
+  background: transparent;
+}
+
+.conn-row-main image,
+.conn-row>image {
+  color: @accent_primary;
+}
+
+.compact-switch {
+  min-width: 36px;
+  min-height: 20px;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  outline: none;
+  background: @border_muted;
+  background-image: none;
+  box-shadow: none;
+}
+
+.compact-switch:checked {
+  background: @accent_secondary;
+}
+
+.compact-switch slider {
+  min-width: 16px;
+  min-height: 16px;
+  margin: 2px;
+  border: none;
+  border-radius: 999px;
+  background: @bg_surface;
+  box-shadow: none;
+}
+
+.status-chip {
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: @bg_hover;
+}
+
+.status-chip image {
+  margin-right: 6px;
+  color: @accent_primary;
+}
+

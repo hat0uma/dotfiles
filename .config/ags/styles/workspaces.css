@@ -1,0 +1,65 @@
+/* Workspace minimap colors are independent of the surrounding bar theme. */
+@define-color mm_frame #d5cec6;
+@define-color mm_pane #e8e2da;
+@define-color mm_glyph #6e6a7e;
+@define-color mm_accent #d9776f;
+@define-color mm_accent_tint #f6d9d4;
+@define-color mm_accent_deep #b5554d;
+@define-color mm_hover #e9e2d8;
+
+.capsule .ws-slot {
+  min-height: 30px;
+  padding: 0 4px;
+  border-radius: 7px;
+  background: transparent;
+}
+
+.capsule .ws-slot:hover {
+  background: @mm_hover;
+}
+
+.minimap {
+  border-radius: 5px;
+  padding: 4px;
+  box-shadow: inset 0 0 0 1.5px @mm_frame;
+}
+
+.minimap.mm-empty {
+  margin: 0;
+  border: 1.5px dashed @mm_frame;
+  box-shadow: none;
+}
+
+.minimap.active {
+  box-shadow: inset 0 0 0 2px @mm_accent;
+}
+
+.minimap.active.mm-empty {
+  border-color: transparent;
+  border-style: solid;
+}
+
+.minimap .pane {
+  background: @mm_pane;
+  color: @mm_glyph;
+  border-radius: 3px;
+}
+
+.minimap.active.focused-mon .pane {
+  background: @mm_accent_tint;
+  color: @mm_accent_deep;
+}
+
+.workspaces.show-numbers .minimap-content {
+  /* filter: blur(1.5px); */
+}
+
+.ws-number {
+  padding: 0 3px;
+  border-radius: 4px;
+  background: @text;
+  color: @base;
+  font-size: 12px;
+  font-weight: 700;
+}
+

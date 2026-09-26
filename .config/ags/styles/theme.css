@@ -1,0 +1,49 @@
+/* Rose Pine Dawn */
+@define-color base #faf4ed;
+@define-color surface #fffaf3;
+@define-color overlay #f2e9e1;
+@define-color muted #9893a5;
+@define-color subtle #797593;
+@define-color text #464261;
+@define-color love #b4637a;
+@define-color gold #ea9d34;
+@define-color rose #d7827e;
+@define-color pine #286983;
+@define-color foam #56949f;
+@define-color iris #907aa9;
+@define-color leaf #6d8f89;
+@define-color highlight_low #f4ede8;
+@define-color highlight_med #dfdad9;
+@define-color highlight_high #cecacd;
+
+/* Theme: backgrounds */
+@define-color bg_base @base;
+@define-color bg_surface @surface;
+@define-color bg_hover @overlay;
+@define-color bg_elevated alpha(@base, 0.97);
+@define-color bg_backdrop alpha(@text, 0.16);
+@define-color bg_panel alpha(@base, 0.85);
+
+/* Theme: foregrounds */
+@define-color fg_primary @text;
+@define-color fg_secondary @subtle;
+@define-color fg_muted @muted;
+@define-color fg_on_accent @surface;
+@define-color fg_disabled @highlight_high;
+
+/* Theme: accents and states */
+@define-color accent_primary @pine;
+@define-color accent_secondary @foam;
+@define-color accent_focus @iris;
+@define-color accent_active @rose;
+@define-color state_danger @love;
+
+/* Theme: borders and shadows */
+@define-color border_default @highlight_high;
+@define-color border_muted @highlight_med;
+@define-color border_strong @text;
+@define-color shadow_subtle alpha(@text, 0.12);
+@define-color shadow_soft alpha(@text, 0.22);
+@define-color shadow_strong alpha(@text, 0.28);
+@define-color shadow_solid @text;
+

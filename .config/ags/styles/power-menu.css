@@ -1,0 +1,38 @@
+.power-backdrop {
+  background: @bg_backdrop;
+}
+
+.power-card {
+  padding: 10px;
+  border: 1px solid @border_default;
+  border-radius: 16px;
+  background: @bg_elevated;
+  box-shadow: 0 12px 40px @shadow_strong;
+}
+
+.power-button {
+  min-width: 112px;
+  padding: 18px 10px;
+  border-radius: 12px;
+  background: transparent;
+  color: @fg_primary;
+}
+
+.power-button:hover {
+  background: @bg_hover;
+}
+
+.power-button image {
+  color: @accent_focus;
+}
+
+.power-label {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.power-shortcut {
+  color: @fg_muted;
+  font-size: 11px;
+}
+

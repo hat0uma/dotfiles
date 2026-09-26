@@ -1,0 +1,178 @@
+/* --- network / wifi page --- */
+
+.pop-head {
+  min-height: 26px;
+  margin-bottom: 4px;
+}
+
+.back {
+  min-width: 26px;
+  min-height: 26px;
+  margin-left: -4px;
+  border-radius: 999px;
+  background: @bg_hover;
+  color: @accent_primary;
+}
+
+.back:hover {
+  background: @border_muted;
+}
+
+.pop-title {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.scanning {
+  color: @fg_muted;
+  font-size: 11px;
+}
+
+.ap {
+  padding: 9px 10px;
+  border-radius: 10px;
+  background: transparent;
+  color: @fg_primary;
+}
+
+.ap:hover {
+  background: @bg_surface;
+}
+
+.ap.current {
+  background: @bg_hover;
+}
+
+.ap.current .ap-name {
+  font-weight: 700;
+}
+
+.ap.dim {
+  opacity: 0.45;
+}
+
+.ap image {
+  color: @accent_primary;
+}
+
+.ap-name {
+  font-size: 13px;
+}
+
+.ap-sub {
+  color: @fg_secondary;
+  font-size: 10px;
+}
+
+.ap .link {
+  color: @accent_primary;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.ap .lock {
+  color: @fg_muted;
+  -gtk-icon-size: 13px;
+}
+
+.pwd {
+  margin: 2px 0;
+  padding: 12px 10px 11px;
+  border-radius: 10px;
+  background: @bg_surface;
+  box-shadow: inset 0 0 0 1px @border_muted;
+}
+
+.pwd-label {
+  color: @fg_secondary;
+  font-size: 11px;
+}
+
+.pwd-error {
+  color: @state_danger;
+  font-size: 11px;
+}
+
+.password-field {
+  min-height: 30px;
+  padding: 0 10px;
+  border: 1px solid @accent_focus;
+  border-radius: 8px;
+  outline: none;
+  background: @bg_base;
+  color: @fg_primary;
+  box-shadow: none;
+}
+
+.password-field:focus {
+  border-color: @accent_focus;
+  box-shadow: none;
+}
+
+.btn {
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.btn.ghost {
+  color: @fg_secondary;
+  background: @bg_hover;
+}
+
+.btn.ghost:hover {
+  background: @border_muted;
+}
+
+.btn.primary {
+  color: @fg_on_accent;
+  background: @accent_focus;
+}
+
+.btn.primary:hover {
+  background: @accent_secondary;
+}
+
+.pop-foot {
+  margin-top: 2px;
+  padding: 12px 0 0;
+  border-top: 1px solid @border_muted;
+  border-radius: 0;
+  background: transparent;
+  color: @accent_primary;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.pop-foot:hover {
+  color: @accent_secondary;
+}
+
+.mono {
+  color: @fg_muted;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 11px;
+  font-weight: 400;
+}
+
+.cap {
+  color: @fg_secondary;
+  font-size: 11px;
+}
+
+.conn-name {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.conn-sub {
+  color: @fg_secondary;
+  font-size: 11px;
+}
+
+.chev {
+  color: @fg_muted;
+  -gtk-icon-size: 13px;
+}
+

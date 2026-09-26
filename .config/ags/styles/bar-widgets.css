@@ -1,0 +1,102 @@
+.active-window {
+  padding: 0 10px;
+}
+
+.active-window image {
+  margin-right: 8px;
+  color: @accent_secondary;
+}
+
+.active-window label {
+  font-weight: 500;
+}
+
+.battery {
+  padding: 0 9px;
+}
+
+.battery image {
+  margin-right: 6px;
+  color: @accent_primary;
+}
+
+.battery.low image {
+  color: @state_danger;
+}
+
+.status .battery {
+  padding: 0;
+}
+
+.capsule .status>button {
+  min-height: 22px;
+  padding: 0 8px;
+  /* border-radius: 999px; */
+  background: transparent;
+}
+
+.capsule .status>button:hover {
+  background: @bg_hover;
+}
+
+.status image {
+  color: @accent_primary;
+}
+
+.chips {
+  min-height: 22px;
+}
+
+.ime-slot {
+  min-width: 0;
+}
+
+.capsule .ime {
+  min-width: 16px;
+  min-height: 22px;
+  padding: 0 6px;
+  /* border-radius: 999px;*/
+  font-weight: 700;
+}
+
+.capsule .ime label {
+  margin-top: 1px;
+}
+
+.ime.en {
+  color: @fg_secondary;
+}
+
+.ime:hover {
+  background: @bg_hover;
+  color: @fg_primary;
+}
+
+.ime.jp {
+  color: @fg_secondary;
+}
+
+.clock {
+  color: @fg_primary;
+  font-weight: 600;
+}
+
+.capsule .clock>button {
+  min-height: 22px;
+  padding: 0 13px 0 9px;
+  /* border-radius: 999px; */
+  background: transparent;
+  color: @fg_primary;
+}
+
+.capsule .clock>button:hover {
+  background: @bg_hover;
+}
+
+.dot {
+  min-width: 5px;
+  min-height: 5px;
+  border-radius: 999px;
+  background: @state_danger;
+}
+

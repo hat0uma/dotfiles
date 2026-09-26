@@ -4,7 +4,7 @@ import { createBinding, For, This } from "ags";
 import app from "ags/gtk4/app";
 import AstalHyprland from "gi://AstalHyprland";
 import AstalNotifd from "gi://AstalNotifd";
-import style from "./style.css";
+import style from "./styles";
 import Bar, { toggleNotifications, toggleStatus } from "./widgets/Bar";
 import NotificationPopups from "./widgets/NotificationPopups";
 import PowerMenu, {
