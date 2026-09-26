@@ -21,7 +21,7 @@ export default function Workspaces({ connector }: { connector: string }) {
     frame.append(fixed);
     const number = new Gtk.Label({
       cssClasses: ["ws-number"], visible: false, canTarget: false,
-      halign: Gtk.Align.CENTER, valign: Gtk.Align.CENTER,
+      halign: Gtk.Align.CENTER, valign: Gtk.Align.START, marginTop: 2,
     });
     const overlay = new Gtk.Overlay({ child: frame });
     overlay.add_overlay(number);

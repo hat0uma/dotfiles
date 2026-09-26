@@ -152,7 +152,7 @@ window {
 }
 
 .workspaces.show-numbers .minimap-content {
-  filter: blur(1.5px);
+  /* filter: blur(1.5px); */
 }
 
 .ws-number {
