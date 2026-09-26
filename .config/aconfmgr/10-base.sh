@@ -22,3 +22,6 @@ CopyFile /etc/tlp.conf
 CopyFile /etc/systemd/system/battery-threshold.service
 
 CopyFile /etc/nftables.conf
+
+CopyFile /etc/systemd/system/thermald.service.d/override.conf
+CopyFile /etc/tlp.conf

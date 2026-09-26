@@ -40,6 +40,8 @@ AddPackage xdg-user-dirs
 AddPackage xorg-xlsclients # List client applications running on a display
 AddPackage nemo            # File manager for Cinnamon (Nautilus fork)
 AddPackage nemo-fileroller # File archiver extension for Nemo
+AddPackage blueman         # GTK+ Bluetooth Manager
+AddPackage discord         # All-in-one voice and text chat for gamers
 
 AddLocalPackage dotfiles-screenshot
 
