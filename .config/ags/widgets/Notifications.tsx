@@ -3,6 +3,7 @@ import AstalNotifd from "gi://AstalNotifd";
 import Gtk from "gi://Gtk?version=4.0";
 import Pango from "gi://Pango";
 import { nowDate, VISUAL_TEST_APP, visualTestMode } from "../lib/clock";
+import { holidayName } from "../lib/holidays";
 import { toPangoMarkup } from "../lib/markup";
 
 function timeAgo(unixSeconds: number): string {
@@ -19,6 +20,7 @@ type CalendarDay = {
   today: boolean;
   marked: boolean;
   weekday: number;
+  holiday?: string;
 };
 
 function dateKey(date: Date) {
@@ -56,6 +58,7 @@ function Calendar({ notifications }: { notifications: () => AstalNotifd.Notifica
         today: date.toDateString() === shown.today,
         marked: marked.has(dateKey(date)),
         weekday: index % 7,
+        holiday: holidayName(date.getFullYear(), date.getMonth() + 1, date.getDate()),
       };
     });
     return Array.from({ length: 6 }, (_, row) => days.slice(row * 7, row * 7 + 7));
@@ -101,6 +104,8 @@ function Calendar({ notifications }: { notifications: () => AstalNotifd.Notifica
                   cssClasses={["cal-cell"]}
                   orientation={Gtk.Orientation.VERTICAL}
                   halign={Gtk.Align.CENTER}
+                  tooltipText={cell.holiday ?? ""}
+                  hasTooltip={!!cell.holiday}
                 >
                   <label
                     cssClasses={[
@@ -108,6 +113,7 @@ function Calendar({ notifications }: { notifications: () => AstalNotifd.Notifica
                       cell.weekday === 0 ? "sun" : cell.weekday === 6 ? "sat" : "",
                       cell.currentMonth ? "" : "out",
                       cell.today ? "today" : "",
+                      cell.holiday ? "holiday" : "",
                     ].filter(Boolean)}
                     halign={Gtk.Align.CENTER}
                     label={`${cell.day}`}

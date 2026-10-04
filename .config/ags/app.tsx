@@ -16,7 +16,9 @@ import ScreenshotMenu, {
   toggleScreenshotMenu,
 } from "./widgets/ScreenshotMenu";
 
-import { freezeClock } from "./lib/clock";
+import { readFile } from "ags/file";
+import { freezeClock, VISUAL_TEST_APP } from "./lib/clock";
+import { setHolidayData } from "./lib/holidays";
 import { initIcons } from "./ws-icons/src/icon";
 import { updateNumbers } from "./workspaces/numbers";
 
@@ -71,6 +73,15 @@ app.start({
         response("ok");
         break;
       }
+      case "visual-clear": {
+        // Dismiss fixture notifications left by tests/visual/capture.sh.
+        const fixtures = AstalNotifd.get_default()
+          .get_notifications()
+          .filter((item) => item.appName === VISUAL_TEST_APP);
+        fixtures.forEach((item) => item.dismiss());
+        response(`dismissed ${fixtures.length}`);
+        break;
+      }
       case "snapshot":
       case "snapshot-tree": {
         // snapshot <target> <out.png> [connector]
@@ -91,6 +102,11 @@ app.start({
 
   main() {
     initIcons(`${SRC}/ws-icons/dist`);
+    try {
+      setHolidayData(readFile(`${SRC}/data/syukujitsu.csv`));
+    } catch (error) {
+      console.error("holidays: failed to read data/syukujitsu.csv", error);
+    }
     const monitors = createBinding(app, "monitors");
 
     // Mounted once, independent of the per-monitor bar/power-menu tree below.

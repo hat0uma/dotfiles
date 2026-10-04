@@ -51,6 +51,24 @@ const popoverTargets: Record<string, { buttons: Map<string, Gtk.MenuButton>; pag
   notifications: { buttons: notificationButtons },
 };
 
+// The Wi-Fi page does not scan during visual tests (a scan briefly empties
+// the list), and right after startup only the connected AP is known: run one
+// full scan per process before the first Wi-Fi capture.
+let accessPointsReady = false;
+async function ensureAccessPoints() {
+  const wifi = AstalNetwork.get_default().wifi;
+  if (accessPointsReady || !wifi?.enabled) return;
+  wifi.scan();
+  let started = false;
+  for (let tries = 0; tries < 150; tries++) {
+    await wait(100);
+    started ||= wifi.scanning;
+    if (started && !wifi.scanning) break;
+  }
+  await wait(500);
+  accessPointsReady = true;
+}
+
 export const snapshotTargetNames = ["bar", "toast", ...Object.keys(popoverTargets)];
 
 // Renders one bar widget (or popover) to a PNG; used by tests/visual.
@@ -82,6 +100,8 @@ export async function snapshotTarget(
   const button = pick(spec.buttons, connector);
   const popover = button?.get_popover();
   if (!button || !popover) throw new Error(`no popover for ${target}`);
+
+  if (target === "wifi") await ensureAccessPoints();
 
   const wasActive = button.active;
   if (spec.page) showQuickPage(spec.page, false);

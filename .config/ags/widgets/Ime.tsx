@@ -2,6 +2,7 @@ import { createBinding, createComputed, With } from "ags";
 import AstalTray from "gi://AstalTray";
 import Gio from "gi://Gio";
 import Gtk from "gi://Gtk?version=4.0";
+import { visualTestMode } from "../lib/clock";
 
 let sessionBus: Gio.DBusConnection | null = null;
 
@@ -52,7 +53,9 @@ function setupMenu(button: Gtk.Button, item: AstalTray.TrayItem) {
 }
 
 function ImeChip({ item }: { item: AstalTray.TrayItem }) {
-  const state = createBinding(item, "iconName")((name) => imeState(name));
+  // Visual tests pin the chip to "A" so the input method state does not matter.
+  const iconName = createBinding(item, "iconName");
+  const state = createComputed(() => imeState(visualTestMode() ? "" : iconName()));
 
   return (
     <button

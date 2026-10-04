@@ -4,6 +4,7 @@ import AstalNetwork from "gi://AstalNetwork";
 import GLib from "gi://GLib";
 import Gtk from "gi://Gtk?version=4.0";
 import PageHead from "./PageHead";
+import { visualTestMode } from "../lib/clock";
 
 function run(command: string[]) {
   execAsync(command).catch((error) => console.error(error));
@@ -170,11 +171,12 @@ export function WifiPage({ onBack, active }: { onBack: () => void; active: Acces
 
   // Scan when the page opens and every 15s while it stays open.
   const rescan = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 15_000, () => {
-    if (active() && wifi.enabled) wifi.scan();
+    if (active() && wifi.enabled && !visualTestMode()) wifi.scan();
     return GLib.SOURCE_CONTINUE;
   });
+  // (Not during visual tests: a fresh scan briefly empties the list.)
   const unsubscribe = active.subscribe(() => {
-    if (active() && wifi.enabled) wifi.scan();
+    if (active() && wifi.enabled && !visualTestMode()) wifi.scan();
     if (!active()) setOpenSsid(null);
   });
   onCleanup(() => {

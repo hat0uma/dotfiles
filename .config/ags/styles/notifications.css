@@ -62,6 +62,11 @@ button.cal-nav:hover {
   color: @accent_secondary;
 }
 
+/* public holidays look like Sundays (name in the tooltip) */
+.cal-day.holiday:not(.out) {
+  color: @state_danger;
+}
+
 .cal-cell {
   min-height: 34px;
 }

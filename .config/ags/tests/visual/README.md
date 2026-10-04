@@ -53,7 +53,8 @@ Use `AGS_VISUAL_CONNECTOR=HDMI-A-1` to capture the bar of a specific monitor.
 
 While capturing, `capture.sh`
 
-- freezes the displayed clock at 00:00:30 today (`ags request visual-freeze <unix>`),
+- freezes the displayed clock at 2026-09-15 00:00:30 (`ags request visual-freeze <unix>`),
+  so the calendar always shows September 2026 (敬老の日 / 国民の休日 / 秋分の日),
 - posts two fixture notifications (app name `visual-test`: a critical one and
   one with long text + markup) and closes them afterwards,
 - shows only those fixtures in the notification center and a fixed
@@ -71,7 +72,21 @@ environment changes (new AP list, different devices), check
 ags request snapshot <target> <out.png> [connector]   # render one target
 ags request snapshot-tree <target> - [connector]      # widget tree with allocations
 ags request visual-freeze <unix-seconds>|off
+ags request visual-clear                              # dismiss fixture notifications
 ```
 
 `snapshot-tree` is useful to see why a widget got an unexpected size (for
 example a CSS `min-width` that never applied).
+
+## Unit tests
+
+```sh
+cd ~/.config/ags
+node --test lib/*.test.mjs workspaces/*.test.mjs
+```
+
+`lib/holidays.test.mjs` checks the CSV parser (`lib/holidays.ts`) and the
+bundled holiday data `data/syukujitsu.csv` (a UTF-8 copy of the Cabinet Office
+list). Refresh the data with `tools/update-syukujitsu.sh`; the
+`Update Japanese holidays` GitHub Actions workflow does this monthly and opens
+a PR when the list changes.
