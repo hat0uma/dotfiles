@@ -26,8 +26,9 @@ Results:
 
 - `current/<target>.png` – fresh snapshots
 - `report/<target>.side.png` – baseline | current | diff (changed pixels in pink)
-- exit code 1 if any target changed more than `--max-ratio` (default 0.2% of
-  pixels, override with `AGS_VISUAL_MAX_RATIO=0.01`), changed size, or has no baseline
+- exit code 1 if any target changed more than its threshold (0.2% of pixels;
+  bar 2%, wifi/bluetooth 1% because of live data; override all with
+  `AGS_VISUAL_MAX_RATIO=0.01`), changed size, or has no baseline
 
 `current/`, `report/` and `baseline/` are git-ignored: the snapshots contain
 real SSIDs, Bluetooth/audio device names and battery state, and this repo is
@@ -55,10 +56,11 @@ While capturing, `capture.sh`
 - freezes the displayed clock at 00:00:30 today (`ags request visual-freeze <unix>`),
 - posts two fixture notifications (app name `visual-test`: a critical one and
   one with long text + markup) and closes them afterwards,
-- and the notification center shows only those fixtures during the capture.
+- shows only those fixtures in the notification center and a fixed
+  "Visual test" title in the bar's active-window slot.
 
-Live data that still varies between runs: Wi-Fi access points / signal
-strength, Bluetooth devices, audio devices, battery, volume and brightness.
+Live data that still varies between runs: workspace minimaps, Wi-Fi access
+points / signal strength, Bluetooth devices, audio devices, battery, volume and brightness.
 Small Wi-Fi icon changes stay under the default threshold; when your
 environment changes (new AP list, different devices), check
 `report/*.side.png` and re-run with `--update`.

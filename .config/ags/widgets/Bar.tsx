@@ -15,7 +15,7 @@ import Workspaces from "./Workspaces";
 import NotificationCenter, { resetCalendar } from "./Notifications";
 import QuickSettings, { showQuickPage, type QuickPage } from "./QuickSettings";
 import { getToastWindow } from "./NotificationPopups";
-import { nowDateTime } from "../lib/clock";
+import { nowDateTime, visualTestMode } from "../lib/clock";
 import { describeTree, renderWidgetToPng, wait } from "../lib/snapshot";
 import { toggleScreenshotMenu } from "./ScreenshotMenu";
 
@@ -89,10 +89,17 @@ export async function snapshotTarget(
   try {
     // Let the popover map and allocate, and 1s clock polls pick up a frozen clock.
     await wait(1200);
+    // Re-opening right after the previous capture closed it can leave the
+    // popover unmapped for a moment; wait for it to come back.
+    for (let tries = 0; popover.get_width() <= 0 && tries < 20; tries++) {
+      button.active = true;
+      await wait(100);
+    }
     return output(popover);
   } finally {
     button.active = wasActive;
     if (spec.page) showQuickPage("main", false);
+    await wait(150);
   }
 }
 
@@ -137,13 +144,17 @@ function ActiveWindow({ connector }: { connector: string }) {
 
   return (
     <box cssClasses={["active-window"]} widthRequest={380}>
-      <image iconName={client(appIcon)} />
+      <image
+        iconName={createComputed(() =>
+          visualTestMode() ? "application-x-executable-symbolic" : appIcon(client()))}
+      />
       <label
         hexpand
         xalign={0}
         maxWidthChars={1}
         ellipsize={3}
-        label={client((item) => item?.title || "Desktop")}
+        label={createComputed(() =>
+          visualTestMode() ? "Visual test" : client()?.title || "Desktop")}
       />
     </box>
   );

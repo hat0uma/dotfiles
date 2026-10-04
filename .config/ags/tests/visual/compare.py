@@ -16,6 +16,10 @@ from PIL import Image, ImageChops, ImageDraw
 
 HIGHLIGHT = (230, 30, 90, 255)
 
+# Targets that show live data (workspace minimaps, Wi-Fi signal / AP order)
+# get a looser default threshold; --max-ratio overrides all of them.
+LIVE_MAX_RATIO = {"bar": 0.02, "wifi": 0.01, "bluetooth": 0.01}
+
 
 def pad(image: Image.Image, size: tuple[int, int]) -> Image.Image:
     canvas = Image.new("RGBA", size, (0, 0, 0, 0))
@@ -61,8 +65,9 @@ def main():
     parser.add_argument("baseline", type=Path)
     parser.add_argument("current", type=Path)
     parser.add_argument("report", type=Path)
-    parser.add_argument("--max-ratio", type=float, default=0.002,
-                        help="allowed fraction of changed pixels (default 0.002)")
+    parser.add_argument("--max-ratio", type=float, default=None,
+                        help="allowed fraction of changed pixels (default 0.002, "
+                             "looser for live targets, see LIVE_MAX_RATIO)")
     parser.add_argument("--tolerance", type=int, default=24,
                         help="per-pixel luminance difference ignored as noise (default 24)")
     args = parser.parse_args()
@@ -75,7 +80,8 @@ def main():
             failed = True
             continue
         ratio, resized, bbox = compare(baseline, current, args.report, args.tolerance)
-        bad = ratio > args.max_ratio or resized
+        limit = args.max_ratio if args.max_ratio is not None else LIVE_MAX_RATIO.get(current.stem, 0.002)
+        bad = ratio > limit or resized
         failed |= bad
         note = " (size changed)" if resized else ""
         where = f" bbox={bbox}" if bbox else ""
