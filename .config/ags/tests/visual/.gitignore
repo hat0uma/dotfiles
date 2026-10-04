@@ -1,0 +1,4 @@
+current/
+report/
+# Snapshots show real SSIDs, device names and notifications; keep them local.
+baseline/

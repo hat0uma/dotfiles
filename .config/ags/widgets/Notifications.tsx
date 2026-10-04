@@ -1,9 +1,12 @@
-import { createBinding, createComputed, createState, For, With } from "ags";
+import { createBinding, createComputed, createState, For, onCleanup, With } from "ags";
 import AstalNotifd from "gi://AstalNotifd";
 import Gtk from "gi://Gtk?version=4.0";
+import Pango from "gi://Pango";
+import { nowDate, VISUAL_TEST_APP, visualTestMode } from "../lib/clock";
+import { toPangoMarkup } from "../lib/markup";
 
 function timeAgo(unixSeconds: number): string {
-  const diff = Math.max(0, Math.floor(Date.now() / 1000) - unixSeconds);
+  const diff = Math.max(0, Math.floor(nowDate().getTime() / 1000) - unixSeconds);
   if (diff < 60) return "たった今";
   if (diff < 3600) return `${Math.floor(diff / 60)} 分前`;
   if (diff < 86400) return `${Math.floor(diff / 3600)} 時間前`;
@@ -22,9 +25,24 @@ function dateKey(date: Date) {
   return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
 }
 
+const calendarResetters = new Set<() => void>();
+
+// Jump back to the current month (and refresh "today") whenever the
+// notification center opens.
+export function resetCalendar() {
+  calendarResetters.forEach((reset) => reset());
+}
+
 function Calendar({ notifications }: { notifications: () => AstalNotifd.Notification[] }) {
-  const now = new Date();
-  const [month, setMonth] = createState({ year: now.getFullYear(), month: now.getMonth() });
+  const current = () => {
+    const now = nowDate();
+    return { year: now.getFullYear(), month: now.getMonth(), today: now.toDateString() };
+  };
+  const [month, setMonth] = createState(current());
+  const reset = () => setMonth(current());
+  calendarResetters.add(reset);
+  onCleanup(() => calendarResetters.delete(reset));
+
   const weeks = createComputed(() => {
     const shown = month();
     const first = new Date(shown.year, shown.month, 1);
@@ -35,7 +53,7 @@ function Calendar({ notifications }: { notifications: () => AstalNotifd.Notifica
       return {
         day: date.getDate(),
         currentMonth: date.getMonth() === shown.month,
-        today: date.toDateString() === now.toDateString(),
+        today: date.toDateString() === shown.today,
         marked: marked.has(dateKey(date)),
         weekday: index % 7,
       };
@@ -45,7 +63,7 @@ function Calendar({ notifications }: { notifications: () => AstalNotifd.Notifica
 
   const moveMonth = (offset: number) => setMonth((current) => {
     const date = new Date(current.year, current.month + offset, 1);
-    return { year: date.getFullYear(), month: date.getMonth() };
+    return { ...current, year: date.getFullYear(), month: date.getMonth() };
   });
 
   return (
@@ -57,10 +75,10 @@ function Calendar({ notifications }: { notifications: () => AstalNotifd.Notifica
           xalign={0}
           label={month((shown) => `${shown.year}年 ${shown.month + 1}月`)}
         />
-        <button cssClasses={["cal-nav"]} onClicked={() => moveMonth(-1)}>
+        <button cssClasses={["cal-nav"]} tooltipText="前の月" onClicked={() => moveMonth(-1)}>
           <image iconName="go-previous-symbolic" />
         </button>
-        <button cssClasses={["cal-nav"]} onClicked={() => moveMonth(1)}>
+        <button cssClasses={["cal-nav"]} tooltipText="次の月" onClicked={() => moveMonth(1)}>
           <image iconName="go-next-symbolic" />
         </button>
       </box>
@@ -72,21 +90,32 @@ function Calendar({ notifications }: { notifications: () => AstalNotifd.Notifica
           />
         ))}
       </box>
-      <box cssClasses={["cal-grid"]} orientation={Gtk.Orientation.VERTICAL} spacing={1}>
+      <box cssClasses={["cal-grid"]} orientation={Gtk.Orientation.VERTICAL}>
         <For each={weeks}>
           {(week) => (
             <box homogeneous>
               {week.map((cell) => (
-                <box cssClasses={["cal-day-slot"]} halign={Gtk.Align.CENTER}>
+                // Same homogeneous column as the weekday header; the label is
+                // centered in it and the notification marker sits below.
+                <box
+                  cssClasses={["cal-cell"]}
+                  orientation={Gtk.Orientation.VERTICAL}
+                  halign={Gtk.Align.CENTER}
+                >
                   <label
                     cssClasses={[
                       "cal-day",
                       cell.weekday === 0 ? "sun" : cell.weekday === 6 ? "sat" : "",
                       cell.currentMonth ? "" : "out",
                       cell.today ? "today" : "",
-                      cell.marked ? "mark" : "",
                     ].filter(Boolean)}
+                    halign={Gtk.Align.CENTER}
                     label={`${cell.day}`}
+                  />
+                  <box
+                    cssClasses={["cal-mark", cell.currentMonth ? "" : "out"].filter(Boolean)}
+                    halign={Gtk.Align.CENTER}
+                    opacity={cell.marked ? 1 : 0}
                   />
                 </box>
               ))}
@@ -94,6 +123,46 @@ function Calendar({ notifications }: { notifications: () => AstalNotifd.Notifica
           )}
         </For>
       </box>
+    </box>
+  );
+}
+
+// Wrapping labels report their full single-line width as natural width unless
+// capped, which made long notifications stretch the popover off screen.
+export function NotificationText({
+  notification,
+  maxWidthChars,
+  bodyLines,
+}: {
+  notification: AstalNotifd.Notification;
+  maxWidthChars: number;
+  bodyLines: number;
+}) {
+  return (
+    <box orientation={Gtk.Orientation.VERTICAL} spacing={2}>
+      <label
+        cssClasses={["note-sum"]}
+        xalign={0}
+        wrap
+        wrapMode={Pango.WrapMode.WORD_CHAR}
+        maxWidthChars={maxWidthChars}
+        lines={3}
+        ellipsize={Pango.EllipsizeMode.END}
+        label={notification.summary}
+      />
+      {notification.body && (
+        <label
+          cssClasses={["note-body"]}
+          xalign={0}
+          wrap
+          wrapMode={Pango.WrapMode.WORD_CHAR}
+          maxWidthChars={maxWidthChars}
+          lines={bodyLines}
+          ellipsize={Pango.EllipsizeMode.END}
+          useMarkup
+          label={toPangoMarkup(notification.body)}
+        />
+      )}
     </box>
   );
 }
@@ -111,17 +180,23 @@ function NotificationRow({ notification }: { notification: AstalNotifd.Notificat
         <centerbox cssClasses={["note-icon"]} valign={Gtk.Align.CENTER}>
           <image $type="center" iconName={icon} pixelSize={12} />
         </centerbox>
-        <label cssClasses={["note-app"]} label={notification.appName || "通知"} />
-        <box hexpand />
+        <label
+          cssClasses={["note-app"]}
+          hexpand
+          xalign={0}
+          ellipsize={Pango.EllipsizeMode.END}
+          maxWidthChars={1}
+          label={notification.appName || "通知"}
+        />
+        {urgent && <label cssClasses={["note-badge"]} valign={Gtk.Align.CENTER} label="重要" />}
         <label cssClasses={["note-time"]} label={timeAgo(notification.time)} />
-        <button cssClasses={["note-close"]} onClicked={() => notification.dismiss()}>
-          <label label="✕" />
+        <button cssClasses={["note-close"]} tooltipText="閉じる" onClicked={() => notification.dismiss()}>
+          <image iconName="window-close-symbolic" />
         </button>
       </box>
-      <label cssClasses={["note-sum"]} xalign={0} wrap label={notification.summary} />
-      {notification.body && <label cssClasses={["note-body"]} xalign={0} wrap label={notification.body} />}
+      <NotificationText notification={notification} maxWidthChars={34} bodyLines={6} />
       {notification.actions.length > 0 && (
-        <box cssClasses={["note-actions"]} spacing={6}>
+        <box cssClasses={["note-actions"]} spacing={8}>
           {notification.actions.map((action) => (
             <button cssClasses={["note-act"]} onClicked={() => {
               action.invoke();
@@ -138,7 +213,12 @@ function NotificationRow({ notification }: { notification: AstalNotifd.Notificat
 
 export default function NotificationCenter() {
   const notifd = AstalNotifd.get_default();
-  const notifications = createBinding(notifd, "notifications");
+  const all = createBinding(notifd, "notifications");
+  // Newest first; during visual tests only the fixture notifications are shown.
+  const notifications = createComputed(() =>
+    all()
+      .filter((item) => !visualTestMode() || item.appName === VISUAL_TEST_APP)
+      .sort((a, b) => b.time - a.time || b.id - a.id));
   const dnd = createBinding(notifd, "dontDisturb");
   const count = createComputed(() => notifications().length);
   const view = createComputed(() => ({ count: count(), dnd: dnd() }));

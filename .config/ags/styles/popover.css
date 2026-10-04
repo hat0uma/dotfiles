@@ -7,6 +7,9 @@ popover>contents {
   box-shadow: 0 8px 28px @shadow_soft;
 }
 
+/* Neutral reset for buttons inside popovers / toasts.  GTK lets this
+   `popover button` selector win over a bare `.some-class`, so every styled
+   button below is written as `button.some-class` to take precedence. */
 popover button,
 .toast-stack button {
   min-width: 0;

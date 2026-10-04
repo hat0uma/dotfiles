@@ -9,18 +9,21 @@ import AstalNetwork from "gi://AstalNetwork";
 import AstalNotifd from "gi://AstalNotifd";
 import AstalWp from "gi://AstalWp";
 import Gdk from "gi://Gdk?version=4.0";
-import GLib from "gi://GLib";
 import Gtk from "gi://Gtk?version=4.0";
 import Ime from "./Ime";
 import Workspaces from "./Workspaces";
-import NotificationCenter from "./Notifications";
-import QuickSettings from "./QuickSettings";
+import NotificationCenter, { resetCalendar } from "./Notifications";
+import QuickSettings, { showQuickPage, type QuickPage } from "./QuickSettings";
+import { getToastWindow } from "./NotificationPopups";
+import { nowDateTime, visualTestMode } from "../lib/clock";
+import { describeTree, renderWidgetToPng, wait } from "../lib/snapshot";
 import { toggleScreenshotMenu } from "./ScreenshotMenu";
 
 const hyprland = AstalHyprland.get_default();
 const apps = AstalApps.Apps.new();
 const notificationButtons = new Map<string, Gtk.MenuButton>();
 const statusButtons = new Map<string, Gtk.MenuButton>();
+const capsules = new Map<string, Gtk.Widget>();
 
 export function toggleNotifications(connector?: string) {
   const button = connector
@@ -34,6 +37,70 @@ export function toggleStatus(connector?: string) {
     ? statusButtons.get(connector)
     : statusButtons.values().next().value;
   if (button) button.active = !button.active;
+}
+
+function pick<T>(map: Map<string, T>, connector?: string) {
+  return (connector && map.get(connector)) || map.values().next().value;
+}
+
+const popoverTargets: Record<string, { buttons: Map<string, Gtk.MenuButton>; page?: QuickPage }> = {
+  status: { buttons: statusButtons, page: "main" },
+  wifi: { buttons: statusButtons, page: "wifi" },
+  bluetooth: { buttons: statusButtons, page: "bluetooth" },
+  audio: { buttons: statusButtons, page: "audio" },
+  notifications: { buttons: notificationButtons },
+};
+
+export const snapshotTargetNames = ["bar", "toast", ...Object.keys(popoverTargets)];
+
+// Renders one bar widget (or popover) to a PNG; used by tests/visual.
+// mode "tree" returns the widget tree with allocations instead.
+export async function snapshotTarget(
+  target: string,
+  path: string,
+  connector?: string,
+  mode: "png" | "tree" = "png",
+) {
+  const output = (widget: Gtk.Widget) =>
+    mode === "tree" ? describeTree(widget) : renderWidgetToPng(widget, path);
+
+  if (target === "bar") {
+    const capsule = pick(capsules, connector);
+    if (!capsule) throw new Error("no bar");
+    // The window, not the capsule, so the offset shadow is included.
+    return output(capsule.get_root() as Gtk.Widget);
+  }
+
+  if (target === "toast") {
+    const toast = getToastWindow();
+    if (!toast) throw new Error("no toast is showing");
+    return output(toast);
+  }
+
+  const spec = popoverTargets[target];
+  if (!spec) throw new Error(`unknown target: ${target} (${snapshotTargetNames.join(", ")})`);
+  const button = pick(spec.buttons, connector);
+  const popover = button?.get_popover();
+  if (!button || !popover) throw new Error(`no popover for ${target}`);
+
+  const wasActive = button.active;
+  if (spec.page) showQuickPage(spec.page, false);
+  button.active = true;
+  try {
+    // Let the popover map and allocate, and 1s clock polls pick up a frozen clock.
+    await wait(1200);
+    // Re-opening right after the previous capture closed it can leave the
+    // popover unmapped for a moment; wait for it to come back.
+    for (let tries = 0; popover.get_width() <= 0 && tries < 20; tries++) {
+      button.active = true;
+      await wait(100);
+    }
+    return output(popover);
+  } finally {
+    button.active = wasActive;
+    if (spec.page) showQuickPage("main", false);
+    await wait(150);
+  }
 }
 
 function appIcon(client: AstalHyprland.Client | null | undefined) {
@@ -77,13 +144,17 @@ function ActiveWindow({ connector }: { connector: string }) {
 
   return (
     <box cssClasses={["active-window"]} widthRequest={380}>
-      <image iconName={client(appIcon)} />
+      <image
+        iconName={createComputed(() =>
+          visualTestMode() ? "application-x-executable-symbolic" : appIcon(client()))}
+      />
       <label
         hexpand
         xalign={0}
         maxWidthChars={1}
         ellipsize={3}
-        label={client((item) => item?.title || "Desktop")}
+        label={createComputed(() =>
+          visualTestMode() ? "Visual test" : client()?.title || "Desktop")}
       />
     </box>
   );
@@ -139,7 +210,7 @@ function StatusIcons({ connector }: { connector: string }) {
         )}
         <Battery />
       </box>
-      <popover>
+      <popover onClosed={() => showQuickPage("main", false)}>
         <QuickSettings
           onTakeScreenshot={() => {
             const button = statusButtons.get(connector);
@@ -159,7 +230,7 @@ function Clock({ connector }: { connector: string }) {
     "notifications",
   )((list) => list.length > 0);
   const time = createPoll("", 1000, () => {
-    const now = GLib.DateTime.new_now_local();
+    const now = nowDateTime();
     const weekday = ["月", "火", "水", "木", "金", "土", "日"][
       now.get_day_of_week() - 1
     ];
@@ -183,7 +254,7 @@ function Clock({ connector }: { connector: string }) {
           valign={Gtk.Align.CENTER}
         />
       </box>
-      <popover cssClasses={["notification-popover"]}>
+      <popover cssClasses={["notification-popover"]} onShow={() => resetCalendar()}>
         <NotificationCenter />
       </popover>
     </menubutton>
@@ -201,7 +272,10 @@ export default function Bar({ gdkmonitor }: { gdkmonitor: Gdk.Monitor }) {
     `${gdkmonitor.get_model()}-${gdkmonitor.get_manufacturer()}`;
   const { TOP, LEFT, RIGHT } = Astal.WindowAnchor;
 
-  onCleanup(() => window.destroy());
+  onCleanup(() => {
+    capsules.delete(connector);
+    window.destroy();
+  });
 
   return (
     <window
@@ -220,7 +294,7 @@ export default function Bar({ gdkmonitor }: { gdkmonitor: Gdk.Monitor }) {
         halign={Gtk.Align.CENTER}
         orientation={Gtk.Orientation.VERTICAL}
       >
-        <box cssClasses={["capsule"]}>
+        <box cssClasses={["capsule"]} $={(self) => capsules.set(connector, self)}>
           <Workspaces connector={connector} />
           <Separator />
           <ActiveWindow connector={connector} />

@@ -5,7 +5,7 @@ import app from "ags/gtk4/app";
 import AstalHyprland from "gi://AstalHyprland";
 import AstalNotifd from "gi://AstalNotifd";
 import style from "./styles";
-import Bar, { toggleNotifications, toggleStatus } from "./widgets/Bar";
+import Bar, { snapshotTarget, toggleNotifications, toggleStatus } from "./widgets/Bar";
 import NotificationPopups from "./widgets/NotificationPopups";
 import PowerMenu, {
   closePowerMenu,
@@ -16,6 +16,7 @@ import ScreenshotMenu, {
   toggleScreenshotMenu,
 } from "./widgets/ScreenshotMenu";
 
+import { freezeClock } from "./lib/clock";
 import { initIcons } from "./ws-icons/src/icon";
 import { updateNumbers } from "./workspaces/numbers";
 
@@ -63,6 +64,26 @@ app.start({
         closeScreenshotMenu();
         response("ok");
         break;
+      case "visual-freeze": {
+        // visual-freeze <unix-seconds> | visual-freeze off
+        const seconds = Number(argv[1]);
+        freezeClock(argv[1] === "off" || !Number.isFinite(seconds) ? null : seconds);
+        response("ok");
+        break;
+      }
+      case "snapshot":
+      case "snapshot-tree": {
+        // snapshot <target> <out.png> [connector]
+        const [, target, path, connector] = argv;
+        if (!target || (argv[0] === "snapshot" && !path)) {
+          response("usage: snapshot <target> <out.png> [connector] | snapshot-tree <target> - [connector]");
+          break;
+        }
+        snapshotTarget(target, path, connector, argv[0] === "snapshot" ? "png" : "tree")
+          .then((result) => response(result))
+          .catch((error) => response(`error: ${error}`));
+        break;
+      }
       default:
         response(`unknown request: ${argv.join(" ")}`);
     }

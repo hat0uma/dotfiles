@@ -1,12 +1,12 @@
 /* --- toast popups --- */
 
 .toast-stack {
-  min-width: 316px;
+  min-width: 356px;
   padding: 5px 6px 0 0;
 }
 
 .toast {
-  min-width: 302px;
+  min-width: 342px;
   padding: 0;
   border: 2px solid @border_strong;
   border-radius: 8px;
@@ -15,7 +15,7 @@
 }
 
 .toast-content {
-  padding: 9px 11px 10px;
+  padding: 10px 12px 12px;
 }
 
 .toast-head {
@@ -44,14 +44,19 @@
   font-weight: 400;
 }
 
-.toast-close {
-  min-width: 16px;
-  min-height: 16px;
+button.toast-close {
+  min-width: 22px;
+  min-height: 22px;
+  border-radius: 5px;
   color: @muted;
-  font-size: 12px;
 }
 
-.toast-close:hover {
+button.toast-close image {
+  -gtk-icon-size: 12px;
+}
+
+button.toast-close:hover {
+  background: @overlay;
   color: @text;
 }
 
@@ -68,23 +73,21 @@
 }
 
 .toast.urgent {
-  background: @love;
-  color: @base;
+  border-color: @love;
+  box-shadow: 4px 4px 0 @love;
 }
 
-.toast.urgent .note-app,
-.toast.urgent .toast-time,
-.toast.urgent .toast-close,
-.toast.urgent .note-body {
-  color: @base;
+.toast.urgent .toast-icon {
+  background: @love;
 }
 
 .toast .note-actions {
   margin-top: 7px;
 }
 
-.toast .note-act {
-  padding: 3px 10px;
+.toast button.note-act {
+  min-height: 26px;
+  padding: 0 12px;
   border: 2px solid @border_strong;
   border-radius: 5px;
   background: @surface;
@@ -94,19 +97,19 @@
   font-weight: 400;
 }
 
-.toast .note-act:first-child {
+.toast button.note-act:first-child {
   background: @gold;
 }
 
-.toast .note-act:hover {
+.toast button.note-act:hover {
   background: @highlight_med;
 }
 
-.toast .note-act:first-child:hover {
+.toast button.note-act:first-child:hover {
   background: shade(@gold, 0.94);
 }
 
-.toast .note-act:active {
+.toast button.note-act:active {
   box-shadow: 1px 1px 0 @shadow_solid;
   transform: translate(1px, 1px);
 }

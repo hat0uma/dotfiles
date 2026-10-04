@@ -6,6 +6,8 @@ import AstalNotifd from "gi://AstalNotifd";
 import Gdk from "gi://Gdk?version=4.0";
 import GLib from "gi://GLib";
 import Gtk from "gi://Gtk?version=4.0";
+import Pango from "gi://Pango";
+import { NotificationText } from "./Notifications";
 
 const DEFAULT_TOAST_DURATION = 10_000;
 
@@ -18,6 +20,12 @@ type Toast = {
 };
 
 const [toasts, setToasts] = createState<Toast[]>([]);
+let popupWindow: Astal.Window | null = null;
+
+// Used by the visual regression snapshot ("toast" target).
+export function getToastWindow() {
+  return popupWindow?.visible ? popupWindow : null;
+}
 const timers = new Map<number, number>();
 
 function clearTimer(id: number) {
@@ -97,21 +105,27 @@ function ToastCard({ toast, now }: { toast: Toast; now: () => number }) {
               pixelSize={12}
             />
           </centerbox>
-          <label cssClasses={["note-app"]} label={notification.appName || "通知"} />
-          <box hexpand />
+          <label
+            cssClasses={["note-app"]}
+            hexpand
+            xalign={0}
+            ellipsize={Pango.EllipsizeMode.END}
+            maxWidthChars={1}
+            label={notification.appName || "通知"}
+          />
+          {urgent && <label cssClasses={["note-badge"]} valign={Gtk.Align.CENTER} label="重要" />}
           <label cssClasses={["toast-time"]} label="今" />
           <button
             cssClasses={["toast-close"]}
             tooltipText="閉じる"
             onClicked={() => dismissToast(notification.id)}
           >
-            <label label="✕" />
+            <image iconName="window-close-symbolic" />
           </button>
         </box>
-        <label cssClasses={["note-sum"]} xalign={0} wrap label={notification.summary} />
-        {notification.body && <label cssClasses={["note-body"]} xalign={0} wrap label={notification.body} />}
+        <NotificationText notification={notification} maxWidthChars={36} bodyLines={4} />
         {notification.actions.length > 0 && (
-          <box cssClasses={["note-actions"]} spacing={6}>
+          <box cssClasses={["note-actions"]} spacing={8}>
             {notification.actions.map((action) => (
               <button cssClasses={["note-act"]} onClicked={() => {
                 action.invoke();
@@ -158,7 +172,7 @@ export default function NotificationPopups() {
 
   return (
     <window
-      $={(self) => (window = self)}
+      $={(self) => (window = popupWindow = self)}
       visible={count((value) => value > 0)}
       name="notification-popups"
       namespace="ags-notifications"

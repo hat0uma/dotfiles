@@ -29,9 +29,9 @@
 }
 
 .capsule .status>button {
-  min-height: 22px;
-  padding: 0 8px;
-  /* border-radius: 999px; */
+  min-height: 30px;
+  padding: 0 10px;
+  border-radius: 7px;
   background: transparent;
 }
 
@@ -44,7 +44,7 @@
 }
 
 .chips {
-  min-height: 22px;
+  min-height: 30px;
 }
 
 .ime-slot {
@@ -52,10 +52,10 @@
 }
 
 .capsule .ime {
-  min-width: 16px;
-  min-height: 22px;
-  padding: 0 6px;
-  /* border-radius: 999px;*/
+  min-width: 18px;
+  min-height: 30px;
+  padding: 0 8px;
+  border-radius: 7px;
   font-weight: 700;
 }
 
@@ -82,9 +82,9 @@
 }
 
 .capsule .clock>button {
-  min-height: 22px;
-  padding: 0 13px 0 9px;
-  /* border-radius: 999px; */
+  min-height: 30px;
+  padding: 0 10px;
+  border-radius: 7px;
   background: transparent;
   color: @fg_primary;
 }
