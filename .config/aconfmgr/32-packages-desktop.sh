@@ -63,9 +63,17 @@ AddPackage --foreign google-chrome
 AddPackage --foreign visual-studio-code-insiders-bin
 AddPackage --foreign webcord-bin
 AddLocalPackage dotfiles-chatgpt-desktop
+AddPackage --foreign claude-desktop-extra # Claude Desktop (official Linux build) with extra features: Computer Use, custom themes, multi-profile, Quick Entry - for distros upstream does not ship
+
+AddPackage linux-headers        # Headers and scripts for building modules for the Linux kernel
+AddPackage virtualbox           # Powerful x86 virtualization for enterprise as well as home use
+AddPackage virtualbox-guest-iso # The official VirtualBox Guest Additions ISO image
 
 # Appearance
 AddPackage --foreign catppuccin-cursors-frappe
 AddPackage --foreign catppuccin-fcitx5-git
 AddPackage --foreign catppuccin-gtk-theme-frappe
 AddPackage --foreign kvantum-theme-catppuccin-git
+
+AddPackage selene # Blazing-fast modern Lua linter written in Rust
+AddPackage stylua # Deterministic code formatter for Lua
