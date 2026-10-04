@@ -85,7 +85,7 @@ function QuickMain({
   );
   const date = createPoll(
     "",
-    60_000,
+    1000,
     () => {
       const now = nowDateTime();
       const weekday = ["月曜日", "火曜日", "水曜日", "木曜日", "金曜日", "土曜日", "日曜日"][
