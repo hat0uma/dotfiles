@@ -21,9 +21,25 @@ local MONITOR_PRIORITY = {
   ["DP-2"] = 2,
 }
 
+--- Monitors that will actually stay on. monitor.lua disables eDP-1 whenever
+--- an external is connected, but at startup / hotplug it can still appear in
+--- hl.get_monitors() for a moment. Counting it would hand it a block and
+--- push the second external to 11-15.
+--- @return HL.Monitor[]
+local function active_monitors()
+  local all = hl.get_monitors()
+  local externals = {}
+  for _, m in ipairs(all) do
+    if m.name ~= "eDP-1" and m.name ~= "FALLBACK" then
+      table.insert(externals, m)
+    end
+  end
+  return #externals > 0 and externals or all
+end
+
 --- @return table<string, integer>
 local function compute_assignment()
-  local monitors = hl.get_monitors()
+  local monitors = active_monitors()
   if #monitors <= 1 then
     return {}
   end
@@ -82,7 +98,7 @@ end
 function M.on_topology_changed()
   -- Single monitor: no range restriction needed, everything already lives
   -- there.
-  if #hl.get_monitors() <= 1 then
+  if #active_monitors() <= 1 then
     return
   end
 

@@ -1,5 +1,5 @@
 pkgname=dotfiles-chatgpt-desktop
-pkgver=26.917.61114
+pkgver=26.930.41038
 pkgrel=1
 pkgdesc="ChatGPT desktop application for Linux (repackaged from the official binary)"
 arch=('x86_64')
@@ -51,7 +51,7 @@ source=(
 )
 noextract=("chatgpt_${pkgver}_amd64.deb")
 sha256sums=('6eb5bc91e9e6ce2c1ba378709366be0b8e65cfbbac58e51f50bf6b36d9c61f4f'
-            '7bea2eff4a46abe0f28e39ec65eb6e6e51c97bbcdad89d25abe5bec4318955c9')
+            'ee7854145554718d7239d01ea37d44f6ba1e0ba4a93f47ac097d6e0f964da47c')
 
 package() {
     bsdtar -xOf "$srcdir/chatgpt_${pkgver}_amd64.deb" data.tar.xz |
