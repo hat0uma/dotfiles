@@ -1,0 +1,41 @@
+name: Update Japanese holidays
+
+# Refreshes .config/ags/data/syukujitsu.csv from the Cabinet Office list and
+# opens a pull request when it changed.  The Cabinet Office usually publishes
+# the next year's holidays around February.
+on:
+  schedule:
+    - cron: "0 0 1 * *" # 09:00 JST on the 1st of every month
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download and convert syukujitsu.csv
+        run: .config/ags/tools/update-syukujitsu.sh
+
+      - name: Check holiday data
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: node --test .config/ags/lib/holidays.test.mjs
+
+      - name: Open pull request if changed
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: chore/update-syukujitsu
+          delete-branch: true
+          add-paths: .config/ags/data/syukujitsu.csv
+          commit-message: "ags: update Japanese holiday data (syukujitsu.csv)"
+          title: "ags: update Japanese holiday data"
+          body: |
+            Automated refresh of `.config/ags/data/syukujitsu.csv` from
+            https://www8.cao.go.jp/chosei/shukujitsu/syukujitsu.csv
+            (converted from Shift_JIS to UTF-8 by `.config/ags/tools/update-syukujitsu.sh`).

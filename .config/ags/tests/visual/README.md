@@ -72,6 +72,7 @@ environment changes (new AP list, different devices), check
 ags request snapshot <target> <out.png> [connector]   # render one target
 ags request snapshot-tree <target> - [connector]      # widget tree with allocations
 ags request visual-freeze <unix-seconds>|off
+ags request visual-clear                              # dismiss fixture notifications
 ```
 
 `snapshot-tree` is useful to see why a widget got an unexpected size (for
@@ -84,6 +85,8 @@ cd ~/.config/ags
 node --test lib/*.test.mjs workspaces/*.test.mjs
 ```
 
-`lib/holidays.test.mjs` checks the Japanese holiday calculation
-(`lib/holidays.ts`) against published lists, including 振替休日, 国民の休日 and
-the 2019-2021 special cases.
+`lib/holidays.test.mjs` checks the CSV parser (`lib/holidays.ts`) and the
+bundled holiday data `data/syukujitsu.csv` (a UTF-8 copy of the Cabinet Office
+list). Refresh the data with `tools/update-syukujitsu.sh`; the
+`Update Japanese holidays` GitHub Actions workflow does this monthly and opens
+a PR when the list changes.

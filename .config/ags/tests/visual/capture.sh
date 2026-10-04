@@ -18,6 +18,9 @@ connector=${AGS_VISUAL_CONNECTOR:-}
 mkdir -p "$out"
 out=$(realpath "$out")
 
+# Drop fixtures left over from an interrupted run.
+ags request visual-clear >/dev/null
+
 # Freeze displayed clocks at a fixed date so time labels and the calendar month
 # are stable.  September 2026 has 敬老の日, 国民の休日 and 秋分の日 in a row, so
 # holiday styling is covered.  The fixture notifications are posted "later"
@@ -29,6 +32,7 @@ sleep 1.1
 fixture_ids=()
 cleanup() {
   ags request visual-freeze off >/dev/null 2>&1 || true
+  ags request visual-clear >/dev/null 2>&1 || true
   for id in "${fixture_ids[@]}"; do
     gdbus call --session --dest org.freedesktop.Notifications \
       --object-path /org/freedesktop/Notifications \
@@ -38,7 +42,6 @@ cleanup() {
 trap cleanup EXIT
 
 post_fixtures() {
-  [[ ${#fixture_ids[@]} -eq 0 ]] || return 0
   # Long, unbreakable text and Pango-style markup, the cases that used to overflow.
   fixture_ids+=("$(notify-send -p -a "visual-test" -u critical -t 0 \
     "Critical: バッテリー残量が少なくなっています" "残り 5% です。電源に接続してください。")")
@@ -48,11 +51,13 @@ post_fixtures() {
   sleep 0.3
 }
 
+# Post the fixtures up front so the bar's unread dot is always shown too.
+post_fixtures
+
 status=0
 for target in "${targets[@]}"; do
-  case $target in
-    notifications | toast) post_fixtures ;;
-  esac
+  # Toasts expire after 10s; post fresh ones right before capturing them.
+  [[ $target == toast ]] && post_fixtures
   result=$(ags request snapshot "$target" "$out/$target.png" $connector)
   echo "$target: $result"
   [[ $result == error:* ]] && status=1
