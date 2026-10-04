@@ -11,7 +11,8 @@ const COUNT = 5;
 
 export default function Workspaces({ connector }: { connector: string }) {
   const box = new Gtk.Box({ spacing: 8, cssClasses: ["workspaces"] });
-  const slots = Array.from({ length: COUNT }, (_, index) => {
+  let numbersVisible = false;
+  const makeSlot = (index: number) => {
     const fixed = new Gtk.Fixed({ cssClasses: ["minimap-content"], overflow: Gtk.Overflow.HIDDEN, hexpand: false, vexpand: false });
     const frame = new Gtk.Box({
       cssClasses: ["minimap", "mm-empty"], valign: Gtk.Align.CENTER, halign: Gtk.Align.CENTER,
@@ -20,7 +21,7 @@ export default function Workspaces({ connector }: { connector: string }) {
     });
     frame.append(fixed);
     const number = new Gtk.Label({
-      cssClasses: ["ws-number"], visible: false, canTarget: false,
+      cssClasses: ["ws-number"], visible: numbersVisible, canTarget: false,
       halign: Gtk.Align.CENTER, valign: Gtk.Align.START, marginTop: 2,
     });
     const overlay = new Gtk.Overlay({ child: frame });
@@ -37,9 +38,11 @@ export default function Workspaces({ connector }: { connector: string }) {
     button.set_tooltip_text(`${index + 1}（空）`);
     box.append(button);
     return slot;
-  });
+  };
+  const slots = Array.from({ length: COUNT }, (_, index) => makeSlot(index));
 
   onCleanup(subscribeNumbers(visible => {
+    numbersVisible = visible;
     if (visible) box.add_css_class("show-numbers");
     else box.remove_css_class("show-numbers");
     slots.forEach(slot => slot.number.set_visible(visible));
@@ -68,10 +71,17 @@ export default function Workspaces({ connector }: { connector: string }) {
     if (hyprland.monitors.length > 1 && !ownIds.length) return;
     const base = hyprland.monitors.length > 1
       ? Math.floor((Math.min(...ownIds) - 1) / COUNT) * COUNT : 0;
+    // Workspaces outside this monitor's block (e.g. 6-10 merged here after the
+    // monitor that owned them was unplugged) get extra slots after the block.
+    const extras = [...new Set(ownIds)]
+      .filter(id => id <= base || id > base + COUNT).sort((a, b) => a - b);
+    const ids = [...Array.from({ length: COUNT }, (_, i) => base + i + 1), ...extras];
+    while (slots.length < ids.length) slots.push(makeSlot(slots.length));
+    while (slots.length > ids.length) box.remove(slots.pop()!.button);
     const clients = hyprland.clients;
     const width = minimapWidth(monitor);
     slots.forEach((slot, index) => {
-      const id = base + index + 1;
+      const id = ids[index];
       if (slot.id !== id) {
         slot.id = id;
         slot.number.set_label(String(id));
@@ -113,7 +123,7 @@ export default function Workspaces({ connector }: { connector: string }) {
           slot.fixed.put(widget, pane.x, pane.y);
         }
       }
-      const text = tooltip(clients, id, index + 1);
+      const text = tooltip(clients, id, index < COUNT ? index + 1 : id);
       if (slot.tooltip !== text) {
         slot.tooltip = text;
         slot.button.set_tooltip_text(text);
