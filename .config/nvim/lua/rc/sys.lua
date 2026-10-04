@@ -56,9 +56,9 @@ function M.get_open_command(args)
     args = {}
   end
 
-  args = vim.tbl_map(function(v)
-    return vim.fn.shellescape(v)
-  end, args)
+  -- args = vim.tbl_map(function(v)
+  --   return vim.fn.shellescape(v)
+  -- end, args)
   vim.list_extend(cmd, args)
   return cmd
 end
