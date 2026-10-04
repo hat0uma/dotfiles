@@ -1,56 +1,18 @@
-import { createBinding, createComputed, createState, With } from "ags";
+import { createBinding, createState, onCleanup, With } from "ags";
 import { execAsync } from "ags/process";
 import { createPoll } from "ags/time";
-import AstalBluetooth from "gi://AstalBluetooth";
 import AstalBrightness from "gi://AstalBrightness";
 import AstalNetwork from "gi://AstalNetwork";
 import AstalWp from "gi://AstalWp";
-import GLib from "gi://GLib";
 import Gtk from "gi://Gtk?version=4.0";
+import { AudioPage, AudioRow } from "./Audio";
+import { BluetoothPage, BluetoothRow } from "./Bluetooth";
 import { WifiPage, WifiRow } from "./Network";
 import { togglePowerMenu } from "./PowerMenu";
+import { nowDateTime } from "../lib/clock";
 
 function run(command: string[]) {
   execAsync(command).catch((error) => console.error(error));
-}
-
-function BluetoothRow() {
-  const bluetooth = AstalBluetooth.get_default();
-  const powered = createBinding(bluetooth, "isPowered");
-  const connected = createBinding(bluetooth, "isConnected");
-  const subtitle = createComputed(() => {
-    if (!powered()) return "オフ";
-    return connected() ? "接続済み" : "接続なし";
-  });
-
-  return (
-    <box
-      cssClasses={powered((on) => ["conn-row", on ? "" : "off"].filter(Boolean))}
-      spacing={10}
-    >
-      <box cssClasses={["conn-row-main"]} spacing={11} hexpand>
-        <image
-          iconName={powered((on) =>
-            on ? "bluetooth-active-symbolic" : "bluetooth-disabled-symbolic"
-          )}
-        />
-        <box orientation={Gtk.Orientation.VERTICAL} hexpand valign={Gtk.Align.CENTER}>
-          <label cssClasses={["conn-name"]} xalign={0} label="Bluetooth" />
-          <label
-            cssClasses={["conn-sub"]}
-            xalign={0}
-            label={subtitle}
-          />
-        </box>
-      </box>
-      <switch
-        cssClasses={["compact-switch"]}
-        valign={Gtk.Align.CENTER}
-        active={powered}
-        onNotifyActive={(self: Gtk.Switch) => (bluetooth.isPowered = self.active)}
-      />
-    </box>
-  );
 }
 
 function Controls() {
@@ -64,6 +26,8 @@ function Controls() {
         <box cssClasses={["control"]} spacing={10}>
           <button
             cssClasses={["icon-button"]}
+            valign={Gtk.Align.CENTER}
+            tooltipText="ミュート切り替え"
             onClicked={() => speaker.set_mute(!speaker.mute)}
           >
             <image iconName={createBinding(speaker, "volumeIcon")} />
@@ -87,8 +51,8 @@ function Controls() {
           value > 0
         )}
       >
-        <box cssClasses={["control-icon-slot"]}>
-          <image iconName="display-brightness-symbolic" />
+        <box cssClasses={["control-icon-slot"]} valign={Gtk.Align.CENTER} hexpand={false}>
+          <image hexpand iconName="display-brightness-symbolic" />
         </box>
         <slider
           hexpand
@@ -106,10 +70,10 @@ function Controls() {
 }
 
 function QuickMain({
-  onOpenWifi,
+  onOpenPage,
   onTakeScreenshot,
 }: {
-  onOpenWifi: () => void;
+  onOpenPage: (page: QuickPage) => void;
   onTakeScreenshot: () => void;
 }) {
   const network = AstalNetwork.get_default();
@@ -117,13 +81,13 @@ function QuickMain({
   const time = createPoll(
     "",
     1000,
-    () => GLib.DateTime.new_now_local().format("%H:%M:%S")!,
+    () => nowDateTime().format("%H:%M:%S")!,
   );
   const date = createPoll(
     "",
     60_000,
     () => {
-      const now = GLib.DateTime.new_now_local();
+      const now = nowDateTime();
       const weekday = ["月曜日", "火曜日", "水曜日", "木曜日", "金曜日", "土曜日", "日曜日"][
         now.get_day_of_week() - 1
       ];
@@ -161,12 +125,20 @@ function QuickMain({
       <Controls />
       <box cssClasses={["connections"]} orientation={Gtk.Orientation.VERTICAL} spacing={8}>
         <With value={wifi}>
-          {(device) => device && <WifiRow wifi={device} onOpen={onOpenWifi} />}
+          {(device) => device && <WifiRow wifi={device} onOpen={() => onOpenPage("wifi")} />}
         </With>
-        <BluetoothRow />
+        <BluetoothRow onOpen={() => onOpenPage("bluetooth")} />
+        <AudioRow onOpen={() => onOpenPage("audio")} />
       </box>
     </box>
   );
+}
+
+export type QuickPage = "main" | "wifi" | "bluetooth" | "audio";
+const pageSetters = new Set<(page: QuickPage, animate: boolean) => void>();
+
+export function showQuickPage(page: QuickPage, animate = true) {
+  pageSetters.forEach((set) => set(page, animate));
 }
 
 export default function QuickSettings({
@@ -174,27 +146,41 @@ export default function QuickSettings({
 }: {
   onTakeScreenshot: () => void;
 }) {
-  const [page, setPage] = createState<"main" | "wifi">("main");
-  const showPage = (next: "main" | "wifi") => setPage(next);
+  const [page, setPage] = createState<QuickPage>("main");
+  const showPage = (next: QuickPage) => setPage(next);
+  let stack: Gtk.Stack;
+  const setter = (next: QuickPage, animate: boolean) => {
+    const duration = stack.transitionDuration;
+    if (!animate) stack.transitionDuration = 0;
+    setPage(next);
+    stack.transitionDuration = duration;
+  };
+  pageSetters.add(setter);
+  onCleanup(() => pageSetters.delete(setter));
 
   return (
     <box cssClasses={["quick-settings"]}>
       <Gtk.Stack
+        $={(self) => (stack = self)}
         cssClasses={["quick-pages"]}
         visibleChildName={page}
         transitionType={Gtk.StackTransitionType.SLIDE_LEFT_RIGHT}
         transitionDuration={160}
         hhomogeneous
-        vhomogeneous
+        vhomogeneous={false}
+        interpolateSize
       >
         <box $type="named" name="main">
-          <QuickMain
-            onOpenWifi={() => showPage("wifi")}
-            onTakeScreenshot={onTakeScreenshot}
-          />
+          <QuickMain onOpenPage={showPage} onTakeScreenshot={onTakeScreenshot} />
         </box>
         <box $type="named" name="wifi">
-          <WifiPage onBack={() => showPage("main")} />
+          <WifiPage onBack={() => showPage("main")} active={page((name) => name === "wifi")} />
+        </box>
+        <box $type="named" name="bluetooth">
+          <BluetoothPage onBack={() => showPage("main")} active={page((name) => name === "bluetooth")} />
+        </box>
+        <box $type="named" name="audio">
+          <AudioPage onBack={() => showPage("main")} />
         </box>
       </Gtk.Stack>
     </box>

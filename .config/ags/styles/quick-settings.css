@@ -1,11 +1,11 @@
 .quick-settings {
-  min-width: 330px;
+  min-width: 340px;
   padding: 18px;
 }
 
 .quick-main,
-.wifi-page {
-  min-width: 330px;
+.sub-page {
+  min-width: 340px;
 }
 
 .quick-time {
@@ -19,26 +19,32 @@
   font-size: 12px;
 }
 
-.round-button,
-.icon-button {
+button.round-button,
+button.icon-button {
   min-width: 36px;
   min-height: 36px;
   border-radius: 999px;
-  background: @bg_hover;
+  background: @bg_surface;
+  box-shadow: inset 0 0 0 1px @border_muted;
   color: @accent_primary;
 }
 
-.round-button:hover,
-.icon-button:hover {
-  background: @border_muted;
+button.round-button:hover,
+button.icon-button:hover {
+  background: @bg_hover;
 }
 
-.round-button.danger {
+button.round-button.danger {
   color: @state_danger;
 }
 
+button.round-button.danger:hover {
+  background: alpha(@love, 0.12);
+}
+
 .control {
-  padding: 8px 10px;
+  min-height: 40px;
+  padding: 6px 14px 6px 8px;
   border-radius: 10px;
   background: @bg_surface;
 }
@@ -59,6 +65,12 @@
 .control>label {
   min-width: 42px;
   color: @fg_secondary;
+  font-feature-settings: "tnum";
+}
+
+button.icon-button {
+  background: transparent;
+  box-shadow: none;
 }
 
 scale trough {
@@ -80,8 +92,8 @@ scale slider {
 }
 
 .connections .conn-row {
-  min-height: 52px;
-  padding: 0 12px;
+  min-height: 54px;
+  padding: 0 14px;
   border-radius: 10px;
   background: @bg_surface;
 }
@@ -91,15 +103,20 @@ scale slider {
   color: @fg_secondary;
 }
 
-.conn-row-main {
+button.conn-row-main {
+  min-height: 54px;
   padding: 0;
   border-radius: 0;
   background: transparent;
   color: @fg_primary;
 }
 
-.conn-row-main:hover {
+button.conn-row-main:hover {
   background: transparent;
+}
+
+button.conn-row-main:hover .chev {
+  color: @accent_primary;
 }
 
 .conn-row-main image,

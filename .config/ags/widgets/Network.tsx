@@ -1,8 +1,9 @@
-import { createBinding, createComputed, createState, For, onCleanup, type State, With } from "ags";
+import { type Accessor, createBinding, createComputed, createState, For, onCleanup, type State, With } from "ags";
 import { execAsync } from "ags/process";
 import AstalNetwork from "gi://AstalNetwork";
 import GLib from "gi://GLib";
 import Gtk from "gi://Gtk?version=4.0";
+import PageHead from "./PageHead";
 
 function run(command: string[]) {
   execAsync(command).catch((error) => console.error(error));
@@ -15,7 +16,7 @@ function WiredRow({ wired }: { wired: AstalNetwork.Wired }) {
   )((state) => state === AstalNetwork.DeviceState.ACTIVATED);
 
   return (
-    <box cssClasses={["ap", "wired"]} visible={active} spacing={11}>
+    <box cssClasses={["ap", "wired"]} visible={active} spacing={12}>
       <image iconName={createBinding(wired, "iconName")} />
       <box orientation={Gtk.Orientation.VERTICAL} hexpand>
         <label cssClasses={["ap-name"]} xalign={0} label="有線 LAN" />
@@ -87,12 +88,15 @@ function AccessPointRow({
   return (
     <box orientation={Gtk.Orientation.VERTICAL}>
       <button cssClasses={rowClasses} onClicked={onRowClicked}>
-        <box spacing={11}>
+        <box spacing={12}>
           <image iconName={createBinding(ap, "iconName")} />
           <box orientation={Gtk.Orientation.VERTICAL} hexpand valign={Gtk.Align.CENTER}>
             <label
               cssClasses={["ap-name"]}
               xalign={0}
+              ellipsize={3}
+              maxWidthChars={1}
+              hexpand
               label={ap.ssid ?? ""}
             />
             <label
@@ -150,7 +154,7 @@ function AccessPointRow({
   );
 }
 
-export function WifiPage({ onBack }: { onBack: () => void }) {
+export function WifiPage({ onBack, active }: { onBack: () => void; active: Accessor<boolean> }) {
   const network = AstalNetwork.get_default();
   const wifi = network.wifi;
   const [openSsid, setOpenSsid] = createState<string | null>(null);
@@ -158,23 +162,25 @@ export function WifiPage({ onBack }: { onBack: () => void }) {
   if (!wifi) {
     return (
       <box orientation={Gtk.Orientation.VERTICAL} spacing={10}>
-        <box cssClasses={["pop-head"]} spacing={10}>
-          <button cssClasses={["back"]} onClicked={onBack}>
-            <image iconName="go-previous-symbolic" />
-          </button>
-          <label cssClasses={["pop-title"]} hexpand xalign={0} label="Wi-Fi" />
-        </box>
+        <PageHead title="Wi-Fi" onBack={onBack} />
         <label cssClasses={["cap"]} label="Wi-Fi デバイスが見つかりません" />
       </box>
     );
   }
 
-  wifi.scan();
+  // Scan when the page opens and every 15s while it stays open.
   const rescan = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 15_000, () => {
-    wifi.scan();
+    if (active() && wifi.enabled) wifi.scan();
     return GLib.SOURCE_CONTINUE;
   });
-  onCleanup(() => GLib.source_remove(rescan));
+  const unsubscribe = active.subscribe(() => {
+    if (active() && wifi.enabled) wifi.scan();
+    if (!active()) setOpenSsid(null);
+  });
+  onCleanup(() => {
+    GLib.source_remove(rescan);
+    unsubscribe();
+  });
 
   const enabled = createBinding(wifi, "enabled");
   const ssid = createBinding(wifi, "ssid");
@@ -201,12 +207,8 @@ export function WifiPage({ onBack }: { onBack: () => void }) {
   });
 
   return (
-    <box cssClasses={["wifi-page"]} orientation={Gtk.Orientation.VERTICAL} spacing={10}>
-      <box cssClasses={["pop-head"]} spacing={10}>
-        <button cssClasses={["back"]} onClicked={onBack}>
-          <image iconName="go-previous-symbolic" />
-        </button>
-        <label cssClasses={["pop-title"]} hexpand xalign={0} label="Wi-Fi" />
+    <box cssClasses={["sub-page", "wifi-page"]} orientation={Gtk.Orientation.VERTICAL} spacing={10}>
+      <PageHead title="Wi-Fi" onBack={onBack}>
         <label
           cssClasses={["scanning"]}
           label="検索中"
@@ -214,20 +216,21 @@ export function WifiPage({ onBack }: { onBack: () => void }) {
         />
         <switch
           cssClasses={["compact-switch"]}
+          valign={Gtk.Align.CENTER}
           active={enabled}
           onNotifyActive={(self: Gtk.Switch) => {
             wifi.set_enabled(self.active);
             if (self.active) wifi.scan();
           }}
         />
-      </box>
+      </PageHead>
 
       <scrolledwindow
         minContentHeight={320}
         maxContentHeight={320}
         propagateNaturalHeight={false}
       >
-        <box cssClasses={["ap-list"]} orientation={Gtk.Orientation.VERTICAL} spacing={2}>
+        <box cssClasses={["ap-list"]} orientation={Gtk.Orientation.VERTICAL} spacing={4}>
           <With value={wired}>{(w) => w && <WiredRow wired={w} />}</With>
           <For each={apRows}>
             {(ap) => (
@@ -269,11 +272,11 @@ export function WifiRow({
   return (
     <box cssClasses={["conn-row"]} spacing={10}>
       <button cssClasses={["conn-row-main"]} hexpand onClicked={onOpen}>
-        <box spacing={11}>
+        <box spacing={12}>
           <image iconName={createBinding(wifi, "iconName")} />
           <box orientation={Gtk.Orientation.VERTICAL} hexpand valign={Gtk.Align.CENTER}>
             <label cssClasses={["conn-name"]} xalign={0} label="Wi-Fi" />
-            <label cssClasses={["conn-sub"]} xalign={0} label={subtitle} />
+            <label cssClasses={["conn-sub"]} xalign={0} ellipsize={3} maxWidthChars={1} hexpand label={subtitle} />
           </box>
           <image cssClasses={["chev"]} iconName="go-next-symbolic" />
         </box>

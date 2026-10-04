@@ -8,8 +8,8 @@ popover.notification-popover>contents {
 }
 
 .notif-center {
-  min-width: 318px;
-  padding: 14px;
+  min-width: 330px;
+  padding: 16px;
 }
 
 .calendar {
@@ -19,7 +19,7 @@ popover.notification-popover>contents {
 }
 
 .cal-head {
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
 .cal-month {
@@ -27,9 +27,9 @@ popover.notification-popover>contents {
   font-weight: 700;
 }
 
-.cal-nav {
-  min-width: 24px;
-  min-height: 24px;
+button.cal-nav {
+  min-width: 28px;
+  min-height: 28px;
   border: 2px solid @border_strong;
   border-radius: 5px;
   background: @surface;
@@ -37,7 +37,7 @@ popover.notification-popover>contents {
   color: @text;
 }
 
-.cal-nav:hover {
+button.cal-nav:hover {
   background: @gold;
 }
 
@@ -46,7 +46,7 @@ popover.notification-popover>contents {
 }
 
 .cal-weekday {
-  min-height: 22px;
+  min-height: 24px;
   color: @fg_secondary;
   font-size: 10px;
   font-weight: 700;
@@ -62,16 +62,29 @@ popover.notification-popover>contents {
   color: @accent_secondary;
 }
 
-.cal-day-slot {
-  min-width: 46px;
-  min-height: 30px;
+.cal-cell {
+  min-height: 34px;
 }
 
 .cal-day {
   min-width: 28px;
   min-height: 28px;
+  border: 2px solid transparent;
   border-radius: 999px;
   font-size: 12px;
+}
+
+/* notification marker: a small dot under the date */
+.cal-mark {
+  min-width: 4px;
+  min-height: 4px;
+  margin-top: 1px;
+  border-radius: 999px;
+  background: @foam;
+}
+
+.cal-mark.out {
+  background: @fg_disabled;
 }
 
 .cal-day.out {
@@ -85,9 +98,6 @@ popover.notification-popover>contents {
   font-weight: 700;
 }
 
-.cal-day.mark:not(.today) {
-  box-shadow: inset 0 -3px 0 -1px @foam;
-}
 
 .divider {
   min-height: 2px;
@@ -123,9 +133,9 @@ popover.notification-popover>contents {
   font-weight: 500;
 }
 
-.nc-tool {
-  min-width: 28px;
-  min-height: 28px;
+button.nc-tool {
+  min-width: 30px;
+  min-height: 30px;
   border: 2px solid @border_strong;
   border-radius: 5px;
   background: @surface;
@@ -133,20 +143,20 @@ popover.notification-popover>contents {
   color: @text;
 }
 
-.nc-tool:disabled {
+button.nc-tool:disabled {
   opacity: 0.35;
 }
 
-.nc-tool:hover {
+button.nc-tool:hover {
   background: @gold;
 }
 
-.nc-tool.on {
+button.nc-tool.on {
   background: @love;
   color: @base;
 }
 
-.nc-tool.danger:hover {
+button.nc-tool.danger:hover {
   background: @love;
   color: @base;
 }
@@ -168,16 +178,31 @@ popover.notification-popover>contents {
 
 .note {
   margin: 0 4px 4px 0;
-  padding: 9px 10px 10px;
+  padding: 10px 12px 12px;
   border: 2px solid @border_strong;
   border-radius: 8px;
   background: @base;
   box-shadow: 3px 3px 0 @shadow_solid;
 }
 
+/* critical urgency: keep the card readable, mark it with an accent instead
+   of filling it (Chrome sends most notifications as critical) */
 .note.urgent {
+  border-color: @love;
+  box-shadow: 3px 3px 0 @love;
+}
+
+.note.urgent .note-icon {
   background: @love;
-  color: @base;
+}
+
+.note-badge {
+  padding: 0 6px;
+  border-radius: 4px;
+  background: alpha(@love, 0.14);
+  color: @love;
+  font-size: 10px;
+  font-weight: 700;
 }
 
 .note-meta {
@@ -210,14 +235,19 @@ popover.notification-popover>contents {
   font-size: 11px;
 }
 
-.note-close {
-  min-width: 16px;
-  min-height: 16px;
+button.note-close {
+  min-width: 22px;
+  min-height: 22px;
+  border-radius: 5px;
   color: @muted;
-  font-size: 12px;
 }
 
-.note-close:hover {
+button.note-close image {
+  -gtk-icon-size: 12px;
+}
+
+button.note-close:hover {
+  background: @overlay;
   color: @text;
 }
 
@@ -237,8 +267,9 @@ popover.notification-popover>contents {
   margin-top: 6px;
 }
 
-.note-act {
-  padding: 3px 10px;
+button.note-act {
+  min-height: 26px;
+  padding: 0 12px;
   border: 2px solid @border_strong;
   border-radius: 5px;
   background: @surface;
@@ -248,23 +279,16 @@ popover.notification-popover>contents {
   font-weight: 400;
 }
 
-.note-act:hover {
+button.note-act:hover {
   background: @highlight_med;
 }
 
-.note-act:first-child {
+button.note-act:first-child {
   background: @gold;
 }
 
-.note-act:active {
+button.note-act:active {
   box-shadow: 1px 1px 0 @shadow_solid;
   transform: translate(1px, 1px);
-}
-
-.note.urgent .note-app,
-.note.urgent .note-time,
-.note.urgent .note-close,
-.note.urgent .note-body {
-  color: @base;
 }
 
