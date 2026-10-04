@@ -18,9 +18,11 @@ connector=${AGS_VISUAL_CONNECTOR:-}
 mkdir -p "$out"
 out=$(realpath "$out")
 
-# Freeze displayed clocks at 00:00:30 today so time labels are stable (and the
-# fixture notifications, posted "later", read as "たった今").
-ags request visual-freeze "$(date -d 'today 00:00:30' +%s)" >/dev/null
+# Freeze displayed clocks at a fixed date so time labels and the calendar month
+# are stable.  September 2026 has 敬老の日, 国民の休日 and 秋分の日 in a row, so
+# holiday styling is covered.  The fixture notifications are posted "later"
+# and read as "たった今".
+ags request visual-freeze "$(date -d '2026-09-15 00:00:30' +%s)" >/dev/null
 # The bar clock polls every second; give it a tick to pick up the frozen time.
 sleep 1.1
 
