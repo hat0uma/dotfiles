@@ -1,0 +1,61 @@
+name: Update ChatGPT desktop
+
+# Bumps .config/aconfmgr/packages/dotfiles-chatgpt-desktop/PKGBUILD to the
+# latest .deb in OpenAI's apt repository and opens a pull request when it
+# changed.
+on:
+  schedule:
+    - cron: "0 0 * * *" # 09:00 JST every day
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+env:
+  PKG_DIR: .config/aconfmgr/packages/dotfiles-chatgpt-desktop
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Update PKGBUILD
+        id: update
+        run: |
+          "$PKG_DIR/update.sh"
+          if git diff --quiet -- "$PKG_DIR/PKGBUILD"; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "version=$(sed -n 's/^pkgver=//p' "$PKG_DIR/PKGBUILD")" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Download the sources and check them against sha256sums with makepkg.
+      - name: Verify sources
+        if: steps.update.outputs.changed == 'true'
+        run: |
+          docker run --rm -v "$PWD/$PKG_DIR:/pkg" archlinux:base-devel bash -euc '
+            useradd -m builder
+            cp -r /pkg /home/builder/pkg
+            chown -R builder /home/builder/pkg
+            cd /home/builder/pkg
+            su builder -c "makepkg --verifysource --noconfirm"
+            su builder -c "makepkg --printsrcinfo" > /dev/null
+          '
+
+      - name: Open pull request if changed
+        if: steps.update.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: chore/update-chatgpt-desktop
+          delete-branch: true
+          add-paths: ${{ env.PKG_DIR }}/PKGBUILD
+          commit-message: "aconfmgr: update dotfiles-chatgpt-desktop to ${{ steps.update.outputs.version }}"
+          title: "aconfmgr: update dotfiles-chatgpt-desktop to ${{ steps.update.outputs.version }}"
+          body: |
+            Automated bump of `${{ env.PKG_DIR }}/PKGBUILD` to ChatGPT
+            ${{ steps.update.outputs.version }} from
+            https://persistent.oaistatic.com/codex-app-prod/linux/deb
+            (version and sha256 from the apt `Packages` index, sources verified with `makepkg --verifysource`).
