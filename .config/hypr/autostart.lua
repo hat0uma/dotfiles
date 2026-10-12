@@ -4,6 +4,8 @@ hl.on("hyprland.start", function()
   )
   hl.exec_cmd("systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP")
 
+  hl.exec_cmd("gsettings set org.gnome.desktop.interface font-name 'Koruri 11'")
+
   hl.exec_cmd("swaybg -m fill -i ~/.local/share/wallpapers/home.png")
 
   hl.exec_cmd("nemo --no-default-window")
