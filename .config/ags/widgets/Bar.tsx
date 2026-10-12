@@ -16,6 +16,7 @@ import NotificationCenter, { resetCalendar } from "./Notifications";
 import QuickSettings, { showQuickPage, type QuickPage } from "./QuickSettings";
 import { getToastWindow } from "./NotificationPopups";
 import { nowDateTime, visualTestMode } from "../lib/clock";
+import { wifiState } from "../lib/wifi";
 import { describeTree, renderWidgetToPng, wait } from "../lib/snapshot";
 import { toggleScreenshotMenu } from "./ScreenshotMenu";
 
@@ -58,13 +59,9 @@ let accessPointsReady = false;
 async function ensureAccessPoints() {
   const wifi = AstalNetwork.get_default().wifi;
   if (accessPointsReady || !wifi?.enabled) return;
-  wifi.scan();
-  let started = false;
-  for (let tries = 0; tries < 150; tries++) {
-    await wait(100);
-    started ||= wifi.scanning;
-    if (started && !wifi.scanning) break;
-  }
+  const { scan, scanning } = wifiState(wifi);
+  scan();
+  for (let tries = 0; scanning() && tries < 150; tries++) await wait(100);
   await wait(500);
   accessPointsReady = true;
 }
@@ -220,7 +217,7 @@ function StatusIcons({ connector }: { connector: string }) {
       <box spacing={6}>
         <With value={wifi}>
           {(device) =>
-            device && <image iconName={createBinding(device, "iconName")} />
+            device && <image iconName={wifiState(device).iconName} />
           }
         </With>
         {wireplumber?.defaultSpeaker && (

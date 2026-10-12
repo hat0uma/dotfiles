@@ -3,8 +3,18 @@ import { execAsync } from "ags/process";
 import AstalNetwork from "gi://AstalNetwork";
 import GLib from "gi://GLib";
 import Gtk from "gi://Gtk?version=4.0";
+import NM from "gi://NM";
 import PageHead from "./PageHead";
 import { visualTestMode } from "../lib/clock";
+import {
+  activateAp,
+  apConnections,
+  apRequiresPassword,
+  apSsid,
+  signalIcon,
+  wifiState,
+  type WifiState,
+} from "../lib/wifi";
 
 function run(command: string[]) {
   execAsync(command).catch((error) => console.error(error));
@@ -30,30 +40,35 @@ function WiredRow({ wired }: { wired: AstalNetwork.Wired }) {
 function AccessPointRow({
   ap,
   wifi,
+  state,
   openSsid,
   setOpenSsid,
 }: {
-  ap: AstalNetwork.AccessPoint;
+  ap: NM.AccessPoint;
   wifi: AstalNetwork.Wifi;
+  state: WifiState;
   openSsid: State<string | null>[0];
   setOpenSsid: State<string | null>[1];
 }) {
   const [connecting, setConnecting] = createState(false);
   const [error, setError] = createState("");
   let passwordEntry: Gtk.Entry;
+  const ssid = apSsid(ap);
+  const requiresPassword = apRequiresPassword(ap);
+  const saved = () => apConnections(ap).length > 0;
 
-  const isActive = createBinding(wifi, "ssid")((ssid) => !!ssid && ssid === ap.ssid);
-  const isOpen = createComputed(() => openSsid() === ap.ssid);
+  const isActive = state.ssid((active) => !!active && active === ssid);
+  const isOpen = createComputed(() => openSsid() === ssid);
   const rowClasses = createComputed(() => [
     "ap",
     isActive() ? "current" : "",
-    openSsid() !== null && openSsid() !== ap.ssid ? "dim" : "",
+    openSsid() !== null && openSsid() !== ssid ? "dim" : "",
   ].filter(Boolean));
 
   function connect(password: string | null) {
     setConnecting(true);
     setError("");
-    ap.activate(password)
+    activateAp(wifi.device, ap, password)
       .then(() => {
         setConnecting(false);
         setOpenSsid(null);
@@ -66,21 +81,21 @@ function AccessPointRow({
   }
 
   function onRowClicked() {
-    if (ap.ssid === wifi.ssid && wifi.enabled) {
+    if (isActive() && wifi.enabled) {
       wifi.deactivate_connection().catch((err: unknown) => console.error(err));
       return;
     }
-    if (openSsid() === ap.ssid) {
+    if (openSsid() === ssid) {
       setOpenSsid(null);
       return;
     }
-    if (ap.get_connections().length > 0) {
+    if (saved()) {
       connect(null);
       return;
     }
-    if (ap.requiresPassword) {
+    if (requiresPassword) {
       setError("");
-      setOpenSsid(ap.ssid);
+      setOpenSsid(ssid);
       return;
     }
     connect(null);
@@ -90,7 +105,7 @@ function AccessPointRow({
     <box orientation={Gtk.Orientation.VERTICAL}>
       <button cssClasses={rowClasses} onClicked={onRowClicked}>
         <box spacing={12}>
-          <image iconName={createBinding(ap, "iconName")} />
+          <image iconName={createBinding(ap, "strength")(signalIcon)} />
           <box orientation={Gtk.Orientation.VERTICAL} hexpand valign={Gtk.Align.CENTER}>
             <label
               cssClasses={["ap-name"]}
@@ -98,12 +113,12 @@ function AccessPointRow({
               ellipsize={3}
               maxWidthChars={1}
               hexpand
-              label={ap.ssid ?? ""}
+              label={ssid ?? ""}
             />
             <label
               cssClasses={["ap-sub"]}
               xalign={0}
-              visible={isActive((active) => active || ap.get_connections().length > 0)}
+              visible={isActive((active) => active || saved())}
               label={isActive((active) => active ? "接続済み" : "保存済み")}
             />
           </box>
@@ -112,7 +127,7 @@ function AccessPointRow({
           </With>
           <image
             cssClasses={["lock"]}
-            visible={ap.requiresPassword}
+            visible={requiresPassword}
             iconName="channel-secure-symbolic"
           />
         </box>
@@ -121,7 +136,7 @@ function AccessPointRow({
         {(open) =>
           open && (
             <box cssClasses={["pwd"]} orientation={Gtk.Orientation.VERTICAL} spacing={9}>
-              <label cssClasses={["pwd-label"]} xalign={0} label={`${ap.ssid} のパスワード`} />
+              <label cssClasses={["pwd-label"]} xalign={0} label={`${ssid} のパスワード`} />
               <entry
                 cssClasses={["password-field"]}
                 $={(self) => (passwordEntry = self)}
@@ -169,14 +184,16 @@ export function WifiPage({ onBack, active }: { onBack: () => void; active: Acces
     );
   }
 
+  const state = wifiState(wifi);
+
   // Scan when the page opens and every 15s while it stays open.
   const rescan = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 15_000, () => {
-    if (active() && wifi.enabled && !visualTestMode()) wifi.scan();
+    if (active() && wifi.enabled && !visualTestMode()) state.scan();
     return GLib.SOURCE_CONTINUE;
   });
   // (Not during visual tests: a fresh scan briefly empties the list.)
   const unsubscribe = active.subscribe(() => {
-    if (active() && wifi.enabled && !visualTestMode()) wifi.scan();
+    if (active() && wifi.enabled && !visualTestMode()) state.scan();
     if (!active()) setOpenSsid(null);
   });
   onCleanup(() => {
@@ -185,27 +202,25 @@ export function WifiPage({ onBack, active }: { onBack: () => void; active: Acces
   });
 
   const enabled = createBinding(wifi, "enabled");
-  const ssid = createBinding(wifi, "ssid");
-  const scanning = createBinding(wifi, "scanning");
-  const showScanning = createComputed(() => enabled() && scanning());
-  const accessPoints = createBinding(wifi, "accessPoints");
+  const showScanning = createComputed(() => enabled() && state.scanning());
   const wired = createBinding(network, "wired");
 
   const apRows = createComputed(() => {
     if (!enabled()) return [];
-    const points = accessPoints();
-    const active = ssid();
-    const bySsid = new Map<string, AstalNetwork.AccessPoint>();
+    const points = state.accessPoints();
+    const active = state.ssid();
+    const bySsid = new Map<string, NM.AccessPoint>();
     for (const ap of points) {
-      if (!ap.ssid) continue;
-      const current = bySsid.get(ap.ssid);
-      if (!current || ap.strength > current.strength) bySsid.set(ap.ssid, ap);
+      const ssid = apSsid(ap);
+      if (!ssid) continue;
+      const current = bySsid.get(ssid);
+      if (!current || ap.strength > current.strength) bySsid.set(ssid, ap);
     }
-    return [...bySsid.values()].sort((a, b) => {
-      if (a.ssid === active) return -1;
-      if (b.ssid === active) return 1;
-      return b.strength - a.strength;
-    });
+    return [...bySsid.entries()].sort(([a, apA], [b, apB]) => {
+      if (a === active) return -1;
+      if (b === active) return 1;
+      return apB.strength - apA.strength;
+    }).map(([, ap]) => ap);
   });
 
   return (
@@ -222,7 +237,7 @@ export function WifiPage({ onBack, active }: { onBack: () => void; active: Acces
           active={enabled}
           onNotifyActive={(self: Gtk.Switch) => {
             wifi.set_enabled(self.active);
-            if (self.active) wifi.scan();
+            if (self.active) state.scan();
           }}
         />
       </PageHead>
@@ -236,7 +251,7 @@ export function WifiPage({ onBack, active }: { onBack: () => void; active: Acces
           <With value={wired}>{(w) => w && <WiredRow wired={w} />}</With>
           <For each={apRows}>
             {(ap) => (
-              <AccessPointRow ap={ap} wifi={wifi} openSsid={openSsid} setOpenSsid={setOpenSsid} />
+              <AccessPointRow ap={ap} wifi={wifi} state={state} openSsid={openSsid} setOpenSsid={setOpenSsid} />
             )}
           </For>
         </box>
@@ -261,12 +276,12 @@ export function WifiRow({
   onOpen: () => void;
 }) {
   const enabled = createBinding(wifi, "enabled");
-  const ssid = createBinding(wifi, "ssid");
-  const scanning = createBinding(wifi, "scanning");
+  const { ssid, scanning, iconName } = wifiState(wifi);
 
   const subtitle = createComputed(() => {
     if (!enabled()) return "オフ";
-    if (ssid()) return ssid();
+    const name = ssid();
+    if (name) return name;
     if (scanning()) return "検索中…";
     return "接続なし";
   });
@@ -275,7 +290,7 @@ export function WifiRow({
     <box cssClasses={["conn-row"]} spacing={10}>
       <button cssClasses={["conn-row-main"]} hexpand onClicked={onOpen}>
         <box spacing={12}>
-          <image iconName={createBinding(wifi, "iconName")} />
+          <image iconName={iconName} />
           <box orientation={Gtk.Orientation.VERTICAL} hexpand valign={Gtk.Align.CENTER}>
             <label cssClasses={["conn-name"]} xalign={0} label="Wi-Fi" />
             <label cssClasses={["conn-sub"]} xalign={0} ellipsize={3} maxWidthChars={1} hexpand label={subtitle} />
