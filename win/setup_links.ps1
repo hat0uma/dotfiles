@@ -58,3 +58,35 @@ foreach ($linkto in $links.Keys)
     MakeLink $linkto $target
 }
 
+# Windows Terminal
+# Windows Terminal rewrites settings.json atomically, which breaks hard links.
+# Use a symbolic link (requires Developer Mode or admin), otherwise fall back to copying.
+$wtSettings = "$env:DOTFILES_PATH\.config\windows-terminal\settings.json"
+$wtPackages = @(
+    "Microsoft.WindowsTerminal_8wekyb3d8bbwe",
+    "Microsoft.WindowsTerminalPreview_8wekyb3d8bbwe"
+)
+foreach ($package in $wtPackages)
+{
+    $localState = "$env:LOCALAPPDATA\Packages\$package\LocalState"
+    if (-not (Test-Path $localState))
+    {
+        continue
+    }
+
+    $linkto = "$localState\settings.json"
+    if ((Test-Path $linkto) -and -not (Get-Item $linkto).LinkType)
+    {
+        Write-Host "Backing up '$linkto'."
+        Move-Item -Force $linkto "$linkto.bak"
+    }
+    UnLink $linkto
+    try
+    {
+        New-Item -ItemType SymbolicLink -Path $linkto -Target $wtSettings -ErrorAction Stop > $null
+    } catch
+    {
+        Write-Warning "Cannot create symbolic link for '$linkto'. Copying instead."
+        Copy-Item $wtSettings $linkto
+    }
+}
