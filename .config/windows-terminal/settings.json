@@ -1,0 +1,159 @@
+{
+  "$help": "https://aka.ms/terminal-documentation",
+  "$schema": "https://aka.ms/terminal-profiles-schema",
+
+  // Ported from .config/wezterm/wezterm.lua
+  "defaultProfile": "{7f3c2a8e-5b1d-4e6a-9c0f-2d8b4a6e1c35}",
+  "copyOnSelect": false,
+  "copyFormatting": "none",
+  "showTabsInTitlebar": true,
+  "alwaysShowTabs": true,
+  "newTabPosition": "afterLastTab",
+  "theme": "rose-pine-dawn",
+  "warning.confirmCloseAllTabs": false,
+
+  "profiles": {
+    "defaults": {
+      "colorScheme": "Rose Pine Dawn",
+      "font": {
+        // WezTerm: font_with_fallback({ "Moralerspace Neon JPDOC", "Symbols Nerd Font Mono", "Twemoji Mozilla" })
+        "face": "Moralerspace Neon JPDOC, Symbols Nerd Font Mono, Twemoji Mozilla",
+        "size": 10,
+        "weight": "normal",
+        // WezTerm: harfbuzz_features = { "calt=1", "clig=0", "liga=0" }
+        "features": { "calt": 1, "clig": 0, "liga": 0 }
+      },
+      // left, top, right, bottom  (WezTerm: window_padding)
+      "padding": "0, 2, 0, 0",
+      "bellStyle": "none",
+      "closeOnExit": "graceful",
+      "intenseTextStyle": "bold"
+    },
+    "list": [
+      {
+        // WezTerm: default_prog / launch_menu "pwsh"
+        "guid": "{7f3c2a8e-5b1d-4e6a-9c0f-2d8b4a6e1c35}",
+        "name": "pwsh",
+        "commandline": "pwsh.exe -NoLogo",
+        "startingDirectory": "%USERPROFILE%",
+        "hidden": false
+      },
+      {
+        // WezTerm: launch_menu "neovim"
+        "guid": "{3b9e6d41-8a2c-4f7e-b5d0-6c1a9e2f4b87}",
+        "name": "neovim",
+        "commandline": "nvim.exe",
+        "startingDirectory": "%USERPROFILE%",
+        "hidden": false
+      }
+    ]
+  },
+
+  "schemes": [
+    {
+      // WezTerm: rosepine.lua (dawn)
+      "name": "Rose Pine Dawn",
+      "foreground": "#575279",
+      "background": "#faf4ed",
+      "cursorColor": "#9893a5",
+      "selectionBackground": "#f2e9e1",
+      "black": "#f2e9de",
+      "red": "#b4637a",
+      "green": "#286983",
+      "yellow": "#ea9d34",
+      "blue": "#56949f",
+      "purple": "#907aa9",
+      "cyan": "#d7827e",
+      "white": "#575279",
+      "brightBlack": "#6e6a86",
+      "brightRed": "#b4637a",
+      "brightGreen": "#286983",
+      "brightYellow": "#ea9d34",
+      "brightBlue": "#56949f",
+      "brightPurple": "#907aa9",
+      "brightCyan": "#d7827e",
+      "brightWhite": "#575279"
+    }
+  ],
+
+  "themes": [
+    {
+      // WezTerm: tab_bar_color / format-tab-title colors
+      "name": "rose-pine-dawn",
+      "window": { "applicationTheme": "light", "useMica": false },
+      "tabRow": { "background": "#f8f4ee", "unfocusedBackground": "#f8f4ee" },
+      "tab": {
+        "background": "#fdfaf4",
+        "unfocusedBackground": "#f8f4ee",
+        "showCloseButton": "always",
+        "iconStyle": "default"
+      }
+    }
+  ],
+
+  // Vim-like "command-line mode": open the command palette (ctrl+shift+p) and type
+  // the action name, e.g. "vs" + Enter for a vertical split, "q" + Enter to close the pane.
+  "actions": [
+    { "id": "User.SplitRight", "name": "vs", "command": { "action": "splitPane", "split": "right", "splitMode": "duplicate" } },
+    { "id": "User.SplitDown", "name": "sp", "command": { "action": "splitPane", "split": "down", "splitMode": "duplicate" } },
+    { "id": "User.VNew", "name": "vnew", "command": { "action": "splitPane", "split": "right", "profile": "neovim" } },
+    { "id": "User.New", "name": "new", "command": { "action": "splitPane", "split": "down", "profile": "neovim" } },
+    { "id": "User.ClosePane", "name": "q", "command": "closePane" },
+    { "id": "User.Quit", "name": "qa", "command": "quit" },
+    { "id": "User.ZoomPane", "name": "only", "command": "togglePaneZoom" },
+    { "id": "User.NewTab", "name": "tabnew", "command": "newTab" },
+    { "id": "User.CloseTab", "name": "tabc", "command": "closeTab" },
+    { "id": "User.NextTab", "name": "tabn", "command": "nextTab" },
+    { "id": "User.PrevTab", "name": "tabp", "command": "prevTab" },
+    { "id": "User.FocusLeft", "name": "wincmd h", "command": { "action": "moveFocus", "direction": "left" } },
+    { "id": "User.FocusDown", "name": "wincmd j", "command": { "action": "moveFocus", "direction": "down" } },
+    { "id": "User.FocusUp", "name": "wincmd k", "command": { "action": "moveFocus", "direction": "up" } },
+    { "id": "User.FocusRight", "name": "wincmd l", "command": { "action": "moveFocus", "direction": "right" } },
+    { "id": "User.SwapLeft", "name": "wincmd H", "command": { "action": "swapPane", "direction": "left" } },
+    { "id": "User.SwapDown", "name": "wincmd J", "command": { "action": "swapPane", "direction": "down" } },
+    { "id": "User.SwapUp", "name": "wincmd K", "command": { "action": "swapPane", "direction": "up" } },
+    { "id": "User.SwapRight", "name": "wincmd L", "command": { "action": "swapPane", "direction": "right" } },
+    { "id": "User.ResizeLeft", "command": { "action": "resizePane", "direction": "left" } },
+    { "id": "User.ResizeDown", "command": { "action": "resizePane", "direction": "down" } },
+    { "id": "User.ResizeUp", "command": { "action": "resizePane", "direction": "up" } },
+    { "id": "User.ResizeRight", "command": { "action": "resizePane", "direction": "right" } },
+    { "id": "User.Tab1", "command": { "action": "switchToTab", "index": 0 } },
+    { "id": "User.Tab2", "command": { "action": "switchToTab", "index": 1 } },
+    { "id": "User.Tab3", "command": { "action": "switchToTab", "index": 2 } },
+    { "id": "User.Tab4", "command": { "action": "switchToTab", "index": 3 } },
+    { "id": "User.Launcher", "command": "openNewTabDropdown" },
+    { "id": "User.Fullscreen", "command": "toggleFullscreen" },
+    { "id": "User.Settings", "command": { "action": "openSettings", "target": "settingsFile" } }
+  ],
+
+  // Same leader bindings as WezTerm (LEADER = ctrl+t).
+  // Windows Terminal chords are limited to 2 keys.
+  "keybindings": [
+    { "keys": "ctrl+t, q", "id": "User.ClosePane" },
+    { "keys": "ctrl+t, 0", "id": "User.Quit" },
+    { "keys": "ctrl+t, enter", "id": "User.Launcher" },
+    { "keys": "ctrl+t, f", "id": "User.Fullscreen" },
+    { "keys": "ctrl+t, 1", "id": "User.Tab1" },
+    { "keys": "ctrl+t, 2", "id": "User.Tab2" },
+    { "keys": "ctrl+t, 3", "id": "User.Tab3" },
+    { "keys": "ctrl+t, 4", "id": "User.Tab4" },
+    { "keys": "ctrl+t, \\", "id": "User.SplitRight" },
+    { "keys": "ctrl+t, -", "id": "User.SplitDown" },
+    { "keys": "ctrl+t, r", "id": "User.Settings" },
+    { "keys": "ctrl+t, h", "id": "User.FocusLeft" },
+    { "keys": "ctrl+t, j", "id": "User.FocusDown" },
+    { "keys": "ctrl+t, k", "id": "User.FocusUp" },
+    { "keys": "ctrl+t, l", "id": "User.FocusRight" },
+    { "keys": "ctrl+t, shift+h", "id": "User.SwapLeft" },
+    { "keys": "ctrl+t, shift+j", "id": "User.SwapDown" },
+    { "keys": "ctrl+t, shift+k", "id": "User.SwapUp" },
+    { "keys": "ctrl+t, shift+l", "id": "User.SwapRight" },
+    { "keys": "ctrl+t, ctrl+h", "id": "User.ResizeLeft" },
+    { "keys": "ctrl+t, ctrl+j", "id": "User.ResizeDown" },
+    { "keys": "ctrl+t, ctrl+k", "id": "User.ResizeUp" },
+    { "keys": "ctrl+t, ctrl+l", "id": "User.ResizeRight" },
+    { "keys": "ctrl+t, v", "id": "User.SplitRight" },
+    { "keys": "ctrl+t, s", "id": "User.SplitDown" },
+    { "keys": "ctrl+t, o", "id": "User.ZoomPane" }
+  ]
+}
