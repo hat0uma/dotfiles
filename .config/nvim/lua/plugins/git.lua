@@ -48,6 +48,10 @@ return {
       local neogit = require("neogit")
       neogit.setup({
         disable_signs = true,
+        -- neogit takes green from the `String` fg, which is gold in rose-pine.
+        highlight = vim.g.colors_name and vim.g.colors_name:find("^rose%-pine") and {
+          green = require("rose-pine.palette").leaf,
+        } or nil,
         disable_commit_confirmation = true,
         integrations = {
           telescope = false, -- If turned on, neogit uses Telescope with the `ivy` theme, which I don't like.
