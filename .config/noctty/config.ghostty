@@ -20,7 +20,9 @@ font-feature = -liga
 background = #faf4ed
 foreground = #575279
 cursor-color = #9893a5
-selection-background = #f2e9e1
+# Rose Pine highlight_med (#f2e9e1 = overlay is almost the same as the background)
+selection-background = #dfdad9
+selection-foreground = #575279
 palette = 0=#f2e9de
 palette = 1=#b4637a
 palette = 2=#286983
