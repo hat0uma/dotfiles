@@ -17,7 +17,7 @@
       "colorScheme": "Rose Pine Dawn",
       "font": {
         // WezTerm: font_with_fallback({ "Moralerspace Neon JPDOC", "Symbols Nerd Font Mono", "Twemoji Mozilla" })
-        "face": "Moralerspace Neon JPDOC, Symbols Nerd Font Mono, Twemoji Mozilla",
+        "face": "Moralerspace Neon JPDOC, Symbols Nerd Font Mono, Noto Color Emoji",
         "size": 10,
         "weight": "normal",
         // WezTerm: harfbuzz_features = { "calt=1", "clig=0", "liga=0" }
@@ -27,7 +27,8 @@
       "padding": "0, 2, 0, 0",
       "bellStyle": "none",
       "closeOnExit": "graceful",
-      "intenseTextStyle": "bold"
+      "intenseTextStyle": "bold",
+      "experimental.useAtlasEngine": false
     },
     "list": [
       {
