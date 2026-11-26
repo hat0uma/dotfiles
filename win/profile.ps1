@@ -18,6 +18,13 @@ $OutputEncoding = [System.Text.Encoding]::UTF8
 [System.Console]::InputEncoding = [System.Text.Encoding]::UTF8
 
 # Colors
+# The default directory style (44;1, blue background) is hard to read with Rose Pine Dawn.
+# Use the blue background blended 50% with the base color, like WezTerm's
+# text_background_opacity = 0.5 did (#56949f over #faf4ed = #a8c4c6).
+if ($PSStyle)
+{
+    $PSStyle.FileInfo.Directory = "`e[1;48;2;168;196;198m"
+}
 # if ($PSStyle)
 # {
 #     $PSStyle.FileInfo.Directory = "$esc[34;1m"
