@@ -65,6 +65,13 @@ profile-command = neovim: nvim.exe
 profile-name = neovim: neovim
 profile-working-directory = neovim: home
 
+# Keep noctty's own folder off PATH for Neovim. It ships an older conpty.dll
+# that Neovim loads (it looks up "conpty.dll" on PATH) for pty jobs. That
+# ConPTY waits up to 3s for a DA1 reply nobody sends, so e.g. Neogit's commit
+# takes 3s to open. Fixed upstream in microsoft/terminal#20536. Setting PATH
+# here stops noctty from prepending its folder. For pwsh, see win/profile.ps1.
+profile-env = neovim: PATH=%PATH%
+
 default-profile = shell
 working-directory = home
 

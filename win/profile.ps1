@@ -61,6 +61,27 @@ if ((Test-Path $localBinPath) -and ($env:PATH -split ';' -notcontains $localBinP
 # ==============================================================================
 # Neovim
 # ==============================================================================
+# noctty puts its own folder on PATH, and that folder ships an older conpty.dll.
+# Neovim loads "conpty.dll" from PATH at startup (before init.lua), and that
+# ConPTY waits up to 3s for a DA1 reply on every pty job (e.g. Neogit's commit).
+# Fixed upstream in microsoft/terminal#20536. Start nvim without that folder.
+if ($env:GHOSTTY_BIN_DIR)
+{
+    function nvim
+    {
+        $nocttyDir = $env:GHOSTTY_BIN_DIR.TrimEnd('\', '/')
+        $origPath = $env:PATH
+        try
+        {
+            $env:PATH = ($origPath -split ';' | Where-Object { $_ -and $_.TrimEnd('\', '/') -ne $nocttyDir }) -join ';'
+            nvim.exe @args
+        } finally
+        {
+            $env:PATH = $origPath
+        }
+    }
+}
+
 if ( Test-Path env:NVIM )
 {
     # Remove-Alias -Force -Name sp
