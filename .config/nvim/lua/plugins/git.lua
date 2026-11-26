@@ -26,10 +26,17 @@ return {
           return
         end
 
-        -- Use directly the git.exe under mingw64/bin to improve performance
+        -- Use directly the git.exe under <msystem>/bin to skip the cmd/git.exe wrapper.
+        -- Newer Git for Windows ships ucrt64 instead of mingw64.
         local cmd_dir = vim.fs.dirname(git_path) -- e.g., C:/Program Files/Git/cmd
-        local mingw64dir = vim.fs.joinpath(vim.fs.dirname(cmd_dir), "mingw64", "bin")
-        vim.env.PATH = mingw64dir .. ";" .. vim.env.PATH
+        local git_root = vim.fs.dirname(cmd_dir)
+        for _, msystem in ipairs({ "ucrt64", "mingw64", "clangarm64" }) do
+          local bin = vim.fs.joinpath(git_root, msystem, "bin")
+          if vim.uv.fs_stat(vim.fs.joinpath(bin, "git.exe")) then
+            vim.env.PATH = bin .. ";" .. vim.env.PATH
+            break
+          end
+        end
       end
       local opts = { silent = true, noremap = true }
       vim.keymap.set("n", "<C-g>", ":<C-u>Neogit<CR>", opts)
