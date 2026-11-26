@@ -9,5 +9,6 @@ git clone https://github.com/hat0uma/dotfiles
 Set-Location dotfiles
 .\win\setup_envs.ps1
 .\win\setup_links.ps1
+.\win\setup_profile.ps1
 make neovim
 
