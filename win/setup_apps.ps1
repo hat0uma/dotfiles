@@ -26,13 +26,14 @@ $scoopApps = @(
     "pwsh"
     "python"
     "ripgrep"
+    "tree-sitter"
     # "rust"
-    "sarasa-mono-j-nerd-font"
-    "sarasa-term-j-nerd-font"
+    #"sarasa-mono-j-nerd-font"
+    #"sarasa-term-j-nerd-font"
     "unzip"
     "sed"
-    "wezterm-nightly"
-    "bottom"
+    #"wezterm-nightly"
+    #"bottom"
 )
 if(!(get-command scoop -errorAction SilentlyContinue ))
 {
@@ -46,10 +47,10 @@ scoop install git
 scoop bucket add "main"
 scoop bucket add "versions"
 scoop bucket add "extras"
-scoop bucket add "sarasa-nerd-fonts" "https://github.com/jonz94/scoop-sarasa-nerd-fonts"
+#scoop bucket add "sarasa-nerd-fonts" "https://github.com/jonz94/scoop-sarasa-nerd-fonts"
 
-scoop install $( $scoopApps -join " " )
-scoop update $( $scoopApps -join " " )
+scoop install @scoopApps
+scoop update @scoopApps
 
-skkdict
+#skkdict
 
