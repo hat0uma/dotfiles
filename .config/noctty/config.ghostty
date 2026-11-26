@@ -1,0 +1,113 @@
+# noctty config (Ghostty syntax)
+# Ported from .config/windows-terminal/settings.json
+# Docs: noctty +show-config --default --docs
+
+# ---------------------------------------------------------------------------
+# Font
+# ---------------------------------------------------------------------------
+font-family = Moralerspace Neon JPDOC
+font-family = Symbols Nerd Font Mono
+font-family = Noto Color Emoji
+font-size = 10
+# WezTerm: harfbuzz_features = { "calt=1", "clig=0", "liga=0" }
+font-feature = calt
+font-feature = -clig
+font-feature = -liga
+
+# ---------------------------------------------------------------------------
+# Colors (Rose Pine Dawn, same values as the Windows Terminal scheme)
+# ---------------------------------------------------------------------------
+background = #faf4ed
+foreground = #575279
+cursor-color = #9893a5
+selection-background = #f2e9e1
+palette = 0=#f2e9de
+palette = 1=#b4637a
+palette = 2=#286983
+palette = 3=#ea9d34
+palette = 4=#56949f
+palette = 5=#907aa9
+palette = 6=#d7827e
+palette = 7=#575279
+palette = 8=#6e6a86
+palette = 9=#b4637a
+palette = 10=#286983
+palette = 11=#ea9d34
+palette = 12=#56949f
+palette = 13=#907aa9
+palette = 14=#d7827e
+palette = 15=#575279
+
+# ---------------------------------------------------------------------------
+# Window / tabs
+# ---------------------------------------------------------------------------
+window-theme = light
+window-titlebar-background = #f8f4ee
+window-show-tab-bar = always
+window-new-tab-position = end
+# left,right / top,bottom  (WT padding "0, 2, 0, 0")
+window-padding-x = 0
+window-padding-y = 2,0
+copy-on-select = false
+# WT bellStyle: none
+bell-features = no-system,no-audio,no-attention,no-title,no-border
+
+# ---------------------------------------------------------------------------
+# Profiles
+# ---------------------------------------------------------------------------
+profile-command = shell: pwsh.exe -NoLogo
+profile-name = shell: pwsh
+profile-working-directory = shell: home
+
+profile-command = neovim: nvim.exe
+profile-name = neovim: neovim
+profile-working-directory = neovim: home
+
+default-profile = shell
+working-directory = home
+
+# ---------------------------------------------------------------------------
+# Command palette (ctrl+shift+p): Vim-like command names, as in WT
+# ---------------------------------------------------------------------------
+command-palette-entry = title:vs,description:Split right,action:new_split:right
+command-palette-entry = title:sp,description:Split down,action:new_split:down
+command-palette-entry = title:q,description:Close pane,action:close_surface
+command-palette-entry = title:qa,description:Quit,action:quit
+command-palette-entry = title:only,description:Toggle pane zoom,action:toggle_split_zoom
+command-palette-entry = title:tabnew,description:New tab,action:new_tab
+command-palette-entry = title:tabc,description:Close tab,action:close_tab:this
+command-palette-entry = title:tabn,description:Next tab,action:next_tab
+command-palette-entry = title:tabp,description:Previous tab,action:previous_tab
+command-palette-entry = title:wincmd h,description:Focus left,action:goto_split:left
+command-palette-entry = title:wincmd j,description:Focus down,action:goto_split:down
+command-palette-entry = title:wincmd k,description:Focus up,action:goto_split:up
+command-palette-entry = title:wincmd l,description:Focus right,action:goto_split:right
+
+# ---------------------------------------------------------------------------
+# Leader bindings (LEADER = ctrl+t), same as WezTerm / WT
+# ---------------------------------------------------------------------------
+keybind = ctrl+t>q=close_surface
+keybind = ctrl+t>0=quit
+keybind = ctrl+t>enter=toggle_command_palette
+keybind = ctrl+t>f=toggle_fullscreen
+keybind = ctrl+t>1=goto_tab:1
+keybind = ctrl+t>2=goto_tab:2
+keybind = ctrl+t>3=goto_tab:3
+keybind = ctrl+t>4=goto_tab:4
+keybind = ctrl+t>backslash=new_split:right
+keybind = ctrl+t>minus=new_split:down
+keybind = ctrl+t>v=new_split:right
+keybind = ctrl+t>s=new_split:down
+keybind = ctrl+t>r=reload_config
+keybind = ctrl+t>h=goto_split:left
+keybind = ctrl+t>j=goto_split:down
+keybind = ctrl+t>k=goto_split:up
+keybind = ctrl+t>l=goto_split:right
+keybind = ctrl+t>ctrl+h=resize_split:left,10
+keybind = ctrl+t>ctrl+j=resize_split:down,10
+keybind = ctrl+t>ctrl+k=resize_split:up,10
+keybind = ctrl+t>ctrl+l=resize_split:right,10
+keybind = ctrl+t>o=toggle_split_zoom
+keybind = ctrl+t>c=new_tab
+keybind = ctrl+t>n=next_tab
+keybind = ctrl+t>p=previous_tab

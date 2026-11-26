@@ -7,6 +7,7 @@ $links = @{
     "$env:USERPROFILE\.goneovim\"             = "$env:DOTFILES_PATH\.config\goneovim"
     "$env:USERPROFILE\.config\wezterm"        = "$env:DOTFILES_PATH\.config\wezterm"
     "$env:USERPROFILE\.glzr"                  = "$env:DOTFILES_PATH\.config\glzr"
+    "$env:USERPROFILE\.config\noctty"         = "$env:DOTFILES_PATH\.config\noctty"
     # "$env:APPDATA\Code\User\keybindings.json" = "$env:DOTFILES_PATH\.config\Code\User\keybindings.json"
     # "$env:APPDATA\Code\User\settings.json"    = "$env:DOTFILES_PATH\.config\Code\User\settings.json"
 }
