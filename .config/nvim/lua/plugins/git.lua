@@ -63,6 +63,36 @@ return {
           "NeogitCommitPopup--allow-empty",
         },
       })
+
+      -- Neogit runs popup actions one at a time under a global lock, and the commit
+      -- actions hold it until the commit editor is closed, so e.g. `l l` (log) does
+      -- nothing while writing a commit message. Run the editor-based commit actions
+      -- in their own coroutine so the lock is released right away. The popup only
+      -- refreshes the status once the action returns, so refresh again when done.
+      -- Only one of them may run at a time: a second `git commit` would overwrite
+      -- .git/COMMIT_EDITMSG and wipe the message being written in the first editor.
+      local a = require("neogit.lib.async")
+      local Watcher = require("neogit.watcher")
+      local commit_actions = require("neogit.popups.commit.actions")
+      local committing = false
+      for _, name in ipairs({ "commit", "amend", "reword", "alter", "augment", "revise" }) do
+        local action = commit_actions[name]
+        commit_actions[name] = function(popup)
+          if committing then
+            vim.notify("Neogit: a commit is already in progress", vim.log.levels.WARN)
+            return
+          end
+          committing = true
+          a.void(function()
+            local ok, err = pcall(action, popup)
+            committing = false
+            Watcher.instance():dispatch_refresh()
+            if not ok then
+              error(err)
+            end
+          end)()
+        end
+      end
     end,
     cmd = { "Neogit" },
     dependencies = {
